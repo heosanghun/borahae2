@@ -9,6 +9,41 @@
   const GEMINI_API_KEY = (typeof window !== 'undefined' && window.__SIMS_GEMINI_KEY__) || '';
 
   // ========================================
+  // 7컬러 × 퍼스널컬러 × 음악 추천 (BTS 멤버 미거론, 무드만 사용)
+  // ========================================
+  const COLOR_MUSIC = {
+    red: { name: '빨강', mood: '열정적이고 강렬한', description: '에너지 넘치는 비트와 강렬한 무드가 잘 어울려요.', directLink: 'https://www.youtube.com/watch?v=4ujQOR2DMFM', searchLink: 'https://www.youtube.com/results?search_query=Fire+%EB%B6%88%ED%83%80%EC%98%A4%EB%A5%B4%EB%84%A4+official+MV' },
+    orange: { name: '주황', mood: '따뜻하고 유쾌한', description: '스무스하고 경쾌한 팝 무드와 잘 맞아요.', directLink: 'https://www.youtube.com/watch?v=ZlQIw9EPui0', searchLink: 'https://www.youtube.com/results?search_query=Butter+official+MV' },
+    yellow: { name: '노랑', mood: '밝고 활기찬', description: '디스코와 밝은 에너지가 잘 어울려요.', directLink: 'https://www.youtube.com/watch?v=gdZLi9oWNZg', searchLink: 'https://www.youtube.com/results?search_query=Dynamite+official+MV' },
+    green: { name: '초록', mood: '달콤하고 설레는', description: '달달하고 희망적인 무드와 잘 맞아요.', directLink: 'https://www.youtube.com/watch?v=XsX3ATc3FbA', searchLink: 'https://www.youtube.com/results?search_query=Boy+With+Luv+%EC%9E%91%EC%9D%80+%EA%B2%83%EB%93%A4%EC%9D%84+%EC%9C%84%ED%95%9C+%EC%8B%9C+official' },
+    blue: { name: '파랑', mood: '시원하고 청량한', description: '신선하고 쿨한 비트가 잘 어울려요.', directLink: 'https://www.youtube.com/watch?v=MBdVXkSdhwU', searchLink: 'https://www.youtube.com/results?search_query=DNA+official+MV' },
+    indigo: { name: '남색', mood: '깊고 예술적인', description: '내면적이고 드라마틱한 무드와 잘 맞아요.', directLink: 'https://www.youtube.com/watch?v=0lapF4DQPKQ', searchLink: 'https://www.youtube.com/results?search_query=Black+Swan+official+MV' },
+    violet: { name: '보라', mood: '감성적이고 몽환적인', description: '감성과 위로가 담긴 무드와 잘 맞아요.', directLink: 'https://www.youtube.com/watch?v=xEeFrLSkMm8', searchLink: 'https://www.youtube.com/results?search_query=%EB%B4%84%EB%82%A0+Spring+Day+official+MV' }
+  };
+  const PERSONAL_COLOR_TO_7COLOR = {
+    '봄웜': { primary: 'yellow', secondary: 'orange' },
+    '봄쿨': { primary: 'yellow', secondary: 'green' },
+    '여름쿨': { primary: 'blue', secondary: 'violet' },
+    '여름웜': { primary: 'green', secondary: 'blue' },
+    '가을웜': { primary: 'red', secondary: 'indigo' },
+    '가을쿨': { primary: 'indigo', secondary: 'violet' },
+    '겨울쿨': { primary: 'red', secondary: 'indigo' },
+    '겨울웜': { primary: 'violet', secondary: 'red' }
+  };
+  const SEASON_TO_7COLOR = { '봄': 'yellow', '여름': 'blue', '가을': 'red', '겨울': 'violet' };
+
+  function getPrimary7Color(seasonString) {
+    if (!seasonString || typeof seasonString !== 'string') return 'blue';
+    var s = seasonString.trim();
+    if (PERSONAL_COLOR_TO_7COLOR[s]) return PERSONAL_COLOR_TO_7COLOR[s].primary;
+    if (s.indexOf('봄') !== -1) return 'yellow';
+    if (s.indexOf('여름') !== -1) return 'blue';
+    if (s.indexOf('가을') !== -1) return 'red';
+    if (s.indexOf('겨울') !== -1) return 'violet';
+    return 'blue';
+  }
+
+  // ========================================
   // Theme Toggle
   // ========================================
   const themeToggle = document.getElementById('theme-toggle');
@@ -1569,6 +1604,8 @@
 
     const personalColorEl = document.getElementById('personal-color-result');
     if (personalColorEl) {
+      var primaryKey = getPrimary7Color(result.personalColor.season);
+      var music = COLOR_MUSIC[primaryKey] || COLOR_MUSIC.blue;
       personalColorEl.innerHTML = `
         <div class="color-type">
           <span class="color-season ${seasonClass}">${result.personalColor.season}</span>
@@ -1578,6 +1615,14 @@
           ${result.personalColor.palette.map(color => `
             <div class="palette-color" style="background: ${color}" title="${color}"></div>
           `).join('')}
+        </div>
+        <div class="personal-color-music">
+          <h5 class="personal-color-music-title">이 컬러에 어울리는 무드 & 음악</h5>
+          <p class="personal-color-music-desc">당신은 <strong>${music.name}</strong> 계열이에요. ${music.description}</p>
+          <div class="personal-color-music-actions">
+            <a href="${music.directLink}" target="_blank" rel="noopener noreferrer" class="music-cta">이 무드의 대표 곡 들어보기</a>
+            <a href="${music.searchLink}" target="_blank" rel="noopener noreferrer" class="music-cta music-cta-secondary">유튜브에서 더 찾아보기</a>
+          </div>
         </div>
       `;
     }

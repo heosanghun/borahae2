@@ -2612,6 +2612,61 @@ section {
   transform: scale(1.15);
 }
 
+/* 7컬러 음악 추천 블록 (퍼스널 컬러 카드 내) */
+.personal-color-music {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-color, rgba(0, 0, 0, 0.08));
+}
+.personal-color-music-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  color: var(--text-primary, #1a1a1a);
+}
+.personal-color-music-desc {
+  font-size: 0.9rem;
+  color: var(--text-secondary, #555);
+  margin: 0 0 12px 0;
+  line-height: 1.45;
+}
+.personal-color-music-desc strong {
+  color: var(--text-primary, #1a1a1a);
+}
+.personal-color-music-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.music-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s, transform 0.15s;
+  background: var(--accent, #6366f1);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+.music-cta:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+.music-cta-secondary {
+  background: transparent;
+  color: var(--text-secondary, #555);
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.15));
+}
+.music-cta-secondary:hover {
+  background: var(--bg-tertiary, rgba(0, 0, 0, 0.04));
+  color: var(--text-primary, #1a1a1a);
+}
+
 /* Style Result */
 .style-content {
   display: flex;
