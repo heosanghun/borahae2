@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SIMS Fashion AI - 나만을 위한 스타일 추천</title>
-  <link href='/style.css' rel='stylesheet'>
+  <link href="style.css" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
@@ -388,7 +388,7 @@
       <div class="about-content">
         <div class="about-image">
           <div class="about-img-wrapper">
-            <img src="assets/ai-fashion-future.webp" alt="SIMS Fashion AI - 미래의 패션">
+            <img src="ai-fashion-future.webp" alt="SIMS Fashion AI - 미래의 패션">
             <div class="about-badge">
               <span class="badge-number">2026</span>
               <span class="badge-text">Since</span>
@@ -527,7 +527,7 @@
       </div>
       <div class="footer-bottom">
         <div class="footer-logo">
-          <img src="/logo.png" alt="SIMS Fashion AI Logo" class="company-logo">
+          <img src="logo.png" alt="SIMS Fashion AI Logo" class="company-logo">
         </div>
         <p>&copy; 2026 SIMS Fashion AI. All rights reserved.</p>
       </div>
@@ -1048,6 +1048,12 @@
               <div class="fashion-image-result" id="fashion-image-result" style="display: none;">
                 <img id="generated-fashion-image" src="" alt="AI Generated Fashion">
                 <div class="fashion-image-actions">
+                  <button type="button" class="btn-taste-like" id="taste-like-fashion-btn" title="취향 학습에 반영">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                    </svg>
+                    이 코디 마음에 들어요
+                  </button>
                   <button type="button" class="btn-regenerate" id="regenerate-fashion-btn">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <polyline points="23 4 23 10 17 10"/>
@@ -1265,12 +1271,12 @@
   </div>
 
   <!-- API Keys: .env → config.js (Git 제외, node scripts/build-config.js 로 생성) -->
-  <script defer type="text/javascript" src="/config.js"></script>
+  <script defer type="text/javascript" src="config.js"></script>
   <!-- Gradio Client for HuggingFace Spaces -->
   <script type="module">
     import { Client } from "https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js";
     window.GradioClient = Client;
   </script>
-  <script defer type="text/javascript" src="/main.js"></script>
+  <script defer type="text/javascript" src="main.js"></script>
 </body>
 </html>

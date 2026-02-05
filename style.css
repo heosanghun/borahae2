@@ -3611,6 +3611,25 @@ section {
   color: var(--text-primary);
 }
 
+.garment-buy-btn {
+  display: block;
+  padding: 8px 12px;
+  margin: 0 8px 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-align: center;
+  color: var(--primary);
+  background: rgba(124, 58, 237, 0.12);
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+.garment-buy-btn:hover {
+  background: var(--primary);
+  color: #fff;
+}
+
 .garment-upload-area {
   display: flex;
   justify-content: center;
@@ -3828,6 +3847,15 @@ section {
   color: var(--text-secondary);
   margin-bottom: 20px;
 }
+.fashion-image-placeholder .fashion-error-detail {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 8px;
+  margin-bottom: 12px;
+  max-width: 320px;
+  word-break: break-word;
+  opacity: 0.9;
+}
 
 .btn-generate-fashion {
   display: flex;
@@ -3867,6 +3895,10 @@ section {
 
 .fashion-image-actions {
   margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
 }
 
 .btn-regenerate {
@@ -3891,6 +3923,89 @@ section {
 .btn-regenerate svg {
   width: 16px;
   height: 16px;
+}
+
+.btn-taste-like {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-taste-like:hover {
+  background: rgba(239, 68, 68, 0.2);
+}
+
+.btn-taste-like svg {
+  width: 16px;
+  height: 16px;
+}
+
+.taste-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  padding: 12px 20px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  z-index: 10000;
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.taste-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.tryon-result-wrap {
+  width: 100%;
+}
+
+.tryon-result-wrap img {
+  width: 100%;
+  border-radius: 12px;
+  display: block;
+}
+
+.tryon-result-actions {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.btn-tryon-shop {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: #fff;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-tryon-shop:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.35);
+  color: #fff;
 }
 
 .btn-tryon {

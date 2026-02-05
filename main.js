@@ -4,9 +4,8 @@
   'use strict';
 
   // ========================================
-  // API Keys (.env → config.js 에서 주입, 하드코딩 없음)
+  // API Keys (.env → config.js 에서 주입, Gemini만 사용)
   // ========================================
-  const OPENAI_API_KEY = (typeof window !== 'undefined' && window.__SIMS_OPENAI_KEY__) || '';
   const GEMINI_API_KEY = (typeof window !== 'undefined' && window.__SIMS_GEMINI_KEY__) || '';
 
   // ========================================
@@ -599,15 +598,64 @@
     styles: [],
     skinTone: null,
     undertone: null,
-    // New fields for Virtual Try-On
-    facePhoto: null,      // Base64 얼굴 사진
-    height: null,         // cm
-    weight: null,         // kg
-    bmi: null,            // 계산된 BMI
-    selectedGarment: null // 선택된 의류 이미지
+    facePhoto: null,
+    height: null,
+    weight: null,
+    bmi: null,
+    selectedGarment: null,
+    selectedGarmentBuyUrl: null,
+    selectedGarmentName: null
   };
 
   let currentStep = 1;
+
+  // ========================================
+  // 취향 학습 (Taste Learning)
+  // ========================================
+  var TASTE_STORAGE_KEY = 'sims_taste_preferences';
+
+  function getTastePreferences() {
+    try {
+      var raw = localStorage.getItem(TASTE_STORAGE_KEY);
+      return raw ? JSON.parse(raw) : { likedStyles: [], savedOutfits: [] };
+    } catch (e) {
+      return { likedStyles: [], savedOutfits: [] };
+    }
+  }
+
+  function saveTasteLike(outfitType, data) {
+    var prefs = getTastePreferences();
+    var entry = { type: outfitType, data: data || {}, at: new Date().toISOString() };
+    prefs.savedOutfits.push(entry);
+    if (entry.data.styles && entry.data.styles.length) {
+      entry.data.styles.forEach(function (s) {
+        if (prefs.likedStyles.indexOf(s) === -1) prefs.likedStyles.push(s);
+      });
+    }
+    try {
+      localStorage.setItem(TASTE_STORAGE_KEY, JSON.stringify(prefs));
+    } catch (e) {}
+    return prefs;
+  }
+
+  function getPreferredStylesForPrompt() {
+    var prefs = getTastePreferences();
+    var list = prefs.likedStyles || [];
+    if (list.length === 0) return '';
+    return 'User preferred styles (prioritize when possible): ' + list.slice(0, 6).join(', ') + '.';
+  }
+
+  function showTasteToast(message) {
+    var el = document.createElement('div');
+    el.className = 'taste-toast';
+    el.textContent = message;
+    document.body.appendChild(el);
+    setTimeout(function () { el.classList.add('show'); }, 10);
+    setTimeout(function () {
+      el.classList.remove('show');
+      setTimeout(function () { el.remove(); }, 300);
+    }, 2000);
+  }
 
   // Open modal function
   function openStylingModal() {
@@ -722,6 +770,9 @@
 
     if (step === 5) {
       startAIAnalysis();
+      if (stylingData.facePhoto) {
+        setTimeout(function () { generateFashionImage(); }, 100);
+      }
     }
 
     if (step === 6) {
@@ -753,9 +804,14 @@
     startAIAnalysis();
   });
 
-  // Save result button
-  document.getElementById('save-result')?.addEventListener('click', () => {
-    const resultData = {
+  // Save result button: save profile + download generated image to device (PC/mobile)
+  document.getElementById('save-result')?.addEventListener('click', function () {
+    var fashionImg = document.getElementById('generated-fashion-image');
+    if (fashionImg && fashionImg.src && fashionImg.src.startsWith('data:')) {
+      downloadImage(fashionImg.src, 'sims-fashion-result-' + Date.now() + '.png');
+    }
+
+    var resultData = {
       timestamp: new Date().toISOString(),
       userData: stylingData,
       personalColor: document.getElementById('personal-color-result')?.innerHTML,
@@ -764,7 +820,7 @@
       tips: document.getElementById('tips-result')?.innerHTML
     };
 
-    const savedResults = JSON.parse(localStorage.getItem('sims_style_results') || '[]');
+    var savedResults = JSON.parse(localStorage.getItem('sims_style_results') || '[]');
     savedResults.push(resultData);
     localStorage.setItem('sims_style_results', JSON.stringify(savedResults));
 
@@ -882,26 +938,27 @@
   // ========================================
   // Step 6: Virtual Try-On Handlers
   // ========================================
+  var SHOP_SEARCH_BASE = 'https://search.shopping.naver.com/search/all?query=';
   const sampleGarments = {
     tops: [
-      { id: 't1', name: '화이트 셔츠', image: 'https://images.unsplash.com/photo-1598032895397-b9472444bf93?w=300&q=80' },
-      { id: 't2', name: '스트라이프 티', image: 'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=300&q=80' },
-      { id: 't3', name: '오버핏 후드', image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=300&q=80' },
-      { id: 't4', name: '니트 스웨터', image: 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=300&q=80' }
+      { id: 't1', name: '화이트 셔츠', image: 'https://images.unsplash.com/photo-1598032895397-b9472444bf93?w=300&q=80', buyUrl: SHOP_SEARCH_BASE + encodeURIComponent('화이트 셔츠') },
+      { id: 't2', name: '스트라이프 티', image: 'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=300&q=80', buyUrl: SHOP_SEARCH_BASE + encodeURIComponent('스트라이프 티') },
+      { id: 't3', name: '오버핏 후드', image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=300&q=80', buyUrl: SHOP_SEARCH_BASE + encodeURIComponent('오버핏 후드') },
+      { id: 't4', name: '니트 스웨터', image: 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=300&q=80', buyUrl: SHOP_SEARCH_BASE + encodeURIComponent('니트 스웨터') }
     ],
     bottoms: [
-      { id: 'b1', name: '슬림 데님', image: 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=300&q=80' },
-      { id: 'b2', name: '와이드 슬랙스', image: 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=300&q=80' },
-      { id: 'b3', name: '카고 팬츠', image: 'https://images.unsplash.com/photo-1517438476312-10d79c077509?w=300&q=80' }
+      { id: 'b1', name: '슬림 데님', image: 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=300&q=80', buyUrl: SHOP_SEARCH_BASE + encodeURIComponent('슬림 데님 청바지') },
+      { id: 'b2', name: '와이드 슬랙스', image: 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=300&q=80', buyUrl: SHOP_SEARCH_BASE + encodeURIComponent('와이드 슬랙스') },
+      { id: 'b3', name: '카고 팬츠', image: 'https://images.unsplash.com/photo-1517438476312-10d79c077509?w=300&q=80', buyUrl: SHOP_SEARCH_BASE + encodeURIComponent('카고 팬츠') }
     ],
     dresses: [
-      { id: 'd1', name: '플로럴 원피스', image: 'https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=300&q=80' },
-      { id: 'd2', name: '셔츠 원피스', image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=300&q=80' }
+      { id: 'd1', name: '플로럴 원피스', image: 'https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=300&q=80', buyUrl: SHOP_SEARCH_BASE + encodeURIComponent('플로럴 원피스') },
+      { id: 'd2', name: '셔츠 원피스', image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=300&q=80', buyUrl: SHOP_SEARCH_BASE + encodeURIComponent('셔츠 원피스') }
     ],
     outerwear: [
-      { id: 'o1', name: '트렌치코트', image: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=300&q=80' },
-      { id: 'o2', name: '레더 자켓', image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=300&q=80' },
-      { id: 'o3', name: '패딩 점퍼', image: 'https://images.unsplash.com/photo-1544923246-77307dd628b1?w=300&q=80' }
+      { id: 'o1', name: '트렌치코트', image: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=300&q=80', buyUrl: SHOP_SEARCH_BASE + encodeURIComponent('트렌치코트') },
+      { id: 'o2', name: '레더 자켓', image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=300&q=80', buyUrl: SHOP_SEARCH_BASE + encodeURIComponent('레더 자켓') },
+      { id: 'o3', name: '패딩 점퍼', image: 'https://images.unsplash.com/photo-1544923246-77307dd628b1?w=300&q=80', buyUrl: SHOP_SEARCH_BASE + encodeURIComponent('패딩 점퍼') }
     ]
   };
 
@@ -917,25 +974,28 @@
     });
   });
 
-  // Load garment gallery
+  // Load garment gallery (원클릭 쇼핑: 구매하기 링크 포함)
   function loadGarmentGallery(category) {
     const gallery = document.getElementById('garment-gallery');
     if (!gallery) return;
 
     const garments = sampleGarments[category] || [];
-    gallery.innerHTML = garments.map(g => `
-      <div class="garment-item" data-id="${g.id}" data-image="${g.image}">
-        <img src="${g.image}" alt="${g.name}">
-        <span>${g.name}</span>
-      </div>
-    `).join('');
+    gallery.innerHTML = garments.map(function (g) {
+      var buyUrl = g.buyUrl || (SHOP_SEARCH_BASE + encodeURIComponent(g.name));
+      return '<div class="garment-item" data-id="' + g.id + '" data-image="' + g.image + '" data-name="' + (g.name || '') + '" data-buy-url="' + (buyUrl || '') + '">' +
+        '<img src="' + g.image + '" alt="' + g.name + '">' +
+        '<span>' + g.name + '</span>' +
+        '<a href="' + buyUrl + '" target="_blank" rel="noopener noreferrer" class="garment-buy-btn" onclick="event.stopPropagation()">구매하기</a>' +
+        '</div>';
+    }).join('');
 
-    // Add click handlers to garment items
-    gallery.querySelectorAll('.garment-item').forEach(item => {
-      item.addEventListener('click', () => {
-        gallery.querySelectorAll('.garment-item').forEach(i => i.classList.remove('selected'));
+    gallery.querySelectorAll('.garment-item').forEach(function (item) {
+      item.addEventListener('click', function () {
+        gallery.querySelectorAll('.garment-item').forEach(function (i) { i.classList.remove('selected'); });
         item.classList.add('selected');
         stylingData.selectedGarment = item.dataset.image;
+        stylingData.selectedGarmentBuyUrl = item.dataset.buyUrl || '';
+        stylingData.selectedGarmentName = item.dataset.name || '';
         document.getElementById('generate-tryon-btn')?.removeAttribute('disabled');
       });
     });
@@ -956,7 +1016,8 @@
       const reader = new FileReader();
       reader.onload = (event) => {
         stylingData.selectedGarment = event.target.result;
-        // Deselect other items
+        stylingData.selectedGarmentBuyUrl = null;
+        stylingData.selectedGarmentName = null;
         document.querySelectorAll('.garment-item').forEach(i => i.classList.remove('selected'));
         document.getElementById('generate-tryon-btn')?.removeAttribute('disabled');
 
@@ -990,22 +1051,39 @@
   // ========================================
   document.getElementById('generate-fashion-btn')?.addEventListener('click', generateFashionImage);
   document.getElementById('regenerate-fashion-btn')?.addEventListener('click', generateFashionImage);
+  document.getElementById('taste-like-fashion-btn')?.addEventListener('click', function () {
+    saveTasteLike('fashion', { styles: stylingData.styles.slice(), gender: stylingData.gender, body: stylingData.body });
+    showTasteToast('취향에 반영했어요. 다음 추천에 반영됩니다.');
+  });
 
   async function generateFashionImage() {
     const placeholder = document.getElementById('fashion-image-placeholder');
     const resultContainer = document.getElementById('fashion-image-result');
     const generatedImage = document.getElementById('generated-fashion-image');
 
+    if (!stylingData.facePhoto) {
+      alert('나의 얼굴을 기반으로 전신 코디를 그리려면 Step 2에서 얼굴 사진을 먼저 업로드해주세요.');
+      return;
+    }
+
     if (placeholder) {
       placeholder.innerHTML = `
         <div class="loading-spinner"></div>
-        <p>AI가 패션 이미지를 생성하고 있습니다...</p>
+        <p>나의 얼굴과 키·몸무게로 전신 코디 이미지를 생성하고 있습니다...</p>
       `;
     }
 
     try {
-      const prompt = buildFashionPrompt();
-      const imageBase64 = await callGeminiImageGeneration(prompt);
+      const useFaceAndBody = !!(stylingData.height || stylingData.weight);
+      const prompt = buildFashionPrompt(useFaceAndBody, false);
+      const faceResized = await compressFacePhoto(stylingData.facePhoto, 768);
+      let imageBase64 = null;
+      try {
+        imageBase64 = await callGeminiImageGeneration(prompt, faceResized);
+      } catch (firstErr) {
+        console.warn('Face+image request failed, retrying text-only:', firstErr.message);
+        imageBase64 = await callGeminiImageGeneration(buildFashionPrompt(useFaceAndBody, true), null);
+      }
 
       if (imageBase64 && generatedImage) {
         generatedImage.src = `data:image/png;base64,${imageBase64}`;
@@ -1014,6 +1092,7 @@
       }
     } catch (error) {
       console.error('Fashion image generation error:', error);
+      const errMsg = (error && error.message) ? String(error.message) : '';
       if (placeholder) {
         placeholder.innerHTML = `
           <div class="placeholder-icon">
@@ -1024,6 +1103,7 @@
             </svg>
           </div>
           <p>이미지 생성에 실패했습니다. 다시 시도해주세요.</p>
+          ${errMsg ? '<p class="fashion-error-detail">' + escapeHtml(errMsg) + '</p>' : ''}
           <button type="button" class="btn-generate-fashion" id="generate-fashion-btn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
@@ -1036,7 +1116,9 @@
     }
   }
 
-  function buildFashionPrompt() {
+  var FASHION_PROMPT_FIXED = 'CRITICAL STYLE RULES (always follow): Photorealistic only. Do NOT draw cartoon, illustration, anime, comic, or manhwa style. Output must look like a real photograph taken by a professional fashion photographer. As if a professional fashion AI coordinator styled and dressed the person for a real photoshoot: natural skin texture, real fabric and lighting, soft shadows, consistent quality. Maintain real-photo image quality and style in every generation.';
+
+  function buildFashionPrompt(useFaceAndBody, textOnly) {
     const genderMap = { female: '여성', male: '남성', neutral: '젠더리스' };
     const bodyMap = { slim: '슬림한', standard: '보통', muscular: '근육질', curvy: '볼륨감 있는' };
     const styleNames = stylingData.styles.map(s => {
@@ -1044,24 +1126,58 @@
       return map[s] || s;
     }).join(', ');
 
-    return `Create a fashion illustration of a ${genderMap[stylingData.gender] || 'person'} with ${bodyMap[stylingData.body] || 'average'} body type.
-Style: ${styleNames || 'modern casual'}.
-Show a full-body outfit recommendation with detailed clothing items.
-The illustration should be stylish, modern, and suitable for a fashion lookbook.
-High-quality, professional fashion photography style.`;
+    var preferredLine = getPreferredStylesForPrompt();
+    if (textOnly) {
+      var h = stylingData.height || 170;
+      var w = stylingData.weight || 65;
+      return (preferredLine ? preferredLine + '\n\n' : '') + FASHION_PROMPT_FIXED + '\n\nCreate ONE full-body image (head to toe). Photorealistic photograph of a ' + (genderMap[stylingData.gender] || 'person') + ', ' + (bodyMap[stylingData.body] || 'average') + ' build, height about ' + h + ' cm, weight about ' + w + ' kg. Outfit (professional coordinator recommendation): ' + (styleNames || 'modern casual') + '. Full-body standing pose, natural lighting, real photo quality. One image only.';
+    }
+
+    const hasHw = stylingData.height && stylingData.weight;
+    var h = stylingData.height || 170;
+    var w = stylingData.weight || 65;
+    const bmiNum = stylingData.bmi != null
+      ? (typeof stylingData.bmi === 'number' ? stylingData.bmi : parseFloat(stylingData.bmi))
+      : (w / Math.pow(h / 100, 2));
+    const bmi = (!isNaN(bmiNum) ? bmiNum.toFixed(1) : (w / Math.pow(h / 100, 2)).toFixed(1));
+    const bodyLine = useFaceAndBody && hasHw
+      ? `Body proportions appropriate for height ${h} cm and weight ${w} kg (BMI about ${bmi}).`
+      : 'Natural, balanced full-body proportions.';
+
+    var prefLine = getPreferredStylesForPrompt();
+    return (prefLine ? prefLine + '\n\n' : '') + FASHION_PROMPT_FIXED + '\n\nThe attached image is this person\'s face. Generate ONE full-body photorealistic photograph (head to toe) that:\n1. Keeps this person\'s face exactly as in the attached photo; blend it seamlessly with the body (same skin tone and texture).\n2. ' + bodyLine + '\n3. They are dressed by a professional fashion coordinator: ' + (styleNames || 'modern casual') + ' style, ' + (genderMap[stylingData.gender] || 'person') + ', ' + (bodyMap[stylingData.body] || 'average') + ' build. Real clothing, real fabric, natural wrinkles and fit.\n4. Full-body standing pose. Professional fashion photography: natural lighting, soft shadows, real-photo quality. One image only. No cartoon, no illustration.';
   }
 
-  async function callGeminiImageGeneration(prompt) {
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${GEMINI_API_KEY}`, {
+  function parseDataUrl(dataUrl) {
+    if (!dataUrl || typeof dataUrl !== 'string') return null;
+    const match = dataUrl.match(/^data:(image\/[a-z]+);base64,(.+)$/i);
+    if (!match) return null;
+    return { mimeType: match[1], data: match[2] };
+  }
+
+  async function callGeminiImageGeneration(prompt, facePhotoDataUrl) {
+    const parts = [];
+    if (facePhotoDataUrl) {
+      const parsed = parseDataUrl(facePhotoDataUrl);
+      if (parsed) {
+        parts.push({
+          inlineData: {
+            mimeType: parsed.mimeType,
+            data: parsed.data
+          }
+        });
+      }
+    }
+    parts.push({ text: prompt });
+
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${GEMINI_API_KEY}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         contents: [{
-          parts: [{
-            text: prompt
-          }]
+          parts: parts
         }],
         generationConfig: {
           responseModalities: ["image", "text"],
@@ -1072,7 +1188,14 @@ High-quality, professional fashion photography style.`;
 
     const data = await response.json();
 
-    // Check for image in response
+    if (data.error) {
+      const msg = data.error.message || (typeof data.error === 'string' ? data.error : JSON.stringify(data.error));
+      throw new Error(msg);
+    }
+    if (!response.ok) {
+      throw new Error(data.message || `API 오류 (${response.status})`);
+    }
+
     if (data.candidates && data.candidates[0]?.content?.parts) {
       for (const part of data.candidates[0].content.parts) {
         if (part.inlineData?.mimeType?.startsWith('image/')) {
@@ -1082,6 +1205,40 @@ High-quality, professional fashion photography style.`;
     }
 
     throw new Error('No image in response');
+  }
+
+  function compressFacePhoto(dataUrl, maxSize) {
+    maxSize = maxSize || 768;
+    return new Promise(function (resolve) {
+      const img = new Image();
+      img.onload = function () {
+        let w = img.width;
+        let h = img.height;
+        if (w <= maxSize && h <= maxSize) {
+          resolve(dataUrl);
+          return;
+        }
+        if (w > h) {
+          h = Math.round((h * maxSize) / w);
+          w = maxSize;
+        } else {
+          w = Math.round((w * maxSize) / h);
+          h = maxSize;
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        try {
+          resolve(canvas.toDataURL('image/jpeg', 0.85));
+        } catch (e) {
+          resolve(dataUrl);
+        }
+      };
+      img.onerror = function () { resolve(dataUrl); };
+      img.src = dataUrl;
+    });
   }
 
   // ========================================
@@ -1113,39 +1270,31 @@ High-quality, professional fashion photography style.`;
     }
 
     if (tryonResult) {
-      tryonResult.innerHTML = `
-        <div class="tryon-loading">
-          <div class="loading-spinner"></div>
-          <p>Virtual Try-On 이미지를 생성하고 있습니다...</p>
-          <small>최대 1-2분 소요될 수 있습니다</small>
-        </div>
-      `;
+      tryonResult.innerHTML = '<div class="tryon-loading"><div class="loading-spinner"></div><p>나노 바나나(Gemini)로 Try-On 이미지를 생성하고 있습니다...</p><small>약 10~30초 소요</small></div>';
     }
 
     try {
-      // Convert base64 to blob for API
-      const personBlob = await base64ToBlob(stylingData.facePhoto);
-      const garmentBlob = await fetchImageAsBlob(stylingData.selectedGarment);
-
-      // Call HuggingFace IDM-VTON API
-      const resultImage = await callIDMVTON(personBlob, garmentBlob);
+      const resultImage = await callGeminiTryOn(stylingData.facePhoto, stylingData.selectedGarment);
 
       if (tryonResult && resultImage) {
-        tryonResult.innerHTML = `<img src="${resultImage}" alt="Try-On Result">`;
+        var buyHtml = stylingData.selectedGarmentBuyUrl
+          ? '<a href="' + (stylingData.selectedGarmentBuyUrl || '#') + '" target="_blank" rel="noopener noreferrer" class="btn-tryon-shop">선택한 옷 쇼핑하기</a>'
+          : '';
+        tryonResult.innerHTML = '<div class="tryon-result-wrap"><img src="' + resultImage + '" alt="Try-On Result"><div class="tryon-result-actions"><button type="button" class="btn-taste-like" id="taste-like-tryon-btn">❤ 이 코디 마음에 들어요</button>' + buyHtml + '</div></div>';
+        document.getElementById('taste-like-tryon-btn')?.addEventListener('click', function () {
+          saveTasteLike('tryon', { styles: stylingData.styles.slice(), garmentName: stylingData.selectedGarmentName });
+          showTasteToast('취향에 반영했어요.');
+        });
         if (downloadBtn) {
           downloadBtn.disabled = false;
-          downloadBtn.onclick = () => downloadImage(resultImage, 'virtual-tryon.png');
+          downloadBtn.onclick = function () { downloadImage(resultImage, 'virtual-tryon.png'); };
         }
       }
     } catch (error) {
       console.error('Virtual Try-On error:', error);
       if (tryonResult) {
-        tryonResult.innerHTML = `
-          <div class="tryon-error">
-            <p>Virtual Try-On 생성에 실패했습니다.</p>
-            <small>${error.message || '다시 시도해주세요.'}</small>
-          </div>
-        `;
+        var errText = (error && error.message) ? String(error.message) : '다시 시도해주세요.';
+        tryonResult.innerHTML = '<div class="tryon-error"><p>Virtual Try-On 생성에 실패했습니다.</p><small>' + (typeof escapeHtml === 'function' ? escapeHtml(errText) : errText) + '</small></div>';
       }
     } finally {
       if (generateBtn) {
@@ -1173,46 +1322,124 @@ High-quality, professional fashion photography style.`;
     return await response.blob();
   }
 
-  async function callIDMVTON(personBlob, garmentBlob) {
-    // Use Gradio Client for HuggingFace Space
-    if (window.GradioClient) {
-      try {
-        const client = await window.GradioClient.connect("yisol/IDM-VTON");
-        const result = await client.predict("/tryon", {
-          dict: { background: personBlob, layers: [], composite: null },
-          garm_img: garmentBlob,
-          garment_des: "A fashion garment",
-          is_checked: true,
-          is_checked_crop: false,
-          denoise_steps: 30,
-          seed: 42
+  function urlOrDataUrlToImageParts(input) {
+    if (!input) return Promise.resolve(null);
+    if (typeof input === 'string' && input.startsWith('data:')) {
+      return Promise.resolve(parseDataUrl(input));
+    }
+    return fetch(input)
+      .then(function (r) { return r.blob(); })
+      .then(function (blob) {
+        return new Promise(function (resolve, reject) {
+          var fr = new FileReader();
+          fr.onload = function () {
+            var parsed = parseDataUrl(fr.result);
+            resolve(parsed || { mimeType: blob.type || 'image/jpeg', data: null });
+          };
+          fr.onerror = function () { resolve(null); };
+          fr.readAsDataURL(blob);
         });
+      })
+      .catch(function () { return null; });
+  }
 
-        if (result?.data?.[0]) {
-          return result.data[0];
+  function buildTryOnPrompt() {
+    var h = stylingData.height || 170;
+    var w = stylingData.weight || 65;
+    var bmiNum = stylingData.bmi != null
+      ? (typeof stylingData.bmi === 'number' ? stylingData.bmi : parseFloat(stylingData.bmi))
+      : (w / Math.pow(h / 100, 2));
+    var bmiStr = (!isNaN(bmiNum) ? bmiNum.toFixed(1) : '22');
+    var bodyLine = stylingData.height && stylingData.weight
+      ? 'Show FULL BODY (head to toe) with body proportions for height ' + h + ' cm and weight ' + w + ' kg (BMI about ' + bmiStr + ').'
+      : 'Show FULL BODY (head to toe) with natural, balanced proportions.';
+    return 'CRITICAL: Photorealistic only. No cartoon, no illustration.\n' +
+      'Image 1: This person\'s face.\n' +
+      'Image 2: The garment to try on (may be a top, bottom, dress, or outerwear).\n' +
+      'Generate ONE photorealistic FULL-BODY photo (head to toe, 전신). ' + bodyLine + ' ' +
+      'Keep this person\'s face exactly as in image 1. Dress them in the garment from image 2: if it is a top, show full body wearing that top with fitting bottom; if it is a bottom, show full body wearing that bottom with fitting top; if dress or outerwear, show full body in that item. ' +
+      'Natural fit, natural lighting, professional fashion photo. One image only.';
+  }
+
+  async function callGeminiTryOn(faceDataUrl, garmentUrlOrDataUrl) {
+    var faceResized = await compressFacePhoto(faceDataUrl, 768);
+    var faceParts = parseDataUrl(faceResized);
+    var garmentParts = await urlOrDataUrlToImageParts(garmentUrlOrDataUrl);
+    if (!faceParts || !faceParts.data) throw new Error('얼굴 이미지를 사용할 수 없습니다.');
+    if (!garmentParts || !garmentParts.data) throw new Error('의류 이미지를 불러올 수 없습니다. 다른 의류를 선택하거나 직접 업로드해보세요.');
+
+    var tryOnPrompt = buildTryOnPrompt();
+    var parts = [
+      { inlineData: { mimeType: faceParts.mimeType, data: faceParts.data } },
+      { inlineData: { mimeType: garmentParts.mimeType, data: garmentParts.data } },
+      { text: tryOnPrompt }
+    ];
+
+    var response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=' + encodeURIComponent(GEMINI_API_KEY), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: parts }],
+        generationConfig: { responseModalities: ['image', 'text'], responseMimeType: 'text/plain' }
+      })
+    });
+
+    var data = await response.json();
+    if (data.error) {
+      var msg = data.error.message || (typeof data.error === 'string' ? data.error : JSON.stringify(data.error));
+      throw new Error(msg);
+    }
+    if (!response.ok) throw new Error(data.message || 'API 오류 (' + response.status + ')');
+
+    if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
+      for (var i = 0; i < data.candidates[0].content.parts.length; i++) {
+        var part = data.candidates[0].content.parts[i];
+        if (part.inlineData && part.inlineData.mimeType && part.inlineData.mimeType.indexOf('image/') === 0) {
+          return 'data:image/png;base64,' + part.inlineData.data;
         }
-      } catch (gradioError) {
-        console.warn('Gradio client error, falling back:', gradioError);
       }
     }
+    throw new Error('No image in response');
+  }
 
-    // Fallback: Use direct inference API
-    const formData = new FormData();
-    formData.append('person', personBlob, 'person.jpg');
-    formData.append('garment', garmentBlob, 'garment.jpg');
-
-    // Since direct API may have CORS issues, return placeholder
-    console.log('Virtual Try-On: Using placeholder due to API limitations');
-    return stylingData.facePhoto; // Return original photo as fallback
+  async function callIDMVTON(personBlob, garmentBlob) {
+    // Legacy HuggingFace path; Try-On now uses Gemini (nano banana) in generateVirtualTryOn
+    console.log('Virtual Try-On: IDM-VTON fallback not used');
+    return stylingData.facePhoto;
   }
 
   function downloadImage(dataUrl, filename) {
-    const link = document.createElement('a');
-    link.href = dataUrl;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    if (!dataUrl || !filename) return;
+    filename = filename.replace(/[^\w.\-가-힣]/g, '_') || 'download.png';
+
+    function doDownload(href, name) {
+      var a = document.createElement('a');
+      a.href = href;
+      a.download = name;
+      a.rel = 'noopener';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    try {
+      if (dataUrl.startsWith('data:')) {
+        var m = dataUrl.match(/^data:([^;]+);base64,(.+)$/);
+        if (m) {
+          var binary = atob(m[2]);
+          var bytes = new Uint8Array(binary.length);
+          for (var i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+          var blob = new Blob([bytes], { type: m[1].indexOf('image/') === 0 ? m[1] : 'image/png' });
+          var url = URL.createObjectURL(blob);
+          doDownload(url, filename);
+          setTimeout(function () { URL.revokeObjectURL(url); }, 3000);
+          return;
+        }
+      }
+      doDownload(dataUrl, filename);
+    } catch (e) {
+      doDownload(dataUrl, filename);
+    }
   }
 
   // AI Analysis
@@ -1248,7 +1475,7 @@ High-quality, professional fashion photography style.`;
   }
 
   async function getAIStylingRecommendation() {
-    const prompt = `당신은 전문 패션 스타일리스트입니다. 다음 사용자 정보를 바탕으로 맞춤형 스타일링 분석 결과를 JSON 형식으로 제공해주세요.
+    var prompt = `당신은 전문 패션 스타일리스트입니다. 다음 사용자 정보를 바탕으로 맞춤형 스타일링 분석 결과를 JSON 형식으로만 제공해주세요. 다른 설명 없이 JSON만 출력하세요.
 
 사용자 정보:
 - 성별: ${stylingData.gender || '미선택'}
@@ -1274,27 +1501,24 @@ High-quality, professional fashion photography style.`;
   "stylingTips": ["스타일링 팁 1", "스타일링 팁 2", "스타일링 팁 3"]
 }`;
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    var url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + encodeURIComponent(GEMINI_API_KEY);
+    var res = await fetch(url, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${OPENAI_API_KEY}`
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          { role: 'system', content: '당신은 전문 패션 스타일리스트입니다. JSON 형식으로만 응답해주세요.' },
-          { role: 'user', content: prompt }
-        ],
-        max_tokens: 1000,
-        temperature: 0.7
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { maxOutputTokens: 1000, temperature: 0.7 }
       })
     });
+    var data = await res.json().catch(function() { return {}; });
+    if (!res.ok) {
+      var errMsg = (data.error && data.error.message) ? data.error.message : ('HTTP ' + res.status);
+      throw new Error('Gemini: ' + errMsg);
+    }
+    var text = data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0] && data.candidates[0].content.parts[0].text;
+    if (!text) throw new Error('Gemini: no text in response');
 
-    const data = await response.json();
-    const content = data.choices[0].message.content;
-
-    const jsonMatch = content.match(/\{[\s\S]*\}/);
+    var jsonMatch = text.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
       return JSON.parse(jsonMatch[0]);
     }
@@ -1478,8 +1702,8 @@ High-quality, professional fashion photography style.`;
 
     chatHistory.push({ role: 'user', content: message });
 
-    if (!OPENAI_API_KEY && !GEMINI_API_KEY) {
-      addMessage('assistant', 'API 키가 설정되지 않았습니다. 프로젝트 루트에 .env 파일을 만들고 OPENAI_API_KEY 또는 GEMINI_API_KEY 를 입력한 뒤, 터미널에서 <code>node scripts/build-config.js</code> 를 실행하고 페이지를 새로고침해주세요.');
+    if (!GEMINI_API_KEY) {
+      addMessage('assistant', 'API 키가 설정되지 않았습니다. 프로젝트 루트에 .env 파일에 GEMINI_API_KEY 를 입력한 뒤, 터미널에서 <code>node scripts/build-config.js</code> 를 실행하고 페이지를 새로고침해주세요.');
       isTyping = false;
       if (chatSend) chatSend.disabled = false;
       return;
@@ -1490,52 +1714,20 @@ High-quality, professional fashion photography style.`;
     if (chatSend) chatSend.disabled = true;
 
     try {
-      let response;
-      try {
-        response = await callOpenAI(message);
-      } catch (openaiError) {
-        console.warn('OpenAI 실패, Gemini로 재시도:', openaiError);
-        response = await callGeminiChat(message);
-      }
+      var response = await callGeminiChat(message);
       hideTypingIndicator();
       addMessage('assistant', response);
       chatHistory.push({ role: 'assistant', content: response });
     } catch (error) {
       hideTypingIndicator();
-      addMessage('assistant', '죄송합니다. 일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요. 🙏');
+      var errMsg = (error && error.message) ? error.message : String(error);
+      if (errMsg.length > 200) errMsg = errMsg.slice(0, 200) + '…';
+      addMessage('assistant', '죄송합니다. 오류가 발생했습니다. 🙏<br><br><small>원인: ' + escapeHtml(errMsg) + '</small>');
       console.error('Chat API Error:', error);
     }
 
     isTyping = false;
     if (chatSend) chatSend.disabled = false;
-  }
-
-  async function callOpenAI(userMessage) {
-    const messages = [
-      { role: 'system', content: SYSTEM_PROMPT },
-      ...chatHistory.slice(-10)
-    ];
-
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${OPENAI_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: messages,
-        max_tokens: 500,
-        temperature: 0.8
-      })
-    });
-
-    if (!response.ok) {
-      throw new Error(`API Error: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return data.choices[0].message.content;
   }
 
   async function callGeminiChat(userMessage) {
@@ -1546,7 +1738,8 @@ High-quality, professional fashion photography style.`;
         parts: [{ text: msg.content }]
       });
     }
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+    var geminiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
+    const res = await fetch(geminiUrl + '?key=' + encodeURIComponent(GEMINI_API_KEY), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -1555,13 +1748,18 @@ High-quality, professional fashion photography style.`;
         generationConfig: { maxOutputTokens: 500, temperature: 0.8 }
       })
     });
+    const data = await res.json().catch(function() { return {}; });
     if (!res.ok) {
-      const errData = await res.json().catch(() => ({}));
-      throw new Error(errData.error?.message || `API Error: ${res.status}`);
+      var errMsg = (data.error && data.error.message) ? data.error.message : ('HTTP ' + res.status);
+      throw new Error('Gemini: ' + errMsg);
     }
-    const data = await res.json();
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-    if (!text) throw new Error('No response from Gemini');
+    var text = data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0] && data.candidates[0].content.parts[0].text;
+    if (!text) {
+      if (data.candidates && data.candidates[0] && data.candidates[0].finishReason) {
+        throw new Error('Gemini: finishReason ' + data.candidates[0].finishReason);
+      }
+      throw new Error('Gemini: no text in response');
+    }
     return text;
   }
 
@@ -1586,6 +1784,12 @@ High-quality, professional fashion photography style.`;
 
     chatMessages.appendChild(messageDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  function escapeHtml(str) {
+    var div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
   }
 
   function formatMessage(content) {
