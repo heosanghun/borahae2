@@ -1,0 +1,1276 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SIMS Fashion AI - 나만을 위한 스타일 추천</title>
+  <link href='/style.css' rel='stylesheet'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="#" class="logo">
+        <span class="logo-icon">S</span>
+        <span class="logo-text">SIMS Fashion AI</span>
+      </a>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#ai-styling">AI Styling</a>
+        <a href="#lookbook">Lookbook</a>
+        <a href="#about">About</a>
+      </div>
+      <div class="nav-actions">
+        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+          <span class="icon-sun">&#9728;</span>
+          <span class="icon-moon">&#9790;</span>
+        </button>
+        <button class="btn-primary">Get Started</button>
+      </div>
+      <button class="mobile-menu-btn" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-bg">
+      <div class="hero-gradient"></div>
+      <div class="floating-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+      </div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-badge">AI-Powered Fashion</div>
+      <h1 class="hero-title">
+        <span class="title-line">당신만을 위한</span>
+        <span class="title-highlight">초개인화 스타일링</span>
+      </h1>
+      <p class="hero-description">
+        AI가 당신의 체형, 피부톤, 라이프스타일을 분석하여<br>
+        세상에 단 하나뿐인 퍼스널 스타일을 제안합니다
+      </p>
+      <div class="hero-cta">
+        <button class="btn-primary btn-large">
+          <span>무료로 시작하기</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </button>
+        <a href="https://youtu.be/QG8Uj7VUMsA" target="_blank" rel="noopener noreferrer" class="btn-secondary btn-large">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="5 3 19 12 5 21 5 3"/>
+          </svg>
+          <span>소개 영상 보기</span>
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-number">50K+</span>
+          <span class="stat-label">Active Users</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number">98%</span>
+          <span class="stat-label">Satisfaction</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number">1M+</span>
+          <span class="stat-label">Styles Created</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="phone-mockup">
+        <div class="phone-screen">
+          <div class="app-header">
+            <span>My Style Profile</span>
+          </div>
+          <div class="style-card">
+            <div class="style-image"></div>
+            <div class="style-info">
+              <span class="style-match">95% Match</span>
+              <span class="style-name">Minimal Chic</span>
+            </div>
+          </div>
+          <div class="style-card">
+            <div class="style-image img-2"></div>
+            <div class="style-info">
+              <span class="style-match">92% Match</span>
+              <span class="style-name">Street Casual</span>
+            </div>
+          </div>
+          <div class="ai-suggestion">
+            <div class="ai-icon">AI</div>
+            <span>오늘의 추천 스타일이 준비되었습니다!</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="features">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">Features</span>
+        <h2 class="section-title">AI가 만드는 새로운 패션 경험</h2>
+        <p class="section-description">최첨단 AI 기술로 당신만의 스타일을 발견하세요</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"/>
+              <circle cx="12" cy="10" r="3"/>
+              <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"/>
+            </svg>
+          </div>
+          <h3>체형 분석</h3>
+          <p>AI가 사진 한 장으로 체형을 분석하여 가장 잘 어울리는 실루엣과 핏을 추천합니다</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10"/>
+              <circle cx="12" cy="12" r="4"/>
+              <line x1="12" y1="2" x2="12" y2="4"/>
+              <line x1="12" y1="20" x2="12" y2="22"/>
+              <line x1="2" y1="12" x2="4" y2="12"/>
+              <line x1="20" y1="12" x2="22" y2="12"/>
+            </svg>
+          </div>
+          <h3>퍼스널 컬러</h3>
+          <p>피부톤, 눈동자, 머리카락 색상을 분석하여 당신에게 완벽한 컬러 팔레트를 제안합니다</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <path d="M3 9h18"/>
+              <path d="M9 21V9"/>
+            </svg>
+          </div>
+          <h3>스타일 큐레이션</h3>
+          <p>수백만 개의 패션 데이터를 학습한 AI가 트렌드와 취향을 반영한 스타일을 큐레이션합니다</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+          </div>
+          <h3>취향 학습</h3>
+          <p>사용할수록 똑똑해지는 AI가 당신의 취향을 학습하여 점점 더 정확한 추천을 제공합니다</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+              <line x1="12" y1="22.08" x2="12" y2="12"/>
+            </svg>
+          </div>
+          <h3>가상 피팅</h3>
+          <p>AR 기술로 옷을 입어보지 않고도 실제 착용 모습을 미리 확인할 수 있습니다</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="9" cy="21" r="1"/>
+              <circle cx="20" cy="21" r="1"/>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+            </svg>
+          </div>
+          <h3>원클릭 쇼핑</h3>
+          <p>마음에 드는 아이템을 발견하면 파트너 브랜드에서 바로 구매할 수 있습니다</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AI Styling Section -->
+  <section id="ai-styling" class="ai-section">
+    <div class="container">
+      <div class="ai-content">
+        <div class="ai-text">
+          <span class="section-badge">AI Styling</span>
+          <h2 class="section-title">3단계로 완성되는<br>나만의 스타일</h2>
+          <div class="steps">
+            <div class="step">
+              <div class="step-number">01</div>
+              <div class="step-content">
+                <h4>프로필 분석</h4>
+                <p>간단한 설문과 사진으로 AI가 당신을 분석합니다</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-number">02</div>
+              <div class="step-content">
+                <h4>스타일 생성</h4>
+                <p>수백만 개의 패션 데이터에서 최적의 스타일을 찾습니다</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-number">03</div>
+              <div class="step-content">
+                <h4>맞춤 추천</h4>
+                <p>매일 새로운 코디와 아이템을 추천받으세요</p>
+              </div>
+            </div>
+          </div>
+          <button class="btn-primary btn-large">AI 스타일링 시작하기</button>
+        </div>
+        <div class="ai-visual">
+          <div class="ai-demo">
+            <div class="demo-header">
+              <div class="demo-dots">
+                <span></span><span></span><span></span>
+              </div>
+              <span>Style Analysis</span>
+            </div>
+            <div class="demo-content">
+              <div class="analysis-item">
+                <div class="analysis-icon color-warm"></div>
+                <div class="analysis-info">
+                  <span class="analysis-label">Personal Color</span>
+                  <span class="analysis-value">Warm Autumn</span>
+                </div>
+                <div class="analysis-bar"><div class="bar-fill" style="width: 92%"></div></div>
+              </div>
+              <div class="analysis-item">
+                <div class="analysis-icon body-type"></div>
+                <div class="analysis-info">
+                  <span class="analysis-label">Body Type</span>
+                  <span class="analysis-value">Hourglass</span>
+                </div>
+                <div class="analysis-bar"><div class="bar-fill" style="width: 88%"></div></div>
+              </div>
+              <div class="analysis-item">
+                <div class="analysis-icon style-pref"></div>
+                <div class="analysis-info">
+                  <span class="analysis-label">Style Preference</span>
+                  <span class="analysis-value">Modern Minimal</span>
+                </div>
+                <div class="analysis-bar"><div class="bar-fill" style="width: 95%"></div></div>
+              </div>
+              <div class="recommended-colors">
+                <span>Recommended Colors</span>
+                <div class="color-palette">
+                  <div class="color" style="background: #8B4513"></div>
+                  <div class="color" style="background: #D2691E"></div>
+                  <div class="color" style="background: #F5DEB3"></div>
+                  <div class="color" style="background: #556B2F"></div>
+                  <div class="color" style="background: #2F4F4F"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Lookbook Section -->
+  <section id="lookbook" class="lookbook">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">Lookbook</span>
+        <h2 class="section-title">AI가 추천하는 Today's Pick</h2>
+        <p class="section-description">실시간 트렌드와 날씨를 반영한 오늘의 추천 스타일</p>
+      </div>
+      <div class="lookbook-grid">
+        <div class="look-card look-large">
+          <div class="look-image look-1">
+            <div class="look-overlay">
+              <span class="look-tag">Spring Essential</span>
+              <h3>미니멀 시크</h3>
+              <p>깔끔한 라인과 뉴트럴 컬러로 완성하는 모던 룩</p>
+              <button class="btn-look">View Look</button>
+            </div>
+          </div>
+        </div>
+        <div class="look-card">
+          <div class="look-image look-2">
+            <div class="look-overlay">
+              <span class="look-tag">Trending</span>
+              <h3>스트릿 캐주얼</h3>
+              <button class="btn-look">View Look</button>
+            </div>
+          </div>
+        </div>
+        <div class="look-card">
+          <div class="look-image look-3">
+            <div class="look-overlay">
+              <span class="look-tag">Office</span>
+              <h3>비즈니스 캐주얼</h3>
+              <button class="btn-look">View Look</button>
+            </div>
+          </div>
+        </div>
+        <div class="look-card">
+          <div class="look-image look-4">
+            <div class="look-overlay">
+              <span class="look-tag">Weekend</span>
+              <h3>릴렉스 핏</h3>
+              <button class="btn-look">View Look</button>
+            </div>
+          </div>
+        </div>
+        <div class="look-card">
+          <div class="look-image look-5">
+            <div class="look-overlay">
+              <span class="look-tag">Date</span>
+              <h3>로맨틱 무드</h3>
+              <button class="btn-look">View Look</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="testimonials">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">Reviews</span>
+        <h2 class="section-title">사용자들의 이야기</h2>
+      </div>
+      <div class="testimonial-grid">
+        <div class="testimonial-card">
+          <div class="testimonial-rating">★★★★★</div>
+          <p>"매일 아침 뭘 입을지 고민했는데, 이제는 AI가 추천해주는 대로 입으면 돼서 너무 편해요!"</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">JY</div>
+            <div class="author-info">
+              <span class="author-name">지영</span>
+              <span class="author-role">직장인, 28세</span>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-rating">★★★★★</div>
+          <p>"퍼스널 컬러 진단받고 완전 인생템들만 추천받아요. 옷 쇼핑 실패가 없어졌어요."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">MJ</div>
+            <div class="author-info">
+              <span class="author-name">민준</span>
+              <span class="author-role">대학생, 24세</span>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-rating">★★★★★</div>
+          <p>"체형 분석 결과 보고 깜짝 놀랐어요. 제가 왜 그 스타일이 안 어울렸는지 이제 알겠어요!"</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">SH</div>
+            <div class="author-info">
+              <span class="author-name">서현</span>
+              <span class="author-role">프리랜서, 32세</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="about-section">
+    <div class="container">
+      <div class="about-content">
+        <div class="about-image">
+          <div class="about-img-wrapper">
+            <img src="assets/ai-fashion-future.webp" alt="SIMS Fashion AI - 미래의 패션">
+            <div class="about-badge">
+              <span class="badge-number">2026</span>
+              <span class="badge-text">Since</span>
+            </div>
+          </div>
+        </div>
+        <div class="about-text">
+          <span class="section-badge">About Us</span>
+          <h2 class="section-title">패션의 미래를<br>AI로 열어갑니다</h2>
+          <p class="about-description">
+            SIMS Fashion AI는 최첨단 인공지능 기술과 패션 전문가의 노하우를 결합하여,
+            모든 사람이 자신만의 스타일을 찾을 수 있도록 돕는 것을 목표로 합니다.
+          </p>
+          <div class="about-features">
+            <div class="about-feature">
+              <div class="feature-icon-small">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                  <path d="M2 17l10 5 10-5"/>
+                  <path d="M2 12l10 5 10-5"/>
+                </svg>
+              </div>
+              <div>
+                <h4>AI 기술력</h4>
+                <p>최신 딥러닝 모델 기반 분석</p>
+              </div>
+            </div>
+            <div class="about-feature">
+              <div class="feature-icon-small">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="M12 6v6l4 2"/>
+                </svg>
+              </div>
+              <div>
+                <h4>실시간 추천</h4>
+                <p>날씨, 일정에 맞는 즉시 코디</p>
+              </div>
+            </div>
+            <div class="about-feature">
+              <div class="feature-icon-small">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                  <circle cx="9" cy="7" r="4"/>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+              </div>
+              <div>
+                <h4>50K+ 사용자</h4>
+                <p>검증된 스타일링 서비스</p>
+              </div>
+            </div>
+          </div>
+          <div class="about-team">
+            <span>Our Team</span>
+            <div class="team-avatars">
+              <div class="team-avatar" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">CEO</div>
+              <div class="team-avatar" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">CTO</div>
+              <div class="team-avatar" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">AI</div>
+              <div class="team-avatar" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">UX</div>
+              <div class="team-more">+12</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-content">
+        <h2>지금 바로 나만의 스타일을 발견하세요</h2>
+        <p>AI 스타일리스트가 당신을 기다리고 있습니다</p>
+        <div class="cta-buttons">
+          <button class="btn-primary btn-large">무료로 시작하기</button>
+          <a href="#about" class="btn-outline btn-large">더 알아보기</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#" class="logo">
+            <span class="logo-icon">S</span>
+            <span class="logo-text">SIMS Fashion AI</span>
+          </a>
+          <p>AI 기반 초개인화 패션 플랫폼</p>
+          <div class="social-links">
+            <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="2" width="20" height="20" rx="5"/>
+                <circle cx="12" cy="12" r="4"/>
+                <circle cx="18" cy="6" r="1"/>
+              </svg>
+            </a>
+            <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+              </svg>
+            </a>
+            <a href="https://youtu.be/QG8Uj7VUMsA" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/>
+                <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+        <div class="footer-links">
+          <h4>Product</h4>
+          <a href="#" data-modal="ai-styling">AI 스타일링</a>
+          <a href="#" data-modal="personal-color">퍼스널 컬러</a>
+          <a href="#" data-modal="virtual-fitting">가상 피팅</a>
+          <a href="#" data-modal="pricing">가격 정책</a>
+        </div>
+        <div class="footer-links">
+          <h4>Company</h4>
+          <a href="#about">About</a>
+          <a href="#" data-modal="blog">Blog</a>
+          <a href="#" data-modal="careers">Careers</a>
+          <a href="#" data-modal="press">Press</a>
+        </div>
+        <div class="footer-links">
+          <h4>Support</h4>
+          <a href="#" data-modal="help">Help Center</a>
+          <a href="#" data-modal="contact">Contact</a>
+          <a href="#" data-modal="privacy">Privacy</a>
+          <a href="#" data-modal="terms">Terms</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="footer-logo">
+          <img src="/logo.png" alt="SIMS Fashion AI Logo" class="company-logo">
+        </div>
+        <p>&copy; 2026 SIMS Fashion AI. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Lookbook Modal -->
+  <div id="lookbook-modal" class="info-modal">
+    <div class="info-modal-content lookbook-modal-content">
+      <button class="info-modal-close" data-close-modal>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+      <div class="lookbook-detail">
+        <div class="lookbook-image" id="lookbook-modal-image"></div>
+        <div class="lookbook-info">
+          <span class="lookbook-tag" id="lookbook-modal-tag"></span>
+          <h2 id="lookbook-modal-title"></h2>
+          <p id="lookbook-modal-desc"></p>
+          <div class="lookbook-items">
+            <h4>코디 아이템</h4>
+            <div id="lookbook-modal-items"></div>
+          </div>
+          <div class="lookbook-colors">
+            <h4>컬러 팔레트</h4>
+            <div id="lookbook-modal-colors"></div>
+          </div>
+          <button class="btn-primary btn-large lookbook-try-btn">이 스타일 시도하기</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Info Modal (for Footer links) -->
+  <div id="info-modal" class="info-modal">
+    <div class="info-modal-content">
+      <button class="info-modal-close" data-close-modal>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+      <div class="info-modal-header">
+        <span class="info-modal-icon" id="info-modal-icon"></span>
+        <h2 id="info-modal-title"></h2>
+      </div>
+      <div class="info-modal-body" id="info-modal-body"></div>
+    </div>
+  </div>
+
+  <!-- AI Styling Modal -->
+  <div id="styling-modal" class="styling-modal">
+    <div class="styling-modal-content">
+      <button id="styling-close" class="styling-close" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+
+      <!-- Progress Bar -->
+      <div class="styling-progress">
+        <div class="progress-bar">
+          <div id="progress-fill" class="progress-fill"></div>
+        </div>
+        <div class="progress-steps">
+          <div class="progress-step active" data-step="1">
+            <span class="step-dot">1</span>
+            <span class="step-label">기본 정보</span>
+          </div>
+          <div class="progress-step" data-step="2">
+            <span class="step-dot">2</span>
+            <span class="step-label">신체 측정</span>
+          </div>
+          <div class="progress-step" data-step="3">
+            <span class="step-dot">3</span>
+            <span class="step-label">스타일 취향</span>
+          </div>
+          <div class="progress-step" data-step="4">
+            <span class="step-dot">4</span>
+            <span class="step-label">컬러 분석</span>
+          </div>
+          <div class="progress-step" data-step="5">
+            <span class="step-dot">5</span>
+            <span class="step-label">AI 분석</span>
+          </div>
+          <div class="progress-step" data-step="6">
+            <span class="step-dot">6</span>
+            <span class="step-label">Virtual Try-On</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 1: Basic Info -->
+      <div id="step-1" class="styling-step active">
+        <div class="step-header">
+          <span class="step-badge">Step 1</span>
+          <h2>기본 정보를 알려주세요</h2>
+          <p>맞춤 스타일링을 위해 기본 정보가 필요해요</p>
+        </div>
+        <div class="step-content">
+          <div class="form-group">
+            <label>성별</label>
+            <div class="option-grid gender-options">
+              <button type="button" class="option-card" data-field="gender" data-value="female">
+                <div class="option-icon">👩</div>
+                <span>여성</span>
+              </button>
+              <button type="button" class="option-card" data-field="gender" data-value="male">
+                <div class="option-icon">👨</div>
+                <span>남성</span>
+              </button>
+              <button type="button" class="option-card" data-field="gender" data-value="neutral">
+                <div class="option-icon">🧑</div>
+                <span>젠더리스</span>
+              </button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>연령대</label>
+            <div class="option-grid age-options">
+              <button type="button" class="option-card" data-field="age" data-value="10s">
+                <span>10대</span>
+              </button>
+              <button type="button" class="option-card" data-field="age" data-value="20s">
+                <span>20대</span>
+              </button>
+              <button type="button" class="option-card" data-field="age" data-value="30s">
+                <span>30대</span>
+              </button>
+              <button type="button" class="option-card" data-field="age" data-value="40s">
+                <span>40대</span>
+              </button>
+              <button type="button" class="option-card" data-field="age" data-value="50s+">
+                <span>50대+</span>
+              </button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>체형 타입</label>
+            <div class="option-grid body-options">
+              <button type="button" class="option-card" data-field="body" data-value="slim">
+                <div class="body-icon slim"></div>
+                <span>슬림</span>
+              </button>
+              <button type="button" class="option-card" data-field="body" data-value="standard">
+                <div class="body-icon standard"></div>
+                <span>보통</span>
+              </button>
+              <button type="button" class="option-card" data-field="body" data-value="muscular">
+                <div class="body-icon muscular"></div>
+                <span>근육질</span>
+              </button>
+              <button type="button" class="option-card" data-field="body" data-value="curvy">
+                <div class="body-icon curvy"></div>
+                <span>볼륨</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="step-actions">
+          <button type="button" class="btn-next" id="next-1">
+            다음 단계
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 2: Body Measurement -->
+      <div id="step-2" class="styling-step">
+        <div class="step-header">
+          <span class="step-badge">Step 2</span>
+          <h2>신체 정보를 입력해주세요</h2>
+          <p>Virtual Try-On을 위해 사진과 체형 정보가 필요해요</p>
+        </div>
+        <div class="step-content">
+          <div class="form-group">
+            <label>얼굴 사진 업로드</label>
+            <div class="photo-upload-area" id="photo-upload-area">
+              <input type="file" id="face-photo-input" accept="image/*" hidden>
+              <div class="upload-placeholder" id="upload-placeholder">
+                <div class="upload-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="17 8 12 3 7 8"/>
+                    <line x1="12" y1="3" x2="12" y2="15"/>
+                  </svg>
+                </div>
+                <p>클릭하여 사진 업로드</p>
+                <span>정면 상반신 사진을 권장합니다</span>
+              </div>
+              <div class="photo-preview" id="photo-preview" style="display: none;">
+                <img id="preview-image" src="" alt="Preview">
+                <button type="button" class="photo-remove-btn" id="photo-remove-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="measurement-inputs">
+            <div class="form-group measurement-field">
+              <label>키 (cm)</label>
+              <input type="number" id="height-input" placeholder="170" min="100" max="250">
+            </div>
+            <div class="form-group measurement-field">
+              <label>몸무게 (kg)</label>
+              <input type="number" id="weight-input" placeholder="65" min="30" max="200">
+            </div>
+          </div>
+          <div class="body-analysis-preview" id="bmi-preview" style="display: none;">
+            <div class="bmi-result">
+              <div class="bmi-value">
+                <span id="bmi-number">--</span>
+                <small>BMI</small>
+              </div>
+              <div class="bmi-info">
+                <span id="bmi-category">체질량 지수</span>
+                <p id="bmi-description">키와 몸무게를 입력하면 BMI가 계산됩니다</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="step-actions">
+          <button type="button" class="btn-prev" id="prev-2">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            이전
+          </button>
+          <button type="button" class="btn-next" id="next-2">
+            다음 단계
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 3: Style Preference -->
+      <div id="step-3" class="styling-step">
+        <div class="step-header">
+          <span class="step-badge">Step 3</span>
+          <h2>선호하는 스타일을 선택하세요</h2>
+          <p>마음에 드는 스타일을 모두 선택해주세요 (복수 선택 가능)</p>
+        </div>
+        <div class="step-content">
+          <div class="style-grid">
+            <button type="button" class="style-card" data-style="minimal">
+              <div class="style-preview minimal-preview"></div>
+              <div class="style-info">
+                <h4>미니멀</h4>
+                <p>깔끔하고 심플한</p>
+              </div>
+              <div class="style-check">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </div>
+            </button>
+            <button type="button" class="style-card" data-style="casual">
+              <div class="style-preview casual-preview"></div>
+              <div class="style-info">
+                <h4>캐주얼</h4>
+                <p>편안하고 자연스러운</p>
+              </div>
+              <div class="style-check">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </div>
+            </button>
+            <button type="button" class="style-card" data-style="street">
+              <div class="style-preview street-preview"></div>
+              <div class="style-info">
+                <h4>스트릿</h4>
+                <p>트렌디하고 개성있는</p>
+              </div>
+              <div class="style-check">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </div>
+            </button>
+            <button type="button" class="style-card" data-style="romantic">
+              <div class="style-preview romantic-preview"></div>
+              <div class="style-info">
+                <h4>로맨틱</h4>
+                <p>여성스럽고 우아한</p>
+              </div>
+              <div class="style-check">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </div>
+            </button>
+            <button type="button" class="style-card" data-style="classic">
+              <div class="style-preview classic-preview"></div>
+              <div class="style-info">
+                <h4>클래식</h4>
+                <p>단정하고 세련된</p>
+              </div>
+              <div class="style-check">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </div>
+            </button>
+            <button type="button" class="style-card" data-style="sporty">
+              <div class="style-preview sporty-preview"></div>
+              <div class="style-info">
+                <h4>스포티</h4>
+                <p>활동적이고 건강한</p>
+              </div>
+              <div class="style-check">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </div>
+            </button>
+          </div>
+        </div>
+        <div class="step-actions">
+          <button type="button" class="btn-prev" id="prev-3">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            이전
+          </button>
+          <button type="button" class="btn-next" id="next-3">
+            다음 단계
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 4: Color Analysis -->
+      <div id="step-4" class="styling-step">
+        <div class="step-header">
+          <span class="step-badge">Step 4</span>
+          <h2>퍼스널 컬러를 찾아볼까요?</h2>
+          <p>피부톤과 어울리는 컬러를 분석해드려요</p>
+        </div>
+        <div class="step-content">
+          <div class="form-group">
+            <label>피부톤</label>
+            <div class="color-option-grid">
+              <button type="button" class="color-option" data-field="skinTone" data-value="fair">
+                <div class="skin-circle fair"></div>
+                <span>밝은 피부</span>
+              </button>
+              <button type="button" class="color-option" data-field="skinTone" data-value="light">
+                <div class="skin-circle light"></div>
+                <span>연한 피부</span>
+              </button>
+              <button type="button" class="color-option" data-field="skinTone" data-value="medium">
+                <div class="skin-circle medium"></div>
+                <span>중간 피부</span>
+              </button>
+              <button type="button" class="color-option" data-field="skinTone" data-value="tan">
+                <div class="skin-circle tan"></div>
+                <span>구릿빛 피부</span>
+              </button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>피부 언더톤</label>
+            <div class="undertone-options">
+              <button type="button" class="undertone-card" data-field="undertone" data-value="warm">
+                <div class="undertone-preview warm">
+                  <div class="undertone-colors">
+                    <span style="background: #FFD700"></span>
+                    <span style="background: #FFA500"></span>
+                    <span style="background: #FF6347"></span>
+                  </div>
+                </div>
+                <div class="undertone-info">
+                  <h4>웜톤 (Warm)</h4>
+                  <p>손목 혈관이 초록빛, 금색 액세서리가 잘 어울림</p>
+                </div>
+              </button>
+              <button type="button" class="undertone-card" data-field="undertone" data-value="cool">
+                <div class="undertone-preview cool">
+                  <div class="undertone-colors">
+                    <span style="background: #4169E1"></span>
+                    <span style="background: #9370DB"></span>
+                    <span style="background: #FF69B4"></span>
+                  </div>
+                </div>
+                <div class="undertone-info">
+                  <h4>쿨톤 (Cool)</h4>
+                  <p>손목 혈관이 파란빛, 은색 액세서리가 잘 어울림</p>
+                </div>
+              </button>
+              <button type="button" class="undertone-card" data-field="undertone" data-value="neutral">
+                <div class="undertone-preview neutral">
+                  <div class="undertone-colors">
+                    <span style="background: #C4A484"></span>
+                    <span style="background: #A0522D"></span>
+                    <span style="background: #8B7355"></span>
+                  </div>
+                </div>
+                <div class="undertone-info">
+                  <h4>뉴트럴 (Neutral)</h4>
+                  <p>두 가지 톤이 섞여 있음, 모든 금속이 어울림</p>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="step-actions">
+          <button type="button" class="btn-prev" id="prev-4">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            이전
+          </button>
+          <button type="button" class="btn-next" id="next-4">
+            AI 분석 시작
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 5: AI Analysis -->
+      <div id="step-5" class="styling-step">
+        <div id="analysis-loading" class="analysis-loading">
+          <div class="loading-animation">
+            <div class="loading-circle"></div>
+            <div class="loading-circle"></div>
+            <div class="loading-circle"></div>
+          </div>
+          <h3>AI가 당신의 스타일을 분석하고 있어요</h3>
+          <p id="loading-status">데이터 수집 중...</p>
+          <div class="loading-progress">
+            <div id="loading-bar" class="loading-bar"></div>
+          </div>
+        </div>
+
+        <div id="analysis-result" class="analysis-result" style="display: none;">
+          <div class="result-header">
+            <div class="result-badge">AI 분석 완료</div>
+            <h2>당신만의 스타일 프로필</h2>
+          </div>
+
+          <div class="result-grid">
+            <div class="result-card personal-color-card">
+              <div class="card-header">
+                <span class="card-icon">🎨</span>
+                <h4>퍼스널 컬러</h4>
+              </div>
+              <div id="personal-color-result" class="personal-color-content">
+                <!-- AI result will be inserted here -->
+              </div>
+            </div>
+
+            <div class="result-card style-card">
+              <div class="card-header">
+                <span class="card-icon">✨</span>
+                <h4>추천 스타일</h4>
+              </div>
+              <div id="style-result" class="style-content">
+                <!-- AI result will be inserted here -->
+              </div>
+            </div>
+
+            <div class="result-card recommendation-card">
+              <div class="card-header">
+                <span class="card-icon">👗</span>
+                <h4>코디 추천</h4>
+              </div>
+              <div id="recommendation-result" class="recommendation-content">
+                <!-- AI result will be inserted here -->
+              </div>
+            </div>
+
+            <div class="result-card tips-card">
+              <div class="card-header">
+                <span class="card-icon">💡</span>
+                <h4>스타일링 팁</h4>
+              </div>
+              <div id="tips-result" class="tips-content">
+                <!-- AI result will be inserted here -->
+              </div>
+            </div>
+          </div>
+
+          <!-- AI Generated Fashion Image -->
+          <div class="result-card fashion-image-card" style="grid-column: span 2;">
+            <div class="card-header">
+              <span class="card-icon">AI</span>
+              <h4>AI 패션 이미지</h4>
+            </div>
+            <div id="fashion-image-container" class="fashion-image-content">
+              <div class="fashion-image-placeholder" id="fashion-image-placeholder">
+                <div class="placeholder-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                    <polyline points="21 15 16 10 5 21"/>
+                  </svg>
+                </div>
+                <p>AI 분석 완료 후 패션 이미지가 생성됩니다</p>
+                <button type="button" class="btn-generate-fashion" id="generate-fashion-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                  </svg>
+                  패션 이미지 생성
+                </button>
+              </div>
+              <div class="fashion-image-result" id="fashion-image-result" style="display: none;">
+                <img id="generated-fashion-image" src="" alt="AI Generated Fashion">
+                <div class="fashion-image-actions">
+                  <button type="button" class="btn-regenerate" id="regenerate-fashion-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="23 4 23 10 17 10"/>
+                      <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                    </svg>
+                    다시 생성
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="result-actions">
+            <button type="button" class="btn-save" id="save-result">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                <polyline points="17 21 17 13 7 13 7 21"/>
+                <polyline points="7 3 7 8 15 8"/>
+              </svg>
+              결과 저장하기
+            </button>
+            <button type="button" class="btn-retry" id="retry-analysis">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="23 4 23 10 17 10"/>
+                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+              </svg>
+              다시 분석하기
+            </button>
+            <button type="button" class="btn-next btn-tryon" id="go-to-tryon">
+              Virtual Try-On
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 6: Virtual Try-On -->
+      <div id="step-6" class="styling-step">
+        <div class="step-header">
+          <span class="step-badge">Step 6</span>
+          <h2>Virtual Try-On</h2>
+          <p>원하는 의류를 선택하여 가상으로 착용해보세요</p>
+        </div>
+        <div class="step-content">
+          <!-- Category Tabs -->
+          <div class="category-tabs">
+            <button type="button" class="category-tab active" data-category="tops">상의</button>
+            <button type="button" class="category-tab" data-category="bottoms">하의</button>
+            <button type="button" class="category-tab" data-category="dresses">원피스</button>
+            <button type="button" class="category-tab" data-category="outerwear">아우터</button>
+          </div>
+
+          <!-- Garment Gallery -->
+          <div class="garment-section">
+            <div class="garment-gallery" id="garment-gallery">
+              <!-- Sample garments will be loaded here -->
+            </div>
+            <div class="garment-upload-area" id="garment-upload-area">
+              <input type="file" id="garment-input" accept="image/*" hidden>
+              <div class="upload-btn-wrapper">
+                <button type="button" class="btn-upload-garment" id="upload-garment-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="17 8 12 3 7 8"/>
+                    <line x1="12" y1="3" x2="12" y2="15"/>
+                  </svg>
+                  내 의류 업로드
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Try-On Result Area -->
+          <div class="tryon-result-area" id="tryon-result-area">
+            <div class="tryon-preview">
+              <div class="tryon-before">
+                <h4>원본 사진</h4>
+                <div class="tryon-image-box" id="tryon-original">
+                  <div class="tryon-placeholder">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                      <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    <span>사진이 표시됩니다</span>
+                  </div>
+                </div>
+              </div>
+              <div class="tryon-arrow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                  <polyline points="12 5 19 12 12 19"/>
+                </svg>
+              </div>
+              <div class="tryon-after">
+                <h4>Try-On 결과</h4>
+                <div class="tryon-image-box" id="tryon-result">
+                  <div class="tryon-placeholder">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                      <circle cx="8.5" cy="8.5" r="1.5"/>
+                      <polyline points="21 15 16 10 5 21"/>
+                    </svg>
+                    <span>의류를 선택하세요</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tryon-actions">
+              <button type="button" class="btn-generate-tryon" id="generate-tryon-btn" disabled>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                </svg>
+                Try-On 생성
+              </button>
+              <button type="button" class="btn-download-tryon" id="download-tryon-btn" disabled>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                다운로드
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="step-actions">
+          <button type="button" class="btn-prev" id="prev-6">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            이전
+          </button>
+          <button type="button" class="btn-finish" id="finish-styling">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            완료
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Chat Widget -->
+  <div id="chat-widget" class="chat-widget">
+    <button id="chat-toggle" class="chat-toggle" aria-label="AI 스타일리스트와 대화">
+      <span class="chat-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+        </svg>
+      </span>
+      <span class="chat-close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </span>
+      <span class="chat-badge">AI</span>
+    </button>
+
+    <div id="chat-container" class="chat-container">
+      <div class="chat-header">
+        <div class="chat-header-info">
+          <div class="chat-avatar">
+            <span>AI</span>
+            <span class="status-dot"></span>
+          </div>
+          <div class="chat-header-text">
+            <h4>SIMS AI 스타일리스트</h4>
+            <span class="chat-status">온라인</span>
+          </div>
+        </div>
+        <button id="chat-minimize" class="chat-minimize" aria-label="최소화">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+        </button>
+      </div>
+
+      <div id="chat-messages" class="chat-messages">
+        <div class="chat-welcome">
+          <div class="welcome-avatar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"/>
+              <circle cx="12" cy="10" r="3"/>
+              <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"/>
+            </svg>
+          </div>
+          <h3>안녕하세요!</h3>
+          <p>저는 당신의 AI 스타일리스트입니다.<br>패션, 스타일, 코디에 대해 무엇이든 물어보세요.</p>
+          <div class="quick-questions">
+            <button class="quick-btn" data-question="오늘 날씨에 맞는 코디 추천해줘">오늘의 코디 추천</button>
+            <button class="quick-btn" data-question="제 퍼스널 컬러를 알고 싶어요">퍼스널 컬러 진단</button>
+            <button class="quick-btn" data-question="2026년 봄 트렌드 알려줘">2026 트렌드</button>
+            <button class="quick-btn" data-question="미니멀 스타일 코디법 알려줘">미니멀 스타일링</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-input-container">
+        <div class="chat-input-wrapper">
+          <textarea id="chat-input" placeholder="메시지를 입력하세요..." rows="1"></textarea>
+          <button id="chat-send" class="chat-send" aria-label="전송">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="22" y1="2" x2="11" y2="13"/>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+          </button>
+        </div>
+        <span class="chat-powered">Powered by AI</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- API Keys: .env → config.js (Git 제외, node scripts/build-config.js 로 생성) -->
+  <script defer type="text/javascript" src="/config.js"></script>
+  <!-- Gradio Client for HuggingFace Spaces -->
+  <script type="module">
+    import { Client } from "https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js";
+    window.GradioClient = Client;
+  </script>
+  <script defer type="text/javascript" src="/main.js"></script>
+</body>
+</html>
