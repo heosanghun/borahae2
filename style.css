@@ -2669,8 +2669,36 @@ section {
 /* Result Actions */
 .result-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 16px;
   justify-content: center;
+}
+
+.btn-naver-shop {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  border-radius: 14px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: #fff;
+  background: #03c75a;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-naver-shop:hover {
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(3, 199, 90, 0.4);
+}
+
+.btn-naver-shop svg {
+  width: 18px;
+  height: 18px;
 }
 
 .btn-save,

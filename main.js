@@ -773,6 +773,12 @@
       if (stylingData.facePhoto) {
         setTimeout(function () { generateFashionImage(); }, 100);
       }
+      var naverBtn = document.getElementById('naver-shop-btn');
+      if (naverBtn) {
+        var styleMap = { minimal: '미니멀', casual: '캐주얼', street: '스트릿', romantic: '로맨틱', classic: '클래식', sporty: '스포티' };
+        var q = (stylingData.styles && stylingData.styles.length) ? stylingData.styles.map(function (s) { return styleMap[s] || s; }).join(' ') + ' 패션' : '패션 코디';
+        naverBtn.href = 'https://search.naver.com/search.naver?query=' + encodeURIComponent(q);
+      }
     }
 
     if (step === 6) {
@@ -938,7 +944,7 @@
   // ========================================
   // Step 6: Virtual Try-On Handlers
   // ========================================
-  var SHOP_SEARCH_BASE = 'https://search.shopping.naver.com/search/all?query=';
+  var SHOP_SEARCH_BASE = 'https://search.naver.com/search.naver?query=';
   const sampleGarments = {
     tops: [
       { id: 't1', name: '화이트 셔츠', image: 'https://images.unsplash.com/photo-1598032895397-b9472444bf93?w=300&q=80', buyUrl: SHOP_SEARCH_BASE + encodeURIComponent('화이트 셔츠') },
@@ -1613,7 +1619,7 @@
   // ========================================
   // AI Chat Widget
   // ========================================
-  const SYSTEM_PROMPT = `당신은 SIMS Fashion AI의 전문 AI 스타일리스트입니다. 패션, 스타일링, 코디네이션에 대한 깊은 전문 지식을 갖추고 있습니다.
+  const SYSTEM_PROMPT_BASE = `당신은 SIMS Fashion AI의 전문 AI 스타일리스트입니다. 패션, 스타일링, 코디네이션에 대한 깊은 전문 지식을 갖추고 있습니다.
 
 ## 핵심 역할
 - 사용자의 개인 스타일을 분석하고 맞춤형 패션 조언 제공
@@ -1627,6 +1633,30 @@
 - 답변은 간결하면서도 핵심을 담아 2-3문단 이내로
 
 사용자의 질문에 맞춰 세련되고 도움이 되는 패션 조언을 제공해주세요.`;
+
+  function getChatUserContext() {
+    var prefs = getTastePreferences();
+    var lines = ['## [필수] 사용자 취향 데이터 (이 섹션을 반드시 참고하여 답변하세요)'];
+    var hasData = false;
+    if (prefs.likedStyles && prefs.likedStyles.length > 0) {
+      var styleNames = prefs.likedStyles.map(function (s) {
+        var map = { minimal: '미니멀', casual: '캐주얼', street: '스트릿', romantic: '로맨틱', classic: '클래식', sporty: '스포티' };
+        return map[s] || s;
+      }).join(', ');
+      lines.push('- 저장된 선호 스타일: ' + styleNames);
+      lines.push('- 사용자가 "내 취향 말해줘", "저의 취향을 이야기 해줘" 등으로 물으면 반드시 먼저 "저장된 취향은 [위 스타일]이에요."라고 말한 뒤, 그에 맞는 조언을 이어가세요. "취향을 말해주세요"라고 되물어보지 마세요.');
+      hasData = true;
+    }
+    if (prefs.savedOutfits && prefs.savedOutfits.length > 0) {
+      lines.push('- 저장한 코디 수: ' + prefs.savedOutfits.length + '건');
+      hasData = true;
+    }
+    if (!hasData) {
+      lines.push('- 현재 저장된 취향 없음 (아직 "이 코디 마음에 들어요"로 저장한 코디가 없음).');
+      lines.push('- 사용자가 "내 취향 말해줘", "저의 취향을 이야기 해줘" 등으로 물으면 반드시 이렇게만 답하세요: "아직 저장된 취향이 없어요. 상단에서 AI 스타일링을 진행하시고, 마음에 드는 코디가 나오면 \'이 코디 마음에 들어요\'를 눌러 저장해보세요. 저장하시면 다음부터 그 취향을 기반으로 맞춤 대화를 드릴게요!" 취향을 말해달라고 되물어보지 마세요.');
+    }
+    return '\n\n' + lines.join('\n');
+  }
 
   let chatHistory = [];
   let isTyping = false;
@@ -1739,11 +1769,12 @@
       });
     }
     var geminiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
+    var systemText = SYSTEM_PROMPT_BASE + getChatUserContext();
     const res = await fetch(geminiUrl + '?key=' + encodeURIComponent(GEMINI_API_KEY), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+        systemInstruction: { parts: [{ text: systemText }] },
         contents: contents,
         generationConfig: { maxOutputTokens: 500, temperature: 0.8 }
       })
