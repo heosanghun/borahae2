@@ -1340,8 +1340,29 @@
     </div>
   </div>
 
+  <!-- Disqus 댓글 -->
+  <section id="comments" class="comments-section">
+    <div class="container">
+      <h2 class="comments-title">댓글</h2>
+      <div id="disqus_thread"></div>
+      <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
   <!-- API Keys: .env → config.js (Git 제외, node scripts/build-config.js 로 생성) -->
   <script defer type="text/javascript" src="config.js"></script>
+  <script>
+    var disqus_config = function () {
+      this.page.url = window.location.href || 'https://sims-fashion.pages.dev/';
+      this.page.identifier = 'sims-fashion-main';
+    };
+    (function() {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://sims-fashion-pages-dev.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
   <!-- Gradio Client for HuggingFace Spaces -->
   <script type="module">
     import { Client } from "https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js";

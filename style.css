@@ -1236,6 +1236,26 @@ section {
 }
 
 /* ========================================
+   Disqus 댓글 섹션
+   ======================================== */
+.comments-section {
+  padding: 60px 0 80px;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+}
+
+.comments-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: var(--text-primary);
+}
+
+#disqus_thread {
+  min-height: 120px;
+}
+
+/* ========================================
    Responsive Design
    ======================================== */
 @media (max-width: 1024px) {
