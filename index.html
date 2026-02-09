@@ -1436,8 +1436,19 @@
   </section>
 
   <!-- API Keys: .env → config.js (Git 제외, node scripts/build-config.js 로 생성) -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-  <script defer type="text/javascript" src="config.js"></script>
+  <script type="text/javascript" src="config.js"></script>
+  <!-- Supabase Auth (ESM) -->
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+    const url = window.__SIMS_SUPABASE_URL__ || '';
+    const key = window.__SIMS_SUPABASE_ANON_KEY__ || '';
+    if (url && key) {
+      try {
+        window.__supabaseClient = createClient(url, key);
+        window.dispatchEvent(new Event('supabase-ready'));
+      } catch(e) { console.error('Supabase init error:', e); }
+    }
+  </script>
   <script>
     (function() {
       var el = document.getElementById('comments');

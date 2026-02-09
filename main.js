@@ -11,16 +11,18 @@
   // ========================================
   // Supabase Auth (회원가입 / 로그인)
   // ========================================
-  const SUPABASE_URL = (typeof window !== 'undefined' && window.__SIMS_SUPABASE_URL__) || '';
-  const SUPABASE_ANON_KEY = (typeof window !== 'undefined' && window.__SIMS_SUPABASE_ANON_KEY__) || '';
-  const supabase = (SUPABASE_URL && SUPABASE_ANON_KEY && typeof window.supabase !== 'undefined')
-    ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-    : null;
+  // Supabase 클라이언트는 index.html의 ESM 모듈에서 생성 → window.__supabaseClient
+  var supabase = window.__supabaseClient || null;
+
+  function getSupabase() {
+    if (!supabase) supabase = window.__supabaseClient || null;
+    return supabase;
+  }
 
   function updateAuthNav(user) {
-    const guestEl = document.getElementById('auth-nav-guest');
-    const userEl = document.getElementById('auth-nav-user');
-    const emailEl = document.getElementById('auth-user-email');
+    var guestEl = document.getElementById('auth-nav-guest');
+    var userEl = document.getElementById('auth-nav-user');
+    var emailEl = document.getElementById('auth-user-email');
     if (!guestEl || !userEl) return;
     if (user && user.email) {
       guestEl.style.display = 'none';
@@ -68,22 +70,33 @@
     document.body.style.overflow = '';
   }
 
-  if (supabase) {
-    supabase.auth.onAuthStateChange(function(event, session) {
+  function initSupabaseAuth() {
+    var sb = getSupabase();
+    if (!sb) return;
+    sb.auth.onAuthStateChange(function(event, session) {
       updateAuthNav(session && session.user ? session.user : null);
     });
-    supabase.auth.getSession().then(function(res) {
+    sb.auth.getSession().then(function(res) {
       updateAuthNav(res.data.session && res.data.session.user ? res.data.session.user : null);
     });
+  }
+
+  // 즉시 시도 + ESM 로드 이벤트 대기
+  if (getSupabase()) {
+    initSupabaseAuth();
   } else {
     updateAuthNav(null);
+    window.addEventListener('supabase-ready', function() {
+      initSupabaseAuth();
+    });
   }
 
   document.getElementById('nav-login-btn') && document.getElementById('nav-login-btn').addEventListener('click', function() {
     openAuthModal('login');
   });
   document.getElementById('nav-logout-btn') && document.getElementById('nav-logout-btn').addEventListener('click', function() {
-    if (supabase) supabase.auth.signOut();
+    var sb = getSupabase();
+    if (sb) sb.auth.signOut();
   });
   document.getElementById('auth-modal-close') && document.getElementById('auth-modal-close').addEventListener('click', closeAuthModal);
   document.getElementById('auth-modal') && document.getElementById('auth-modal').addEventListener('click', function(e) {
@@ -99,9 +112,10 @@
 
   document.getElementById('auth-login-form') && document.getElementById('auth-login-form').addEventListener('submit', function(e) {
     e.preventDefault();
-    if (!supabase) {
+    var sb = getSupabase();
+    if (!sb) {
       var err = document.getElementById('auth-login-error');
-      if (err) err.textContent = 'Supabase가 설정되지 않았습니다. .env에 SUPABASE_URL, SUPABASE_ANON_KEY를 넣어 주세요.';
+      if (err) err.textContent = 'Supabase 로딩 중입니다. 잠시 후 다시 시도해 주세요.';
       return;
     }
     var emailEl = document.getElementById('auth-login-email');
@@ -114,7 +128,7 @@
       return;
     }
     if (errEl) errEl.textContent = '';
-    supabase.auth.signInWithPassword({ email: email, password: password })
+    sb.auth.signInWithPassword({ email: email, password: password })
       .then(function(res) {
         if (res.error) {
           if (errEl) errEl.textContent = res.error.message || '로그인에 실패했습니다.';
@@ -129,9 +143,10 @@
 
   document.getElementById('auth-signup-form') && document.getElementById('auth-signup-form').addEventListener('submit', function(e) {
     e.preventDefault();
-    if (!supabase) {
+    var sb = getSupabase();
+    if (!sb) {
       var err = document.getElementById('auth-signup-error');
-      if (err) err.textContent = 'Supabase가 설정되지 않았습니다. .env에 SUPABASE_URL, SUPABASE_ANON_KEY를 넣어 주세요.';
+      if (err) err.textContent = 'Supabase 로딩 중입니다. 잠시 후 다시 시도해 주세요.';
       return;
     }
     var emailEl = document.getElementById('auth-signup-email');
@@ -154,7 +169,7 @@
       return;
     }
     if (errEl) errEl.textContent = '';
-    supabase.auth.signUp({ email: email, password: password })
+    sb.auth.signUp({ email: email, password: password })
       .then(function(res) {
         if (res.error) {
           if (errEl) errEl.textContent = res.error.message || '회원가입에 실패했습니다.';
