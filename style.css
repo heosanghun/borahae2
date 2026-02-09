@@ -1932,7 +1932,14 @@ section {
   margin-top: auto;
 }
 
-/* 제휴문의 Formspree 폼 */
+/* 제휴문의 Formspree 폼 - 모달 스크롤로 하단 버튼까지 표시 */
+.partnership-form-content {
+  max-height: 85vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
 .partnership-form-content .info-modal-header {
   padding-bottom: 12px;
 }
