@@ -1340,8 +1340,9 @@
     </div>
   </div>
 
-  <!-- Disqus 댓글 -->
-  <section id="comments" class="comments-section">
+  <!-- Disqus 댓글 (shortname: https-sims-fashion-pages-dev)
+       로드 오류 시: docs/DISQUS_SETUP.md 참고 (Trusted Domains 등록 필수) -->
+  <section id="comments" class="comments-section" data-disqus-shortname="https-sims-fashion-pages-dev">
     <div class="container">
       <h2 class="comments-title">댓글</h2>
       <div id="disqus_thread"></div>
@@ -1352,13 +1353,16 @@
   <!-- API Keys: .env → config.js (Git 제외, node scripts/build-config.js 로 생성) -->
   <script defer type="text/javascript" src="config.js"></script>
   <script>
-    var disqus_config = function () {
-      this.page.url = window.location.href || 'https://sims-fashion.pages.dev/';
-      this.page.identifier = 'sims-fashion-main';
-    };
     (function() {
+      var el = document.getElementById('comments');
+      var shortname = (el && el.getAttribute('data-disqus-shortname')) || 'https-sims-fashion-pages-dev';
+      var canonicalUrl = (window.location.origin || 'https://sims-fashion.pages.dev') + (window.location.pathname || '/') || 'https://sims-fashion.pages.dev/';
+      window.disqus_config = function () {
+        this.page.url = canonicalUrl;
+        this.page.identifier = 'sims-fashion-main';
+      };
       var d = document, s = d.createElement('script');
-      s.src = 'https://sims-fashion-pages-dev.disqus.com/embed.js';
+      s.src = 'https://' + shortname + '.disqus.com/embed.js';
       s.setAttribute('data-timestamp', +new Date());
       (d.head || d.body).appendChild(s);
     })();
