@@ -39,12 +39,16 @@ if (fs.existsSync(envPath)) {
 // 배포(Cloudflare Pages 등)에서는 process.env 로 키 주입. 로컬은 .env 우선.
 const openaiKey = process.env.OPENAI_API_KEY || env.OPENAI_API_KEY || '';
 const geminiKey = process.env.GEMINI_API_KEY || env.GEMINI_API_KEY || '';
+const supabaseUrl = process.env.SUPABASE_URL || env.SUPABASE_URL || '';
+const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || env.SUPABASE_ANON_KEY || '';
 
 const configContent = `// SIMS Fashion AI - API 설정 (자동 생성, Git 제외)
 // scripts/build-config.js 로 .env 에서 생성됩니다.
 (function() {
   window.__SIMS_OPENAI_KEY__ = ${JSON.stringify(openaiKey)};
   window.__SIMS_GEMINI_KEY__ = ${JSON.stringify(geminiKey)};
+  window.__SIMS_SUPABASE_URL__ = ${JSON.stringify(supabaseUrl)};
+  window.__SIMS_SUPABASE_ANON_KEY__ = ${JSON.stringify(supabaseAnonKey)};
 })();
 `;
 

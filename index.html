@@ -28,7 +28,13 @@
           <span class="icon-sun">&#9728;</span>
           <span class="icon-moon">&#9790;</span>
         </button>
-        <button class="btn-primary">Get Started</button>
+        <div id="auth-nav-guest" class="auth-nav">
+          <button type="button" id="nav-login-btn" class="btn-primary">로그인</button>
+        </div>
+        <div id="auth-nav-user" class="auth-nav" style="display: none;">
+          <span id="auth-user-email" class="auth-user-email"></span>
+          <button type="button" id="nav-logout-btn" class="btn-outline btn-sm">로그아웃</button>
+        </div>
       </div>
       <button class="mobile-menu-btn" aria-label="Menu">
         <span></span>
@@ -636,7 +642,86 @@
     </div>
   </div>
 
+  <!-- Auth Modal (로그인 / 회원가입) -->
+  <div id="auth-modal" class="info-modal auth-modal" aria-hidden="true">
+    <div class="info-modal-content auth-modal-content">
+      <!-- 닫기 버튼 -->
+      <button type="button" class="auth-close" id="auth-modal-close" aria-label="닫기">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <!-- 헤더 -->
+      <div class="auth-header">
+        <div class="auth-logo">S</div>
+        <h2 class="auth-title">Welcome</h2>
+        <p class="auth-subtitle">SIMS Fashion AI에 오신 것을 환영합니다</p>
+      </div>
+      <!-- 탭 -->
+      <div class="auth-tabs">
+        <button type="button" id="auth-tab-login" class="auth-tab active" data-tab="login">로그인</button>
+        <button type="button" id="auth-tab-signup" class="auth-tab" data-tab="signup">회원가입</button>
+      </div>
+      <!-- 로그인 폼 -->
+      <div class="auth-body">
+        <div id="auth-form-login" class="auth-form-panel active">
+          <form id="auth-login-form" class="auth-form">
+            <div class="auth-field">
+              <label for="auth-login-email">이메일</label>
+              <div class="auth-input-wrap">
+                <svg class="auth-input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M22 7l-10 7L2 7"/></svg>
+                <input type="email" id="auth-login-email" required placeholder="you@example.com" autocomplete="email">
+              </div>
+            </div>
+            <div class="auth-field">
+              <label for="auth-login-password">비밀번호</label>
+              <div class="auth-input-wrap">
+                <svg class="auth-input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                <input type="password" id="auth-login-password" required placeholder="비밀번호 입력" autocomplete="current-password">
+              </div>
+            </div>
+            <div id="auth-login-error" class="auth-error" role="alert"></div>
+            <button type="submit" class="auth-submit">
+              <span>로그인</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+          </form>
+        </div>
+        <!-- 회원가입 폼 -->
+        <div id="auth-form-signup" class="auth-form-panel">
+          <form id="auth-signup-form" class="auth-form">
+            <div class="auth-field">
+              <label for="auth-signup-email">이메일</label>
+              <div class="auth-input-wrap">
+                <svg class="auth-input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M22 7l-10 7L2 7"/></svg>
+                <input type="email" id="auth-signup-email" required placeholder="you@example.com" autocomplete="email">
+              </div>
+            </div>
+            <div class="auth-field">
+              <label for="auth-signup-password">비밀번호</label>
+              <div class="auth-input-wrap">
+                <svg class="auth-input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                <input type="password" id="auth-signup-password" required placeholder="6자 이상" autocomplete="new-password" minlength="6">
+              </div>
+            </div>
+            <div class="auth-field">
+              <label for="auth-signup-password-confirm">비밀번호 확인</label>
+              <div class="auth-input-wrap">
+                <svg class="auth-input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                <input type="password" id="auth-signup-password-confirm" required placeholder="다시 입력" autocomplete="new-password" minlength="6">
+              </div>
+            </div>
+            <div id="auth-signup-error" class="auth-error" role="alert"></div>
+            <button type="submit" class="auth-submit">
+              <span>회원가입</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- AI Styling Modal -->
+
   <div id="styling-modal" class="styling-modal">
     <div class="styling-modal-content">
       <button id="styling-close" class="styling-close" aria-label="Close">
@@ -1351,6 +1436,7 @@
   </section>
 
   <!-- API Keys: .env → config.js (Git 제외, node scripts/build-config.js 로 생성) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script defer type="text/javascript" src="config.js"></script>
   <script>
     (function() {

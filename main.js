@@ -9,6 +9,168 @@
   const GEMINI_API_KEY = (typeof window !== 'undefined' && window.__SIMS_GEMINI_KEY__) || '';
 
   // ========================================
+  // Supabase Auth (회원가입 / 로그인)
+  // ========================================
+  const SUPABASE_URL = (typeof window !== 'undefined' && window.__SIMS_SUPABASE_URL__) || '';
+  const SUPABASE_ANON_KEY = (typeof window !== 'undefined' && window.__SIMS_SUPABASE_ANON_KEY__) || '';
+  const supabase = (SUPABASE_URL && SUPABASE_ANON_KEY && typeof window.supabase !== 'undefined')
+    ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+    : null;
+
+  function updateAuthNav(user) {
+    const guestEl = document.getElementById('auth-nav-guest');
+    const userEl = document.getElementById('auth-nav-user');
+    const emailEl = document.getElementById('auth-user-email');
+    if (!guestEl || !userEl) return;
+    if (user && user.email) {
+      guestEl.style.display = 'none';
+      userEl.style.display = '';
+      if (emailEl) emailEl.textContent = user.email;
+    } else {
+      guestEl.style.display = '';
+      userEl.style.display = 'none';
+      if (emailEl) emailEl.textContent = '';
+    }
+  }
+
+  function openAuthModal(tab) {
+    var m = document.getElementById('auth-modal');
+    if (!m) return;
+    m.classList.add('open');
+    m.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    var loginPanel = document.getElementById('auth-form-login');
+    var signupPanel = document.getElementById('auth-form-signup');
+    var tabLogin = document.getElementById('auth-tab-login');
+    var tabSignup = document.getElementById('auth-tab-signup');
+    if (tab === 'signup') {
+      if (loginPanel) loginPanel.classList.remove('active');
+      if (signupPanel) signupPanel.classList.add('active');
+      if (tabLogin) tabLogin.classList.remove('active');
+      if (tabSignup) tabSignup.classList.add('active');
+    } else {
+      if (loginPanel) loginPanel.classList.add('active');
+      if (signupPanel) signupPanel.classList.remove('active');
+      if (tabLogin) tabLogin.classList.add('active');
+      if (tabSignup) tabSignup.classList.remove('active');
+    }
+    var loginErr = document.getElementById('auth-login-error');
+    var signupErr = document.getElementById('auth-signup-error');
+    if (loginErr) loginErr.textContent = '';
+    if (signupErr) signupErr.textContent = '';
+  }
+
+  function closeAuthModal() {
+    var m = document.getElementById('auth-modal');
+    if (!m) return;
+    m.classList.remove('open');
+    m.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  if (supabase) {
+    supabase.auth.onAuthStateChange(function(event, session) {
+      updateAuthNav(session && session.user ? session.user : null);
+    });
+    supabase.auth.getSession().then(function(res) {
+      updateAuthNav(res.data.session && res.data.session.user ? res.data.session.user : null);
+    });
+  } else {
+    updateAuthNav(null);
+  }
+
+  document.getElementById('nav-login-btn') && document.getElementById('nav-login-btn').addEventListener('click', function() {
+    openAuthModal('login');
+  });
+  document.getElementById('nav-logout-btn') && document.getElementById('nav-logout-btn').addEventListener('click', function() {
+    if (supabase) supabase.auth.signOut();
+  });
+  document.getElementById('auth-modal-close') && document.getElementById('auth-modal-close').addEventListener('click', closeAuthModal);
+  document.getElementById('auth-modal') && document.getElementById('auth-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeAuthModal();
+  });
+
+  document.getElementById('auth-tab-login') && document.getElementById('auth-tab-login').addEventListener('click', function() {
+    openAuthModal('login');
+  });
+  document.getElementById('auth-tab-signup') && document.getElementById('auth-tab-signup').addEventListener('click', function() {
+    openAuthModal('signup');
+  });
+
+  document.getElementById('auth-login-form') && document.getElementById('auth-login-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (!supabase) {
+      var err = document.getElementById('auth-login-error');
+      if (err) err.textContent = 'Supabase가 설정되지 않았습니다. .env에 SUPABASE_URL, SUPABASE_ANON_KEY를 넣어 주세요.';
+      return;
+    }
+    var emailEl = document.getElementById('auth-login-email');
+    var pwEl = document.getElementById('auth-login-password');
+    var errEl = document.getElementById('auth-login-error');
+    var email = emailEl && emailEl.value ? emailEl.value.trim() : '';
+    var password = pwEl ? pwEl.value : '';
+    if (!email || !password) {
+      if (errEl) errEl.textContent = '이메일과 비밀번호를 입력해 주세요.';
+      return;
+    }
+    if (errEl) errEl.textContent = '';
+    supabase.auth.signInWithPassword({ email: email, password: password })
+      .then(function(res) {
+        if (res.error) {
+          if (errEl) errEl.textContent = res.error.message || '로그인에 실패했습니다.';
+          return;
+        }
+        closeAuthModal();
+      })
+      .catch(function(err) {
+        if (errEl) errEl.textContent = err.message || '로그인에 실패했습니다.';
+      });
+  });
+
+  document.getElementById('auth-signup-form') && document.getElementById('auth-signup-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (!supabase) {
+      var err = document.getElementById('auth-signup-error');
+      if (err) err.textContent = 'Supabase가 설정되지 않았습니다. .env에 SUPABASE_URL, SUPABASE_ANON_KEY를 넣어 주세요.';
+      return;
+    }
+    var emailEl = document.getElementById('auth-signup-email');
+    var pwEl = document.getElementById('auth-signup-password');
+    var pwConfirmEl = document.getElementById('auth-signup-password-confirm');
+    var errEl = document.getElementById('auth-signup-error');
+    var email = emailEl && emailEl.value ? emailEl.value.trim() : '';
+    var password = pwEl ? pwEl.value : '';
+    var passwordConfirm = pwConfirmEl ? pwConfirmEl.value : '';
+    if (!email || !password) {
+      if (errEl) errEl.textContent = '이메일과 비밀번호를 입력해 주세요.';
+      return;
+    }
+    if (password.length < 6) {
+      if (errEl) errEl.textContent = '비밀번호는 6자 이상이어야 합니다.';
+      return;
+    }
+    if (password !== passwordConfirm) {
+      if (errEl) errEl.textContent = '비밀번호가 일치하지 않습니다.';
+      return;
+    }
+    if (errEl) errEl.textContent = '';
+    supabase.auth.signUp({ email: email, password: password })
+      .then(function(res) {
+        if (res.error) {
+          if (errEl) errEl.textContent = res.error.message || '회원가입에 실패했습니다.';
+          return;
+        }
+        closeAuthModal();
+        if (res.data.user && !res.data.session) {
+          alert('가입한 이메일로 확인 메일을 보냈습니다. 링크를 클릭한 뒤 로그인해 주세요.');
+        }
+      })
+      .catch(function(err) {
+        if (errEl) errEl.textContent = err.message || '회원가입에 실패했습니다.';
+      });
+  });
+
+  // ========================================
   // 7컬러 × 퍼스널컬러 × 음악 추천 (BTS 멤버 미거론, 무드만 사용)
   // ========================================
   const COLOR_MUSIC = {
