@@ -1,5 +1,50 @@
 # 배포 가이드 (GitHub Pages)
 
+## 🔗 연결 점검 체크리스트
+
+### 1. GitHub 푸시 연결 확인 (로컬 ↔ GitHub)
+
+로컬에서 아래 명령으로 확인했을 때 정상이면 푸시 가능합니다.
+
+```bash
+# 원격 저장소 확인
+git remote -v
+# → origin  https://github.com/heosanghun/SIMS_Fashion.git (fetch)
+# → origin  https://github.com/heosanghun/SIMS_Fashion.git (push)
+
+# upstream 설정 및 푸시 테스트
+git push -u origin main
+# → branch 'main' set up to track 'origin/main'. / Everything up-to-date
+```
+
+- **성공**: `Everything up-to-date` 또는 푸시 완료 메시지 → GitHub 연결 정상.
+- **실패**: 인증 오류 시 [GITHUB_SETUP.md](../GITHUB_SETUP.md) 또는 Personal Access Token 사용.
+
+---
+
+### 2. Cloudflare Pages 배포 연결 점검
+
+Cloudflare는 **대시보드에서 GitHub 저장소를 연결**하는 방식이라, 아래만 확인하면 됩니다.
+
+| 확인 항목 | 위치 | 확인 내용 |
+|-----------|------|-----------|
+| **GitHub 연결** | Workers & Pages → 프로젝트 → **Settings** → **Builds & deployments** | **Connected repository**에 `heosanghun/SIMS_Fashion` (또는 본인 계정/저장소) 표시되는지 |
+| **브랜치** | 위와 동일 | **Production branch**가 `main` 인지 |
+| **빌드 설정** | **Build configuration** | **Build command**: `npm run build` |
+| **빌드 출력** | 위와 동일 | **Build output directory**: `.` 또는 `/` (루트) |
+| **환경 변수** | **Settings** → **Environment variables** | **Production**에 `GEMINI_API_KEY` 등 필요한 변수 설정 여부 |
+
+**배포가 푸시마다 자동으로 되는지 확인:**
+
+1. [Cloudflare Dashboard](https://dash.cloudflare.com) → **Workers & Pages** → 해당 프로젝트 클릭
+2. **Deployments** 탭에서 최근 배포 목록 확인
+3. `main` 브랜치에 푸시한 뒤 **새 배포가 자동으로 시작**되는지 확인
+4. 배포 성공 후 **https://sims-fashion.pages.dev** (또는 본인 도메인) 접속해 사이트·챗봇 동작 확인
+
+**수동 재배포:** Deployments 탭에서 **Retry deployment** 또는 **Create deployment**로 최신 커밋 다시 배포 가능.
+
+---
+
 ## 현재 배포 실패 원인
 
 GitHub Actions 로그에 나오는 오류:
