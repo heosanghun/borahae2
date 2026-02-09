@@ -184,6 +184,44 @@ button {
   gap: 16px;
 }
 
+/* Language Toggle */
+.lang-toggle {
+  display: flex;
+  align-items: center;
+  background: var(--bg-tertiary);
+  border-radius: 8px;
+  padding: 2px;
+  gap: 2px;
+  border: 1px solid var(--border-color);
+}
+
+.lang-btn {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  background: transparent;
+  transition: all 0.25s ease;
+  line-height: 1.4;
+}
+
+.lang-btn:hover {
+  color: var(--text-primary);
+}
+
+.lang-btn.active {
+  background: var(--gradient-primary);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(124, 58, 237, 0.3);
+}
+
+[data-theme="dark"] .lang-toggle {
+  border-color: var(--border-color);
+  background: var(--bg-tertiary);
+}
+
 /* Theme Toggle */
 .theme-toggle {
   width: 44px;
@@ -1330,6 +1368,15 @@ section {
 
   .nav-actions .btn-primary {
     display: none;
+  }
+
+  .lang-toggle {
+    padding: 1px;
+  }
+
+  .lang-btn {
+    padding: 3px 7px;
+    font-size: 0.6rem;
   }
 
   .mobile-menu-btn {

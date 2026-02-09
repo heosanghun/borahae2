@@ -18,22 +18,26 @@
         <span class="logo-text">SIMS Fashion AI</span>
       </a>
       <div class="nav-links">
-        <a href="#features">Features</a>
-        <a href="#ai-styling">AI Styling</a>
-        <a href="#lookbook">Lookbook</a>
-        <a href="#about">About</a>
+        <a href="#features" data-i18n="nav.features">Features</a>
+        <a href="#ai-styling" data-i18n="nav.ai_styling">AI Styling</a>
+        <a href="#lookbook" data-i18n="nav.lookbook">Lookbook</a>
+        <a href="#about" data-i18n="nav.about">About</a>
       </div>
       <div class="nav-actions">
+        <div class="lang-toggle" aria-label="Language">
+          <button type="button" id="lang-ko" class="lang-btn active" title="한국어">KO</button>
+          <button type="button" id="lang-en" class="lang-btn" title="English">EN</button>
+        </div>
         <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
           <span class="icon-sun">&#9728;</span>
           <span class="icon-moon">&#9790;</span>
         </button>
         <div id="auth-nav-guest" class="auth-nav">
-          <button type="button" id="nav-login-btn" class="btn-primary">로그인</button>
+          <button type="button" id="nav-login-btn" class="btn-primary" data-i18n="nav.login">로그인</button>
         </div>
         <div id="auth-nav-user" class="auth-nav" style="display: none;">
           <span id="auth-user-email" class="auth-user-email"></span>
-          <button type="button" id="nav-logout-btn" class="btn-outline btn-sm">로그아웃</button>
+          <button type="button" id="nav-logout-btn" class="btn-outline btn-sm" data-i18n="nav.logout">로그아웃</button>
         </div>
       </div>
       <button class="mobile-menu-btn" aria-label="Menu">
@@ -55,20 +59,20 @@
       </div>
     </div>
     <div class="hero-content">
-      <div class="hero-badge">AI-Powered Fashion</div>
-      <p class="hero-tagline">나만의 컬러 × 나만의 무드 · 특별한 만남</p>
+      <div class="hero-badge" data-i18n="hero.badge">AI-Powered Fashion</div>
+      <p class="hero-tagline" data-i18n="hero.tagline">나만의 컬러 × 나만의 무드 · 특별한 만남</p>
       <h1 class="hero-title">
-        <span class="title-line">당신만을 위한</span>
-        <span class="title-highlight">특별한 체험</span>
+        <span class="title-line" data-i18n="hero.title_line">당신만을 위한</span>
+        <span class="title-highlight" data-i18n="hero.title_highlight">특별한 체험</span>
       </h1>
-      <p class="hero-description">
+      <p class="hero-description" data-i18n-html="hero.desc">
         퍼스널 컬러와 어울리는 무드·음악까지 한곳에서.<br>
         AI가 당신의 체형, 피부톤, 라이프스타일을 분석해<br>
         <strong>세상에 단 하나뿐인</strong> 스타일과 특별한 경험을 제안합니다
       </p>
       <div class="hero-cta">
         <button class="btn-primary btn-large">
-          <span>무료로 시작하기</span>
+          <span data-i18n="hero.cta_start">무료로 시작하기</span>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M5 12h14M12 5l7 7-7 7"/>
           </svg>
@@ -77,21 +81,21 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polygon points="5 3 19 12 5 21 5 3"/>
           </svg>
-          <span>소개 영상 보기</span>
+          <span data-i18n="hero.cta_video">소개 영상 보기</span>
         </a>
       </div>
       <div class="hero-stats">
         <div class="stat">
           <span class="stat-number">50K+</span>
-          <span class="stat-label">Active Users</span>
+          <span class="stat-label" data-i18n="hero.stat_users">Active Users</span>
         </div>
         <div class="stat">
           <span class="stat-number">98%</span>
-          <span class="stat-label">Satisfaction</span>
+          <span class="stat-label" data-i18n="hero.stat_satisfaction">Satisfaction</span>
         </div>
         <div class="stat">
           <span class="stat-number">1M+</span>
-          <span class="stat-label">Styles Created</span>
+          <span class="stat-label" data-i18n="hero.stat_styles">Styles Created</span>
         </div>
       </div>
     </div>
@@ -100,15 +104,15 @@
         <div class="phone-mockup-glow" aria-hidden="true"></div>
         <div class="phone-screen">
           <div class="app-header">
-            <span class="app-header-title">나만의 컬러 & 무드</span>
-            <span class="app-header-sub">특별한 나를 만나는 순간</span>
+            <span class="app-header-title" data-i18n="hero.phone_title">나만의 컬러 & 무드</span>
+            <span class="app-header-sub" data-i18n="hero.phone_sub">특별한 나를 만나는 순간</span>
           </div>
           <div class="style-card">
             <div class="style-image"></div>
             <div class="style-info">
               <span class="style-match">95% Match</span>
               <span class="style-name">Minimal Chic</span>
-              <span class="style-mood">나의 무드 · 청량한</span>
+              <span class="style-mood" data-i18n="hero.mood_1">나의 무드 · 청량한</span>
             </div>
           </div>
           <div class="style-card">
@@ -116,7 +120,7 @@
             <div class="style-info">
               <span class="style-match">92% Match</span>
               <span class="style-name">Street Casual</span>
-              <span class="style-mood">나의 무드 · 밝은 에너지</span>
+              <span class="style-mood" data-i18n="hero.mood_2">나의 무드 · 밝은 에너지</span>
             </div>
           </div>
           <div class="hero-color-dots" aria-hidden="true">
@@ -130,7 +134,7 @@
           </div>
           <div class="ai-suggestion">
             <div class="ai-icon">AI</div>
-            <span>나만의 컬러와 만나는 <strong>특별한 체험</strong>, 지금 시작하세요</span>
+            <span data-i18n-html="hero.ai_suggestion">나만의 컬러와 만나는 <strong>특별한 체험</strong>, 지금 시작하세요</span>
           </div>
         </div>
       </div>
@@ -141,9 +145,9 @@
   <section id="features" class="features">
     <div class="container">
       <div class="section-header">
-        <span class="section-badge">Features</span>
-        <h2 class="section-title">AI가 만드는 새로운 패션 경험</h2>
-        <p class="section-description">최첨단 AI 기술로 당신만의 스타일을 발견하세요</p>
+        <span class="section-badge" data-i18n="features.badge">Features</span>
+        <h2 class="section-title" data-i18n="features.title">AI가 만드는 새로운 패션 경험</h2>
+        <p class="section-description" data-i18n="features.desc">최첨단 AI 기술로 당신만의 스타일을 발견하세요</p>
       </div>
       <div class="features-grid">
         <div class="feature-card">
@@ -154,8 +158,8 @@
               <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"/>
             </svg>
           </div>
-          <h3>체형 분석</h3>
-          <p>AI가 사진 한 장으로 체형을 분석하여 가장 잘 어울리는 실루엣과 핏을 추천합니다</p>
+          <h3 data-i18n="features.body_title">체형 분석</h3>
+          <p data-i18n="features.body_desc">AI가 사진 한 장으로 체형을 분석하여 가장 잘 어울리는 실루엣과 핏을 추천합니다</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">
@@ -168,8 +172,8 @@
               <line x1="20" y1="12" x2="22" y2="12"/>
             </svg>
           </div>
-          <h3>퍼스널 컬러</h3>
-          <p>피부톤, 눈동자, 머리카락 색상을 분석하여 당신에게 완벽한 컬러 팔레트를 제안합니다</p>
+          <h3 data-i18n="features.color_title">퍼스널 컬러</h3>
+          <p data-i18n="features.color_desc">피부톤, 눈동자, 머리카락 색상을 분석하여 당신에게 완벽한 컬러 팔레트를 제안합니다</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">
@@ -179,8 +183,8 @@
               <path d="M9 21V9"/>
             </svg>
           </div>
-          <h3>스타일 큐레이션</h3>
-          <p>수백만 개의 패션 데이터를 학습한 AI가 트렌드와 취향을 반영한 스타일을 큐레이션합니다</p>
+          <h3 data-i18n="features.curation_title">스타일 큐레이션</h3>
+          <p data-i18n="features.curation_desc">수백만 개의 패션 데이터를 학습한 AI가 트렌드와 취향을 반영한 스타일을 큐레이션합니다</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">
@@ -188,8 +192,8 @@
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
             </svg>
           </div>
-          <h3>취향 학습</h3>
-          <p>사용할수록 똑똑해지는 AI가 당신의 취향을 학습하여 점점 더 정확한 추천을 제공합니다</p>
+          <h3 data-i18n="features.learning_title">취향 학습</h3>
+          <p data-i18n="features.learning_desc">사용할수록 똑똑해지는 AI가 당신의 취향을 학습하여 점점 더 정확한 추천을 제공합니다</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">
@@ -199,8 +203,8 @@
               <line x1="12" y1="22.08" x2="12" y2="12"/>
             </svg>
           </div>
-          <h3>가상 피팅</h3>
-          <p>AR 기술로 옷을 입어보지 않고도 실제 착용 모습을 미리 확인할 수 있습니다</p>
+          <h3 data-i18n="features.fitting_title">가상 피팅</h3>
+          <p data-i18n="features.fitting_desc">AR 기술로 옷을 입어보지 않고도 실제 착용 모습을 미리 확인할 수 있습니다</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">
@@ -210,8 +214,8 @@
               <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
             </svg>
           </div>
-          <h3>원클릭 쇼핑</h3>
-          <p>마음에 드는 아이템을 발견하면 파트너 브랜드에서 바로 구매할 수 있습니다</p>
+          <h3 data-i18n="features.shopping_title">원클릭 쇼핑</h3>
+          <p data-i18n="features.shopping_desc">마음에 드는 아이템을 발견하면 파트너 브랜드에서 바로 구매할 수 있습니다</p>
         </div>
       </div>
     </div>
@@ -222,32 +226,32 @@
     <div class="container">
       <div class="ai-content">
         <div class="ai-text">
-          <span class="section-badge">AI Styling</span>
-          <h2 class="section-title">3단계로 완성되는<br>나만의 스타일</h2>
+          <span class="section-badge" data-i18n="ai.badge">AI Styling</span>
+          <h2 class="section-title" data-i18n-html="ai.title">3단계로 완성되는<br>나만의 스타일</h2>
           <div class="steps">
             <div class="step">
               <div class="step-number">01</div>
               <div class="step-content">
-                <h4>프로필 분석</h4>
-                <p>간단한 설문과 사진으로 AI가 당신을 분석합니다</p>
+                <h4 data-i18n="ai.step1_title">프로필 분석</h4>
+                <p data-i18n="ai.step1_desc">간단한 설문과 사진으로 AI가 당신을 분석합니다</p>
               </div>
             </div>
             <div class="step">
               <div class="step-number">02</div>
               <div class="step-content">
-                <h4>스타일 생성</h4>
-                <p>수백만 개의 패션 데이터에서 최적의 스타일을 찾습니다</p>
+                <h4 data-i18n="ai.step2_title">스타일 생성</h4>
+                <p data-i18n="ai.step2_desc">수백만 개의 패션 데이터에서 최적의 스타일을 찾습니다</p>
               </div>
             </div>
             <div class="step">
               <div class="step-number">03</div>
               <div class="step-content">
-                <h4>맞춤 추천</h4>
-                <p>매일 새로운 코디와 아이템을 추천받으세요</p>
+                <h4 data-i18n="ai.step3_title">맞춤 추천</h4>
+                <p data-i18n="ai.step3_desc">매일 새로운 코디와 아이템을 추천받으세요</p>
               </div>
             </div>
           </div>
-          <button class="btn-primary btn-large">AI 스타일링 시작하기</button>
+          <button class="btn-primary btn-large" data-i18n="ai.cta">AI 스타일링 시작하기</button>
         </div>
         <div class="ai-visual">
           <div class="ai-demo">
@@ -303,17 +307,17 @@
   <section id="lookbook" class="lookbook">
     <div class="container">
       <div class="section-header">
-        <span class="section-badge">Lookbook</span>
-        <h2 class="section-title">AI가 추천하는 Today's Pick</h2>
-        <p class="section-description">실시간 트렌드와 날씨를 반영한 오늘의 추천 스타일</p>
+        <span class="section-badge" data-i18n="lookbook.badge">Lookbook</span>
+        <h2 class="section-title" data-i18n="lookbook.title">AI가 추천하는 Today's Pick</h2>
+        <p class="section-description" data-i18n="lookbook.desc">실시간 트렌드와 날씨를 반영한 오늘의 추천 스타일</p>
       </div>
       <div class="lookbook-grid">
         <div class="look-card look-large">
           <div class="look-image look-1">
             <div class="look-overlay">
               <span class="look-tag">Spring Essential</span>
-              <h3>미니멀 시크</h3>
-              <p>깔끔한 라인과 뉴트럴 컬러로 완성하는 모던 룩</p>
+              <h3 data-i18n="lookbook.minimal">미니멀 시크</h3>
+              <p data-i18n="lookbook.minimal_desc">깔끔한 라인과 뉴트럴 컬러로 완성하는 모던 룩</p>
               <button class="btn-look">View Look</button>
             </div>
           </div>
@@ -322,7 +326,7 @@
           <div class="look-image look-2">
             <div class="look-overlay">
               <span class="look-tag">Trending</span>
-              <h3>스트릿 캐주얼</h3>
+              <h3 data-i18n="lookbook.street">스트릿 캐주얼</h3>
               <button class="btn-look">View Look</button>
             </div>
           </div>
@@ -331,7 +335,7 @@
           <div class="look-image look-3">
             <div class="look-overlay">
               <span class="look-tag">Office</span>
-              <h3>비즈니스 캐주얼</h3>
+              <h3 data-i18n="lookbook.business">비즈니스 캐주얼</h3>
               <button class="btn-look">View Look</button>
             </div>
           </div>
@@ -340,7 +344,7 @@
           <div class="look-image look-4">
             <div class="look-overlay">
               <span class="look-tag">Weekend</span>
-              <h3>릴렉스 핏</h3>
+              <h3 data-i18n="lookbook.relax">릴렉스 핏</h3>
               <button class="btn-look">View Look</button>
             </div>
           </div>
@@ -349,7 +353,7 @@
           <div class="look-image look-5">
             <div class="look-overlay">
               <span class="look-tag">Date</span>
-              <h3>로맨틱 무드</h3>
+              <h3 data-i18n="lookbook.romantic">로맨틱 무드</h3>
               <button class="btn-look">View Look</button>
             </div>
           </div>
@@ -362,40 +366,40 @@
   <section class="testimonials">
     <div class="container">
       <div class="section-header">
-        <span class="section-badge">Reviews</span>
-        <h2 class="section-title">사용자들의 이야기</h2>
+        <span class="section-badge" data-i18n="testimonials.badge">Reviews</span>
+        <h2 class="section-title" data-i18n="testimonials.title">사용자들의 이야기</h2>
       </div>
       <div class="testimonial-grid">
         <div class="testimonial-card">
           <div class="testimonial-rating">★★★★★</div>
-          <p>"매일 아침 뭘 입을지 고민했는데, 이제는 AI가 추천해주는 대로 입으면 돼서 너무 편해요!"</p>
+          <p data-i18n="testimonials.review1">"매일 아침 뭘 입을지 고민했는데, 이제는 AI가 추천해주는 대로 입으면 돼서 너무 편해요!"</p>
           <div class="testimonial-author">
             <div class="author-avatar">JY</div>
             <div class="author-info">
-              <span class="author-name">지영</span>
-              <span class="author-role">직장인, 28세</span>
+              <span class="author-name" data-i18n="testimonials.author1_name">지영</span>
+              <span class="author-role" data-i18n="testimonials.author1_role">직장인, 28세</span>
             </div>
           </div>
         </div>
         <div class="testimonial-card">
           <div class="testimonial-rating">★★★★★</div>
-          <p>"퍼스널 컬러 진단받고 완전 인생템들만 추천받아요. 옷 쇼핑 실패가 없어졌어요."</p>
+          <p data-i18n="testimonials.review2">"퍼스널 컬러 진단받고 완전 인생템들만 추천받아요. 옷 쇼핑 실패가 없어졌어요."</p>
           <div class="testimonial-author">
             <div class="author-avatar">MJ</div>
             <div class="author-info">
-              <span class="author-name">민준</span>
-              <span class="author-role">대학생, 24세</span>
+              <span class="author-name" data-i18n="testimonials.author2_name">민준</span>
+              <span class="author-role" data-i18n="testimonials.author2_role">대학생, 24세</span>
             </div>
           </div>
         </div>
         <div class="testimonial-card">
           <div class="testimonial-rating">★★★★★</div>
-          <p>"체형 분석 결과 보고 깜짝 놀랐어요. 제가 왜 그 스타일이 안 어울렸는지 이제 알겠어요!"</p>
+          <p data-i18n="testimonials.review3">"체형 분석 결과 보고 깜짝 놀랐어요. 제가 왜 그 스타일이 안 어울렸는지 이제 알겠어요!"</p>
           <div class="testimonial-author">
             <div class="author-avatar">SH</div>
             <div class="author-info">
-              <span class="author-name">서현</span>
-              <span class="author-role">프리랜서, 32세</span>
+              <span class="author-name" data-i18n="testimonials.author3_name">서현</span>
+              <span class="author-role" data-i18n="testimonials.author3_role">프리랜서, 32세</span>
             </div>
           </div>
         </div>
@@ -417,9 +421,9 @@
           </div>
         </div>
         <div class="about-text">
-          <span class="section-badge">About Us</span>
-          <h2 class="section-title">패션의 미래를<br>AI로 열어갑니다</h2>
-          <p class="about-description">
+          <span class="section-badge" data-i18n="about.badge">About Us</span>
+          <h2 class="section-title" data-i18n-html="about.title">패션의 미래를<br>AI로 열어갑니다</h2>
+          <p class="about-description" data-i18n="about.desc">
             SIMS Fashion AI는 최첨단 인공지능 기술과 패션 전문가의 노하우를 결합하여,
             모든 사람이 자신만의 스타일을 찾을 수 있도록 돕는 것을 목표로 합니다.
           </p>
@@ -433,8 +437,8 @@
                 </svg>
               </div>
               <div>
-                <h4>AI 기술력</h4>
-                <p>최신 딥러닝 모델 기반 분석</p>
+                <h4 data-i18n="about.tech_title">AI 기술력</h4>
+                <p data-i18n="about.tech_desc">최신 딥러닝 모델 기반 분석</p>
               </div>
             </div>
             <div class="about-feature">
@@ -445,8 +449,8 @@
                 </svg>
               </div>
               <div>
-                <h4>실시간 추천</h4>
-                <p>날씨, 일정에 맞는 즉시 코디</p>
+                <h4 data-i18n="about.realtime_title">실시간 추천</h4>
+                <p data-i18n="about.realtime_desc">날씨, 일정에 맞는 즉시 코디</p>
               </div>
             </div>
             <div class="about-feature">
@@ -459,8 +463,8 @@
                 </svg>
               </div>
               <div>
-                <h4>50K+ 사용자</h4>
-                <p>검증된 스타일링 서비스</p>
+                <h4 data-i18n="about.users_title">50K+ 사용자</h4>
+                <p data-i18n="about.users_desc">검증된 스타일링 서비스</p>
               </div>
             </div>
           </div>
@@ -483,11 +487,11 @@
   <section class="cta-section">
     <div class="container">
       <div class="cta-content">
-        <h2>지금 바로 나만의 스타일을 발견하세요</h2>
-        <p>AI 스타일리스트가 당신을 기다리고 있습니다</p>
+        <h2 data-i18n="cta.title">지금 바로 나만의 스타일을 발견하세요</h2>
+        <p data-i18n="cta.desc">AI 스타일리스트가 당신을 기다리고 있습니다</p>
         <div class="cta-buttons">
-          <button class="btn-primary btn-large">무료로 시작하기</button>
-          <a href="#about" class="btn-outline btn-large">더 알아보기</a>
+          <button class="btn-primary btn-large" data-i18n="cta.start">무료로 시작하기</button>
+          <a href="#about" class="btn-outline btn-large" data-i18n="cta.learn">더 알아보기</a>
         </div>
       </div>
     </div>
@@ -502,7 +506,7 @@
             <span class="logo-icon">S</span>
             <span class="logo-text">SIMS Fashion AI</span>
           </a>
-          <p>AI 기반 초개인화 패션 플랫폼</p>
+          <p data-i18n="footer.tagline">AI 기반 초개인화 패션 플랫폼</p>
           <div class="social-links">
             <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -525,22 +529,22 @@
           </div>
         </div>
         <div class="footer-links">
-          <h4>Product</h4>
-          <a href="#" data-modal="ai-styling">AI 스타일링</a>
-          <a href="#" data-modal="personal-color">퍼스널 컬러</a>
-          <a href="#" data-modal="virtual-fitting">가상 피팅</a>
-          <a href="#" data-modal="pricing">가격 정책</a>
+          <h4 data-i18n="footer.product">Product</h4>
+          <a href="#" data-modal="ai-styling" data-i18n="footer.ai_styling">AI 스타일링</a>
+          <a href="#" data-modal="personal-color" data-i18n="footer.personal_color">퍼스널 컬러</a>
+          <a href="#" data-modal="virtual-fitting" data-i18n="footer.virtual_fitting">가상 피팅</a>
+          <a href="#" data-modal="pricing" data-i18n="footer.pricing">가격 정책</a>
         </div>
         <div class="footer-links">
-          <h4>Company</h4>
+          <h4 data-i18n="footer.company">Company</h4>
           <a href="#about">About</a>
-          <a href="#" id="open-partnership-form" aria-label="제휴문의 폼 열기">제휴문의</a>
+          <a href="#" id="open-partnership-form" aria-label="제휴문의 폼 열기" data-i18n="footer.partnership">제휴문의</a>
           <a href="#" data-modal="blog">Blog</a>
           <a href="#" data-modal="careers">Careers</a>
           <a href="#" data-modal="press">Press</a>
         </div>
         <div class="footer-links">
-          <h4>Support</h4>
+          <h4 data-i18n="footer.support">Support</h4>
           <a href="#" data-modal="help">Help Center</a>
           <a href="#" data-modal="contact">Contact</a>
           <a href="#" data-modal="privacy">Privacy</a>
@@ -551,7 +555,7 @@
         <div class="footer-logo">
           <img src="logo.png" alt="SIMS Fashion AI Logo" class="company-logo">
         </div>
-        <p>&copy; 2026 SIMS Fashion AI. All rights reserved.</p>
+        <p data-i18n="footer.copyright">&copy; 2026 SIMS Fashion AI. All rights reserved.</p>
       </div>
     </div>
   </footer>
@@ -610,30 +614,30 @@
       </button>
       <div class="info-modal-header">
         <span class="info-modal-icon">🤝</span>
-        <h2>제휴문의</h2>
-        <p class="partnership-desc">SIMS Fashion AI와 함께하고 싶으시다면 아래 양식을 작성해 주세요.</p>
+        <h2 data-i18n="partnership.title">제휴문의</h2>
+        <p class="partnership-desc" data-i18n="partnership.desc">SIMS Fashion AI와 함께하고 싶으시다면 아래 양식을 작성해 주세요.</p>
       </div>
       <form id="partnership-form" class="partnership-form" action="https://formspree.io/f/xkovgjoy" method="POST">
         <input type="hidden" name="_subject" value="[SIMS Fashion AI] 제휴문의">
         <div class="form-group">
-          <label for="partnership-name">이름 / 담당자 <span class="required">*</span></label>
+          <label for="partnership-name"><span data-i18n="partnership.name">이름 / 담당자</span> <span class="required">*</span></label>
           <input type="text" id="partnership-name" name="name" required placeholder="홍길동" autocomplete="name">
         </div>
         <div class="form-group">
-          <label for="partnership-email">이메일 <span class="required">*</span></label>
+          <label for="partnership-email"><span data-i18n="partnership.email">이메일</span> <span class="required">*</span></label>
           <input type="email" id="partnership-email" name="email" required placeholder="example@company.com" autocomplete="email">
         </div>
         <div class="form-group">
-          <label for="partnership-company">회사 / 브랜드</label>
+          <label for="partnership-company" data-i18n="partnership.company">회사 / 브랜드</label>
           <input type="text" id="partnership-company" name="company" placeholder="(선택)">
         </div>
         <div class="form-group">
-          <label for="partnership-message">문의 내용 <span class="required">*</span></label>
+          <label for="partnership-message"><span data-i18n="partnership.message">문의 내용</span> <span class="required">*</span></label>
           <textarea id="partnership-message" name="message" required rows="4" placeholder="제휴 유형과 간단한 소개를 적어 주세요."></textarea>
         </div>
         <div id="partnership-form-status" class="form-status" role="status" aria-live="polite"></div>
         <button type="submit" class="btn-primary btn-large partnership-submit">
-          <span>보내기</span>
+          <span data-i18n="partnership.submit">보내기</span>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
           </svg>
@@ -652,35 +656,35 @@
       <!-- 헤더 -->
       <div class="auth-header">
         <div class="auth-logo">S</div>
-        <h2 class="auth-title">Welcome</h2>
-        <p class="auth-subtitle">SIMS Fashion AI에 오신 것을 환영합니다</p>
+        <h2 class="auth-title" data-i18n="auth.welcome">Welcome</h2>
+        <p class="auth-subtitle" data-i18n="auth.subtitle">SIMS Fashion AI에 오신 것을 환영합니다</p>
       </div>
       <!-- 탭 -->
       <div class="auth-tabs">
-        <button type="button" id="auth-tab-login" class="auth-tab active" data-tab="login">로그인</button>
-        <button type="button" id="auth-tab-signup" class="auth-tab" data-tab="signup">회원가입</button>
+        <button type="button" id="auth-tab-login" class="auth-tab active" data-tab="login" data-i18n="auth.tab_login">로그인</button>
+        <button type="button" id="auth-tab-signup" class="auth-tab" data-tab="signup" data-i18n="auth.tab_signup">회원가입</button>
       </div>
       <!-- 로그인 폼 -->
       <div class="auth-body">
         <div id="auth-form-login" class="auth-form-panel active">
           <form id="auth-login-form" class="auth-form">
             <div class="auth-field">
-              <label for="auth-login-email">이메일</label>
+              <label for="auth-login-email" data-i18n="auth.email">이메일</label>
               <div class="auth-input-wrap">
                 <svg class="auth-input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M22 7l-10 7L2 7"/></svg>
                 <input type="email" id="auth-login-email" required placeholder="you@example.com" autocomplete="email">
               </div>
             </div>
             <div class="auth-field">
-              <label for="auth-login-password">비밀번호</label>
+              <label for="auth-login-password" data-i18n="auth.password">비밀번호</label>
               <div class="auth-input-wrap">
                 <svg class="auth-input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-                <input type="password" id="auth-login-password" required placeholder="비밀번호 입력" autocomplete="current-password">
+                <input type="password" id="auth-login-password" required placeholder="비밀번호 입력" autocomplete="current-password" data-i18n-placeholder="auth.pw_placeholder">
               </div>
             </div>
             <div id="auth-login-error" class="auth-error" role="alert"></div>
             <button type="submit" class="auth-submit">
-              <span>로그인</span>
+              <span data-i18n="auth.login_btn">로그인</span>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </button>
           </form>
@@ -689,29 +693,29 @@
         <div id="auth-form-signup" class="auth-form-panel">
           <form id="auth-signup-form" class="auth-form">
             <div class="auth-field">
-              <label for="auth-signup-email">이메일</label>
+              <label for="auth-signup-email" data-i18n="auth.email">이메일</label>
               <div class="auth-input-wrap">
                 <svg class="auth-input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M22 7l-10 7L2 7"/></svg>
                 <input type="email" id="auth-signup-email" required placeholder="you@example.com" autocomplete="email">
               </div>
             </div>
             <div class="auth-field">
-              <label for="auth-signup-password">비밀번호</label>
+              <label for="auth-signup-password" data-i18n="auth.password">비밀번호</label>
               <div class="auth-input-wrap">
                 <svg class="auth-input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-                <input type="password" id="auth-signup-password" required placeholder="6자 이상" autocomplete="new-password" minlength="6">
+                <input type="password" id="auth-signup-password" required placeholder="6자 이상" autocomplete="new-password" minlength="6" data-i18n-placeholder="auth.pw_min">
               </div>
             </div>
             <div class="auth-field">
-              <label for="auth-signup-password-confirm">비밀번호 확인</label>
+              <label for="auth-signup-password-confirm" data-i18n="auth.password_confirm">비밀번호 확인</label>
               <div class="auth-input-wrap">
                 <svg class="auth-input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-                <input type="password" id="auth-signup-password-confirm" required placeholder="다시 입력" autocomplete="new-password" minlength="6">
+                <input type="password" id="auth-signup-password-confirm" required placeholder="다시 입력" autocomplete="new-password" minlength="6" data-i18n-placeholder="auth.pw_confirm_placeholder">
               </div>
             </div>
             <div id="auth-signup-error" class="auth-error" role="alert"></div>
             <button type="submit" class="auth-submit">
-              <span>회원가입</span>
+              <span data-i18n="auth.signup_btn">회원가입</span>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </button>
           </form>
@@ -1378,8 +1382,8 @@
             <span class="status-dot"></span>
           </div>
           <div class="chat-header-text">
-            <h4>SIMS AI 스타일리스트</h4>
-            <span class="chat-status">온라인</span>
+            <h4 data-i18n="chat.title">SIMS AI 스타일리스트</h4>
+            <span class="chat-status" data-i18n="chat.status">온라인</span>
           </div>
         </div>
         <button id="chat-minimize" class="chat-minimize" aria-label="최소화">
@@ -1398,21 +1402,21 @@
               <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"/>
             </svg>
           </div>
-          <h3>안녕하세요!</h3>
-          <p>저는 당신의 AI 스타일리스트입니다.<br>패션, 스타일, 코디에 대해 무엇이든 물어보세요.</p>
+          <h3 data-i18n="chat.hello">안녕하세요!</h3>
+          <p data-i18n-html="chat.intro">저는 당신의 AI 스타일리스트입니다.<br>패션, 스타일, 코디에 대해 무엇이든 물어보세요.</p>
           <div class="quick-questions">
-            <button class="quick-btn" data-question="오늘 날씨에 맞는 코디 추천해줘">오늘의 코디 추천</button>
-            <button class="quick-btn" data-question="제 퍼스널 컬러를 알고 싶어요">퍼스널 컬러 진단</button>
-            <button class="quick-btn" data-question="2026년 봄 트렌드 알려줘">2026 트렌드</button>
-            <button class="quick-btn" data-question="미니멀 스타일 코디법 알려줘">미니멀 스타일링</button>
-            <button class="quick-btn" data-question="저의 취향을 먼저 이야기 해줘">내 취향 말해줘</button>
+            <button class="quick-btn" data-question="오늘 날씨에 맞는 코디 추천해줘" data-i18n="chat.q1">오늘의 코디 추천</button>
+            <button class="quick-btn" data-question="제 퍼스널 컬러를 알고 싶어요" data-i18n="chat.q2">퍼스널 컬러 진단</button>
+            <button class="quick-btn" data-question="2026년 봄 트렌드 알려줘" data-i18n="chat.q3">2026 트렌드</button>
+            <button class="quick-btn" data-question="미니멀 스타일 코디법 알려줘" data-i18n="chat.q4">미니멀 스타일링</button>
+            <button class="quick-btn" data-question="저의 취향을 먼저 이야기 해줘" data-i18n="chat.q5">내 취향 말해줘</button>
           </div>
         </div>
       </div>
 
       <div class="chat-input-container">
         <div class="chat-input-wrapper">
-          <textarea id="chat-input" placeholder="메시지를 입력하세요..." rows="1"></textarea>
+          <textarea id="chat-input" placeholder="메시지를 입력하세요..." rows="1" data-i18n-placeholder="chat.placeholder"></textarea>
           <button id="chat-send" class="chat-send" aria-label="전송">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="22" y1="2" x2="11" y2="13"/>
@@ -1429,7 +1433,7 @@
        로드 오류 시: docs/DISQUS_SETUP.md 참고 (Trusted Domains 등록 필수) -->
   <section id="comments" class="comments-section" data-disqus-shortname="https-sims-fashion-pages-dev">
     <div class="container">
-      <h2 class="comments-title">댓글</h2>
+      <h2 class="comments-title" data-i18n="comments.title">댓글</h2>
       <div id="disqus_thread"></div>
       <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
     </div>
@@ -1469,6 +1473,7 @@
     import { Client } from "https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js";
     window.GradioClient = Client;
   </script>
+  <script type="text/javascript" src="i18n.js"></script>
   <script defer type="text/javascript" src="main.js"></script>
 </body>
 </html>
