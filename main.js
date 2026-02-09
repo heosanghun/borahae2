@@ -13,10 +13,20 @@
   // ========================================
   // Supabase 클라이언트는 index.html의 ESM 모듈에서 생성 → window.__supabaseClient
   var supabase = window.__supabaseClient || null;
+  var supabaseReady = !!supabase;
 
   function getSupabase() {
     if (!supabase) supabase = window.__supabaseClient || null;
     return supabase;
+  }
+
+  function waitForSupabase(callback) {
+    var sb = getSupabase();
+    if (sb) { callback(sb); return; }
+    window.addEventListener('supabase-ready', function() {
+      var s = getSupabase();
+      if (s) callback(s);
+    });
   }
 
   function updateAuthNav(user) {
@@ -110,14 +120,7 @@
     openAuthModal('signup');
   });
 
-  document.getElementById('auth-login-form') && document.getElementById('auth-login-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    var sb = getSupabase();
-    if (!sb) {
-      var err = document.getElementById('auth-login-error');
-      if (err) err.textContent = 'Supabase 로딩 중입니다. 잠시 후 다시 시도해 주세요.';
-      return;
-    }
+  function doLogin(sb) {
     var emailEl = document.getElementById('auth-login-email');
     var pwEl = document.getElementById('auth-login-password');
     var errEl = document.getElementById('auth-login-error');
@@ -139,16 +142,9 @@
       .catch(function(err) {
         if (errEl) errEl.textContent = err.message || '로그인에 실패했습니다.';
       });
-  });
+  }
 
-  document.getElementById('auth-signup-form') && document.getElementById('auth-signup-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    var sb = getSupabase();
-    if (!sb) {
-      var err = document.getElementById('auth-signup-error');
-      if (err) err.textContent = 'Supabase 로딩 중입니다. 잠시 후 다시 시도해 주세요.';
-      return;
-    }
+  function doSignup(sb) {
     var emailEl = document.getElementById('auth-signup-email');
     var pwEl = document.getElementById('auth-signup-password');
     var pwConfirmEl = document.getElementById('auth-signup-password-confirm');
@@ -183,6 +179,32 @@
       .catch(function(err) {
         if (errEl) errEl.textContent = err.message || '회원가입에 실패했습니다.';
       });
+  }
+
+  document.getElementById('auth-login-form') && document.getElementById('auth-login-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var errEl = document.getElementById('auth-login-error');
+    var sb = getSupabase();
+    if (sb) { doLogin(sb); return; }
+    if (errEl) errEl.textContent = '연결 중... 잠시만 기다려 주세요.';
+    waitForSupabase(function(s) {
+      if (errEl) errEl.textContent = '';
+      if (s) doLogin(s);
+      else if (errEl) errEl.textContent = 'Supabase 연결에 실패했습니다. 페이지를 새로고침해 주세요.';
+    });
+  });
+
+  document.getElementById('auth-signup-form') && document.getElementById('auth-signup-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var errEl = document.getElementById('auth-signup-error');
+    var sb = getSupabase();
+    if (sb) { doSignup(sb); return; }
+    if (errEl) errEl.textContent = '연결 중... 잠시만 기다려 주세요.';
+    waitForSupabase(function(s) {
+      if (errEl) errEl.textContent = '';
+      if (s) doSignup(s);
+      else if (errEl) errEl.textContent = 'Supabase 연결에 실패했습니다. 페이지를 새로고침해 주세요.';
+    });
   });
 
   // ========================================
