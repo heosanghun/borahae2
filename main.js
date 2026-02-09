@@ -578,6 +578,16 @@
   };
 
   const infoModal = document.getElementById('info-modal');
+  const partnershipModal = document.getElementById('partnership-modal');
+
+  document.getElementById('open-partnership-form')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (partnershipModal) {
+      partnershipModal.classList.add('active');
+      partnershipModal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+  });
 
   document.querySelectorAll('[data-modal]').forEach(link => {
     link.addEventListener('click', (e) => {
@@ -601,12 +611,16 @@
     btn.addEventListener('click', () => {
       if (lookbookModal) lookbookModal.classList.remove('active');
       if (infoModal) infoModal.classList.remove('active');
+      if (partnershipModal) {
+        partnershipModal.classList.remove('active');
+        partnershipModal.setAttribute('aria-hidden', 'true');
+      }
       document.body.style.overflow = '';
     });
   });
 
   // Close on backdrop click
-  [lookbookModal, infoModal].forEach(modal => {
+  [lookbookModal, infoModal, partnershipModal].forEach(modal => {
     if (modal) {
       modal.addEventListener('click', (e) => {
         if (e.target === modal) {
@@ -1675,9 +1689,60 @@
       if (lookbookModal) lookbookModal.classList.remove('active');
       if (infoModal) infoModal.classList.remove('active');
       if (stylingModal) stylingModal.classList.remove('active');
+      if (partnershipModal) {
+        partnershipModal.classList.remove('active');
+        partnershipModal.setAttribute('aria-hidden', 'true');
+      }
       document.body.style.overflow = '';
     }
   });
+
+  // 제휴문의 Formspree AJAX 전송
+  const partnershipForm = document.getElementById('partnership-form');
+  const partnershipStatus = document.getElementById('partnership-form-status');
+  if (partnershipForm && partnershipStatus) {
+    partnershipForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      partnershipStatus.textContent = '';
+      partnershipStatus.className = 'form-status';
+      const submitBtn = partnershipForm.querySelector('.partnership-submit');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = '전송 중...';
+      }
+      try {
+        const formData = new FormData(partnershipForm);
+        const res = await fetch(partnershipForm.action, {
+          method: 'POST',
+          body: formData,
+          headers: { Accept: 'application/json' }
+        });
+        const data = await res.json();
+        if (data.ok) {
+          partnershipStatus.textContent = '문의가 접수되었습니다. 빠르게 연락드리겠습니다.';
+          partnershipStatus.className = 'form-status form-status-success';
+          partnershipForm.reset();
+          setTimeout(() => {
+            if (partnershipModal) {
+              partnershipModal.classList.remove('active');
+              partnershipModal.setAttribute('aria-hidden', 'true');
+            }
+            document.body.style.overflow = '';
+          }, 2000);
+        } else {
+          partnershipStatus.textContent = data.error || '전송에 실패했습니다. 잠시 후 다시 시도해 주세요.';
+          partnershipStatus.className = 'form-status form-status-error';
+        }
+      } catch (err) {
+        partnershipStatus.textContent = '네트워크 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
+        partnershipStatus.className = 'form-status form-status-error';
+      }
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<span>보내기</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>';
+      }
+    });
+  }
 
   // ========================================
   // AI Chat Widget
