@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7c3aed"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+    <linearGradient id="shine" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.18"/>
+      <stop offset="40%" stop-color="#ffffff" stop-opacity="0.03"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="s-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#edd5ff"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="1 0 0 0 1  0 1 0 0 1  0 0 1 0 1  0 0 0 0.35 0" result="glow"/>
+      <feMerge>
+        <feMergeNode in="glow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <!-- Rounded square background -->
+  <rect width="512" height="512" rx="108" ry="108" fill="url(#bg)"/>
+  <!-- Subtle shine overlay -->
+  <rect width="512" height="256" rx="108" ry="108" fill="url(#shine)"/>
+  <!-- Stylized S letter - full, centered, elegant curves -->
+  <path d="
+    M 340 145
+    C 340 145, 335 100, 270 100
+    C 200 100, 152 130, 152 185
+    C 152 240, 200 262, 256 278
+    C 312 294, 360 316, 360 370
+    C 360 425, 305 452, 245 452
+    C 178 452, 172 410, 172 410
+  " fill="none" stroke="url(#s-grad)" stroke-width="46" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+  <!-- Sparkle accent top-right -->
+  <path d="M 395 85 L 400 100 L 415 105 L 400 110 L 395 125 L 390 110 L 375 105 L 390 100 Z" fill="#ffffff" opacity="0.75"/>
+  <!-- Small sparkle bottom-left -->
+  <path d="M 115 395 L 118 404 L 127 407 L 118 410 L 115 419 L 112 410 L 103 407 L 112 404 Z" fill="#ffffff" opacity="0.5"/>
+</svg>
