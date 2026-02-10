@@ -41,8 +41,8 @@ const openaiKey = process.env.OPENAI_API_KEY || env.OPENAI_API_KEY || '';
 const geminiKey = process.env.GEMINI_API_KEY || env.GEMINI_API_KEY || '';
 // Supabase URL & anon key는 공개 키 (클라이언트용, RLS로 보안 처리)
 // 환경변수가 없을 때를 위한 폴백 기본값 포함
-const SUPABASE_URL_DEFAULT = 'https://lqhlxtnonsnxlijobvmy.supabase.co';
-const SUPABASE_ANON_KEY_DEFAULT = 'sb_publishable_AIdo0THbtKq0pcq7W5qu0Q_u2l30UNZ';
+const SUPABASE_URL_DEFAULT = 'https://ydzqwveyovdfqgehkpui.supabase.co';
+const SUPABASE_ANON_KEY_DEFAULT = 'sb_publishable_xQm-sn6cc_UT7r9Y-Q3qgA_y-1_tPPl';
 const supabaseUrl = process.env.SUPABASE_URL || env.SUPABASE_URL || SUPABASE_URL_DEFAULT;
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || env.SUPABASE_ANON_KEY || SUPABASE_ANON_KEY_DEFAULT;
 
