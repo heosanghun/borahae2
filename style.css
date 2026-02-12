@@ -3784,9 +3784,9 @@ section {
 .chat-avatar-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center 50%;
-  transform: scale(0.95);
+  object-fit: contain;
+  object-position: center center;
+  transform: scale(0.8);
 }
 
 .status-dot {
@@ -3882,9 +3882,9 @@ section {
 .welcome-avatar-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center 50%;
-  transform: scale(0.95);
+  object-fit: contain;
+  object-position: center center;
+  transform: scale(0.8);
 }
 .welcome-avatar svg {
   width: 32px;
@@ -3980,9 +3980,9 @@ section {
 .message-avatar .message-avatar-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center 50%;
-  transform: scale(0.95);
+  object-fit: contain;
+  object-position: center center;
+  transform: scale(0.8);
 }
 
 .message.user .message-avatar {
