@@ -3785,8 +3785,9 @@ section {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center top;
-  transform: scale(0.9);
+  object-position: center center;
+  border-radius: 50%;
+  transform: scale(0.95);
 }
 
 .status-dot {
@@ -3883,8 +3884,9 @@ section {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center top;
-  transform: scale(0.9);
+  object-position: center center;
+  border-radius: 50%;
+  transform: scale(0.95);
 }
 .welcome-avatar svg {
   width: 32px;
@@ -3981,8 +3983,9 @@ section {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center top;
-  transform: scale(0.9);
+  object-position: center center;
+  border-radius: 50%;
+  transform: scale(0.95);
 }
 
 .message.user .message-avatar {
