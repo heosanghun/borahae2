@@ -2630,5 +2630,72 @@
     });
   })();
 
+  // 디지털 옷장 - 소아베 패션 자동 슬라이드 애니메이션
+  (function() {
+    var fashionSlides = document.querySelectorAll('.fashion-slide');
+    var indicatorDots = document.querySelectorAll('.indicator-dot');
+    var currentSlide = 0;
+    var slideInterval = null;
+    var slideDuration = 3000; // 3초마다 변경
+
+    if (fashionSlides.length === 0) return;
+
+    function showSlide(index) {
+      // 모든 슬라이드 비활성화
+      fashionSlides.forEach(function(slide) {
+        slide.classList.remove('active');
+      });
+      indicatorDots.forEach(function(dot) {
+        dot.classList.remove('active');
+      });
+
+      // 현재 슬라이드 활성화
+      if (fashionSlides[index]) {
+        fashionSlides[index].classList.add('active');
+      }
+      if (indicatorDots[index]) {
+        indicatorDots[index].classList.add('active');
+      }
+
+      currentSlide = index;
+    }
+
+    function nextSlide() {
+      var next = (currentSlide + 1) % fashionSlides.length;
+      showSlide(next);
+    }
+
+    function startAutoSlide() {
+      if (slideInterval) clearInterval(slideInterval);
+      slideInterval = setInterval(nextSlide, slideDuration);
+    }
+
+    function stopAutoSlide() {
+      if (slideInterval) {
+        clearInterval(slideInterval);
+        slideInterval = null;
+      }
+    }
+
+    // 인디케이터 클릭 이벤트
+    indicatorDots.forEach(function(dot, index) {
+      dot.addEventListener('click', function() {
+        showSlide(index);
+        startAutoSlide(); // 클릭 후 자동 슬라이드 재시작
+      });
+    });
+
+    // 마우스 호버 시 일시정지
+    var fashionShowcase = document.querySelector('.fashion-showcase');
+    if (fashionShowcase) {
+      fashionShowcase.addEventListener('mouseenter', stopAutoSlide);
+      fashionShowcase.addEventListener('mouseleave', startAutoSlide);
+    }
+
+    // 초기 슬라이드 표시 및 자동 슬라이드 시작
+    showSlide(0);
+    startAutoSlide();
+  })();
+
   console.log('BORAHAE loaded successfully!');
 })();

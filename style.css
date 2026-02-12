@@ -598,6 +598,7 @@ button {
   display: flex;
   justify-content: center;
   perspective: 1000px;
+  position: relative;
 }
 
 .phone-mockup {
@@ -611,32 +612,9 @@ button {
   transform: rotateY(-10deg) rotateX(5deg);
   transition: var(--transition);
   overflow: visible;
+  z-index: 1;
 }
 
-.phone-mockup::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  right: -60px;
-  transform: translateY(-50%) rotate(-8deg);
-  width: 320px;
-  height: 450px;
-  background-image: url('image/soave/soave1.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  opacity: 0.18;
-  filter: blur(3px) brightness(1.1);
-  z-index: -2;
-  pointer-events: none;
-  transition: opacity 0.4s ease, transform 0.4s ease, filter 0.4s ease;
-}
-
-.phone-mockup:hover::before {
-  opacity: 0.22;
-  transform: translateY(-50%) rotate(-6deg) scale(1.03);
-  filter: blur(2px) brightness(1.15);
-}
 
 .phone-mockup-glow {
   position: absolute;
@@ -685,71 +663,85 @@ button {
   letter-spacing: 0.3px;
 }
 
-.style-card {
-  background: var(--bg-secondary);
-  border-radius: 16px;
-  padding: 12px;
+/* 디지털 옷장 - 패션 쇼케이스 */
+.fashion-showcase {
+  position: relative;
+  width: 100%;
+  height: 380px;
+  margin-bottom: 16px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.fashion-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 1s ease-in-out, transform 1s ease-in-out;
   display: flex;
-  gap: 12px;
-  margin-bottom: 12px;
-  transition: var(--transition);
-}
-
-.style-card:hover {
-  transform: scale(1.02);
-}
-
-.style-image {
-  width: 60px;
-  height: 60px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-}
-
-.style-image.img-2 {
-  background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%);
-}
-
-.style-info {
-  display: flex;
-  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  gap: 4px;
+  padding: 20px;
 }
 
-.style-match {
-  font-size: 0.75rem;
-  color: #10b981;
-  font-weight: 600;
+.fashion-slide.active {
+  opacity: 1;
+  transform: scale(1);
+  z-index: 1;
 }
 
-.style-name {
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: var(--text-primary);
+.fashion-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
+  animation: fashionFloat 3s ease-in-out infinite;
 }
 
-.style-mood {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-  margin-top: 2px;
-  font-weight: 500;
+@keyframes fashionFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
 }
 
-.hero-color-dots {
+.fashion-indicators {
   display: flex;
   justify-content: center;
-  gap: 6px;
-  margin-top: 14px;
-  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+  margin-bottom: 8px;
 }
 
-.hero-color-dots .dot {
+.indicator-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--c);
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.indicator-dot.active {
+  background: var(--gradient-primary);
+  width: 24px;
+  border-radius: 4px;
+  box-shadow: 0 0 8px rgba(124, 58, 237, 0.5);
+}
+
+.indicator-dot:hover {
+  background: rgba(255, 255, 255, 0.5);
+  transform: scale(1.2);
 }
 
 .ai-suggestion {
