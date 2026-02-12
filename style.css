@@ -461,14 +461,7 @@ button {
   border-radius: 20px;
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
-  animation: watercolor-float 4s ease-in-out infinite;
   transform-origin: center;
-  background: 
-    radial-gradient(ellipse at top left, rgba(124, 58, 237, 0.4) 0%, transparent 50%),
-    radial-gradient(ellipse at bottom right, rgba(236, 72, 153, 0.3) 0%, transparent 50%),
-    radial-gradient(ellipse at center, rgba(167, 139, 250, 0.2) 0%, transparent 70%);
-  background-size: 120% 120%, 100% 100%, 150% 150%;
-  background-position: -10% -10%, 110% 110%, center;
   color: transparent;
   background-image: linear-gradient(135deg, #7c3aed 0%, #a855f7 25%, #ec4899 50%, #f472b6 75%, #7c3aed 100%);
   background-size: 200% 200%;
@@ -476,10 +469,33 @@ button {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: watercolor-float 4s ease-in-out infinite, gradient-color-shift 4s ease-in-out infinite;
-  text-shadow: 
-    0 2px 4px rgba(124, 58, 237, 0.3),
-    0 4px 8px rgba(124, 58, 237, 0.2),
-    0 8px 16px rgba(236, 72, 153, 0.15);
+}
+
+.title-line::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  background: 
+    radial-gradient(ellipse at top left, rgba(124, 58, 237, 0.4) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom right, rgba(236, 72, 153, 0.3) 0%, transparent 50%),
+    radial-gradient(ellipse at center, rgba(167, 139, 250, 0.2) 0%, transparent 70%);
+  background-size: 120% 120%, 100% 100%, 150% 150%;
+  background-position: -10% -10%, 110% 110%, center;
+  z-index: -1;
+  animation: gradient-shift 4s ease-in-out infinite;
+}
+
+.title-line::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(236, 72, 153, 0.15));
+  z-index: -2;
+  opacity: 0.6;
+  filter: blur(8px);
+  animation: glow-pulse 3s ease-in-out infinite;
 }
 
 @keyframes watercolor-float {
