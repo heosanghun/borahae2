@@ -3768,9 +3768,9 @@ section {
 }
 
 .chat-avatar {
-  width: 56px;
-  height: 56px;
-  background: rgba(255, 255, 255, 0.2);
+  width: 64px;
+  height: 64px;
+  background: transparent;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -3780,6 +3780,8 @@ section {
   font-size: 1rem;
   position: relative;
   overflow: hidden;
+  border: none;
+  padding: 0;
 }
 .chat-avatar-img {
   width: 100%;
@@ -3793,7 +3795,7 @@ section {
   -webkit-clip-path: circle(50%);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  transform: scale(0.65);
+  transform: scale(1.0);
   will-change: transform;
 }
 
@@ -3877,15 +3879,17 @@ section {
 }
 
 .welcome-avatar {
-  width: 80px;
-  height: 80px;
-  background: rgba(124, 58, 237, 0.1);
+  width: 96px;
+  height: 96px;
+  background: transparent;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 14px;
   overflow: hidden;
+  border: none;
+  padding: 0;
 }
 .welcome-avatar-img {
   width: 100%;
@@ -3899,7 +3903,7 @@ section {
   -webkit-clip-path: circle(50%);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  transform: scale(0.65);
+  transform: scale(1.0);
   will-change: transform;
 }
 .welcome-avatar svg {
@@ -3976,8 +3980,8 @@ section {
 }
 
 .message-avatar {
-  width: 44px;
-  height: 44px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -3986,10 +3990,12 @@ section {
   font-size: 0.75rem;
   font-weight: 700;
   overflow: hidden;
+  border: none;
+  padding: 0;
 }
 
 .message.assistant .message-avatar {
-  background: var(--gradient-primary);
+  background: transparent;
   color: white;
   overflow: hidden;
 }
@@ -4005,7 +4011,7 @@ section {
   -webkit-clip-path: circle(50%);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  transform: scale(0.65);
+  transform: scale(1.0);
   will-change: transform;
 }
 
@@ -4058,10 +4064,12 @@ section {
 }
 
 .typing-indicator .message-avatar {
-  width: 44px;
-  height: 44px;
-  background: var(--gradient-primary);
+  width: 52px;
+  height: 52px;
+  background: transparent;
   color: white;
+  border: none;
+  padding: 0;
 }
 
 .typing-dots {
