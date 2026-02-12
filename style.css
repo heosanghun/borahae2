@@ -29,6 +29,7 @@
 
   --font-sans: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-display: 'Playfair Display', Georgia, serif;
+  --font-artistic: 'Noto Serif KR', 'Nanum Pen Script', serif;
 
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -451,7 +452,35 @@ button {
 
 .title-line {
   display: block;
+  font-family: 'Noto Serif KR', serif;
+  font-weight: 500;
+  font-size: 4rem;
+  letter-spacing: -0.02em;
   color: var(--text-primary);
+  text-shadow: 0 2px 8px rgba(124, 58, 237, 0.15), 0 4px 16px rgba(236, 72, 153, 0.1);
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.95) 0%, rgba(236, 72, 153, 0.95) 50%, rgba(124, 58, 237, 0.95) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+  position: relative;
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.title-line::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(124, 58, 237, 0.4), transparent);
+  opacity: 0.6;
 }
 
 .title-highlight {
@@ -1457,6 +1486,10 @@ section {
 
   .hero-title {
     font-size: 2.5rem;
+  }
+  
+  .title-line {
+    font-size: 2.8rem;
   }
 
   .hero-description {
