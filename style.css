@@ -3797,7 +3797,7 @@ section {
   font-weight: 700;
   font-size: 1rem;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   border: none;
   padding: 0;
 }
@@ -3819,13 +3819,14 @@ section {
 
 .status-dot {
   position: absolute;
-  bottom: 2px;
-  right: 2px;
-  width: 12px;
-  height: 12px;
+  bottom: 0;
+  right: 0;
+  width: 14px;
+  height: 14px;
   background: #22c55e;
   border-radius: 50%;
   border: 2px solid rgba(124, 58, 237, 1);
+  z-index: 10;
 }
 
 .chat-header-text h4 {
