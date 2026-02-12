@@ -1068,7 +1068,20 @@ section {
   background: var(--bg-secondary);
   border-top: 1px solid var(--border-color);
   scroll-margin-top: 80px;
+  display: none;
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: opacity 0.4s ease, max-height 0.4s ease, padding 0.4s ease;
 }
+
+.shop-cat-block.active {
+  display: block;
+  opacity: 1;
+  max-height: 5000px;
+  padding: 48px 0;
+}
+
 .shop-cat-block:nth-child(even) { background: var(--bg-primary); }
 .shop-cat-title {
   font-size: 1.35rem;
@@ -5171,17 +5184,30 @@ section {
    Borahae Shop & Membership Sections
    ======================================== */
 .shop-categories a.btn-outline {
-  border: 1.5px solid var(--primary);
-  color: var(--primary);
+  border: 1.5px solid var(--border-color);
+  color: var(--text-primary);
   font-weight: 500;
   transition: var(--transition);
 }
+
+.shop-categories a.btn-outline.active,
+.shop-categories a.btn-outline[href="#boratime"] {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: rgba(124, 58, 237, 0.1);
+}
+
 .shop-categories a.btn-outline:hover {
   background: var(--gradient-primary);
   color: #fff;
   border-color: transparent;
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
+}
+
+.shop-categories a.btn-outline.active:hover {
+  background: var(--gradient-primary);
+  color: #fff;
 }
 
 .membership-grid .feature-card {

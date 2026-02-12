@@ -2551,5 +2551,84 @@
     });
   })();
 
+  // Shop category toggle functionality
+  (function() {
+    var shopCatBtns = document.querySelectorAll('.shop-cat-btn');
+    var shopCatBlocks = document.querySelectorAll('.shop-cat-block');
+    var boratimeSection = document.getElementById('boratime');
+    
+    // Initialize: Hide all shop-cat-blocks, show boratime
+    shopCatBlocks.forEach(function(block) {
+      block.classList.remove('active');
+    });
+    
+    // Set boratime button as active by default
+    var boratimeBtn = document.querySelector('.shop-cat-btn[href="#boratime"]');
+    if (boratimeBtn) {
+      boratimeBtn.classList.add('active');
+    }
+    
+    // Handle button clicks
+    shopCatBtns.forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        var targetId = this.getAttribute('href');
+        
+        if (targetId === '#boratime') {
+          // Handle boratime section (it's not a shop-cat-block)
+          shopCatBlocks.forEach(function(block) {
+            block.classList.remove('active');
+          });
+          shopCatBtns.forEach(function(b) {
+            b.classList.remove('active');
+          });
+          this.classList.add('active');
+          
+          // Scroll to boratime section
+          if (boratimeSection) {
+            boratimeSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        } else {
+          // Handle shop-cat-block sections
+          var targetBlock = document.querySelector(targetId);
+          
+          if (targetBlock && targetBlock.classList.contains('shop-cat-block')) {
+            // Toggle the clicked block
+            var isActive = targetBlock.classList.contains('active');
+            
+            // Close all blocks first
+            shopCatBlocks.forEach(function(block) {
+              block.classList.remove('active');
+            });
+            
+            // Remove active class from all buttons
+            shopCatBtns.forEach(function(b) {
+              b.classList.remove('active');
+            });
+            
+            // If it wasn't active, open it
+            if (!isActive) {
+              targetBlock.classList.add('active');
+              this.classList.add('active');
+              
+              // Scroll to the opened section
+              setTimeout(function() {
+                targetBlock.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }, 100);
+            } else {
+              // If it was active, close it and show boratime instead
+              if (boratimeBtn) {
+                boratimeBtn.classList.add('active');
+                if (boratimeSection) {
+                  boratimeSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+              }
+            }
+          }
+        }
+      });
+    });
+  })();
+
   console.log('BORAHAE loaded successfully!');
 })();
