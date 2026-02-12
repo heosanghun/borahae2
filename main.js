@@ -2193,7 +2193,7 @@
     return text;
   }
 
-  var SOAVE_AVATAR_URL = 'image/soave/chat-soave-face.png';
+  var SOAVE_AVATAR_URL = 'image/soave/soave-avatar-face.png';
   function addMessage(role, content) {
     if (!chatMessages) return;
 
