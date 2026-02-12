@@ -2056,10 +2056,10 @@
         if (chatInput) {
           chatInput.focus();
         }
-        // 채팅 위젯이 열릴 때 하단으로 스크롤하여 모든 버튼이 보이도록 함
+        // 채팅 위젯이 열릴 때 스크롤을 맨 위로 설정하여 환영 메시지가 보이도록 함
         setTimeout(() => {
           if (chatMessages) {
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+            chatMessages.scrollTop = 0;
           }
         }, 100);
       }
