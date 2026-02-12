@@ -3785,7 +3785,7 @@ section {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 35%;
+  object-position: center top;
 }
 
 .status-dot {
@@ -3882,7 +3882,7 @@ section {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 30%;
+  object-position: center top;
 }
 .welcome-avatar svg {
   width: 32px;
@@ -3979,7 +3979,7 @@ section {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 35%;
+  object-position: center top;
 }
 
 .message.user .message-avatar {
