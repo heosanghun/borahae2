@@ -3787,7 +3787,12 @@ section {
   object-fit: cover;
   object-position: center center;
   border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   transform: scale(0.95);
+  will-change: transform;
 }
 
 .status-dot {
@@ -3886,7 +3891,12 @@ section {
   object-fit: cover;
   object-position: center center;
   border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   transform: scale(0.95);
+  will-change: transform;
 }
 .welcome-avatar svg {
   width: 32px;
@@ -3985,7 +3995,12 @@ section {
   object-fit: cover;
   object-position: center center;
   border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   transform: scale(0.95);
+  will-change: transform;
 }
 
 .message.user .message-avatar {
