@@ -3785,14 +3785,16 @@ section {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center center;
+  object-position: center 48%;
   border-radius: 50%;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  transform: scale(0.95);
+  transform: scale(0.92);
   will-change: transform;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
 }
 
 .status-dot {
@@ -3889,14 +3891,16 @@ section {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center center;
+  object-position: center 48%;
   border-radius: 50%;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  transform: scale(0.95);
+  transform: scale(0.92);
   will-change: transform;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
 }
 .welcome-avatar svg {
   width: 32px;
@@ -3993,14 +3997,16 @@ section {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center center;
+  object-position: center 48%;
   border-radius: 50%;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  transform: scale(0.95);
+  transform: scale(0.92);
   will-change: transform;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
 }
 
 .message.user .message-avatar {
