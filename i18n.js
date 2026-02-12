@@ -117,9 +117,9 @@
     // --- BORATIME (시계 디자인 · 팬심 소장) ---
     'boratime.badge': { ko: 'BORATIME', en: 'BORATIME' },
     'boratime.title': { ko: '시계도 패션이다.<br>팬심을 간직하다', en: 'Watches Are Fashion.<br>Keep Your Fan Heart' },
-    'boratime.desc': { ko: '앱에서 유료 다운로드로 보라빛 시계 페이스를 소장하세요. 콘서트, 보라해, 일곱 개의 달, 꽃길까지—소중한 순간을 시계에 담습니다.', en: 'Download watch faces in the app. Purple ocean, seven moons, flower path—keep your precious moments on your wrist.' },
+    'boratime.desc': { ko: '앱에서 다운로드로 보라빛 시계 페이스를 소장하세요. 콘서트, 보라해, 일곱 개의 달, 꽃길까지—소중한 순간을 시계에 담습니다.', en: 'Download watch faces in the app. Purple ocean, seven moons, flower path—keep your precious moments on your wrist.' },
     'boratime.cta': { ko: '앱에서 만나기', en: 'Get the App' },
-    'boratime.cta_sub': { ko: '앱스토어 · 플레이스토어 유료 다운로드', en: 'Paid download on App Store & Play Store' },
+    'boratime.cta_sub': { ko: '앱스토어 · 플레이스토어 다운로드', en: 'Download on App Store & Play Store' },
 
     // --- Community / Events / Fan Content (상세 섹션) ---
     'community.badge': { ko: 'Community', en: 'Community' },
