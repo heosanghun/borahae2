@@ -2052,8 +2052,16 @@
   if (chatToggle && chatWidget) {
     chatToggle.addEventListener('click', () => {
       chatWidget.classList.toggle('active');
-      if (chatWidget.classList.contains('active') && chatInput) {
-        chatInput.focus();
+      if (chatWidget.classList.contains('active')) {
+        if (chatInput) {
+          chatInput.focus();
+        }
+        // 채팅 위젯이 열릴 때 하단으로 스크롤하여 모든 버튼이 보이도록 함
+        setTimeout(() => {
+          if (chatMessages) {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+          }
+        }, 100);
       }
     });
   }
