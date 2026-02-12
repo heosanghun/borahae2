@@ -1,4 +1,4 @@
-// SIMS Fashion AI - Internationalization (i18n)
+// BORAHAE - Internationalization (i18n)
 // 한국어(ko) / English(en) 다국어 지원
 
 (function() {
@@ -9,42 +9,60 @@
   // ========================================
   var translations = {
     // --- Navigation ---
-    'nav.features': { ko: 'Features', en: 'Features' },
-    'nav.ai_styling': { ko: 'AI Styling', en: 'AI Styling' },
-    'nav.lookbook': { ko: 'Lookbook', en: 'Lookbook' },
-    'nav.about': { ko: 'About', en: 'About' },
+    'nav.services': { ko: '서비스', en: 'Services' },
+    'nav.styling': { ko: '스타일링', en: 'Styling' },
+    'nav.shop': { ko: '굿즈샵', en: 'Shop' },
+    'nav.membership': { ko: '멤버십', en: 'Membership' },
     'nav.login': { ko: '로그인', en: 'Login' },
     'nav.logout': { ko: '로그아웃', en: 'Logout' },
 
     // --- Hero ---
-    'hero.badge': { ko: 'AI-Powered Fashion', en: 'AI-Powered Fashion' },
-    'hero.tagline': { ko: '나만의 컬러 × 나만의 무드 · 특별한 만남', en: 'Your Color × Your Mood · A Special Encounter' },
-    'hero.title_line': { ko: '당신만을 위한', en: 'Exclusively for You' },
-    'hero.title_highlight': { ko: '특별한 체험', en: 'A Special Experience' },
+    'hero.badge': { ko: 'K-pop Fan Lifestyle Platform', en: 'K-pop Fan Lifestyle Platform' },
+    'hero.tagline': { ko: 'I Purple You · 끝까지 함께', en: 'I Purple You · Together Forever' },
+    'hero.title_line': { ko: '보라해', en: 'BORAHAE' },
+    'hero.title_highlight': { ko: '팬이 만드는 보라빛 세상', en: 'A Purple World Made by Fans' },
     'hero.desc': {
-      ko: '퍼스널 컬러와 어울리는 무드·음악까지 한곳에서.<br>AI가 당신의 체형, 피부톤, 라이프스타일을 분석해<br><strong>세상에 단 하나뿐인</strong> 스타일과 특별한 경험을 제안합니다',
-      en: 'Personal color, mood & music all in one place.<br>AI analyzes your body, skin tone & lifestyle to propose<br><strong>one-of-a-kind</strong> style and special experiences'
+      ko: 'K-pop을 사랑하는 팬들의 라이프스타일 플랫폼.<br>AI 스타일링, 팬 굿즈, 커뮤니티, 이벤트까지<br><strong>보라빛으로 물든</strong> 특별한 팬 경험을 시작하세요',
+      en: 'A lifestyle platform for K-pop fans.<br>AI styling, fan goods, community & events —<br>start your <strong>purple-tinted</strong> special fan experience'
     },
     'hero.cta_start': { ko: '무료로 시작하기', en: 'Get Started Free' },
-    'hero.cta_video': { ko: '소개 영상 보기', en: 'Watch Video' },
-    'hero.stat_users': { ko: 'Active Users', en: 'Active Users' },
-    'hero.stat_satisfaction': { ko: 'Satisfaction', en: 'Satisfaction' },
-    'hero.stat_styles': { ko: 'Styles Created', en: 'Styles Created' },
+    'hero.cta_explore': { ko: '어떤 경험인지 보기', en: 'See What\'s in Store' },
+    'hero.stat_users': { ko: '보라해 팬', en: 'Borahae Fans' },
+    'hero.stat_goods': { ko: '굿즈 아이템', en: 'Goods Items' },
+    'hero.stat_styles': { ko: '스타일링 완성', en: 'Styles Created' },
 
     // Hero phone mockup
-    'hero.phone_title': { ko: '나만의 컬러 & 무드', en: 'My Color & Mood' },
-    'hero.phone_sub': { ko: '특별한 나를 만나는 순간', en: 'The Moment You Meet the Special You' },
-    'hero.mood_1': { ko: '나의 무드 · 청량한', en: 'My Mood · Refreshing' },
-    'hero.mood_2': { ko: '나의 무드 · 밝은 에너지', en: 'My Mood · Bright Energy' },
+    'hero.phone_title': { ko: '보라해 스타일링', en: 'Borahae Styling' },
+    'hero.phone_sub': { ko: '나만의 K-pop 코디', en: 'My K-pop Outfit' },
+    'hero.mood_1': { ko: '무드 · 보라빛 에너지', en: 'Mood · Purple Energy' },
+    'hero.mood_2': { ko: '무드 · 설레는 만남', en: 'Mood · Exciting Encounter' },
     'hero.ai_suggestion': {
-      ko: '나만의 컬러와 만나는 <strong>특별한 체험</strong>, 지금 시작하세요',
-      en: 'Discover your color in a <strong>special experience</strong> — start now'
+      ko: '보라빛으로 물든 <strong>나만의 스타일</strong>, 지금 시작하세요',
+      en: 'Your <strong>purple-tinted style</strong> — start now'
     },
 
     // --- Features ---
-    'features.badge': { ko: 'Features', en: 'Features' },
-    'features.title': { ko: 'AI가 만드는 새로운 패션 경험', en: 'A New Fashion Experience Powered by AI' },
-    'features.desc': { ko: '최첨단 AI 기술로 당신만의 스타일을 발견하세요', en: 'Discover your unique style with cutting-edge AI technology' },
+    'features.badge': { ko: 'Services', en: 'Services' },
+    'features.title': { ko: '보라해가 만드는 팬 라이프스타일', en: 'Fan Lifestyle by BORAHAE' },
+    'features.desc': { ko: 'K-pop을 사랑하는 당신을 위한 올인원 플랫폼', en: 'All-in-one platform for K-pop lovers' },
+    'features.styling_title': { ko: 'AI K-pop 스타일링', en: 'AI K-pop Styling' },
+    'features.styling_desc': { ko: '콘서트, 팬미팅, 일상까지 — AI가 퍼스널 컬러와 체형을 분석해 K-pop 감성 코디를 추천합니다', en: 'From concerts to fan meetings & daily life — AI analyzes your personal color & body type to recommend K-pop style outfits' },
+    'features.shop_title': { ko: '보라해 굿즈샵', en: 'Borahae Goods Shop' },
+    'features.shop_desc': { ko: '보라빛 감성의 팬메이드 굿즈 마켓플레이스. 의류, 액세서리, 문구, 폰케이스까지 한곳에서', en: 'A purple-themed fan-made goods marketplace. Clothing, accessories, stationery & phone cases — all in one place' },
+    'features.styling_btn': { ko: '스타일링 시작하기', en: 'Start Styling' },
+    'features.shop_btn': { ko: '굿즈샵 보기', en: 'View Shop' },
+    'features.community_title': { ko: '팬 커뮤니티', en: 'Fan Community' },
+    'features.community_desc': { ko: '같은 마음으로 보라해를 외치는 팬들과 소통하고, 덕질 일상을 공유하는 따뜻한 공간', en: 'A warm space to connect with fellow fans and share your fandom daily life' },
+    'features.event_title': { ko: '이벤트 기획', en: 'Event Planning' },
+    'features.event_desc': { ko: '생일 카페, 스트리밍 파티, 팬 프로젝트 — 함께 만드는 특별한 순간을 기획하고 참여하세요', en: 'Birthday cafes, streaming parties, fan projects — plan and join special moments together' },
+    'features.content_title': { ko: '팬 콘텐츠', en: 'Fan Content' },
+    'features.content_desc': { ko: '팬아트, 팬픽션, 에디트 영상 — 크리에이터들의 작품을 감상하고, 내 작품도 공유하세요', en: 'Fan art, fan fiction, edit videos — enjoy creators\' works and share your own' },
+    'features.membership_title': { ko: '프리미엄 멤버십', en: 'Premium Membership' },
+    'features.membership_desc': { ko: '독점 콘텐츠, 굿즈 할인, 이벤트 우선 참여 — 보라해 VIP만의 특별한 혜택을 누리세요', en: 'Exclusive content, goods discounts, priority events — enjoy special perks as a Borahae VIP' },
+    'features.community_btn': { ko: '커뮤니티 들어가기', en: 'Enter Community' },
+    'features.event_btn': { ko: '이벤트 더보기', en: 'See Events' },
+    'features.content_btn': { ko: '콘텐츠 보기', en: 'View Content' },
+    'features.membership_btn': { ko: '멤버십 알아보기', en: 'Learn about Membership' },
     'features.body_title': { ko: '체형 분석', en: 'Body Analysis' },
     'features.body_desc': { ko: 'AI가 사진 한 장으로 체형을 분석하여 가장 잘 어울리는 실루엣과 핏을 추천합니다', en: 'AI analyzes your body from a single photo and recommends the best silhouette and fit' },
     'features.color_title': { ko: '퍼스널 컬러', en: 'Personal Color' },
@@ -60,70 +78,203 @@
 
     // --- AI Styling ---
     'ai.badge': { ko: 'AI Styling', en: 'AI Styling' },
-    'ai.title': { ko: '3단계로 완성되는<br>나만의 스타일', en: 'Your Personal Style<br>in 3 Steps' },
+    'ai.title': { ko: '3단계로 완성되는<br>K-pop 감성 코디', en: 'K-pop Style<br>in 3 Steps' },
     'ai.step1_title': { ko: '프로필 분석', en: 'Profile Analysis' },
-    'ai.step1_desc': { ko: '간단한 설문과 사진으로 AI가 당신을 분석합니다', en: 'AI analyzes you through a simple survey and photos' },
-    'ai.step2_title': { ko: '스타일 생성', en: 'Style Generation' },
-    'ai.step2_desc': { ko: '수백만 개의 패션 데이터에서 최적의 스타일을 찾습니다', en: 'Finding the optimal style from millions of fashion data' },
-    'ai.step3_title': { ko: '맞춤 추천', en: 'Custom Recommendation' },
-    'ai.step3_desc': { ko: '매일 새로운 코디와 아이템을 추천받으세요', en: 'Get daily new outfit and item recommendations' },
-    'ai.cta': { ko: 'AI 스타일링 시작하기', en: 'Start AI Styling' },
+    'ai.step1_desc': { ko: '간단한 설문과 사진으로 AI가 퍼스널 컬러와 체형을 분석합니다', en: 'AI analyzes your personal color and body type' },
+    'ai.step2_title': { ko: 'K-pop 스타일 매칭', en: 'K-pop Style Matching' },
+    'ai.step2_desc': { ko: '콘서트, 팬미팅, 일상 등 상황별 최적의 스타일을 찾습니다', en: 'Finding the best style for concerts, fan meetings & daily life' },
+    'ai.step3_title': { ko: '보라해 코디 완성', en: 'Borahae Outfit Complete' },
+    'ai.step3_desc': { ko: 'AI가 생성한 코디로 보라빛 감성을 완성하세요', en: 'Complete your purple vibe with AI-generated outfits' },
+    'ai.cta': { ko: '보라해 스타일링 시작', en: 'Start Borahae Styling' },
+
+    // --- Shop ---
+    'shop.badge': { ko: 'Shop', en: 'Shop' },
+    'shop.title': { ko: '보라해 굿즈샵', en: 'Borahae Goods Shop' },
+    'shop.desc': { ko: '보라빛 감성을 담은 팬메이드 아이템', en: 'Fan-made items infused with purple vibes' },
+    'shop.cat_clothing': { ko: '보라해 의류', en: 'Borahae Clothing' },
+    'shop.cat_ecobag': { ko: '에코백', en: 'Eco Bags' },
+    'shop.cat_phonecase': { ko: '폰케이스', en: 'Phone Cases' },
+    'shop.cat_keyring': { ko: '키링 · 액세서리', en: 'Keyrings & Accessories' },
+    'shop.cat_stationery': { ko: '문구 · 다이어리', en: 'Stationery & Diaries' },
+    'shop.cat_sticker': { ko: '스티커 · 데코', en: 'Stickers & Deco' },
+    'shop.cat_boratime': { ko: '시계 · 보라타임', en: 'Watch · BORATIME' },
+    'shop.cat_clothing_title': { ko: '보라해 의류', en: 'Borahae Apparel' },
+    'shop.cat_clothing_desc': { ko: '보라빛 감성의 티셔츠, 후드, 악세서리', en: 'Purple vibe tees, hoodies & accessories' },
+    'shop.cat_ecobag_title': { ko: '에코백', en: 'Eco Bags' },
+    'shop.cat_ecobag_desc': { ko: '일상과 콘서트 모두 담는 보라빛 가방', en: 'Purple totes for daily & concert' },
+    'shop.cat_phonecase_title': { ko: '폰케이스', en: 'Phone Cases' },
+    'shop.cat_phonecase_desc': { ko: '보라해 감성의 스마트폰 케이스', en: 'Borahae-style phone cases' },
+    'shop.cat_keyring_title': { ko: '키링 · 악세서리', en: 'Keyrings & Accessories' },
+    'shop.cat_keyring_desc': { ko: '가방에 달아두는 보라빛 키링과 소품', en: 'Purple keyrings & small accessories' },
+    'shop.cat_stationery_title': { ko: '문구 · 다이어리', en: 'Stationery & Diaries' },
+    'shop.cat_stationery_desc': { ko: '덕질 기록을 담는 노트와 다이어리', en: 'Notebooks & diaries for fan life' },
+    'shop.cat_sticker_title': { ko: '스티커 · 데코', en: 'Stickers & Deco' },
+    'shop.cat_sticker_desc': { ko: '폰·노트북을 꾸미는 보라빛 스티커', en: 'Purple stickers & deco for devices' },
+    'shop.app_cta': { ko: '앱에서 만나기', en: 'Get the App' },
+    'shop.app_cta_sub': { ko: '앱에서 더 많은 굿즈를 만나보세요', en: 'Discover more goods in the app' },
+    'shop.view_naver': { ko: '네이버 쇼핑에서 보기', en: 'View on Naver Shopping' },
+
+    // --- BORATIME (시계 디자인 · 팬심 소장) ---
+    'boratime.badge': { ko: 'BORATIME', en: 'BORATIME' },
+    'boratime.title': { ko: '시계도 패션이다.<br>팬심을 간직하다', en: 'Watches Are Fashion.<br>Keep Your Fan Heart' },
+    'boratime.desc': { ko: '앱에서 유료 다운로드로 보라빛 시계 페이스를 소장하세요. 콘서트, 보라해, 일곱 개의 달, 꽃길까지—소중한 순간을 시계에 담습니다.', en: 'Download watch faces in the app. Purple ocean, seven moons, flower path—keep your precious moments on your wrist.' },
+    'boratime.cta': { ko: '앱에서 만나기', en: 'Get the App' },
+    'boratime.cta_sub': { ko: '앱스토어 · 플레이스토어 유료 다운로드', en: 'Paid download on App Store & Play Store' },
+
+    // --- Community / Events / Fan Content (상세 섹션) ---
+    'community.badge': { ko: 'Community', en: 'Community' },
+    'community.title': { ko: '팬 커뮤니티', en: 'Fan Community' },
+    'community.desc': { ko: '같은 마음으로 보라해를 외치는 팬들과 소통하고, 덕질 일상을 공유하는 따뜻한 공간입니다. 앱에서 실시간 채팅, 게시판, 팬 소모임을 만나보세요.', en: 'A warm space to connect with fellow fans and share your fandom daily life. Chat, boards, and fan clubs are available in the app.' },
+    'community.cta': { ko: '앱에서 커뮤니티 이용하기', en: 'Use Community in the App' },
+    'events.badge': { ko: 'Events', en: 'Events' },
+    'events.title': { ko: '이벤트 기획', en: 'Event Planning' },
+    'events.desc': { ko: '생일 카페, 스트리밍 파티, 팬 프로젝트—함께 만드는 특별한 순간을 기획하고 참여하세요. 진행 중인 이벤트와 참여 방법을 앱에서 확인할 수 있습니다.', en: 'Birthday cafes, streaming parties, fan projects—plan and join special moments together. Check ongoing events in the app.' },
+    'events.cta': { ko: '이벤트 일정 보기', en: 'View Event Schedule' },
+    'content.badge': { ko: 'Fan Content', en: 'Fan Content' },
+    'content.title': { ko: '팬 콘텐츠', en: 'Fan Content' },
+    'content.desc': { ko: '팬아트, 팬픽션, 에디트 영상—크리에이터들의 작품을 감상하고, 내 작품도 공유하세요. 보라해 앱 갤러리에서 팬 제작 콘텐츠를 만나보실 수 있습니다.', en: 'Fan art, fan fiction, edit videos—enjoy creators\' works and share your own. Find fan-made content in the app gallery.' },
+    'content.cta': { ko: '콘텐츠 갤러리 보기', en: 'View Content Gallery' },
+
+    // --- Membership ---
+    'membership.badge': { ko: 'Membership', en: 'Membership' },
+    'membership.title': { ko: '보라해 멤버십', en: 'Borahae Membership' },
+    'membership.desc': { ko: '당신의 팬 라이프에 딱 맞는 플랜을 선택하세요', en: 'Choose the plan that fits your fan life' },
+    'membership.free': { ko: 'Free', en: 'Free' },
+    'membership.purple': { ko: 'Purple', en: 'Purple' },
+    'membership.vip': { ko: 'VIP 보라해', en: 'VIP Borahae' },
+    'membership.popular': { ko: 'POPULAR', en: 'POPULAR' },
+    'membership.per_month': { ko: '/월', en: '/mo' },
+    'membership.free_f1': { ko: 'AI 스타일링 월 3회', en: 'AI Styling 3x/month' },
+    'membership.free_f2': { ko: '커뮤니티 접근', en: 'Community Access' },
+    'membership.free_f3': { ko: '룩북 갤러리', en: 'Lookbook Gallery' },
+    'membership.free_f4': { ko: '굿즈 할인', en: 'Goods Discount' },
+    'membership.free_f5': { ko: '독점 콘텐츠', en: 'Exclusive Content' },
+    'membership.purple_f1': { ko: 'AI 스타일링 무제한', en: 'Unlimited AI Styling' },
+    'membership.purple_f2': { ko: '커뮤니티 + 이벤트', en: 'Community + Events' },
+    'membership.purple_f3': { ko: '굿즈 10% 할인', en: '10% Goods Discount' },
+    'membership.purple_f4': { ko: '독점 콘텐츠', en: 'Exclusive Content' },
+    'membership.purple_f5': { ko: '1:1 코디 상담', en: '1:1 Style Consult' },
+    'membership.vip_f1': { ko: 'AI 스타일링 무제한', en: 'Unlimited AI Styling' },
+    'membership.vip_f2': { ko: '모든 Purple 혜택', en: 'All Purple Benefits' },
+    'membership.vip_f3': { ko: '굿즈 20% 할인', en: '20% Goods Discount' },
+    'membership.vip_f4': { ko: '1:1 AI 코디 상담', en: '1:1 AI Style Consult' },
+    'membership.vip_f5': { ko: '이벤트 우선 참여 + VIP 배지', en: 'Priority Events + VIP Badge' },
+    'membership.btn_free': { ko: '무료로 시작', en: 'Start Free' },
+    'membership.btn_purple': { ko: 'Purple 시작', en: 'Start Purple' },
+    'membership.btn_vip': { ko: 'VIP 시작', en: 'Start VIP' },
+
+    // --- Lightstick Designer ---
+    'lightstick.badge': { ko: '보라빛 응원봉', en: 'Purple Lightstick' },
+    'lightstick.title': { ko: '보라빛 응원봉, 너를 위해 빛나는 💜', en: 'Purple Lightstick, Shining for You 💜' },
+    'lightstick.desc': { ko: '당신의 사랑과 응원을 담아, 세상에 단 하나뿐인 나만의 응원봉을 AI가 만들어드려요', en: 'Filled with your love & support, AI creates a one-of-a-kind lightstick just for you' },
+    'lightstick.step1_label': { ko: 'STEP 1', en: 'STEP 1' },
+    'lightstick.step1_html': { ko: '응원봉에 담을<br><strong>나의 마음</strong>을 새기다', en: 'Engrave <strong>your heart</strong><br>on the lightstick' },
+    'lightstick.step2_label': { ko: 'STEP 2', en: 'STEP 2' },
+    'lightstick.step2_html': { ko: '마음을 비추는<br><strong>보라빛 7컬러</strong> 선택', en: 'Choose from<br><strong>7 purple-inspired colors</strong>' },
+    'lightstick.step3_label': { ko: 'STEP 3', en: 'STEP 3' },
+    'lightstick.step3_html': { ko: 'AI가 빚어낸<br><strong>나만의 응원봉</strong> 탄생', en: 'AI crafts<br><strong>your unique lightstick</strong>' },
+    'lightstick.step4_label': { ko: 'STEP 4', en: 'STEP 4' },
+    'lightstick.step4_html': { ko: '함께 나누는<br><strong>보라빛 응원</strong>', en: 'Share your<br><strong>purple support</strong>' },
+    'lightstick.btn_start': { ko: '나의 응원봉, 지금 만들기 💜', en: 'Create My Lightstick Now 💜' },
+    'lightstick.plan_info': { ko: 'Free: 월 1회 | Purple: 월 10회 | VIP: 무제한 생성', en: 'Free: 1/month | Purple: 10/month | VIP: Unlimited' },
+    'lightstick.modal_step1_title': { ko: '✍️ 응원봉에 새길 이름', en: '✍️ Name on Your Lightstick' },
+    'lightstick.modal_step1_desc': { ko: '소중한 마음을 담아, 응원봉에 새길 이름이나 닉네임을 입력하세요', en: 'With all your heart, enter the name to engrave on your lightstick' },
+    'lightstick.modal_step1_placeholder': { ko: '예: 지영, 보라해♡, 끝까지 함께', en: 'e.g. Jiyoung, Borahae♡, Together Forever' },
+    'lightstick.modal_step1_max': { ko: '최대 20자', en: 'Max 20 characters' },
+    'lightstick.modal_step1_next': { ko: '다음: 컬러 선택 →', en: 'Next: Choose Color →' },
+    'lightstick.modal_step2_title': { ko: '🎨 마음을 비추는 컬러', en: '🎨 Color That Reflects Your Heart' },
+    'lightstick.modal_step2_desc': { ko: '당신의 마음을 가장 잘 표현하는 보라빛 컬러를 선택하세요', en: 'Choose the purple-inspired color that best expresses your heart' },
+    'lightstick.modal_step2_prev': { ko: '← 이전', en: '← Back' },
+    'lightstick.modal_step2_next': { ko: '다음: 디자인 →', en: 'Next: Design →' },
+    'lightstick.modal_step3_title': { ko: '🤖 응원봉 디자인', en: '🤖 Lightstick Design' },
+    'lightstick.modal_step3_desc': { ko: '어떤 모양으로 마음을 전하고 싶나요? 테마와 아이디어를 자유롭게 담아주세요', en: 'What shape carries your heart? Freely add your themes and ideas' },
+    'lightstick.modal_step3_shape': { ko: '🔷 응원봉 모양 선택', en: '🔷 Choose Lightstick Shape' },
+    'lightstick.modal_step3_theme': { ko: '💡 테마 · 분위기 선택 (복수 가능)', en: '💡 Choose Theme & Mood (multiple OK)' },
+    'lightstick.modal_step3_free': { ko: '✏️ 나만의 응원 메시지', en: '✏️ Your Creative Vision' },
+    'lightstick.modal_step3_placeholder': { ko: '은하수가 흐르는 투명한 응원봉, 나비 날개 장식, 보라빛 별빛이 감도는 크리스탈...', en: 'A transparent lightstick with flowing galaxy, butterfly wing decorations, purple starlight crystal...' },
+    'lightstick.modal_step3_summary_title': { ko: '📋 나의 응원봉 요약', en: '📋 My Lightstick Summary' },
+    'lightstick.modal_step3_prev': { ko: '← 이전', en: '← Back' },
+    'lightstick.modal_step3_generate': { ko: '💜 보라빛 응원봉 만들기', en: '💜 Create My Purple Lightstick' },
+    'lightstick.modal_step4_title': { ko: '🎉 나만의 보라빛 응원봉 완성!', en: '🎉 Your Purple Lightstick is Ready!' },
+    'lightstick.modal_step4_subtitle': { ko: '당신의 사랑과 응원이 빛나는, 세상에 단 하나뿐인 응원봉입니다', en: 'A one-of-a-kind lightstick shining with your love and support' },
+    'lightstick.modal_step4_download': { ko: '💾 소중히 간직하기', en: '💾 Save to Keep' },
+    'lightstick.modal_step4_share': { ko: '📤 함께 응원하기', en: '📤 Share & Cheer Together' },
+    'lightstick.modal_step4_retry': { ko: '🔄 다시 만들기', en: '🔄 Try Again' },
+    'lightstick.modal_step4_community_desc': { ko: '응원봉을 저장한 후, 같은 마음의 팬들과 함께 나눠요!', en: 'Save your lightstick and share it with fellow fans who share your heart!' },
+    'lightstick.loading': { ko: '💜 당신의 마음을 담아 응원봉을 빚고 있어요...', en: '💜 Crafting your lightstick with all your heart...' },
+    'lightstick.loading_sub': { ko: '보라빛 마법이 완성되기까지 잠시만 기다려주세요', en: 'Please wait while the purple magic comes to life' },
+    'lightstick.link_weverse': { ko: 'Weverse (공식)', en: 'Weverse (Official)' },
+    'lightstick.link_fancafe': { ko: '팬카페', en: 'Fan Cafe' },
+
+    // --- Lightstick Colors ---
+    'lightstick.color_purple': { ko: '보라빛 꿈', en: 'Purple Dream' },
+    'lightstick.color_rose': { ko: '로즈 블러쉬', en: 'Rose Blush' },
+    'lightstick.color_mint': { ko: '민트 프레시', en: 'Mint Fresh' },
+    'lightstick.color_gold': { ko: '선샤인 골드', en: 'Sunshine Gold' },
+    'lightstick.color_ocean': { ko: '오션 딥', en: 'Ocean Deep' },
+    'lightstick.color_forest': { ko: '포레스트', en: 'Forest' },
+    'lightstick.color_coral': { ko: '코랄 파이어', en: 'Coral Fire' },
+
+    // --- Footer extra ---
+    'footer.ai_styling_link': { ko: 'AI 스타일링', en: 'AI Styling' },
+    'footer.shop_link': { ko: '보라해 굿즈샵', en: 'Borahae Shop' },
+    'footer.membership_link': { ko: '멤버십', en: 'Membership' },
 
     // --- Lookbook ---
     'lookbook.badge': { ko: 'Lookbook', en: 'Lookbook' },
-    'lookbook.title': { ko: "AI가 추천하는 Today's Pick", en: "AI's Today's Pick" },
-    'lookbook.desc': { ko: '실시간 트렌드와 날씨를 반영한 오늘의 추천 스타일', en: "Today's recommended styles reflecting real-time trends and weather" },
-    'lookbook.minimal': { ko: '미니멀 시크', en: 'Minimal Chic' },
-    'lookbook.minimal_desc': { ko: '깔끔한 라인과 뉴트럴 컬러로 완성하는 모던 룩', en: 'A modern look with clean lines and neutral colors' },
-    'lookbook.street': { ko: '스트릿 캐주얼', en: 'Street Casual' },
-    'lookbook.business': { ko: '비즈니스 캐주얼', en: 'Business Casual' },
-    'lookbook.relax': { ko: '릴렉스 핏', en: 'Relaxed Fit' },
-    'lookbook.romantic': { ko: '로맨틱 무드', en: 'Romantic Mood' },
+    'lookbook.title': { ko: "K-pop 감성 Today's Pick", en: "K-pop Today's Pick" },
+    'lookbook.desc': { ko: '보라해 AI가 추천하는 오늘의 K-pop 코디', en: "Today's K-pop outfits recommended by Borahae AI" },
+    'lookbook.concert': { ko: '콘서트 글램', en: 'Concert Glam' },
+    'lookbook.concert_desc': { ko: '무대 위 조명 아래 빛나는 보라빛 콘서트 룩', en: 'A purple concert look that shines under stage lights' },
+    'lookbook.fanmeeting': { ko: '팬미팅 코디', en: 'Fan Meeting' },
+    'lookbook.daily': { ko: '데일리 K-pop', en: 'Daily K-pop' },
+    'lookbook.casual': { ko: '덕질 캐주얼', en: 'Fan Casual' },
+    'lookbook.purple': { ko: '보라해 무드', en: 'Borahae Mood' },
 
     // --- Testimonials ---
     'testimonials.badge': { ko: 'Reviews', en: 'Reviews' },
-    'testimonials.title': { ko: '사용자들의 이야기', en: 'User Stories' },
+    'testimonials.title': { ko: '보라해 팬들의 이야기', en: 'Borahae Fan Stories' },
     'testimonials.review1': {
-      ko: '"매일 아침 뭘 입을지 고민했는데, 이제는 AI가 추천해주는 대로 입으면 돼서 너무 편해요!"',
-      en: '"I used to wonder what to wear every morning, but now AI recommends outfits for me — so convenient!"'
+      ko: '"콘서트 갈 때 뭘 입을지 항상 고민이었는데, AI가 퍼스널 컬러에 맞춰 추천해줘서 매번 완벽한 코디 완성!"',
+      en: '"I always worried about what to wear to concerts, but AI recommends based on my personal color — perfect outfit every time!"'
     },
     'testimonials.author1_name': { ko: '지영', en: 'Jiyoung' },
-    'testimonials.author1_role': { ko: '직장인, 28세', en: 'Office Worker, 28' },
+    'testimonials.author1_role': { ko: 'K-pop 팬, 28세', en: 'K-pop Fan, 28' },
     'testimonials.review2': {
-      ko: '"퍼스널 컬러 진단받고 완전 인생템들만 추천받아요. 옷 쇼핑 실패가 없어졌어요."',
-      en: '"After getting my personal color diagnosis, I only get life-changing recommendations. No more shopping fails!"'
+      ko: '"보라해 굿즈샵에서 보라빛 에코백 구매했는데 팬미팅에서 옆자리 팬이 같은 거 들고 와서 바로 친구됨 ㅋㅋ"',
+      en: '"Bought a purple eco bag from the Borahae shop and the fan next to me at the fan meeting had the same one — instant friends lol"'
     },
     'testimonials.author2_name': { ko: '민준', en: 'Minjun' },
     'testimonials.author2_role': { ko: '대학생, 24세', en: 'College Student, 24' },
     'testimonials.review3': {
-      ko: '"체형 분석 결과 보고 깜짝 놀랐어요. 제가 왜 그 스타일이 안 어울렸는지 이제 알겠어요!"',
-      en: '"I was amazed by the body analysis results. Now I understand why certain styles didn\'t suit me!"'
+      ko: '"멤버십 가입하고 이벤트 기획에 참여했어요. 같은 마음의 팬들과 함께하니까 덕질이 100배 즐거워요!"',
+      en: '"Joined the membership and participated in event planning. Being with like-minded fans makes fandom 100x more fun!"'
     },
     'testimonials.author3_name': { ko: '서현', en: 'Seohyun' },
-    'testimonials.author3_role': { ko: '프리랜서, 32세', en: 'Freelancer, 32' },
+    'testimonials.author3_role': { ko: '보라해 VIP, 32세', en: 'Borahae VIP, 32' },
 
     // --- About ---
     'about.badge': { ko: 'About Us', en: 'About Us' },
-    'about.title': { ko: '패션의 미래를<br>AI로 열어갑니다', en: 'Opening the Future<br>of Fashion with AI' },
+    'about.title': { ko: '보라해,<br>팬이 만드는 세상', en: 'BORAHAE,<br>A World Made by Fans' },
     'about.desc': {
-      ko: 'SIMS Fashion AI는 최첨단 인공지능 기술과 패션 전문가의 노하우를 결합하여, 모든 사람이 자신만의 스타일을 찾을 수 있도록 돕는 것을 목표로 합니다.',
-      en: 'SIMS Fashion AI combines cutting-edge AI technology with fashion expertise to help everyone discover their own style.'
+      ko: '보라해(BORAHAE)는 K-pop을 사랑하는 팬들이 만들어가는 독립 라이프스타일 플랫폼입니다. AI 스타일링, 팬 굿즈, 커뮤니티, 이벤트를 통해 팬덤의 새로운 가능성을 열어갑니다.',
+      en: 'BORAHAE is an independent lifestyle platform built by K-pop fans. We open new possibilities for fandom through AI styling, fan goods, community, and events.'
     },
-    'about.tech_title': { ko: 'AI 기술력', en: 'AI Technology' },
-    'about.tech_desc': { ko: '최신 딥러닝 모델 기반 분석', en: 'Analysis based on latest deep learning models' },
-    'about.realtime_title': { ko: '실시간 추천', en: 'Real-time Picks' },
-    'about.realtime_desc': { ko: '날씨, 일정에 맞는 즉시 코디', en: 'Instant outfits for weather & schedule' },
-    'about.users_title': { ko: '50K+ 사용자', en: '50K+ Users' },
-    'about.users_desc': { ko: '검증된 스타일링 서비스', en: 'Proven styling service' },
+    'about.tech_title': { ko: 'AI 스타일링', en: 'AI Styling' },
+    'about.tech_desc': { ko: 'K-pop 감성 맞춤 코디 추천', en: 'K-pop vibe custom outfit recommendations' },
+    'about.realtime_title': { ko: '팬 커뮤니티', en: 'Fan Community' },
+    'about.realtime_desc': { ko: '보라해를 외치는 팬들의 공간', en: 'A space for fans who say Borahae' },
+    'about.users_title': { ko: '50K+ 보라해 팬', en: '50K+ Borahae Fans' },
+    'about.users_desc': { ko: '함께 만드는 팬 라이프', en: 'Fan life built together' },
 
     // --- CTA ---
-    'cta.title': { ko: '지금 바로 나만의 스타일을 발견하세요', en: 'Discover Your Style Now' },
-    'cta.desc': { ko: 'AI 스타일리스트가 당신을 기다리고 있습니다', en: 'Your AI stylist is waiting for you' },
+    'cta.title': { ko: '보라해, 끝까지 함께해요', en: 'BORAHAE, Together Forever' },
+    'cta.desc': { ko: '보라빛으로 물든 팬 라이프를 지금 시작하세요', en: 'Start your purple fan life now' },
     'cta.start': { ko: '무료로 시작하기', en: 'Get Started Free' },
     'cta.learn': { ko: '더 알아보기', en: 'Learn More' },
 
     // --- Footer ---
-    'footer.tagline': { ko: 'AI 기반 초개인화 패션 플랫폼', en: 'AI-Powered Hyper-Personalized Fashion Platform' },
+    'footer.tagline': { ko: 'K-pop 팬 라이프스타일 플랫폼', en: 'K-pop Fan Lifestyle Platform' },
     'footer.product': { ko: 'Product', en: 'Product' },
     'footer.ai_styling': { ko: 'AI 스타일링', en: 'AI Styling' },
     'footer.personal_color': { ko: '퍼스널 컬러', en: 'Personal Color' },
@@ -132,14 +283,14 @@
     'footer.company': { ko: 'Company', en: 'Company' },
     'footer.partnership': { ko: '제휴문의', en: 'Partnership' },
     'footer.support': { ko: 'Support', en: 'Support' },
-    'footer.copyright': { ko: '© 2026 SIMS Fashion AI. All rights reserved.', en: '© 2026 SIMS Fashion AI. All rights reserved.' },
+    'footer.copyright': { ko: '© 2026 BORAHAE. All rights reserved. | 팬이 만드는 보라빛 세상', en: '© 2026 BORAHAE. All rights reserved. | A Purple World Made by Fans' },
 
     // --- Comments ---
     'comments.title': { ko: '댓글', en: 'Comments' },
 
     // --- Auth Modal ---
     'auth.welcome': { ko: 'Welcome', en: 'Welcome' },
-    'auth.subtitle': { ko: 'SIMS Fashion AI에 오신 것을 환영합니다', en: 'Welcome to SIMS Fashion AI' },
+    'auth.subtitle': { ko: '보라해에 오신 것을 환영합니다', en: 'Welcome to BORAHAE' },
     'auth.tab_login': { ko: '로그인', en: 'Login' },
     'auth.tab_signup': { ko: '회원가입', en: 'Sign Up' },
     'auth.email': { ko: '이메일', en: 'Email' },
@@ -153,7 +304,7 @@
 
     // --- Partnership ---
     'partnership.title': { ko: '제휴문의', en: 'Partnership Inquiry' },
-    'partnership.desc': { ko: 'SIMS Fashion AI와 함께하고 싶으시다면 아래 양식을 작성해 주세요.', en: 'Fill out the form below to partner with SIMS Fashion AI.' },
+    'partnership.desc': { ko: '보라해와 함께하고 싶으시다면 아래 양식을 작성해 주세요.', en: 'Fill out the form below to partner with BORAHAE.' },
     'partnership.name': { ko: '이름 / 담당자', en: 'Name / Contact Person' },
     'partnership.email': { ko: '이메일', en: 'Email' },
     'partnership.company': { ko: '회사 / 브랜드', en: 'Company / Brand' },
@@ -161,19 +312,19 @@
     'partnership.submit': { ko: '보내기', en: 'Send' },
 
     // --- Chat ---
-    'chat.title': { ko: 'SIMS AI 스타일리스트', en: 'SIMS AI Stylist' },
+    'chat.title': { ko: '보라해 AI 스타일리스트', en: 'Borahae AI Stylist' },
     'chat.status': { ko: '온라인', en: 'Online' },
     'chat.hello': { ko: '안녕하세요!', en: 'Hello!' },
     'chat.intro': {
-      ko: '저는 당신의 AI 스타일리스트입니다.<br>패션, 스타일, 코디에 대해 무엇이든 물어보세요.',
-      en: "I'm your AI stylist.<br>Ask me anything about fashion, style & outfits."
+      ko: '저는 보라해 AI 스타일리스트입니다.<br>K-pop 코디, 콘서트 패션, 팬미팅 스타일 무엇이든 물어보세요.',
+      en: "I'm your Borahae AI stylist.<br>Ask me about K-pop outfits, concert fashion & fan meeting styles."
     },
     'chat.placeholder': { ko: '메시지를 입력하세요...', en: 'Type a message...' },
-    'chat.q1': { ko: '오늘의 코디 추천', en: "Today's Outfit" },
-    'chat.q2': { ko: '퍼스널 컬러 진단', en: 'Personal Color' },
-    'chat.q3': { ko: '2026 트렌드', en: '2026 Trends' },
-    'chat.q4': { ko: '미니멀 스타일링', en: 'Minimal Styling' },
-    'chat.q5': { ko: '내 취향 말해줘', en: 'Tell My Taste' }
+    'chat.q1': { ko: '💜 콘서트 코디 추천', en: '💜 Concert Outfit' },
+    'chat.q2': { ko: '🎨 퍼스널 컬러 진단', en: '🎨 Personal Color' },
+    'chat.q3': { ko: '🎤 팬미팅 스타일링', en: '🎤 Fan Meeting Style' },
+    'chat.q4': { ko: '🟣 보라해 코디', en: '🟣 Purple Outfit' },
+    'chat.q5': { ko: '✨ 내 취향 말해줘', en: '✨ Tell My Taste' }
   };
 
   // ========================================
@@ -220,8 +371,8 @@
     }
     // Update page title
     document.title = currentLang === 'en'
-      ? 'SIMS Fashion AI - Style Recommendation Just for You'
-      : 'SIMS Fashion AI - 나만을 위한 스타일 추천';
+      ? 'BORAHAE - K-pop Fan Lifestyle Platform'
+      : '보라해 BORAHAE - I Purple You';
   }
 
   function updateLangToggle() {

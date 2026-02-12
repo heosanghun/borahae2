@@ -127,25 +127,24 @@ button {
   font-size: 1.25rem;
 }
 
-.logo-icon {
-  width: 40px;
+/* 로고 이미지: 라이트/다크 테마별 전환 (image/logo.png, image/logo_dark.png) */
+.logo-img,
+.company-logo {
   height: 40px;
-  background: var(--gradient-primary);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-weight: 900;
-  font-size: 1.25rem;
+  width: auto;
+  object-fit: contain;
+  display: block;
 }
+.logo .logo-img { height: 36px; }
+.footer-logo .company-logo { height: 32px; }
 
-.logo-text {
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
+.logo-img-dark,
+.footer-logo .logo-img-dark { display: none !important; }
+[data-theme="dark"] .logo-img-light,
+[data-theme="dark"] .footer-logo .logo-img-light { display: none !important; }
+[data-theme="dark"] .logo-img-dark,
+[data-theme="dark"] .footer-logo .logo-img-dark { display: block !important; }
+
 
 .nav-links {
   display: flex;
@@ -763,6 +762,11 @@ section {
   color: var(--text-secondary);
   line-height: 1.7;
 }
+.feature-card-cta {
+  display: inline-block;
+  text-decoration: none;
+  margin-top: 8px;
+}
 
 /* ========================================
    AI Section
@@ -949,6 +953,74 @@ section {
 .color:hover {
   transform: scale(1.15);
 }
+
+/* ========================================
+   BORATIME Section (시계 디자인 · 팬심 소장)
+   ======================================== */
+.boratime-section .section-title { margin-bottom: 12px; }
+.boratime-gallery .boratime-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.boratime-gallery .boratime-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(124, 58, 237, 0.25);
+}
+#boratime-app-cta { text-decoration: none; }
+
+/* ========================================
+   Shop category blocks (의류, 에코백, 폰케이스 등)
+   ======================================== */
+.shop-cat-block {
+  padding: 48px 0;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+  scroll-margin-top: 80px;
+}
+.shop-cat-block:nth-child(even) { background: var(--bg-primary); }
+.shop-cat-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+  text-align: center;
+}
+.shop-cat-desc {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-bottom: 24px;
+}
+.shop-cat-gallery {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+@media (max-width: 900px) {
+  .shop-cat-gallery { grid-template-columns: repeat(2, 1fr); }
+}
+.shop-cat-item {
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--bg-tertiary);
+  aspect-ratio: 1;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.shop-cat-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(124, 58, 237, 0.15);
+}
+.shop-cat-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.shop-cat-block:target .section-title { color: var(--primary); }
+.shop-cat-block .shop-cat-header .section-title { text-align: center; }
+.shop-cat-block .shop-cat-header .section-description { text-align: center; }
 
 /* ========================================
    Lookbook Section
@@ -4876,5 +4948,203 @@ section {
 
   .tryon-actions {
     flex-direction: column;
+  }
+}
+
+/* ========================================
+   Borahae Shop & Membership Sections
+   ======================================== */
+.shop-categories a.btn-outline {
+  border: 1.5px solid var(--primary);
+  color: var(--primary);
+  font-weight: 500;
+  transition: var(--transition);
+}
+.shop-categories a.btn-outline:hover {
+  background: var(--gradient-primary);
+  color: #fff;
+  border-color: transparent;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.membership-grid .feature-card {
+  transition: var(--transition);
+}
+.membership-grid .feature-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-xl);
+}
+.membership-grid ul li {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+}
+
+.footer-disclaimer {
+  border: 1px solid var(--border-color);
+}
+.footer-disclaimer strong {
+  display: block;
+  margin-bottom: 8px;
+}
+
+@media (max-width: 768px) {
+  .membership-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .shop-categories {
+    gap: 8px !important;
+  }
+  .shop-categories a.btn-outline {
+    font-size: 0.8rem !important;
+    padding: 6px 14px !important;
+  }
+}
+
+/* ========================================
+   Borahae Lightstick Designer
+   ======================================== */
+/* Step Indicator */
+.ls-dot {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  background: var(--bg-tertiary);
+  color: var(--text-muted);
+  border: 2px solid var(--border-color);
+  transition: var(--transition);
+}
+.ls-dot.active {
+  background: var(--gradient-primary);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 0 12px rgba(124, 58, 237, 0.4);
+}
+
+/* Color Grid */
+.ls-color-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+.ls-color-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  transition: var(--transition);
+}
+.ls-color-item:hover {
+  background: var(--bg-tertiary);
+  transform: translateY(-2px);
+}
+.ls-color-item.selected {
+  border-color: var(--primary);
+  background: var(--bg-tertiary);
+  box-shadow: 0 0 16px rgba(124, 58, 237, 0.3);
+}
+.ls-color-circle {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: var(--transition);
+}
+.ls-color-item.selected .ls-color-circle {
+  transform: scale(1.15);
+  box-shadow: 0 0 20px currentColor;
+}
+.ls-color-item span {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+/* Tag Buttons */
+.ls-tag-btn {
+  padding: 6px 14px;
+  border-radius: 16px;
+  border: 1.5px solid var(--border-color);
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.ls-tag-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+.ls-tag-btn.active {
+  background: var(--gradient-primary);
+  color: #fff;
+  border-color: transparent;
+}
+
+/* Shape selection buttons */
+.ls-shape-btn {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 2px solid var(--border-color);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.ls-shape-btn:hover {
+  border-color: var(--primary);
+  background: rgba(124, 58, 237, 0.1);
+}
+.ls-shape-btn.active {
+  background: var(--gradient-primary);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 2px 12px rgba(124, 58, 237, 0.3);
+}
+
+/* Community share links */
+.ls-community-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(124, 58, 237, 0.3);
+}
+
+/* Lightstick modal inner */
+.lightstick-modal-inner {
+  padding: 32px 24px;
+}
+
+/* Spinner for loading */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive for lightstick section */
+@media (max-width: 768px) {
+  #lightstick .features-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .ls-color-grid {
+    gap: 10px;
+  }
+  .ls-color-circle {
+    width: 42px;
+    height: 42px;
+  }
+  .lightstick-modal-inner {
+    padding: 20px 16px;
   }
 }

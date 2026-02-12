@@ -1,4 +1,4 @@
-// SIMS Fashion AI - Main JavaScript
+// BORAHAE - Main JavaScript
 
 (function() {
   'use strict';
@@ -514,68 +514,68 @@
   const lookbookData = {
     'look-1': {
       image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&q=80',
-      tag: 'Spring Essential',
-      title: '미니멀 시크',
-      desc: '깔끔한 라인과 뉴트럴 컬러로 완성하는 모던 룩. 심플하면서도 세련된 느낌을 주는 스타일로, 어떤 상황에서도 품격 있는 인상을 남길 수 있습니다.',
+      tag: 'Concert',
+      title: '콘서트 글램',
+      desc: '무대 위 조명 아래 빛나는 보라빛 콘서트 룩. 글리터와 시퀸으로 포인트를 주고, 응원봉과 어울리는 코디로 특별한 밤을 완성하세요.',
       items: [
-        { icon: '👔', name: '오버사이즈 블레이저' },
-        { icon: '👖', name: '와이드 슬랙스' },
-        { icon: '👟', name: '화이트 스니커즈' },
-        { icon: '👜', name: '미니멀 토트백' }
+        { icon: '✨', name: '글리터 크롭탑' },
+        { icon: '👖', name: '하이웨이스트 와이드팬츠' },
+        { icon: '👟', name: '플랫폼 스니커즈' },
+        { icon: '💜', name: '보라색 크로스백' }
       ],
-      colors: ['#F5F5DC', '#D2B48C', '#8B7355', '#2F2F2F', '#FFFFFF']
+      colors: ['#7c3aed', '#a78bfa', '#c084fc', '#1A1A1A', '#FFFFFF']
     },
     'look-2': {
       image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&q=80',
-      tag: 'Trending',
-      title: '스트릿 캐주얼',
-      desc: '트렌디한 스트릿 감성과 편안한 캐주얼의 조화. 자유롭고 개성 있는 스타일로 일상에서 특별한 존재감을 발휘해보세요.',
+      tag: 'Fan Meeting',
+      title: '팬미팅 코디',
+      desc: '좋아하는 아티스트를 가까이에서 만나는 특별한 날. 깔끔하면서도 센스있는 코디로 설레는 순간을 빛내보세요.',
       items: [
-        { icon: '🧥', name: '오버핏 후드 집업' },
-        { icon: '👕', name: '그래픽 티셔츠' },
-        { icon: '👖', name: '카고 팬츠' },
-        { icon: '👟', name: '청키 스니커즈' }
+        { icon: '👕', name: '라벤더 니트' },
+        { icon: '👖', name: '슬림 데님' },
+        { icon: '👟', name: '화이트 스니커즈' },
+        { icon: '🎀', name: '포인트 헤어밴드' }
       ],
-      colors: ['#1A1A1A', '#4A4A4A', '#FF6B35', '#FFFFFF', '#7B68EE']
+      colors: ['#E6E6FA', '#9370DB', '#FFFFFF', '#F0F0F0', '#7B68EE']
     },
     'look-3': {
       image: 'https://images.unsplash.com/photo-1507680434567-5739c80be1ac?w=800&q=80',
-      tag: 'Office',
-      title: '비즈니스 캐주얼',
-      desc: '전문적이면서도 편안한 오피스 룩. 단정한 인상과 함께 자신감을 높여주는 스타일로 업무 효율도 UP!',
+      tag: 'Daily K-pop',
+      title: '데일리 K-pop',
+      desc: '일상에서도 K-pop 감성을 놓치지 않는 트렌디 룩. 아이돌 공항패션에서 영감받은 스타일리시한 데일리 코디.',
       items: [
-        { icon: '👔', name: '슬림핏 셔츠' },
-        { icon: '🧥', name: '싱글 자켓' },
-        { icon: '👖', name: '슬랙스' },
-        { icon: '👞', name: '로퍼' }
+        { icon: '🧥', name: '오버사이즈 블레이저' },
+        { icon: '👕', name: '크롭 티셔츠' },
+        { icon: '👖', name: '와이드 슬랙스' },
+        { icon: '👟', name: '청키 스니커즈' }
       ],
-      colors: ['#1E3A5F', '#FFFFFF', '#D4AF37', '#2F4F4F', '#F5F5F5']
+      colors: ['#1E3A5F', '#FFFFFF', '#7c3aed', '#2F4F4F', '#F5F5F5']
     },
     'look-4': {
       image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800&q=80',
-      tag: 'Weekend',
-      title: '릴렉스 핏',
-      desc: '주말을 위한 편안하고 스타일리시한 룩. 활동성과 패션을 동시에 잡아주는 캐주얼 스타일입니다.',
+      tag: 'Casual',
+      title: '덕질 캐주얼',
+      desc: '카페에서 앨범 언박싱, 팬 모임에서의 편안한 룩. 덕질 아이템과 자연스럽게 어울리는 캐주얼 스타일.',
       items: [
         { icon: '👕', name: '오버핏 맨투맨' },
         { icon: '👖', name: '와이드 데님' },
         { icon: '🧢', name: '볼캡' },
-        { icon: '👟', name: '캔버스 스니커즈' }
+        { icon: '🎒', name: '캔버스 백팩' }
       ],
-      colors: ['#87CEEB', '#F0F0F0', '#4169E1', '#FFD700', '#FFFFFF']
+      colors: ['#87CEEB', '#F0F0F0', '#7c3aed', '#FFD700', '#FFFFFF']
     },
     'look-5': {
       image: 'https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=800&q=80',
-      tag: 'Date',
-      title: '로맨틱 무드',
-      desc: '특별한 날을 위한 로맨틱하고 우아한 스타일. 부드러운 컬러와 여성스러운 실루엣으로 사랑스러운 분위기를 연출해보세요.',
+      tag: 'Purple Mood',
+      title: '보라해 무드',
+      desc: '보라빛으로 물든 감성 코디. 라벤더, 바이올렛, 퍼플 계열로 통일감 있는 보라해 룩을 완성하세요.',
       items: [
-        { icon: '👗', name: '플로럴 원피스' },
-        { icon: '🧥', name: '크롭 가디건' },
-        { icon: '👠', name: '스트랩 힐' },
-        { icon: '👜', name: '미니 크로스백' }
+        { icon: '👗', name: '라벤더 원피스' },
+        { icon: '🧥', name: '퍼플 가디건' },
+        { icon: '👠', name: '라일락 뮬' },
+        { icon: '💜', name: '바이올렛 미니백' }
       ],
-      colors: ['#FFB6C1', '#FFF0F5', '#DDA0DD', '#FFDAB9', '#FFFFFF']
+      colors: ['#E6E6FA', '#DDA0DD', '#9370DB', '#7c3aed', '#4B0082']
     }
   };
 
@@ -626,21 +626,21 @@
   const infoModalData = {
     'ai-styling': {
       icon: '✨',
-      title: 'AI 스타일링',
+      title: 'AI K-pop 스타일링',
       content: `
-        <h3>AI 스타일링이란?</h3>
-        <p>SIMS Fashion AI의 핵심 기능으로, 인공지능이 당신의 체형, 피부톤, 선호도를 분석하여 최적의 스타일을 추천해드립니다.</p>
+        <h3>보라해 AI 스타일링이란?</h3>
+        <p>K-pop 팬을 위한 맞춤 스타일링 서비스. AI가 퍼스널 컬러와 체형을 분석하여 콘서트, 팬미팅, 일상에 최적의 K-pop 감성 코디를 추천합니다.</p>
         <div class="highlight-box">
           <strong>주요 기능</strong>
           <ul>
-            <li>체형 분석 및 맞춤 실루엣 추천</li>
-            <li>퍼스널 컬러 진단</li>
-            <li>TPO별 코디 추천</li>
-            <li>매일 새로운 스타일 제안</li>
+            <li>퍼스널 컬러 × K-pop 코디 매칭</li>
+            <li>콘서트 · 팬미팅 · 일상 상황별 추천</li>
+            <li>AI 패션 이미지 생성 & Virtual Try-On</li>
+            <li>보라해 감성 컬러 팔레트 제안</li>
           </ul>
         </div>
         <h3>어떻게 작동하나요?</h3>
-        <p>간단한 설문과 사진 분석을 통해 AI가 당신의 스타일 DNA를 파악합니다.</p>
+        <p>간단한 설문과 사진으로 AI가 당신의 스타일 DNA를 파악하고, K-pop 감성에 맞는 코디를 생성합니다.</p>
       `
     },
     'personal-color': {
@@ -672,14 +672,14 @@
     },
     'pricing': {
       icon: '💰',
-      title: '가격 정책',
+      title: '보라해 멤버십',
       content: `
-        <h3>요금제 안내</h3>
+        <h3>멤버십 안내</h3>
         <table class="pricing-table">
-          <tr><th>플랜</th><th>가격</th><th>기능</th></tr>
-          <tr><td><strong>Free</strong></td><td>무료</td><td>기본 스타일 분석, AI 챗봇</td></tr>
-          <tr><td><strong>Pro</strong></td><td>₩9,900/월</td><td>무제한 분석, 맞춤 코디</td></tr>
-          <tr><td><strong>Premium</strong></td><td>₩19,900/월</td><td>Pro + 1:1 스타일리스트 상담</td></tr>
+          <tr><th>플랜</th><th>가격</th><th>혜택</th></tr>
+          <tr><td><strong>Free</strong></td><td>무료</td><td>AI 스타일링 월 3회, 커뮤니티</td></tr>
+          <tr><td><strong>Purple</strong></td><td>₩9,900/월</td><td>무제한 스타일링, 굿즈 10% 할인, 독점 콘텐츠</td></tr>
+          <tr><td><strong>VIP 보라해</strong></td><td>₩19,900/월</td><td>Purple + 1:1 코디 상담, 이벤트 우선, VIP 배지</td></tr>
         </table>
       `
     },
@@ -702,7 +702,7 @@
       icon: '💼',
       title: 'Careers',
       content: `
-        <h3>SIMS Fashion AI와 함께하세요</h3>
+        <h3>보라해와 함께하세요</h3>
         <div class="job-card">
           <h4>AI Engineer</h4>
           <p>컴퓨터 비전 및 추천 시스템 개발</p>
@@ -721,7 +721,7 @@
       content: `
         <h3>보도자료</h3>
         <div class="highlight-box">
-          <strong>SIMS Fashion AI, 시리즈 A 투자 유치</strong>
+          <strong>보라해(BORAHAE), 시리즈 A 투자 유치</strong>
           <p>50억원 규모 투자 유치로 글로벌 진출 가속화</p>
         </div>
         <p>미디어 문의: press@simsfashion.ai</p>
@@ -757,7 +757,7 @@
       title: 'Privacy Policy',
       content: `
         <h3>개인정보 처리방침</h3>
-        <p>SIMS Fashion AI는 이용자의 개인정보를 중요시하며, 개인정보보호법을 준수합니다.</p>
+        <p>보라해(BORAHAE)는 이용자의 개인정보를 중요시하며, 개인정보보호법을 준수합니다.</p>
         <h3>수집하는 개인정보</h3>
         <ul><li>필수: 이메일, 닉네임</li><li>선택: 성별, 연령대, 체형 정보</li></ul>
       `
@@ -767,7 +767,7 @@
       title: 'Terms of Service',
       content: `
         <h3>이용약관</h3>
-        <p>본 약관은 SIMS Fashion AI가 제공하는 서비스의 이용과 관련하여 회사와 회원 간의 권리, 의무 및 책임사항을 규정함을 목적으로 합니다.</p>
+        <p>본 약관은 보라해(BORAHAE)가 제공하는 서비스의 이용과 관련하여 회사와 회원 간의 권리, 의무 및 책임사항을 규정함을 목적으로 합니다.</p>
         <div class="highlight-box">
           <strong>문의</strong>
           <p>약관에 대한 문의는 support@simsfashion.ai로 연락주세요.</p>
@@ -1370,7 +1370,7 @@
     }
   }
 
-  var FASHION_PROMPT_FIXED = 'CRITICAL STYLE RULES (always follow): Photorealistic only. Do NOT draw cartoon, illustration, anime, comic, or manhwa style. Output must look like a real photograph taken by a professional fashion photographer. As if a professional fashion AI coordinator styled and dressed the person for a real photoshoot: natural skin texture, real fabric and lighting, soft shadows, consistent quality. Maintain real-photo image quality and style in every generation.';
+  var FASHION_PROMPT_FIXED = 'CRITICAL STYLE RULES (always follow): Photorealistic only. Do NOT draw cartoon, illustration, anime, comic, or manhwa style. Output must look like a real photograph taken by a professional fashion photographer. Style inspiration: Korean K-pop idol fashion, trendy Korean street style. Purple/lavender/violet color accents are preferred when possible. As if a professional K-pop fashion coordinator styled and dressed the person for a real photoshoot: natural skin texture, real fabric and lighting, soft shadows, consistent quality. Maintain real-photo image quality and style in every generation.';
 
   function buildFashionPrompt(useFaceAndBody, textOnly) {
     const genderMap = { female: '여성', male: '남성', neutral: '젠더리스' };
@@ -1657,7 +1657,7 @@
   }
 
   async function callIDMVTON(personBlob, garmentBlob) {
-    // Legacy HuggingFace path; Try-On now uses Gemini (nano banana) in generateVirtualTryOn
+    // Legacy HuggingFace path; Try-On now uses Gemini in generateVirtualTryOn
     console.log('Virtual Try-On: IDM-VTON fallback not used');
     return stylingData.facePhoto;
   }
@@ -1729,7 +1729,7 @@
   }
 
   async function getAIStylingRecommendation() {
-    var prompt = `당신은 전문 패션 스타일리스트입니다. 다음 사용자 정보를 바탕으로 맞춤형 스타일링 분석 결과를 JSON 형식으로만 제공해주세요. 다른 설명 없이 JSON만 출력하세요.
+    var prompt = `당신은 K-pop 감성 전문 패션 스타일리스트입니다. 다음 사용자 정보를 바탕으로 K-pop 콘서트, 팬미팅, 일상에 어울리는 맞춤형 스타일링 분석 결과를 JSON 형식으로만 제공해주세요. 보라색/퍼플 계열 컬러를 팔레트에 반드시 포함하세요. 다른 설명 없이 JSON만 출력하세요.
 
 사용자 정보:
 - 성별: ${stylingData.gender || '미선택'}
@@ -1946,20 +1946,25 @@
   // ========================================
   // AI Chat Widget
   // ========================================
-  const SYSTEM_PROMPT_BASE = `당신은 SIMS Fashion AI의 전문 AI 스타일리스트입니다. 패션, 스타일링, 코디네이션에 대한 깊은 전문 지식을 갖추고 있습니다.
+  const SYSTEM_PROMPT_BASE = `당신은 보라해(BORAHAE) 플랫폼의 전문 AI 스타일리스트입니다. K-pop 팬들을 위한 패션, 스타일링, 코디네이션에 대한 깊은 전문 지식을 갖추고 있습니다.
 
 ## 핵심 역할
-- 사용자의 개인 스타일을 분석하고 맞춤형 패션 조언 제공
-- 퍼스널 컬러, 체형별 스타일링, 트렌드 정보 안내
-- 상황별(데이트, 출근, 캐주얼 등) 코디 추천
+- K-pop 콘서트, 팬미팅, 일상 등 상황별 맞춤 코디 추천
+- 퍼스널 컬러 기반 K-pop 감성 스타일링 조언
+- 보라색/퍼플 계열 코디를 자연스럽게 녹여서 추천
+
+## 중요 규칙
+- 특정 아티스트 이름, 그룹명, 소속사명을 직접 언급하지 마세요
+- "K-pop 아티스트", "좋아하는 아티스트" 등 일반적 표현을 사용하세요
+- 팬 문화와 덕질 용어를 자연스럽게 활용하세요
 
 ## 응답 스타일
-- 친근하고 전문적인 톤 유지
+- 친근하고 전문적인 톤 유지, 팬 감성을 이해하는 따뜻한 말투
 - 구체적이고 실용적인 조언 제공
-- 이모지를 적절히 활용하여 친근감 표현
+- 보라해 감성의 이모지를 적절히 활용 (💜🟣✨)
 - 답변은 간결하면서도 핵심을 담아 2-3문단 이내로
 
-사용자의 질문에 맞춰 세련되고 도움이 되는 패션 조언을 제공해주세요.`;
+사용자의 질문에 맞춰 K-pop 팬 감성에 어울리는 세련된 패션 조언을 제공해주세요.`;
 
   function getChatUserContext() {
     var prefs = getTastePreferences();
@@ -2226,5 +2231,290 @@
     }
   }
 
-  console.log('SIMS Fashion AI loaded successfully!');
+  // ========================================
+  // Borahae Lightstick Designer
+  // ========================================
+  (function initLightstickDesigner() {
+    var lsModal = document.getElementById('lightstick-modal');
+    var lsCloseBtn = document.getElementById('lightstick-modal-close');
+    var openBtn = document.getElementById('open-lightstick-btn');
+    if (!lsModal || !openBtn) return;
+
+    var lsState = { name: '', color: '', colorName: '', shape: '', shapeName: '', prompt: '', step: 1 };
+
+    // Open / Close modal
+    function openLightstickModal() {
+      lsState = { name: '', color: '', colorName: '', shape: '', shapeName: '', prompt: '', step: 1 };
+      showLsStep(1);
+      document.getElementById('ls-name-input').value = '';
+      document.getElementById('ls-prompt-input').value = '';
+      document.querySelectorAll('.ls-shape-btn').forEach(function(b) { b.classList.remove('active'); });
+      document.getElementById('ls-design-summary').style.display = 'none';
+      document.getElementById('ls-result-image-wrap').style.display = 'none';
+      document.getElementById('ls-loading').style.display = 'none';
+      document.querySelectorAll('.ls-color-item').forEach(function(el) { el.classList.remove('selected'); });
+      document.getElementById('ls-next-1').disabled = true;
+      document.getElementById('ls-next-2').disabled = true;
+      lsModal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightstickModal() {
+      lsModal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    openBtn.addEventListener('click', openLightstickModal);
+    lsCloseBtn.addEventListener('click', closeLightstickModal);
+    lsModal.addEventListener('click', function(e) { if (e.target === lsModal) closeLightstickModal(); });
+
+    // Step navigation
+    function showLsStep(n) {
+      lsState.step = n;
+      for (var i = 1; i <= 4; i++) {
+        var el = document.getElementById('ls-step-' + i);
+        if (el) el.style.display = i === n ? 'block' : 'none';
+      }
+      document.querySelectorAll('.ls-dot').forEach(function(dot) {
+        var s = parseInt(dot.getAttribute('data-ls-step'));
+        dot.classList.toggle('active', s <= n);
+      });
+    }
+
+    // Step 1: Name input
+    var nameInput = document.getElementById('ls-name-input');
+    var nextBtn1 = document.getElementById('ls-next-1');
+    nameInput.addEventListener('input', function() {
+      lsState.name = nameInput.value.trim();
+      nextBtn1.disabled = lsState.name.length === 0;
+    });
+    nextBtn1.addEventListener('click', function() { if (lsState.name) showLsStep(2); });
+
+    // Step 2: Color selection
+    var nextBtn2 = document.getElementById('ls-next-2');
+    var backBtn2 = document.getElementById('ls-back-2');
+    document.querySelectorAll('.ls-color-item').forEach(function(item) {
+      item.addEventListener('click', function() {
+        document.querySelectorAll('.ls-color-item').forEach(function(el) { el.classList.remove('selected'); });
+        item.classList.add('selected');
+        lsState.color = item.getAttribute('data-color');
+        lsState.colorName = item.getAttribute('data-color-name');
+        nextBtn2.disabled = false;
+      });
+    });
+    nextBtn2.addEventListener('click', function() { if (lsState.color) showLsStep(3); updateDesignSummary(); });
+    backBtn2.addEventListener('click', function() { showLsStep(1); });
+
+    // Step 3: Shape selection
+    document.querySelectorAll('.ls-shape-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.ls-shape-btn').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        lsState.shape = btn.getAttribute('data-shape');
+        lsState.shapeName = btn.textContent.trim();
+        updateDesignSummary();
+      });
+    });
+
+    // Step 3: Prompt tags
+    document.querySelectorAll('.ls-tag-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        btn.classList.toggle('active');
+        var textarea = document.getElementById('ls-prompt-input');
+        var tag = btn.getAttribute('data-tag');
+        var val = textarea.value;
+        if (btn.classList.contains('active')) {
+          textarea.value = val ? val + ', ' + tag : tag;
+        } else {
+          textarea.value = val.replace(new RegExp(',?\\s*' + tag.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), '').replace(/^,\s*/, '');
+        }
+        lsState.prompt = textarea.value.trim();
+        updateDesignSummary();
+      });
+    });
+    document.getElementById('ls-prompt-input').addEventListener('input', function() {
+      lsState.prompt = this.value.trim();
+      updateDesignSummary();
+    });
+    document.getElementById('ls-back-3').addEventListener('click', function() { showLsStep(2); });
+
+    function _t(key, fallback) {
+      if (window.__simsI18n && window.__simsI18n.t) {
+        var val = window.__simsI18n.t(key);
+        return val || fallback || '';
+      }
+      return fallback || '';
+    }
+    function _lang() {
+      return (window.__simsI18n && window.__simsI18n.getLang) ? window.__simsI18n.getLang() : 'ko';
+    }
+
+    function updateDesignSummary() {
+      var summary = document.getElementById('ls-design-summary');
+      var text = document.getElementById('ls-summary-text');
+      if (lsState.name || lsState.colorName || lsState.shapeName || lsState.prompt) {
+        summary.style.display = 'block';
+        var parts = [];
+        var isEn = _lang() === 'en';
+        if (lsState.name) parts.push((isEn ? 'Name: ' : '이름: ') + lsState.name);
+        if (lsState.colorName) parts.push((isEn ? 'Color: ' : '컬러: ') + lsState.colorName);
+        if (lsState.shapeName) parts.push((isEn ? 'Shape: ' : '모양: ') + lsState.shapeName);
+        if (lsState.prompt) parts.push((isEn ? 'Theme: ' : '테마: ') + lsState.prompt);
+        text.textContent = parts.join(' | ');
+      }
+    }
+
+    // Step 3: Generate
+    document.getElementById('ls-generate-btn').addEventListener('click', async function() {
+      showLsStep(4);
+      document.getElementById('ls-loading').style.display = 'block';
+      document.getElementById('ls-result-image-wrap').style.display = 'none';
+      document.getElementById('ls-result-title').textContent = _t('lightstick.loading', '✨ AI가 응원봉을 디자인하고 있어요...');
+      document.getElementById('ls-result-subtitle').textContent = _t('lightstick.loading_sub', '약 10~30초 정도 소요됩니다');
+
+      var designPrompt = buildLightstickPrompt();
+      try {
+        var imageData = await callGeminiLightstick(designPrompt);
+        if (imageData) {
+          var img = document.getElementById('ls-result-image');
+          img.src = 'data:image/png;base64,' + imageData;
+          img.style.display = 'block';
+          document.getElementById('ls-loading').style.display = 'none';
+          document.getElementById('ls-result-image-wrap').style.display = 'block';
+          var isEn = _lang() === 'en';
+          document.getElementById('ls-result-title').textContent = isEn
+            ? '🎉 ' + lsState.name + '\'s Purple Lightstick is Ready!'
+            : '🎉 ' + lsState.name + '님의 보라빛 응원봉 완성!';
+          var shapeDesc = lsState.shapeName ? lsState.shapeName + ' ' : '';
+          document.getElementById('ls-result-subtitle').textContent = isEn
+            ? lsState.colorName + ' · ' + shapeDesc + 'A lightstick shining with your love'
+            : lsState.colorName + ' 컬러 · ' + shapeDesc + '당신의 사랑이 빛나는 응원봉';
+        } else {
+          throw new Error('No image data');
+        }
+      } catch (err) {
+        console.error('Lightstick generation error:', err);
+        document.getElementById('ls-loading').style.display = 'none';
+        document.getElementById('ls-result-image-wrap').style.display = 'block';
+        document.getElementById('ls-result-image').style.display = 'none';
+        document.getElementById('ls-result-title').textContent = _lang() === 'en' ? '⚠️ Generation Failed' : '⚠️ 잠시 후 다시 시도해주세요';
+        var errDetail = err.message || (_lang() === 'en' ? 'Unknown error' : '알 수 없는 오류');
+        if (errDetail.length > 100) errDetail = errDetail.substring(0, 100) + '...';
+        document.getElementById('ls-result-subtitle').textContent = errDetail;
+      }
+    });
+
+    function buildLightstickPrompt() {
+      var colorHex = lsState.color;
+      var colorName = lsState.colorName;
+      var userName = lsState.name;
+      var shape = lsState.shape || '';
+      var userPrompt = lsState.prompt || '';
+
+      // 모양: 사용자가 선택한 모양 또는 기본 라운드
+      var shapeDesc = shape
+        ? 'The lightstick head/top is shaped like: ' + shape + '.'
+        : 'The lightstick has an elegant, unique shape designed by the user\'s preference.';
+
+      // 테마/분위기
+      var themeDesc = userPrompt
+        ? 'User\'s design vision and theme: "' + userPrompt + '". Interpret this creatively and incorporate it into the lightstick design, decorations, patterns, and overall mood.'
+        : 'The overall design should be elegant, premium, and visually stunning.';
+
+      return 'Generate a single beautiful product photo of a custom K-pop fan lightstick (응원봉, cheering stick).\n\n'
+        + 'USER\'S DESIGN CHOICES:\n'
+        + '- Name to display: "' + userName + '" — elegantly engraved, illuminated, or embossed on the lightstick body\n'
+        + '- Primary glow color: ' + colorName + ' (' + colorHex + ') — the lightstick emits and glows in this color\n'
+        + '- ' + shapeDesc + '\n'
+        + '- ' + themeDesc + '\n\n'
+        + 'LIGHTSTICK STRUCTURE:\n'
+        + '- A handheld lightstick with a decorative glowing head on top and a grip handle at the bottom\n'
+        + '- The head/top part is the main design element (where the shape and glow are)\n'
+        + '- Transparent or semi-transparent crystal/glass-like material with inner LED glow\n'
+        + '- The handle should look sleek and premium (metallic, matte black, or matching the theme)\n\n'
+        + 'PHOTO STYLE:\n'
+        + '- Dark/black studio background to showcase the glowing effect beautifully\n'
+        + '- Professional product photography with soft studio lighting\n'
+        + '- Single lightstick centered in frame, slightly angled for a dynamic look\n'
+        + '- Photorealistic, high detail, 4K quality\n\n'
+        + 'IMPORTANT: Do NOT include any real brand logos, real artist/group names, or trademarked symbols. '
+        + 'This is an original fan-designed lightstick concept. Focus on the user\'s creative vision.';
+    }
+
+    async function callGeminiLightstick(prompt) {
+      if (!GEMINI_API_KEY) {
+        throw new Error('API 키가 설정되지 않았습니다. config.js를 확인하세요.');
+      }
+      var url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=' + encodeURIComponent(GEMINI_API_KEY);
+      var body = {
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: {
+          responseModalities: ["image", "text"],
+          responseMimeType: "text/plain"
+        }
+      };
+      var resp = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      var data = await resp.json();
+      if (data.error) {
+        var errMsg = data.error.message || JSON.stringify(data.error);
+        console.error('Gemini API error:', errMsg);
+        throw new Error(errMsg);
+      }
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
+        for (var i = 0; i < data.candidates[0].content.parts.length; i++) {
+          var part = data.candidates[0].content.parts[i];
+          if (part.inlineData && part.inlineData.data) return part.inlineData.data;
+        }
+      }
+      throw new Error('이미지가 생성되지 않았습니다. 다른 프롬프트로 시도해주세요.');
+    }
+
+    // Download
+    document.getElementById('ls-download-btn').addEventListener('click', function() {
+      var img = document.getElementById('ls-result-image');
+      if (!img.src || img.src === window.location.href) return;
+      var a = document.createElement('a');
+      a.href = img.src;
+      a.download = 'borahae-lightstick-' + lsState.name + '.png';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    });
+
+    // Share — copy to clipboard + show community links
+    document.getElementById('ls-share-btn').addEventListener('click', async function() {
+      var img = document.getElementById('ls-result-image');
+      var linksDiv = document.getElementById('ls-community-links');
+      if (!img.src || img.src === window.location.href) return;
+
+      // Toggle community links
+      if (linksDiv.style.display === 'none') {
+        linksDiv.style.display = 'block';
+        this.textContent = _lang() === 'en' ? '✅ Links opened!' : '✅ 함께 응원해요!';
+      } else {
+        linksDiv.style.display = 'none';
+        this.textContent = _t('lightstick.modal_step4_share', '📤 커뮤니티 공유');
+        return;
+      }
+
+      // Also try to copy image to clipboard
+      try {
+        var resp = await fetch(img.src);
+        var blob = await resp.blob();
+        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+      } catch (e) {
+        // clipboard copy failed silently, user can still download manually
+      }
+    });
+
+    // Retry
+    document.getElementById('ls-retry-btn').addEventListener('click', function() {
+      showLsStep(3);
+    });
+  })();
+
+  console.log('BORAHAE loaded successfully!');
 })();

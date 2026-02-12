@@ -13,9 +13,11 @@ Thumbs.db
 *.log
 npm-debug.log*
 
-# Environment variables
+# Environment variables (업로드 제외)
 .env
 .env.local
+.env.*
+!.env.example
 
 # Generated config (contains API keys from .env)
 config.js
