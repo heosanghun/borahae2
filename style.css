@@ -3768,8 +3768,8 @@ section {
 }
 
 .chat-avatar {
-  width: 48px;
-  height: 48px;
+  width: 56px;
+  height: 56px;
   background: rgba(255, 255, 255, 0.2);
   border-radius: 50%;
   display: flex;
@@ -3793,7 +3793,7 @@ section {
   -webkit-clip-path: circle(50%);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  transform: scale(0.75);
+  transform: scale(0.65);
   will-change: transform;
 }
 
@@ -3877,8 +3877,8 @@ section {
 }
 
 .welcome-avatar {
-  width: 64px;
-  height: 64px;
+  width: 80px;
+  height: 80px;
   background: rgba(124, 58, 237, 0.1);
   border-radius: 50%;
   display: flex;
@@ -3899,7 +3899,7 @@ section {
   -webkit-clip-path: circle(50%);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  transform: scale(0.75);
+  transform: scale(0.65);
   will-change: transform;
 }
 .welcome-avatar svg {
@@ -3976,8 +3976,8 @@ section {
 }
 
 .message-avatar {
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -4005,7 +4005,7 @@ section {
   -webkit-clip-path: circle(50%);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  transform: scale(0.75);
+  transform: scale(0.65);
   will-change: transform;
 }
 
@@ -4058,8 +4058,8 @@ section {
 }
 
 .typing-indicator .message-avatar {
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   background: var(--gradient-primary);
   color: white;
 }
