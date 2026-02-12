@@ -3793,8 +3793,9 @@ section {
   -webkit-backface-visibility: hidden;
   transform: scale(0.92);
   will-change: transform;
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
+  image-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .status-dot {
@@ -3899,8 +3900,9 @@ section {
   -webkit-backface-visibility: hidden;
   transform: scale(0.92);
   will-change: transform;
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
+  image-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 .welcome-avatar svg {
   width: 32px;
@@ -4005,8 +4007,9 @@ section {
   -webkit-backface-visibility: hidden;
   transform: scale(0.92);
   will-change: transform;
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
+  image-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .message.user .message-avatar {
