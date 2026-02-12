@@ -3785,7 +3785,7 @@ section {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 15%;
+  object-position: center 10%;
   transform: scale(0.95);
 }
 
@@ -3883,7 +3883,7 @@ section {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 15%;
+  object-position: center 10%;
   transform: scale(0.95);
 }
 .welcome-avatar svg {
@@ -3981,7 +3981,7 @@ section {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 15%;
+  object-position: center 10%;
   transform: scale(0.95);
 }
 
