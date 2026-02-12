@@ -3681,6 +3681,20 @@ section {
   stroke: white;
 }
 
+.chat-toggle-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  clip-path: circle(50%);
+  -webkit-clip-path: circle(50%);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
 .chat-icon,
 .chat-close {
   position: absolute;
@@ -3688,6 +3702,10 @@ section {
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
 }
 
 .chat-close {
