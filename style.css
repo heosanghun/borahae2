@@ -3295,6 +3295,46 @@ section {
   transform: scale(1.15);
 }
 
+/* 나만의 컬러에 어울리는 한글 친구 */
+.personal-color-hangul {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-color);
+}
+.personal-color-hangul-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 10px;
+}
+.personal-color-hangul-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  background: var(--bg-secondary);
+  border-radius: 14px;
+  border: 1px solid var(--border-color);
+}
+.personal-color-hangul-name {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+}
+.personal-color-hangul-role {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+.personal-color-hangul-message {
+  margin: 8px 0 0 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+
 /* 7컬러 × 무드 & 음악 존 (이벤트형 특별 공간) */
 .mood-music-zone {
   position: relative;
@@ -3739,6 +3779,12 @@ section {
   font-weight: 700;
   font-size: 1rem;
   position: relative;
+  overflow: hidden;
+}
+.chat-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .status-dot {
@@ -3829,8 +3875,13 @@ section {
   align-items: center;
   justify-content: center;
   margin-bottom: 14px;
+  overflow: hidden;
 }
-
+.welcome-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 .welcome-avatar svg {
   width: 32px;
   height: 32px;
@@ -3919,6 +3970,12 @@ section {
 .message.assistant .message-avatar {
   background: var(--gradient-primary);
   color: white;
+  overflow: hidden;
+}
+.message-avatar .message-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .message.user .message-avatar {

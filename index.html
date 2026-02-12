@@ -1035,11 +1035,11 @@
         </div>
       </div>
       <div class="footer-disclaimer" style="background:var(--bg-tertiary);border-radius:12px;padding:20px 24px;margin-bottom:24px;font-size:0.82rem;color:var(--text-muted);line-height:1.8;">
-        <strong style="color:var(--text-secondary);">⚠️ 법적 고지 (Legal Disclaimer)</strong><br>
-        이 웹사이트는 K-pop 팬이 운영하는 <strong>독립적인 팬 라이프스타일 플랫폼</strong>입니다.
-        특정 아티스트, 엔터테인먼트 소속사와 제휴, 후원, 승인 관계가 없습니다.
-        '보라해(Borahae)'는 한국 특허청(KIPO)에서 상표등록이 거절되어 <strong>등록 상표가 아닌</strong>, 팬 문화에서 자연발생적으로 사용되는 표현입니다 (특허법원 2023허10361, 2023.10.27 확정).
-        본 플랫폼에서 사용되는 모든 아티스트 관련 권리는 해당 권리자에게 있으며, 본 사이트의 콘텐츠는 팬 활동 목적으로만 제공됩니다.
+        <strong style="color:var(--text-secondary);" data-i18n="disclaimer.title">⚠️ 법적 고지 (Legal Disclaimer)</strong><br>
+        <span data-i18n="disclaimer.p1">이 웹사이트는 K-pop 팬이 운영하는 독립적인 팬 라이프스타일 플랫폼 입니다.</span><br>
+        <span data-i18n="disclaimer.p2">특정 아티스트, 엔터테인먼트 소속사와 제휴, 후원, 승인 관계가 없습니다.</span><br>
+        <span data-i18n="disclaimer.p3">'보라해(Borahae)'는 한국 특허청(KIPO)에서 상표등록이 거절되어 등록 상표가 아닌, 팬 문화에서 자연발생적으로 사용되는 표현입니다 (특허법원 2023허10361, 2023.10.27 확정).</span><br>
+        <span data-i18n="disclaimer.p4">본 플랫폼에서 사용되는 모든 아티스트 관련 권리는 해당 권리자에게 있으며, 본 사이트의 콘텐츠는 팬 문화·팬 활동 지원 목적으로 제공됩니다. 유료 멤버십 등 수익은 플랫폼 운영 및 서비스 유지에 사용되며, 특정 아티스트·소속사와의 수익 분배나 공식 승인을 의미하지 않습니다.</span>
       </div>
       <div class="footer-bottom">
         <div class="footer-logo">
@@ -1850,7 +1850,7 @@
 
   <!-- AI Chat Widget -->
   <div id="chat-widget" class="chat-widget">
-    <button id="chat-toggle" class="chat-toggle" aria-label="AI 스타일리스트와 대화">
+    <button id="chat-toggle" class="chat-toggle" aria-label="소아베와 대화">
       <span class="chat-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
@@ -1869,11 +1869,11 @@
       <div class="chat-header">
         <div class="chat-header-info">
           <div class="chat-avatar">
-            <span>AI</span>
+            <img src="image/soave/soave.jpeg" alt="소아베" class="chat-avatar-img" width="48" height="48">
             <span class="status-dot"></span>
           </div>
           <div class="chat-header-text">
-            <h4 data-i18n="chat.title">보라해 AI 스타일리스트</h4>
+            <h4 data-i18n="chat.title">소아베</h4>
             <span class="chat-status" data-i18n="chat.status">온라인</span>
           </div>
         </div>
@@ -1887,14 +1887,10 @@
       <div id="chat-messages" class="chat-messages">
         <div class="chat-welcome">
           <div class="welcome-avatar">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"/>
-              <circle cx="12" cy="10" r="3"/>
-              <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"/>
-            </svg>
+            <img src="image/soave/soave.jpeg" alt="소아베" class="welcome-avatar-img" width="64" height="64">
           </div>
-          <h3 data-i18n="chat.hello">안녕하세요!</h3>
-          <p data-i18n-html="chat.intro">저는 보라해 AI 스타일리스트입니다.<br>K-pop 코디, 콘서트 패션, 팬미팅 스타일 무엇이든 물어보세요.</p>
+          <h3 data-i18n="chat.hello">안녕!</h3>
+          <p data-i18n-html="chat.intro">나는 보라해를 사랑하는 아미, <strong>소아베</strong>야.<br>코디나 스타일 고민 같이 나눠 보자.</p>
           <div class="quick-questions">
             <button class="quick-btn" data-question="콘서트에 뭐 입고 가면 좋을까?" data-i18n="chat.q1">콘서트 코디 추천</button>
             <button class="quick-btn" data-question="제 퍼스널 컬러를 알고 싶어요" data-i18n="chat.q2">퍼스널 컬러 진단</button>

@@ -219,6 +219,16 @@
     indigo: { name: '남색', mood: '깊고 예술적인', description: '내면적이고 드라마틱한 무드와 잘 맞아요.', directLink: 'https://www.youtube.com/watch?v=0lapF4DQPKQ', searchLink: 'https://www.youtube.com/results?search_query=Black+Swan+official+MV' },
     violet: { name: '보라', mood: '감성적이고 몽환적인', description: '감성과 위로가 담긴 무드와 잘 맞아요.', directLink: 'https://www.youtube.com/watch?v=xEeFrLSkMm8', searchLink: 'https://www.youtube.com/results?search_query=%EB%B4%84%EB%82%A0+Spring+Day+official+MV' }
   };
+  // 7컬러 → 한글 소모오 캐릭터 1명 (성향 기반, 순서 무관)
+  const COLOR_TO_HANGUL = {
+    red:    { name: '초롱', nameEn: 'ChoLong', role: '댄서', roleEn: 'Dancer', message: '열정과 리듬이 있는 너에게 어울리는 친구예요. 춤처럼 에너지를 발산해 보세요.', messageEn: 'A friend who matches your passion and rhythm. Let your energy out like dance.' },
+    orange: { name: '오롱', nameEn: 'OhLong', role: '웃음꽃', roleEn: 'Joy', message: '따뜻하고 유쾌한 무드에 잘 맞는 친구예요. 밝은 웃음으로 주변을 환하게 만들어 보세요.', messageEn: 'A friend who fits your warm, cheerful mood. Brighten the day with a smile.' },
+    yellow: { name: '노롱', nameEn: 'NoLong', role: '가수', roleEn: 'Singer', message: '밝고 활기찬 에너지가 넘치는 친구예요. 무대 위에서 빛나듯 표현해 보세요.', messageEn: 'A friend full of bright energy. Shine through expression, like on stage.' },
+    green:  { name: '어롱', nameEn: 'EoLong', role: '정원사', roleEn: 'Gardener', message: '달콤하고 설레는 무드와 잘 맞아요. 꽃처럼 성장하고 꽃피우는 일을 찾아 보세요.', messageEn: 'A friend who matches your sweet, hopeful mood. Find what makes you bloom.' },
+    blue:   { name: '으롱', nameEn: 'EuLong', role: '명상가', roleEn: 'Meditator', message: '시원하고 청량한 마음에 어울리는 친구예요. 평정심을 잃지 않고 중심을 잡아 보세요.', messageEn: 'A friend who fits your cool, calm mind. Keep your center and stay grounded.' },
+    indigo: { name: '소롱', nameEn: 'SoLong', role: '시인', roleEn: 'Poet', message: '깊고 예술적인 감성에 잘 맞는 친구예요. 세상을 시어로 번역해 보세요.', messageEn: 'A friend who fits your deep, artistic soul. Translate the world into your words.' },
+    violet: { name: '예롱', nameEn: 'YehLong', role: '연주가', roleEn: 'Musician', message: '감성과 위로가 담긴 무드에 어울려요. 음악처럼 마음을 나눠 보세요.', messageEn: 'A friend who fits your emotional, comforting mood. Share your heart like music.' }
+  };
   const PERSONAL_COLOR_TO_7COLOR = {
     '봄웜': { primary: 'yellow', secondary: 'orange' },
     '봄쿨': { primary: 'yellow', secondary: 'green' },
@@ -1817,6 +1827,11 @@
 
     var primaryKey = getPrimary7Color(result.personalColor.season);
     var music = COLOR_MUSIC[primaryKey] || COLOR_MUSIC.blue;
+    var hangul = COLOR_TO_HANGUL[primaryKey] || COLOR_TO_HANGUL.blue;
+    var isEn = document.documentElement.lang === 'en';
+    var hangulName = isEn ? hangul.nameEn : hangul.name;
+    var hangulRole = isEn ? hangul.roleEn : hangul.role;
+    var hangulMessage = isEn ? hangul.messageEn : hangul.message;
 
     const personalColorEl = document.getElementById('personal-color-result');
     if (personalColorEl) {
@@ -1829,6 +1844,14 @@
           ${result.personalColor.palette.map(color => `
             <div class="palette-color" style="background: ${color}" title="${color}"></div>
           `).join('')}
+        </div>
+        <div class="personal-color-hangul">
+          <span class="personal-color-hangul-label">${isEn ? 'Your Hangul friend' : '나만의 컬러에 어울리는 한글 친구'}</span>
+          <div class="personal-color-hangul-card">
+            <span class="personal-color-hangul-name">${hangulName}</span>
+            <span class="personal-color-hangul-role">${hangulRole}</span>
+            <p class="personal-color-hangul-message">${hangulMessage}</p>
+          </div>
         </div>
       `;
     }
@@ -2170,6 +2193,7 @@
     return text;
   }
 
+  var SOAVE_AVATAR_URL = 'image/soave/soave.jpeg';
   function addMessage(role, content) {
     if (!chatMessages) return;
 
@@ -2181,8 +2205,11 @@
       minute: '2-digit'
     });
 
+    var avatarHtml = role === 'assistant'
+      ? '<img src="' + SOAVE_AVATAR_URL + '" alt="소아베" class="message-avatar-img" width="36" height="36">'
+      : 'ME';
     messageDiv.innerHTML = `
-      <div class="message-avatar">${role === 'assistant' ? 'AI' : 'ME'}</div>
+      <div class="message-avatar">${avatarHtml}</div>
       <div class="message-content">
         <div class="message-bubble">${formatMessage(content)}</div>
         <span class="message-time">${time}</span>
@@ -2213,7 +2240,7 @@
     typingDiv.className = 'typing-indicator';
     typingDiv.id = 'typing-indicator';
     typingDiv.innerHTML = `
-      <div class="message-avatar">AI</div>
+      <div class="message-avatar"><img src="${SOAVE_AVATAR_URL}" alt="소아베" class="message-avatar-img" width="36" height="36"></div>
       <div class="typing-dots">
         <span></span>
         <span></span>

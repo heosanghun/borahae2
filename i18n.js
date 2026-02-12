@@ -285,6 +285,13 @@
     'footer.support': { ko: 'Support', en: 'Support' },
     'footer.copyright': { ko: '© 2026 BORAHAE. All rights reserved. | 팬이 만드는 보라빛 세상', en: '© 2026 BORAHAE. All rights reserved. | A Purple World Made by Fans' },
 
+    // --- 법적 고지 (Legal Disclaimer) ---
+    'disclaimer.title': { ko: '⚠️ 법적 고지 (Legal Disclaimer)', en: '⚠️ Legal Disclaimer' },
+    'disclaimer.p1': { ko: '이 웹사이트는 K-pop 팬이 운영하는 독립적인 팬 라이프스타일 플랫폼 입니다.', en: 'This website is an independent fan lifestyle platform operated by K-pop fans.' },
+    'disclaimer.p2': { ko: '특정 아티스트, 엔터테인먼트 소속사와 제휴, 후원, 승인 관계가 없습니다.', en: 'It is not affiliated with, sponsored by, or endorsed by any specific artist or entertainment company.' },
+    'disclaimer.p3': { ko: '\'보라해(Borahae)\'는 한국 특허청(KIPO)에서 상표등록이 거절되어 등록 상표가 아닌, 팬 문화에서 자연발생적으로 사용되는 표현입니다 (특허법원 2023허10361, 2023.10.27 확정).', en: '\'Borahae\' is not a registered trademark; it is an expression used organically in fan culture (Patent Court 2023Heo10361, Oct 27, 2023).' },
+    'disclaimer.p4': { ko: '본 플랫폼에서 사용되는 모든 아티스트 관련 권리는 해당 권리자에게 있으며, 본 사이트의 콘텐츠는 팬 문화·팬 활동 지원 목적으로 제공됩니다. 유료 멤버십 등 수익은 플랫폼 운영 및 서비스 유지에 사용되며, 특정 아티스트·소속사와의 수익 분배나 공식 승인을 의미하지 않습니다.', en: 'All artist-related rights used on this platform belong to their respective owners. Site content is provided to support fan culture and fan activities. Revenue from paid membership is used for platform operation and service maintenance and does not imply revenue sharing or official endorsement by any artist or company.' },
+
     // --- Comments ---
     'comments.title': { ko: '댓글', en: 'Comments' },
 
@@ -312,12 +319,12 @@
     'partnership.submit': { ko: '보내기', en: 'Send' },
 
     // --- Chat ---
-    'chat.title': { ko: '보라해 AI 스타일리스트', en: 'Borahae AI Stylist' },
+    'chat.title': { ko: '소아베', en: 'Soave' },
     'chat.status': { ko: '온라인', en: 'Online' },
-    'chat.hello': { ko: '안녕하세요!', en: 'Hello!' },
+    'chat.hello': { ko: '안녕!', en: 'Hey!' },
     'chat.intro': {
-      ko: '저는 보라해 AI 스타일리스트입니다.<br>K-pop 코디, 콘서트 패션, 팬미팅 스타일 무엇이든 물어보세요.',
-      en: "I'm your Borahae AI stylist.<br>Ask me about K-pop outfits, concert fashion & fan meeting styles."
+      ko: '나는 보라해를 사랑하는 아미, <strong>소아베</strong>야.<br>코디나 스타일 고민 같이 나눠 보자.',
+      en: "I'm Soave, an ARMY who loves BORAHAE.<br>Let's talk about outfit & style together."
     },
     'chat.placeholder': { ko: '메시지를 입력하세요...', en: 'Type a message...' },
     'chat.q1': { ko: '💜 콘서트 코디 추천', en: '💜 Concert Outfit' },
