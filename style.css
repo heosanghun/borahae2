@@ -582,8 +582,8 @@ button {
 }
 
 .style-image {
-  width: 60px;
-  height: 60px;
+  width: 90px;
+  height: 90px;
   border-radius: 12px;
   background: transparent;
   overflow: hidden;
@@ -597,9 +597,8 @@ button {
 .style-image-char {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center top;
-  transform: scale(1.5);
+  object-fit: contain;
+  object-position: center center;
 }
 
 .style-image.img-2 {
