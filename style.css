@@ -3793,7 +3793,7 @@ section {
   -webkit-clip-path: circle(50%);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  transform: scale(0.93);
+  transform: scale(0.85);
   will-change: transform;
 }
 
@@ -3899,7 +3899,7 @@ section {
   -webkit-clip-path: circle(50%);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  transform: scale(0.93);
+  transform: scale(0.85);
   will-change: transform;
 }
 .welcome-avatar svg {
@@ -4005,7 +4005,7 @@ section {
   -webkit-clip-path: circle(50%);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  transform: scale(0.93);
+  transform: scale(0.85);
   will-change: transform;
 }
 
