@@ -456,25 +456,30 @@ button {
   font-weight: 400;
   font-size: 4.5rem;
   letter-spacing: 0.05em;
-  color: #ffffff;
-  text-shadow: 
-    0 2px 4px rgba(124, 58, 237, 0.3),
-    0 4px 8px rgba(124, 58, 237, 0.2),
-    0 8px 16px rgba(236, 72, 153, 0.15),
-    0 0 20px rgba(124, 58, 237, 0.1);
   position: relative;
   padding: 8px 24px;
+  border-radius: 20px;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  animation: watercolor-float 4s ease-in-out infinite;
+  transform-origin: center;
   background: 
     radial-gradient(ellipse at top left, rgba(124, 58, 237, 0.4) 0%, transparent 50%),
     radial-gradient(ellipse at bottom right, rgba(236, 72, 153, 0.3) 0%, transparent 50%),
     radial-gradient(ellipse at center, rgba(167, 139, 250, 0.2) 0%, transparent 70%);
   background-size: 120% 120%, 100% 100%, 150% 150%;
   background-position: -10% -10%, 110% 110%, center;
-  border-radius: 20px;
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
-  animation: watercolor-float 4s ease-in-out infinite;
-  transform-origin: center;
+  color: transparent;
+  background-image: linear-gradient(135deg, #7c3aed 0%, #a855f7 25%, #ec4899 50%, #f472b6 75%, #7c3aed 100%);
+  background-size: 200% 200%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: watercolor-float 4s ease-in-out infinite, gradient-color-shift 4s ease-in-out infinite;
+  text-shadow: 
+    0 2px 4px rgba(124, 58, 237, 0.3),
+    0 4px 8px rgba(124, 58, 237, 0.2),
+    0 8px 16px rgba(236, 72, 153, 0.15);
 }
 
 @keyframes watercolor-float {
@@ -485,6 +490,27 @@ button {
   50% { 
     transform: translateY(-3px) scale(1.01);
     background-position: -5% -5%, 105% 105%, center;
+  }
+}
+
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: -10% -10%, 110% 110%, center;
+  }
+  50% {
+    background-position: -5% -5%, 105% 105%, center;
+  }
+}
+
+@keyframes gradient-color-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
   }
 }
 
