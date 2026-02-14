@@ -68,10 +68,7 @@
   <section class="hero">
     <div class="hero-bg">
       <div class="hero-soave-bg" id="hero-soave-bg" aria-hidden="true"></div>
-      <video class="hero-soave-video" id="hero-soave-video" muted loop playsinline autoplay aria-hidden="true">
-        <source src="movie/soave_flower.mp4" type="video/mp4">
-        <source src="movie/soave_flower.webm" type="video/webm">
-      </video>
+      <img class="hero-soave-gif" id="hero-soave-gif" src="movie/soave_flower_gif.gif" alt="" aria-hidden="true">
       <div class="hero-gradient"></div>
       <div class="floating-shapes">
         <div class="shape shape-1"></div>
@@ -159,11 +156,6 @@
     var origin = window.location.origin || '';
     var url = origin + '/image/soave/background1.jpeg';
     el.style.backgroundImage = "url('" + url + "')";
-    var video = document.getElementById('hero-soave-video');
-    if (video) {
-      video.addEventListener('error', function(){ video.classList.add('is-error'); });
-      if (video.error) video.classList.add('is-error');
-    }
   })();
   </script>
 
@@ -363,10 +355,7 @@
               <img src="" alt="" class="name-episodes-visual-img" data-src="image/soave/background1.jpeg">
             </div>
             <div class="name-episodes-visual-overlay"></div>
-            <video class="name-episodes-soave-video" muted loop playsinline autoplay aria-label="배경 영상">
-              <source src="movie/soave_flower.mp4" type="video/mp4">
-              <source src="movie/soave_flower.webm" type="video/webm">
-            </video>
+            <img class="name-episodes-soave-gif" src="movie/soave_flower_gif.gif" alt="" aria-hidden="true">
           </div>
         </div>
       </div>
@@ -2172,7 +2161,6 @@
         var visual = document.getElementById('name-episodes-visual') || document.querySelector('.name-episodes-visual');
         var img = document.querySelector('.name-episodes-visual-img');
         var bg = document.querySelector('.name-episodes-visual-bg');
-        var video = document.querySelector('.name-episodes-soave-video');
         if (visual) {
           visual.style.backgroundImage = "url('" + url + "')";
           visual.style.backgroundSize = 'cover';
@@ -2184,10 +2172,6 @@
           img.onerror = function() { this.src = fallbackUrl; this.onerror = null; };
         }
         if (bg && bg.dataset.bgSrc) bg.style.backgroundImage = "url('" + url + "')";
-        if (video) {
-          video.addEventListener('error', function() { video.classList.add('is-error'); });
-          if (video.error) video.classList.add('is-error');
-        }
       }
       if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', applySoaveBg);
       else applySoaveBg();
