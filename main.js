@@ -7,6 +7,7 @@
   // API Keys (.env → config.js 에서 주입, Gemini만 사용)
   // ========================================
   const GEMINI_API_KEY = (typeof window !== 'undefined' && window.__SIMS_GEMINI_KEY__) || '';
+  if (typeof window !== 'undefined') window.__hasGeminiApiKey = !!GEMINI_API_KEY;
 
   // ========================================
   // Supabase Auth (회원가입 / 로그인)
@@ -930,8 +931,9 @@
     }
   }
 
-  // Open modal buttons
+  // Open modal buttons (에피소드 만들기 버튼은 제외)
   document.querySelectorAll('.btn-primary').forEach(btn => {
+    if (btn.id === 'name-episodes-btn') return;
     const text = btn.textContent || btn.innerText;
     if (text.includes('시작') || text.includes('스타일링')) {
       btn.addEventListener('click', (e) => {
@@ -1434,21 +1436,26 @@
     }
     parts.push({ text: prompt });
 
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${GEMINI_API_KEY}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        contents: [{
-          parts: parts
-        }],
-        generationConfig: {
-          responseModalities: ["image", "text"],
-          responseMimeType: "text/plain"
-        }
-      })
-    });
+    var controller = new AbortController();
+    var timeoutId = setTimeout(function () { controller.abort(); }, 90000);
+    var response;
+    try {
+      response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${GEMINI_API_KEY}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          contents: [{
+            parts: parts
+          }],
+          generationConfig: {}
+        }),
+        signal: controller.signal
+      });
+    } finally {
+      clearTimeout(timeoutId);
+    }
 
     const data = await response.json();
 
@@ -1470,6 +1477,17 @@
 
     throw new Error('No image in response');
   }
+
+  /** 나노 바나나(에피소드 등)에서 프롬프트로 이미지 생성 시 사용. 프롬프트만 전달하면 됨. */
+  window.__simsGenerateImage = async function(prompt) {
+    if (!GEMINI_API_KEY) return null;
+    try {
+      return await callGeminiImageGeneration(prompt, null);
+    } catch (e) {
+      console.warn('Episode image generation failed:', e);
+      return null;
+    }
+  };
 
   /**
    * Veo 3.1 텍스트→영상 생성 시작 (REST predictLongRunning)

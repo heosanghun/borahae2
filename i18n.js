@@ -49,7 +49,7 @@
     'features.title': { ko: '캐릭터 만들고, 집 짓고, 시계에 넣는다', en: 'Create a character. Build a home. Put it on your watch.' },
     'features.desc': { ko: '한글과 AI로 완성하는 글로벌 팬덤 경험', en: 'Global fandom experience powered by Hangeul & AI' },
     'features.pillar1_title': { ko: '한글 페르소나', en: 'Hangeul Persona' },
-    'features.pillar1_desc': { ko: '이름으로 한글 캐릭터(툰)를 만들고, 그 캐릭터에게 어울리는 패션(OOTD)을 AI가 추천합니다', en: 'Create a Hangeul character from your name, then get AI OOTD recommendations for that character' },
+    'features.pillar1_desc': { ko: '이름으로 재미있는 한글 캐릭터 웹툰이 만들어지고, 쉬운 선택으로 취향을 담아 나를 위한 초개인맞춤 스타일을 AI가 추천합니다', en: 'Your name becomes a fun Hangeul character webtoon; then easy choices shape your taste so AI recommends ultra-personalized style for you' },
     'features.pillar1_btn': { ko: '놀기 · PLAY', en: 'PLAY' },
     'features.pillar2_title': { ko: '매직샵', en: 'Magic Shop' },
     'features.pillar2_desc': { ko: '음악(MIDI)을 업로드하면 한글 건축물이 생성되고, 그 공간의 열쇠가 되는 나만의 응원봉을 만듭니다', en: 'Upload music (MIDI) to generate Hangeul architecture, then create your lightstick as the key to that space' },
@@ -90,13 +90,13 @@
 
     // --- AI Styling ---
     'ai.badge': { ko: 'PLAY · 한글 페르소나', en: 'PLAY · Hangeul Persona' },
-    'ai.title': { ko: '이름으로 캐릭터를 만들고,<br>그 캐릭터의 OOTD를 받으세요', en: 'Create a character from your name,<br>get OOTD for that character' },
+    'ai.title': { ko: '이름으로 캐릭터를 만들고,<br>나만의 스타일 추천 받으세요', en: 'Create a character from your name,<br>get your own style recommendations' },
     'ai.step1_title': { ko: '프로필 분석', en: 'Profile Analysis' },
-    'ai.step1_desc': { ko: '간단한 설문과 사진으로 AI가 퍼스널 컬러와 체형을 분석합니다', en: 'AI analyzes your personal color and body type' },
+    'ai.step1_desc': { ko: '쉬운 선택(성별·연령·체형)으로 당신의 기본 프로필을 담습니다', en: 'Easy choices (gender, age, body type) capture your profile' },
     'ai.step2_title': { ko: 'K-pop 스타일 매칭', en: 'K-pop Style Matching' },
-    'ai.step2_desc': { ko: '콘서트, 팬미팅, 일상 등 상황별 최적의 스타일을 찾습니다', en: 'Finding the best style for concerts, fan meetings & daily life' },
+    'ai.step2_desc': { ko: '콘서트, 팬미팅, 일상 등 상황별 당신에게 맞는 스타일을 찾습니다', en: 'Find styles that fit you for concerts, fan meetings & daily life' },
     'ai.step3_title': { ko: '보라해 코디 완성', en: 'Borahae Outfit Complete' },
-    'ai.step3_desc': { ko: 'AI가 생성한 코디로 보라빛 감성을 완성하세요', en: 'Complete your purple vibe with AI-generated outfits' },
+    'ai.step3_desc': { ko: '당신만을 위한 초개인맞춤 코디로 보라빛 감성을 완성하세요', en: 'Complete your purple vibe with ultra-personalized outfits for you' },
     'ai.cta': { ko: '보라해 스타일링 시작', en: 'Start Borahae Styling' },
 
     // --- Shop ---

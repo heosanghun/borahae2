@@ -21,7 +21,7 @@
   <link rel="manifest" href="image/favicon/manifest.json">
   <meta name="msapplication-TileColor" content="#7c3aed">
   <meta name="msapplication-config" content="image/favicon/browserconfig.xml">
-  <link href="style.css" rel="stylesheet">
+  <link href="style.css?v=soave2" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Noto+Serif+KR:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&family=Nanum+Pen+Script&family=Gamja+Flower&family=Hi+Melody&display=swap" rel="stylesheet">
@@ -67,6 +67,11 @@
   <!-- Hero Section -->
   <section class="hero">
     <div class="hero-bg">
+      <div class="hero-soave-bg" id="hero-soave-bg" aria-hidden="true"></div>
+      <video class="hero-soave-video" id="hero-soave-video" muted loop playsinline autoplay aria-hidden="true">
+        <source src="movie/soave_flower.mp4" type="video/mp4">
+        <source src="movie/soave_flower.webm" type="video/webm">
+      </video>
       <div class="hero-gradient"></div>
       <div class="floating-shapes">
         <div class="shape shape-1"></div>
@@ -147,6 +152,20 @@
       </div>
     </div>
   </section>
+  <script>
+  (function(){
+    var el = document.getElementById('hero-soave-bg');
+    if (!el) return;
+    var origin = window.location.origin || '';
+    var url = origin + '/image/soave/background1.jpeg';
+    el.style.backgroundImage = "url('" + url + "')";
+    var video = document.getElementById('hero-soave-video');
+    if (video) {
+      video.addEventListener('error', function(){ video.classList.add('is-error'); });
+      if (video.error) video.classList.add('is-error');
+    }
+  })();
+  </script>
 
   <!-- BORAHAE 3.0: 3대 핵심 서비스 -->
   <section id="services" class="features">
@@ -195,7 +214,7 @@
     </div>
   </section>
 
-  <!-- PLAY: 한글 페르소나 (이름 → 캐릭터/웹툰 → 패션 OOTD) -->
+  <!-- PLAY: 한글 페르소나 (이름 → 캐릭터 웹툰 → 쉬운 취향 선택 → 고객 본인 초개인맞춤 스타일) -->
   <section id="styling" class="ai-section">
     <div class="container">
       <div class="ai-content">
@@ -274,8 +293,101 @@
           </div>
         </div>
       </div>
+      <!-- 나만의 에피소드: 이름 → 자·모음 분리 → 28 한글 에이전트 (원소스: ja/mo, hangeulalpabat) -->
+      <div class="name-episodes-block">
+        <span class="section-badge">PLAY · 나만의 에피소드</span>
+        <div class="name-episodes-row">
+          <div class="name-episodes-left">
+            <div class="name-episodes-hero">
+              <h3 class="name-episodes-title">이름에 숨은 한글 에이전트</h3>
+              <p class="name-episodes-desc">이름을 입력하면 자음·모음으로 풀어, 28 한글 캐릭터가 차례로 등장하는 에피소드를 만들어 드려요.</p>
+              <div class="name-episodes-input-corner">
+                <label for="name-episodes-input" class="name-episodes-input-label">여기에 이름을 입력하세요</label>
+                <div class="name-episodes-input-row">
+                  <span class="name-episodes-input-icon" aria-hidden="true">✏️</span>
+                  <input type="text" id="name-episodes-input" class="name-episodes-input" placeholder="한글 또는 영어 (예: 민수, Michael)" maxlength="20" aria-label="한글 또는 영어 이름 입력">
+                  <button type="button" id="name-episodes-btn" class="name-episodes-btn" aria-label="에피소드 만들기">에피소드 만들기</button>
+                </div>
+                <p class="name-episodes-hint">이름을 입력한 뒤 버튼을 누르면 바로 결과를 볼 수 있어요. <span class="name-episodes-hint-en">For international visitors: enter your name in English.</span></p>
+                <p class="name-episodes-examples">예시로 체험: <button type="button" class="btn-example-name" data-name="민수">민수</button> · <button type="button" class="btn-example-name" data-name="Michael">Michael</button></p>
+              </div>
+            </div>
+            <div id="name-episodes-result" class="name-episodes-result" style="display:none;">
+          <p id="name-episodes-summary" class="name-episodes-summary" style="font-size:1.05rem;color:var(--text-secondary);margin-bottom:20px;"></p>
+          <p class="name-episodes-strip-label" style="font-size:0.9rem;font-weight:600;color:var(--text-muted);margin-bottom:10px;">✨ 나만의 어벤져스 팀</p>
+          <div id="name-episodes-strip" class="name-episodes-strip"></div>
+          <div id="name-episodes-story" class="name-episodes-story" style="display:none;margin-top:32px;padding:24px;background:var(--bg);border-radius:20px;border:2px solid var(--border);max-width:900px;">
+            <h4 class="name-episodes-story-title" style="font-size:1.25rem;margin-bottom:20px;color:var(--text-primary);"></h4>
+            <div class="name-episodes-story-body-wrap" style="margin-bottom:28px;">
+              <p class="name-episodes-story-body-label" style="font-size:0.9rem;font-weight:600;color:var(--text-muted);margin-bottom:12px;">📖 시나리오 · 이야기 스토리</p>
+              <div class="name-episodes-story-body" style="font-size:0.95rem;line-height:1.65;color:var(--text-secondary);"></div>
+            </div>
+            <p class="name-episodes-cuts-label" style="font-size:0.9rem;font-weight:600;color:var(--text-muted);margin-bottom:12px;">🖼 시나리오 대표 이미지</p>
+            <div id="name-episodes-cuts" class="name-episodes-cuts" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;">
+              <div class="name-episodes-cut" data-cut="1"><img class="name-episodes-cut-img" src="" alt="컷 1" /><p class="name-episodes-cut-caption"></p></div>
+              <div class="name-episodes-cut" data-cut="2"><img class="name-episodes-cut-img" src="" alt="컷 2" /><p class="name-episodes-cut-caption"></p></div>
+              <div class="name-episodes-cut" data-cut="3"><img class="name-episodes-cut-img" src="" alt="컷 3" /><p class="name-episodes-cut-caption"></p></div>
+              <div class="name-episodes-cut" data-cut="4"><img class="name-episodes-cut-img" src="" alt="컷 4" /><p class="name-episodes-cut-caption"></p></div>
+            </div>
+            <div id="name-episodes-ai-image-block" class="name-episodes-ai-image-block" style="display:none;margin-top:24px;">
+              <p style="font-size:0.95rem;color:var(--text-secondary);margin-bottom:12px;">나만의 에피소드 영상 (위 4컷 이미지를 합쳐 만들어요)</p>
+              <div id="name-episodes-ai-video-loading" class="name-episodes-ai-loading" style="display:none;padding:40px;text-align:center;background:var(--bg-secondary);border-radius:16px;color:var(--text-muted);">이미지를 생성하고 있어요... (약 1~2분)</div>
+              <div id="name-episodes-ai-video-wrap" style="display:none;">
+                <video id="name-episodes-ai-video" controls style="width:100%;max-width:640px;border-radius:16px;display:block;background:var(--bg-secondary);"></video>
+                <a id="name-episodes-ai-video-save" href="#" download="나만의-에피소드-영상.webm" class="btn-primary" style="display:inline-block;margin-top:12px;text-decoration:none;">💾 영상 저장</a>
+              </div>
+              <p id="name-episodes-ai-video-error" style="display:none;font-size:0.9rem;color:var(--text-muted);margin-top:8px;"></p>
+              <div id="name-episodes-actions-wrap" style="margin-top:20px;display:none;flex-wrap:wrap;gap:12px;align-items:center;">
+                <button type="button" id="name-episodes-fashion-btn" class="btn-outline" style="font-size:0.95rem;">👗 이 에피소드의 주인공 패션 보기</button>
+                <button type="button" id="name-episodes-share-btn" class="btn-primary" style="font-size:0.95rem;">📷 인스타그램 공유하기</button>
+              </div>
+            </div>
+            <div id="name-episodes-fashion-modal" class="name-episodes-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:1000;padding:20px;align-items:center;justify-content:center;" aria-hidden="true">
+              <div class="name-episodes-modal-inner" style="background:var(--bg);border-radius:20px;max-width:480px;width:100%;padding:24px;position:relative;max-height:90vh;overflow:auto;">
+                <button type="button" class="name-episodes-modal-close" aria-label="닫기" style="position:absolute;top:12px;right:12px;width:36px;height:36px;border:none;background:var(--bg-secondary);border-radius:50%;cursor:pointer;font-size:1.2rem;">×</button>
+                <h4 style="margin-bottom:16px;font-size:1.1rem;">🛍 나의 OOTD (오늘의 룩)</h4>
+                <p id="name-episodes-fashion-desc" style="font-size:0.9rem;color:var(--text-muted);margin-bottom:12px;">웹툰 속 주인공을 현실 데일리 룩으로 재해석했어요.</p>
+                <div id="name-episodes-fashion-loading" style="display:none;padding:40px;text-align:center;color:var(--text-muted);">옷을 고르는 중...</div>
+                <img id="name-episodes-fashion-img" src="" alt="OOTD" style="width:100%;border-radius:12px;display:none;" />
+              </div>
+            </div>
+            <div id="name-episodes-share-card" class="name-episodes-share-card" style="position:absolute;left:-9999px;width:1080px;height:1350px;background:linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);color:#fff;padding:48px;box-sizing:border-box;font-family:system-ui,sans-serif;">
+              <h2 id="name-episodes-share-title" style="font-size:42px;margin:0 0 24px;text-align:center;"></h2>
+              <p id="name-episodes-share-chars" style="font-size:24px;margin:0 0 32px;text-align:center;opacity:0.9;"></p>
+              <div id="name-episodes-share-cuts" style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:32px;"></div>
+              <p id="name-episodes-share-summary" style="font-size:22px;line-height:1.5;margin:0;text-align:center;opacity:0.85;"></p>
+            </div>
+          </div>
+          <div class="name-episodes-visual" id="name-episodes-visual" aria-hidden="true">
+            <div class="name-episodes-visual-bg" data-bg-src="image/soave/background1.jpeg">
+              <img src="" alt="" class="name-episodes-visual-img" data-src="image/soave/background1.jpeg">
+            </div>
+            <div class="name-episodes-visual-overlay"></div>
+            <video class="name-episodes-soave-video" muted loop playsinline autoplay aria-label="배경 영상">
+              <source src="movie/soave_flower.mp4" type="video/mp4">
+              <source src="movie/soave_flower.webm" type="video/webm">
+            </video>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
+  <script>
+  (function(){
+    var el = document.getElementById('name-episodes-visual');
+    if (!el) return;
+    var origin = window.location.origin || '';
+    var url = origin + '/image/soave/background1.jpeg';
+    el.style.backgroundImage = "url('" + url + "')";
+    el.style.backgroundSize = 'cover';
+    el.style.backgroundPosition = 'center';
+    el.style.backgroundRepeat = 'no-repeat';
+    var img = el.querySelector('.name-episodes-visual-img');
+    if (img) { img.src = url; img.onerror = function(){ this.src = origin + '/image/soave/background1.jpg'; this.onerror = null; }; }
+    var bg = el.querySelector('.name-episodes-visual-bg');
+    if (bg) bg.style.backgroundImage = "url('" + url + "')";
+  })();
+  </script>
 
   <!-- CREATE: 매직샵 (음악 → 한글 건축물 + 응원봉) -->
   <section id="lightstick" class="features" style="background:var(--bg-secondary);">
@@ -2039,6 +2151,48 @@
 
   <!-- API Keys: .env → config.js (Git 제외, node scripts/build-config.js 로 생성) -->
   <script type="text/javascript" src="config.js"></script>
+  <script>
+    (function() {
+      var path = 'image/soave/background1.jpeg';
+      function baseUrl() {
+        var p = window.location.pathname || '/';
+        return p.indexOf('.html') !== -1 ? p.replace(/\/[^/]*$/, '/') : (p.replace(/\/$/, '') + '/');
+      }
+      function fullUrl() {
+        var origin = window.location.origin || '';
+        var base = baseUrl();
+        return origin + (base === '/' ? '' : base) + path;
+      }
+      function applySoaveBg() {
+        var base = baseUrl();
+        var origin = window.location.origin || '';
+        var slash = (base === '/' || base === '') ? '/' : base;
+        var url = origin + slash + path;
+        var fallbackUrl = origin + slash + 'image/soave/background1.jpg';
+        var visual = document.getElementById('name-episodes-visual') || document.querySelector('.name-episodes-visual');
+        var img = document.querySelector('.name-episodes-visual-img');
+        var bg = document.querySelector('.name-episodes-visual-bg');
+        var video = document.querySelector('.name-episodes-soave-video');
+        if (visual) {
+          visual.style.backgroundImage = "url('" + url + "')";
+          visual.style.backgroundSize = 'cover';
+          visual.style.backgroundPosition = 'center';
+          visual.style.backgroundRepeat = 'no-repeat';
+        }
+        if (img) {
+          img.src = url;
+          img.onerror = function() { this.src = fallbackUrl; this.onerror = null; };
+        }
+        if (bg && bg.dataset.bgSrc) bg.style.backgroundImage = "url('" + url + "')";
+        if (video) {
+          video.addEventListener('error', function() { video.classList.add('is-error'); });
+          if (video.error) video.classList.add('is-error');
+        }
+      }
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', applySoaveBg);
+      else applySoaveBg();
+    })();
+  </script>
   <!-- Supabase Auth (ESM) -->
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
@@ -2073,6 +2227,35 @@
   </script>
   <script type="text/javascript" src="i18n.js"></script>
   <script type="text/javascript" src="hangeul-architecture.js"></script>
+  <script type="text/javascript" src="name-episodes.js?v=6"></script>
+  <script>
+    (function(){
+      function attachNameEpisodesBtn() {
+        var btn = document.getElementById('name-episodes-btn');
+        var input = document.getElementById('name-episodes-input');
+        if (!btn) return;
+        btn.onclick = function() {
+          if (typeof window.nameEpisodesMake === 'function') {
+            window.nameEpisodesMake();
+          } else {
+            alert('에피소드 기능을 불러오는 중입니다. 잠시 후 다시 시도해 주세요.');
+          }
+        };
+        if (input) input.onkeypress = function(e) { if (e.key === 'Enter') btn.onclick(); };
+        document.querySelectorAll('.btn-example-name').forEach(function(el) {
+          var name = el.getAttribute('data-name');
+          if (name) el.onclick = function() { if (input) { input.value = name; input.focus(); } };
+        });
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', attachNameEpisodesBtn);
+      } else {
+        attachNameEpisodesBtn();
+      }
+      setTimeout(attachNameEpisodesBtn, 500);
+    })();
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous"></script>
   <script defer type="text/javascript" src="main.js"></script>
 </body>
 </html>

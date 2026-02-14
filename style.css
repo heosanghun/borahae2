@@ -355,22 +355,52 @@ button {
   z-index: -1;
 }
 
+.hero-soave-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #faf5ff;
+}
+
+.hero-soave-video {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.9;
+}
+
+.hero-soave-video.is-error {
+  opacity: 0;
+  pointer-events: none;
+}
+
 .hero-gradient {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 30% 20%, rgba(124, 58, 237, 0.15) 0%, transparent 50%),
-              radial-gradient(circle at 70% 80%, rgba(236, 72, 153, 0.1) 0%, transparent 50%);
+  z-index: 1;
+  background: linear-gradient(135deg, rgba(255,255,255,0.75) 0%, rgba(250,245,255,0.6) 40%, rgba(240,235,250,0.5) 100%),
+              radial-gradient(circle at 30% 20%, rgba(124, 58, 237, 0.12) 0%, transparent 50%),
+              radial-gradient(circle at 70% 80%, rgba(236, 72, 153, 0.08) 0%, transparent 50%);
 }
 
 [data-theme="dark"] .hero-gradient {
-  background: radial-gradient(circle at 30% 20%, rgba(124, 58, 237, 0.25) 0%, transparent 50%),
+  background: linear-gradient(135deg, rgba(15,23,42,0.85) 0%, rgba(30,41,59,0.75) 100%),
+              radial-gradient(circle at 30% 20%, rgba(124, 58, 237, 0.25) 0%, transparent 50%),
               radial-gradient(circle at 70% 80%, rgba(236, 72, 153, 0.15) 0%, transparent 50%);
 }
 
 .floating-shapes {
   position: absolute;
   inset: 0;
+  z-index: 2;
   overflow: hidden;
+  pointer-events: none;
 }
 
 .shape {
@@ -883,6 +913,303 @@ section {
    ======================================== */
 .ai-section {
   background: var(--bg-primary);
+}
+
+/* 나만의 에피소드 (이름 → 자·모음 → 28 한글 에이전트) — 직관적 입력 코너 디자인 */
+.name-episodes-block {
+  margin-top: 48px;
+  padding: 40px 36px;
+  background: linear-gradient(165deg, var(--bg-secondary) 0%, color-mix(in srgb, var(--primary) 6%, var(--bg-secondary)) 100%);
+  border-radius: 24px;
+  border: 1px solid color-mix(in srgb, var(--primary) 12%, transparent);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+}
+.name-episodes-block .section-badge { display: inline-block; }
+.name-episodes-row {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 32px;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .name-episodes-row {
+    grid-template-columns: 1fr;
+  }
+}
+.name-episodes-left {
+  min-width: 0;
+}
+.name-episodes-hero { max-width: 560px; }
+.name-episodes-visual {
+  width: 380px;
+  min-width: 380px;
+  min-height: 360px;
+  height: 360px;
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+  background-color: #e8e0f5;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  isolation: isolate;
+  flex-shrink: 0;
+}
+@media (max-width: 900px) {
+  .name-episodes-visual {
+    width: 100%;
+    min-width: 0;
+  }
+}
+.name-episodes-visual-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: transparent;
+}
+.name-episodes-visual-img {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.name-episodes-visual-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(240,235,250,0.15) 50%, rgba(235,245,255,0.2) 100%);
+  pointer-events: none;
+}
+.name-episodes-soave-video {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.5;
+}
+.name-episodes-soave-video.is-error {
+  opacity: 0;
+  pointer-events: none;
+}
+@media (max-width: 900px) {
+  .name-episodes-visual { min-height: 280px; }
+}
+.name-episodes-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 12px 0 8px;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+.name-episodes-desc {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-bottom: 28px;
+  line-height: 1.55;
+}
+.name-episodes-input-corner {
+  background: var(--bg);
+  border: 2px solid color-mix(in srgb, var(--primary) 22%, var(--border));
+  border-radius: 20px;
+  padding: 24px 28px;
+  box-shadow: 0 2px 16px rgba(124, 58, 237, 0.08), inset 0 1px 0 rgba(255,255,255,0.6);
+}
+.name-episodes-input-label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 12px;
+  letter-spacing: -0.01em;
+}
+.name-episodes-input-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.name-episodes-input-icon {
+  font-size: 1.35rem;
+  line-height: 1;
+  flex-shrink: 0;
+  opacity: 0.9;
+}
+.name-episodes-input {
+  flex: 1;
+  min-width: 180px;
+  padding: 16px 20px;
+  border: 2px solid color-mix(in srgb, var(--primary) 48%, transparent);
+  border-radius: 14px;
+  font-size: 1.1rem;
+  background: var(--bg);
+  color: var(--text-primary);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.name-episodes-input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.9;
+}
+.name-episodes-input:hover {
+  border-color: color-mix(in srgb, var(--primary) 65%, transparent);
+}
+.name-episodes-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  border-width: 2px;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 22%, transparent);
+}
+.name-episodes-btn {
+  padding: 16px 24px;
+  border: none;
+  border-radius: 14px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, var(--primary) 0%, color-mix(in srgb, var(--primary) 85%, #e879f9) 100%);
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.2s;
+  white-space: nowrap;
+}
+.name-episodes-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--primary) 35%, transparent);
+}
+.name-episodes-btn:active { transform: translateY(0); }
+.name-episodes-hint {
+  margin: 14px 0 0;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+.name-episodes-hint-en {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.82rem;
+  opacity: 0.9;
+}
+.name-episodes-examples {
+  margin: 12px 0 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+.name-episodes-examples .btn-example-name {
+  background: none;
+  border: none;
+  color: var(--primary);
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+  font: inherit;
+  font-weight: 500;
+}
+.name-episodes-examples .btn-example-name:hover { opacity: 0.85; }
+.name-episodes-result { margin-top: 32px; }
+@media (max-width: 600px) {
+  .name-episodes-block { padding: 28px 20px; }
+  .name-episodes-title { font-size: 1.45rem; }
+  .name-episodes-input-corner { padding: 20px; }
+  .name-episodes-input-row { flex-direction: column; align-items: stretch; }
+  .name-episodes-input { min-width: 0; }
+  .name-episodes-btn { width: 100%; }
+}
+.name-episodes-strip {
+  --card-w: 140px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+.name-episodes-strip-label { display: block; }
+.name-episode-card {
+  width: var(--card-w, 140px);
+  min-width: var(--card-w, 140px);
+  height: 220px;
+  flex-shrink: 0;
+  border: 2px solid #c9a227;
+  box-shadow: 0 0 16px rgba(201, 162, 39, 0.35);
+  transition: box-shadow 0.25s, filter 0.3s;
+  opacity: 0;
+  transform: scale(0.85) rotateY(-12deg);
+  perspective: 800px;
+}
+.name-episode-card.reveal {
+  opacity: 1;
+  transform: scale(1) rotateY(0);
+}
+.name-episode-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 220px;
+  transform-style: preserve-3d;
+  transition: transform 0.6s ease-in-out;
+}
+.name-episode-card:hover .name-episode-card-inner,
+.name-episode-card.flipped .name-episode-card-inner {
+  transform: rotateY(180deg);
+}
+.name-episode-card-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 14px;
+  overflow: hidden;
+}
+.name-episode-card-front {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  background: var(--bg);
+}
+.name-episode-card-back {
+  background: var(--bg);
+  transform: rotateY(180deg);
+}
+.name-episode-card-back-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.name-episode-card[data-rarity="rare"] {
+  box-shadow: 0 0 20px rgba(201, 162, 39, 0.45);
+}
+.name-episode-card[data-rarity="rare"]:hover { box-shadow: 0 0 24px rgba(201, 162, 39, 0.5); }
+.name-episode-card:hover { box-shadow: 0 0 24px rgba(201, 162, 39, 0.5); }
+.name-episodes-confetti { position: fixed; pointer-events: none; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; }
+.name-episodes-confetti span { position: absolute; width: 8px; height: 8px; border-radius: 2px; animation: name-episodes-confetti-fall 1.2s ease-out forwards; }
+@keyframes name-episodes-confetti-fall {
+  0% { opacity: 1; transform: translate(0, 0) rotate(0deg) scale(1); }
+  100% { opacity: 0; transform: translate(var(--tx, 0px), var(--ty, -80px)) rotate(360deg) scale(0.3); }
+}
+@media (max-width: 600px) {
+  .name-episodes-strip { --card-w: 120px; }
+  .name-episode-card { min-width: 120px !important; width: 120px !important; height: 200px; }
+  .name-episode-card-inner { min-height: 200px; }
+}
+.name-episodes-story .name-episodes-story-p { margin: 0 0 12px 0; }
+.name-episodes-story .name-episodes-story-p:last-child { margin-bottom: 0; }
+.name-episodes-cut { text-align: center; position: relative; }
+.name-episodes-cut-img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 12px; display: block; transition: filter 0.6s ease-out; }
+.name-episodes-cut-img.name-episodes-cut-img-loading { filter: blur(12px); opacity: 0.9; }
+.name-episodes-cut-img.name-episodes-cut-img-reveal { filter: blur(0); opacity: 1; }
+.name-episodes-cut-caption { margin: 8px 0 0; font-size: 0.85rem; color: var(--text-muted); }
+.name-episodes-cut-loading { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: var(--bg-secondary); border-radius: 12px; font-size: 0.85rem; color: var(--text-muted); text-align: center; padding: 12px; }
+@media (max-width: 640px) {
+  .name-episodes-cuts { grid-template-columns: repeat(2, 1fr) !important; }
 }
 
 .ai-content {

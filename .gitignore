@@ -32,3 +32,7 @@ build/
 # Temporary files
 *.tmp
 *.temp
+
+# Large media (GitHub 100MB limit; deploy 시 외부 호스팅 또는 서버에 별도 배치)
+movie/*.mp4
+movie/*.webm
