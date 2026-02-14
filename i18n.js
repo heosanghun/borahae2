@@ -98,6 +98,8 @@
     'ai.step3_title': { ko: '보라해 코디 완성', en: 'Borahae Outfit Complete' },
     'ai.step3_desc': { ko: '당신만을 위한 초개인맞춤 코디로 보라빛 감성을 완성하세요', en: 'Complete your purple vibe with ultra-personalized outfits for you' },
     'ai.cta': { ko: '보라해 스타일링 시작', en: 'Start Borahae Styling' },
+    'ai.subtitle': { ko: '나만의 이름으로 캐릭터도 만들고, 나만의 컬러로 패션 AI 추천도 받아보세요.', en: 'Create your character from your name and get fashion AI recommendations in your colors.' },
+    'ai.connector': { ko: '이름으로 나만의 캐릭터 · 에피소드 만들기', en: 'Create your character & episode from your name' },
 
     // --- Shop ---
     'shop.badge': { ko: 'STORE · 보라 굿즈', en: 'STORE · Bora Goods' },
@@ -132,6 +134,8 @@
     'boratime.desc': { ko: '앱에서 다운로드로 보라빛 시계 페이스를 소장하세요. 콘서트, 보라해, 일곱 개의 달, 꽃길까지—소중한 순간을 시계에 담습니다.', en: 'Download watch faces in the app. Purple ocean, seven moons, flower path—keep your precious moments on your wrist.' },
     'boratime.cta': { ko: '앱에서 만나기', en: 'Get the App' },
     'boratime.cta_sub': { ko: '앱스토어 · 플레이스토어 다운로드', en: 'Download on App Store & Play Store' },
+    'boratime.jamo_consonant': { ko: '자음타임', en: 'Consonant Time' },
+    'boratime.jamo_vowel': { ko: '모음타임', en: 'Vowel Time' },
 
     // --- Community / Events / Fan Content (상세 섹션) ---
     'community.badge': { ko: 'Community', en: 'Community' },

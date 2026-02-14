@@ -637,38 +637,6 @@
       if (btn) btn.addEventListener('click', function (e) { e.preventDefault(); onNameEpisodesSubmit(); });
       var input = document.getElementById('name-episodes-input');
       if (input) input.addEventListener('keypress', function (e) { if (e.key === 'Enter') { e.preventDefault(); onNameEpisodesSubmit(); } });
-      var fashionBtn = document.getElementById('name-episodes-fashion-btn');
-      var fashionModal = document.getElementById('name-episodes-fashion-modal');
-      var fashionImg = document.getElementById('name-episodes-fashion-img');
-      var fashionLoading = document.getElementById('name-episodes-fashion-loading');
-      if (fashionBtn && fashionModal) {
-        fashionBtn.addEventListener('click', function () {
-          var cur = window.__nameEpisodesLastResult;
-          if (!cur || !cur.list.length) return;
-          var name_ = cur.name;
-          var charList_ = cur.charList;
-          fashionModal.style.display = 'flex';
-          fashionModal.style.alignItems = 'center';
-          fashionModal.style.justifyContent = 'center';
-          fashionModal.setAttribute('aria-hidden', 'false');
-          if (fashionImg) fashionImg.style.display = 'none';
-          if (fashionLoading) fashionLoading.style.display = 'block';
-          var ootdPrompt = 'One realistic OOTD (outfit of the day) photo. The protagonist ' + name_ + ' and their Hangul agent team (' + charList_ + ') reimagined as a hip daily look: casual workwear, street style, one person wearing a cohesive outfit. Photorealistic, high quality, no text.';
-          var gen = typeof window.__simsGenerateImage === 'function' ? window.__simsGenerateImage(ootdPrompt) : Promise.resolve(null);
-          gen.then(function (base64) {
-            if (fashionLoading) fashionLoading.style.display = 'none';
-            if (base64 && fashionImg) {
-              fashionImg.src = 'data:image/png;base64,' + base64;
-              fashionImg.style.display = 'block';
-            }
-          }).catch(function () { if (fashionLoading) fashionLoading.style.display = 'none'; });
-        });
-      }
-      if (fashionModal) {
-        var closeBtn = fashionModal.querySelector('.name-episodes-modal-close');
-        if (closeBtn) closeBtn.addEventListener('click', function () { fashionModal.style.display = 'none'; fashionModal.setAttribute('aria-hidden', 'true'); });
-        fashionModal.addEventListener('click', function (e) { if (e.target === fashionModal) { fashionModal.style.display = 'none'; fashionModal.setAttribute('aria-hidden', 'true'); } });
-      }
       var shareBtn = document.getElementById('name-episodes-share-btn');
       var shareCard = document.getElementById('name-episodes-share-card');
       if (shareBtn && shareCard) {

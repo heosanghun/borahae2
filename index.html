@@ -228,13 +228,92 @@
     </div>
   </section>
 
-  <!-- PLAY: 한글 페르소나 (이름 → 캐릭터 웹툰 → 쉬운 취향 선택 → 고객 본인 초개인맞춤 스타일) -->
+  <!-- PLAY: 한글 페르소나 — 1) 이름 에이전트 먼저, 2) 보라해 스타일링 시작·01/02/03 -->
   <section id="styling" class="ai-section">
     <div class="container">
-      <div class="ai-content">
+      <header class="persona-header">
+        <span class="section-badge" data-i18n="ai.badge">PLAY · 한글 페르소나</span>
+        <h2 class="section-title" data-i18n-html="ai.title">이름으로 캐릭터를 만들고,<br>그 캐릭터의 OOTD를 받으세요</h2>
+        <p class="persona-subtitle" data-i18n="ai.subtitle">나만의 이름으로 캐릭터도 만들고, 나만의 컬러로 패션 AI 추천도 받아보세요.</p>
+      </header>
+      <!-- 1순서: 이름에 숨은 한글 에이전트 (에피소드 만들기) + 오른쪽 미리보기 -->
+      <div class="name-episodes-block">
+        <p class="persona-connector" data-i18n="ai.connector">이름으로 나만의 캐릭터 · 에피소드 만들기</p>
+        <div class="name-episodes-row">
+          <div class="name-episodes-left">
+            <div class="name-episodes-hero">
+              <h3 class="name-episodes-title">이름에 숨은 한글 에이전트</h3>
+              <p class="name-episodes-desc">이름을 입력하면 자음·모음으로 풀어, 28 한글 캐릭터가 차례로 등장하는 에피소드를 만들어 드려요.</p>
+              <div class="name-episodes-input-corner">
+                <label for="name-episodes-input" class="name-episodes-input-label">여기에 이름을 입력하세요</label>
+                <div class="name-episodes-input-row">
+                  <span class="name-episodes-input-icon" aria-hidden="true">✏️</span>
+                  <input type="text" id="name-episodes-input" class="name-episodes-input" placeholder="한글 또는 영어 (예: 민수, Michael)" maxlength="20" aria-label="한글 또는 영어 이름 입력">
+                  <button type="button" id="name-episodes-btn" class="name-episodes-btn" aria-label="에피소드 만들기">에피소드 만들기</button>
+                </div>
+                <p class="name-episodes-hint">이름을 입력한 뒤 버튼을 누르면 바로 결과를 볼 수 있어요. <span class="name-episodes-hint-en">For international visitors: enter your name in English.</span></p>
+                <p class="name-episodes-examples">예시로 체험: <button type="button" class="btn-example-name" data-name="민수">민수</button> · <button type="button" class="btn-example-name" data-name="Michael">Michael</button></p>
+              </div>
+            </div>
+            <div id="name-episodes-result" class="name-episodes-result" style="display:none;">
+          <p id="name-episodes-summary" class="name-episodes-summary" style="font-size:1.05rem;color:var(--text-secondary);margin-bottom:20px;"></p>
+          <p class="name-episodes-strip-label" style="font-size:0.9rem;font-weight:600;color:var(--text-muted);margin-bottom:10px;">✨ 나만의 어벤져스 팀</p>
+          <div id="name-episodes-strip" class="name-episodes-strip"></div>
+          <div id="name-episodes-story" class="name-episodes-story" style="display:none;margin-top:32px;padding:24px;background:var(--bg);border-radius:20px;border:2px solid var(--border);max-width:900px;">
+            <h4 class="name-episodes-story-title" style="font-size:1.25rem;margin-bottom:20px;color:var(--text-primary);"></h4>
+            <div class="name-episodes-story-body-wrap" style="margin-bottom:28px;">
+              <p class="name-episodes-story-body-label" style="font-size:0.9rem;font-weight:600;color:var(--text-muted);margin-bottom:12px;">📖 시나리오 · 이야기 스토리</p>
+              <div class="name-episodes-story-body" style="font-size:0.95rem;line-height:1.65;color:var(--text-secondary);"></div>
+            </div>
+            <p class="name-episodes-cuts-label" style="font-size:0.9rem;font-weight:600;color:var(--text-muted);margin-bottom:12px;">🖼 시나리오 대표 이미지</p>
+            <div id="name-episodes-cuts" class="name-episodes-cuts" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;">
+              <div class="name-episodes-cut" data-cut="1"><img class="name-episodes-cut-img" src="" alt="컷 1" /><p class="name-episodes-cut-caption"></p></div>
+              <div class="name-episodes-cut" data-cut="2"><img class="name-episodes-cut-img" src="" alt="컷 2" /><p class="name-episodes-cut-caption"></p></div>
+              <div class="name-episodes-cut" data-cut="3"><img class="name-episodes-cut-img" src="" alt="컷 3" /><p class="name-episodes-cut-caption"></p></div>
+              <div class="name-episodes-cut" data-cut="4"><img class="name-episodes-cut-img" src="" alt="컷 4" /><p class="name-episodes-cut-caption"></p></div>
+            </div>
+            <div id="name-episodes-ai-image-block" class="name-episodes-ai-image-block" style="display:none;margin-top:24px;">
+              <div id="name-episodes-actions-wrap" style="margin-top:20px;display:none;flex-wrap:wrap;gap:12px;align-items:center;">
+                <button type="button" id="name-episodes-share-btn" class="btn-primary" style="font-size:0.95rem;">📷 인스타그램 공유하기</button>
+              </div>
+            </div>
+            <div id="name-episodes-share-card" class="name-episodes-share-card" style="position:absolute;left:-9999px;width:1080px;height:1350px;background:linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);color:#fff;padding:48px;box-sizing:border-box;font-family:system-ui,sans-serif;">
+              <h2 id="name-episodes-share-title" style="font-size:42px;margin:0 0 24px;text-align:center;"></h2>
+              <p id="name-episodes-share-chars" style="font-size:24px;margin:0 0 32px;text-align:center;opacity:0.9;"></p>
+              <div id="name-episodes-share-cuts" style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:32px;"></div>
+              <p id="name-episodes-share-summary" style="font-size:22px;line-height:1.5;margin:0;text-align:center;opacity:0.85;"></p>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 1.5 코너: 나만의 탄생 컬러와 바이브 (에피소드 아래 · 보라해 스타일링 위) -->
+      <section class="soul-color-block" aria-labelledby="soul-color-heading">
+        <div class="soul-color-inner">
+          <h3 id="soul-color-heading" class="soul-color-title">당신의 소울 컬러는? <span class="soul-color-title-en">What's your Soul Color?</span></h3>
+          <p class="soul-color-desc">생일을 알려주시면, 당신의 탄생 컬러와 바이브를 찾아드려요.</p>
+          <div class="soul-color-form-wrap">
+            <label for="soul-color-date" class="soul-color-label">생년월일</label>
+            <div class="soul-color-input-row">
+              <input type="date" id="soul-color-date" class="soul-color-date" aria-label="생년월일 선택" max="9999-12-31">
+              <button type="button" id="soul-color-btn" class="soul-color-btn">분석하기</button>
+            </div>
+            <p class="soul-color-privacy">🔒 입력하신 정보는 결과 생성 즉시 폐기되며, 서버에 저장되지 않습니다.</p>
+          </div>
+          <div id="soul-color-result" class="soul-color-result" hidden>
+            <div class="soul-color-chip-wrap">
+              <div id="soul-color-chip" class="soul-color-chip" aria-hidden="true"></div>
+            </div>
+            <p id="soul-color-keyword" class="soul-color-keyword"></p>
+            <p id="soul-color-personality" class="soul-color-personality"></p>
+            <p id="soul-color-tags" class="soul-color-tags"></p>
+          </div>
+        </div>
+      </section>
+      <!-- 2순서: 보라해 스타일링 시작 + 01/02/03 프로필·스타일·코디 -->
+      <div class="ai-content persona-styling-block">
         <div class="ai-text">
-          <span class="section-badge" data-i18n="ai.badge">PLAY · 한글 페르소나</span>
-          <h2 class="section-title" data-i18n-html="ai.title">이름으로 캐릭터를 만들고,<br>그 캐릭터의 OOTD를 받으세요</h2>
+          <button class="btn-primary btn-large" id="open-styling-result-btn" data-i18n="ai.cta">보라해 스타일링 시작</button>
           <div class="steps">
             <div class="step">
               <div class="step-number">01</div>
@@ -258,14 +337,11 @@
               </div>
             </div>
           </div>
-          <button class="btn-primary btn-large" data-i18n="ai.cta">보라해 스타일링 시작</button>
         </div>
         <div class="ai-visual">
           <div class="ai-demo">
             <div class="demo-header">
-              <div class="demo-dots">
-                <span></span><span></span><span></span>
-              </div>
+              <img src="image/logo1-removebg-preview.png" alt="BORAHAE" class="demo-header-logo">
               <span>Style Analysis</span>
             </div>
             <div class="demo-content">
@@ -307,98 +383,8 @@
           </div>
         </div>
       </div>
-      <!-- 나만의 에피소드: 이름 → 자·모음 분리 → 28 한글 에이전트 (원소스: ja/mo, hangeulalpabat) -->
-      <div class="name-episodes-block">
-        <span class="section-badge">PLAY · 나만의 에피소드</span>
-        <div class="name-episodes-row">
-          <div class="name-episodes-left">
-            <div class="name-episodes-hero">
-              <h3 class="name-episodes-title">이름에 숨은 한글 에이전트</h3>
-              <p class="name-episodes-desc">이름을 입력하면 자음·모음으로 풀어, 28 한글 캐릭터가 차례로 등장하는 에피소드를 만들어 드려요.</p>
-              <div class="name-episodes-input-corner">
-                <label for="name-episodes-input" class="name-episodes-input-label">여기에 이름을 입력하세요</label>
-                <div class="name-episodes-input-row">
-                  <span class="name-episodes-input-icon" aria-hidden="true">✏️</span>
-                  <input type="text" id="name-episodes-input" class="name-episodes-input" placeholder="한글 또는 영어 (예: 민수, Michael)" maxlength="20" aria-label="한글 또는 영어 이름 입력">
-                  <button type="button" id="name-episodes-btn" class="name-episodes-btn" aria-label="에피소드 만들기">에피소드 만들기</button>
-                </div>
-                <p class="name-episodes-hint">이름을 입력한 뒤 버튼을 누르면 바로 결과를 볼 수 있어요. <span class="name-episodes-hint-en">For international visitors: enter your name in English.</span></p>
-                <p class="name-episodes-examples">예시로 체험: <button type="button" class="btn-example-name" data-name="민수">민수</button> · <button type="button" class="btn-example-name" data-name="Michael">Michael</button></p>
-              </div>
-            </div>
-            <div id="name-episodes-result" class="name-episodes-result" style="display:none;">
-          <p id="name-episodes-summary" class="name-episodes-summary" style="font-size:1.05rem;color:var(--text-secondary);margin-bottom:20px;"></p>
-          <p class="name-episodes-strip-label" style="font-size:0.9rem;font-weight:600;color:var(--text-muted);margin-bottom:10px;">✨ 나만의 어벤져스 팀</p>
-          <div id="name-episodes-strip" class="name-episodes-strip"></div>
-          <div id="name-episodes-story" class="name-episodes-story" style="display:none;margin-top:32px;padding:24px;background:var(--bg);border-radius:20px;border:2px solid var(--border);max-width:900px;">
-            <h4 class="name-episodes-story-title" style="font-size:1.25rem;margin-bottom:20px;color:var(--text-primary);"></h4>
-            <div class="name-episodes-story-body-wrap" style="margin-bottom:28px;">
-              <p class="name-episodes-story-body-label" style="font-size:0.9rem;font-weight:600;color:var(--text-muted);margin-bottom:12px;">📖 시나리오 · 이야기 스토리</p>
-              <div class="name-episodes-story-body" style="font-size:0.95rem;line-height:1.65;color:var(--text-secondary);"></div>
-            </div>
-            <p class="name-episodes-cuts-label" style="font-size:0.9rem;font-weight:600;color:var(--text-muted);margin-bottom:12px;">🖼 시나리오 대표 이미지</p>
-            <div id="name-episodes-cuts" class="name-episodes-cuts" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;">
-              <div class="name-episodes-cut" data-cut="1"><img class="name-episodes-cut-img" src="" alt="컷 1" /><p class="name-episodes-cut-caption"></p></div>
-              <div class="name-episodes-cut" data-cut="2"><img class="name-episodes-cut-img" src="" alt="컷 2" /><p class="name-episodes-cut-caption"></p></div>
-              <div class="name-episodes-cut" data-cut="3"><img class="name-episodes-cut-img" src="" alt="컷 3" /><p class="name-episodes-cut-caption"></p></div>
-              <div class="name-episodes-cut" data-cut="4"><img class="name-episodes-cut-img" src="" alt="컷 4" /><p class="name-episodes-cut-caption"></p></div>
-            </div>
-            <div id="name-episodes-ai-image-block" class="name-episodes-ai-image-block" style="display:none;margin-top:24px;">
-              <p style="font-size:0.95rem;color:var(--text-secondary);margin-bottom:12px;">나만의 에피소드 영상 (위 4컷 이미지를 합쳐 만들어요)</p>
-              <div id="name-episodes-ai-video-loading" class="name-episodes-ai-loading" style="display:none;padding:40px;text-align:center;background:var(--bg-secondary);border-radius:16px;color:var(--text-muted);">이미지를 생성하고 있어요... (약 1~2분)</div>
-              <div id="name-episodes-ai-video-wrap" style="display:none;">
-                <video id="name-episodes-ai-video" controls style="width:100%;max-width:640px;border-radius:16px;display:block;background:var(--bg-secondary);"></video>
-                <a id="name-episodes-ai-video-save" href="#" download="나만의-에피소드-영상.webm" class="btn-primary" style="display:inline-block;margin-top:12px;text-decoration:none;">💾 영상 저장</a>
-              </div>
-              <p id="name-episodes-ai-video-error" style="display:none;font-size:0.9rem;color:var(--text-muted);margin-top:8px;"></p>
-              <div id="name-episodes-actions-wrap" style="margin-top:20px;display:none;flex-wrap:wrap;gap:12px;align-items:center;">
-                <button type="button" id="name-episodes-fashion-btn" class="btn-outline" style="font-size:0.95rem;">👗 이 에피소드의 주인공 패션 보기</button>
-                <button type="button" id="name-episodes-share-btn" class="btn-primary" style="font-size:0.95rem;">📷 인스타그램 공유하기</button>
-              </div>
-            </div>
-            <div id="name-episodes-fashion-modal" class="name-episodes-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:1000;padding:20px;align-items:center;justify-content:center;" aria-hidden="true">
-              <div class="name-episodes-modal-inner" style="background:var(--bg);border-radius:20px;max-width:480px;width:100%;padding:24px;position:relative;max-height:90vh;overflow:auto;">
-                <button type="button" class="name-episodes-modal-close" aria-label="닫기" style="position:absolute;top:12px;right:12px;width:36px;height:36px;border:none;background:var(--bg-secondary);border-radius:50%;cursor:pointer;font-size:1.2rem;">×</button>
-                <h4 style="margin-bottom:16px;font-size:1.1rem;">🛍 나의 OOTD (오늘의 룩)</h4>
-                <p id="name-episodes-fashion-desc" style="font-size:0.9rem;color:var(--text-muted);margin-bottom:12px;">웹툰 속 주인공을 현실 데일리 룩으로 재해석했어요.</p>
-                <div id="name-episodes-fashion-loading" style="display:none;padding:40px;text-align:center;color:var(--text-muted);">옷을 고르는 중...</div>
-                <img id="name-episodes-fashion-img" src="" alt="OOTD" style="width:100%;border-radius:12px;display:none;" />
-              </div>
-            </div>
-            <div id="name-episodes-share-card" class="name-episodes-share-card" style="position:absolute;left:-9999px;width:1080px;height:1350px;background:linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);color:#fff;padding:48px;box-sizing:border-box;font-family:system-ui,sans-serif;">
-              <h2 id="name-episodes-share-title" style="font-size:42px;margin:0 0 24px;text-align:center;"></h2>
-              <p id="name-episodes-share-chars" style="font-size:24px;margin:0 0 32px;text-align:center;opacity:0.9;"></p>
-              <div id="name-episodes-share-cuts" style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:32px;"></div>
-              <p id="name-episodes-share-summary" style="font-size:22px;line-height:1.5;margin:0;text-align:center;opacity:0.85;"></p>
-            </div>
-          </div>
-          <div class="name-episodes-visual" id="name-episodes-visual" aria-hidden="true">
-            <div class="name-episodes-visual-bg" data-bg-src="image/soave/background1.jpeg">
-              <img src="" alt="" class="name-episodes-visual-img" data-src="image/soave/background1.jpeg">
-            </div>
-            <div class="name-episodes-visual-overlay"></div>
-            <video id="name-episodes-soave-video" class="name-episodes-soave-video" muted loop playsinline autoplay aria-hidden="true" style="display:none"></video>
-          </div>
-        </div>
-      </div>
     </div>
   </section>
-  <script>
-  (function(){
-    var el = document.getElementById('name-episodes-visual');
-    if (!el) return;
-    var origin = window.location.origin || '';
-    var url = origin + '/image/soave/background1.jpeg';
-    el.style.backgroundImage = "url('" + url + "')";
-    el.style.backgroundSize = 'cover';
-    el.style.backgroundPosition = 'center';
-    el.style.backgroundRepeat = 'no-repeat';
-    var img = el.querySelector('.name-episodes-visual-img');
-    if (img) { img.src = url; img.onerror = function(){ this.src = origin + '/image/soave/background1.jpg'; this.onerror = null; }; }
-    var bg = el.querySelector('.name-episodes-visual-bg');
-    if (bg) bg.style.backgroundImage = "url('" + url + "')";
-  })();
-  </script>
 
   <!-- CREATE: 매직샵 (음악 → 한글 건축물 + 응원봉) -->
   <section id="lightstick" class="features" style="background:var(--bg-secondary);">
@@ -915,12 +901,32 @@
         <h2 class="section-title" data-i18n-html="boratime.title">시계도 패션이다.<br>팬심을 간직하다</h2>
         <p class="section-description" style="max-width:560px;margin-left:auto;margin-right:auto;" data-i18n="boratime.desc">앱에서 다운로드로 보라빛 시계 페이스를 소장하세요. 콘서트, 보라해, 일곱 개의 달, 꽃길까지—소중한 순간을 시계에 담습니다.</p>
       </div>
-      <div class="boratime-gallery" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;max-width:900px;margin:32px auto 40px;">
+      <div class="boratime-gallery" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;max-width:900px;margin:32px auto 24px;">
         <div class="boratime-card" style="border-radius:20px;overflow:hidden;box-shadow:0 12px 40px rgba(124,58,237,0.2);background:var(--bg-tertiary);">
           <img src="image/BORATIME.jpeg" alt="BORATIME 시계 페이스" style="width:100%;height:auto;display:block;" loading="lazy">
         </div>
         <div class="boratime-card" style="border-radius:20px;overflow:hidden;box-shadow:0 12px 40px rgba(124,58,237,0.2);background:var(--bg-tertiary);">
           <img src="image/BORATIME-DESIGN.jpeg" alt="BORATIME 디자인 컨셉" style="width:100%;height:auto;display:block;" loading="lazy">
+        </div>
+      </div>
+      <!-- 자음타임 · 모음타임 (양쪽 시계 아래 한글 자모 워치페이스) -->
+      <div class="boratime-jamo-row" style="display:grid;grid-template-columns:repeat(2,1fr);gap:24px;max-width:900px;margin:0 auto 24px;">
+        <div class="boratime-jamo-card" style="border-radius:20px;overflow:hidden;box-shadow:0 12px 40px rgba(124,58,237,0.2);background:var(--bg-tertiary);">
+          <p class="boratime-jamo-label" style="margin:0;padding:12px 16px;font-size:1rem;font-weight:700;color:var(--text-primary);background:var(--bg-secondary);text-align:center;" data-i18n="boratime.jamo_consonant">자음타임</p>
+          <img src="image/name/jamo/jatime.jpeg" alt="자음타임 — 한글 자음 캐릭터 워치페이스" style="width:100%;height:auto;display:block;" loading="lazy" onerror="this.onerror=null; this.src='image/name/jamo/jatime.jpg'; this.onerror=null; this.onerror=function(){ this.src='image/name/jamo/jatime.png'; };">
+        </div>
+        <div class="boratime-jamo-card" style="border-radius:20px;overflow:hidden;box-shadow:0 12px 40px rgba(124,58,237,0.2);background:var(--bg-tertiary);">
+          <p class="boratime-jamo-label" style="margin:0;padding:12px 16px;font-size:1rem;font-weight:700;color:var(--text-primary);background:var(--bg-secondary);text-align:center;" data-i18n="boratime.jamo_vowel">모음타임</p>
+          <img src="image/name/jamo/motime.jpeg" alt="모음타임 — 한글 모음 캐릭터 워치페이스" style="width:100%;height:auto;display:block;" loading="lazy" onerror="this.onerror=null; this.src='image/name/jamo/motime.jpg'; this.onerror=null; this.onerror=function(){ this.src='image/name/jamo/motime.png'; };">
+        </div>
+      </div>
+      <!-- jatime1 · motime1 (자음타임 / 모음타임 아래 추가) -->
+      <div class="boratime-jamo-row boratime-jamo-row-sub" style="display:grid;grid-template-columns:repeat(2,1fr);gap:24px;max-width:900px;margin:0 auto 40px;">
+        <div class="boratime-jamo-card" style="border-radius:20px;overflow:hidden;box-shadow:0 12px 40px rgba(124,58,237,0.2);background:var(--bg-tertiary);">
+          <img src="image/name/jamo/jatime1.jpeg" alt="자음타임 추가" style="width:100%;height:auto;display:block;" loading="lazy" onerror="this.onerror=null; this.src='image/name/jamo/jatime1.jpg'; this.onerror=null; this.onerror=function(){ this.src='image/name/jamo/jatime1.png'; };">
+        </div>
+        <div class="boratime-jamo-card" style="border-radius:20px;overflow:hidden;box-shadow:0 12px 40px rgba(124,58,237,0.2);background:var(--bg-tertiary);">
+          <img src="image/name/jamo/motime1.jpeg" alt="모음타임 추가" style="width:100%;height:auto;display:block;" loading="lazy" onerror="this.onerror=null; this.src='image/name/jamo/motime1.jpg'; this.onerror=null; this.onerror=function(){ this.src='image/name/jamo/motime1.png'; };">
         </div>
       </div>
       <div style="text-align:center;">
@@ -2160,6 +2166,68 @@
     </div>
   </section>
 
+  <!-- Soul-to-Style: 스타일 추천 결과 오버레이 (보라해 스타일링 시작 클릭 시) -->
+  <div id="styling-result-overlay" class="styling-result-overlay" aria-hidden="true" role="dialog" aria-labelledby="styling-result-heading">
+    <div class="styling-result-backdrop"></div>
+    <!-- Phase 1: 칩 → 질감 전환 -->
+    <div id="styling-result-transition" class="styling-result-transition">
+      <div id="styling-result-chip-morph" class="styling-result-chip-morph"></div>
+      <div id="styling-result-texture" class="styling-result-texture"></div>
+    </div>
+    <!-- Phase 2: 최종 결과 레이아웃 -->
+    <div id="styling-result-panel" class="styling-result-panel" hidden>
+      <button type="button" class="styling-result-close" id="styling-result-close" aria-label="닫기">&times;</button>
+      <h2 id="styling-result-heading" class="styling-result-heading">당신의 컬러가 소재가 되다</h2>
+      <p id="styling-result-copy" class="styling-result-copy">차가운 도시의 지성인을 위한, 한글 모던 시크 룩</p>
+      <div class="styling-result-palette">
+        <span class="styling-result-palette-label">Color Palette</span>
+        <div class="styling-result-palette-bar">
+          <div id="styling-result-main-color" class="styling-result-main-color" title="당신의 소울"></div>
+          <div class="styling-result-sub-color" style="background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);" title="보라해 포인트"></div>
+        </div>
+        <p class="styling-result-palette-desc">당신의 차가운 지성(Gray)에 보라해의 따뜻한 감성(Purple)을 안감으로 더했습니다.</p>
+      </div>
+      <div class="styling-result-layout">
+        <div class="styling-result-tryon">
+          <div class="styling-result-tryon-placeholder">
+            <span class="styling-result-tryon-label">Virtual Try-on</span>
+            <p>회색 미니멀 한글 재킷</p>
+            <p class="styling-result-tryon-hint">사진 업로드 시 AI가 합성해 드려요</p>
+          </div>
+        </div>
+        <div class="styling-result-right">
+          <div class="styling-result-style-meta">
+            <p class="styling-result-style-name" id="styling-result-style-name">Minimalist Tech-wear</p>
+            <p class="styling-result-material" id="styling-result-material">소재: 나일론, 실버 체인</p>
+            <p class="styling-result-hangeul" id="styling-result-hangeul">한글 포인트: 이름 자모 기하 패턴</p>
+          </div>
+          <div id="styling-result-texture-zoom" class="styling-result-texture-zoom"></div>
+          <div class="styling-result-cards">
+            <h3 class="styling-result-cards-title">Urban Chic Look with Hangeul Detail</h3>
+            <div class="styling-result-cards-grid">
+              <div class="styling-result-card" data-look="daily">
+                <div class="styling-result-card-thumb"></div>
+                <span>Daily</span>
+              </div>
+              <div class="styling-result-card" data-look="idol">
+                <div class="styling-result-card-thumb"></div>
+                <span>K-Pop Idol</span>
+              </div>
+              <div class="styling-result-card" data-look="avant">
+                <div class="styling-result-card-thumb"></div>
+                <span>Avant-garde</span>
+              </div>
+            </div>
+          </div>
+          <div class="styling-result-actions">
+            <button type="button" class="btn-primary styling-result-btn-share">공유하기</button>
+            <button type="button" class="btn-secondary styling-result-btn-buy">이 스타일, 입어보기</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- API Keys: .env → config.js (Git 제외, node scripts/build-config.js 로 생성) -->
   <script type="text/javascript" src="config.js"></script>
   <script>
@@ -2259,6 +2327,154 @@
         attachNameEpisodesBtn();
       }
       setTimeout(attachNameEpisodesBtn, 500);
+    })();
+  </script>
+  <script>
+    (function(){
+      var SOUL_ELEMENTS = [
+        { type: 'metal', keyword: 'Logic Master (설계자)', color: '#A0A0A0', personality: '차가운 도시의 지성인', tags: '#LogicMaster #도시요정 #팩트폭격기', styleName: 'Minimalist Tech-wear', material: '나일론, 실버 체인', hangeulPoint: '이름 자모 기하 패턴', copy: '차가운 도시의 지성인을 위한, 한글 모던 시크 룩', textureClass: 'texture-metal' },
+        { type: 'water', keyword: 'Deep Thinker (철학자)', color: '#1E3A8A', personality: '깊이를 알 수 없는 신비주의', tags: '#DeepThinker #신비주의 #감성장인', styleName: 'Fluid Silk Layered', material: '실크, 유체감 원단', hangeulPoint: '흐르는 한글 라인', copy: '깊이를 알 수 없는 당신을 위한, 몽환 한글 레이어드 룩', textureClass: 'texture-silk' },
+        { type: 'wood', keyword: 'Creative Maker (창작자)', color: '#10B981', personality: '엉뚱하고 기발한 아이디어 뱅크', tags: '#CreativeMaker #아이디어뱅크 #자유로운영혼', styleName: 'Creative Casual', material: '린넨, 캔버스, 오가닉 코튼', hangeulPoint: '자유로운 한글 그래픽', copy: '엉뚱한 아이디어 뱅크를 위한, 한글 크리에이티브 웨어', textureClass: 'texture-linen' },
+        { type: 'fire', keyword: 'Super Influencer (인싸)', color: '#EF4444', personality: '어디서나 주인공이 되는 열정파', tags: '#SuperInfluencer #열정파 #인싸에너지', styleName: 'Idol Stage Glam', material: '스팽글, 벨벳, 시퀸', hangeulPoint: '포인트 한글 악세서리', copy: '어디서나 주인공이 되는 당신을 위한, 한글 스테이지 글램 룩', textureClass: 'texture-velvet' },
+        { type: 'earth', keyword: 'Peace Keeper (중재자)', color: '#D97706', personality: '모두를 포용하는 다정한 리더', tags: '#PeaceKeeper #다정한리더 #포용력', styleName: 'Warm Knit Modern', material: '니트, 울, 웜베이지 원단', hangeulPoint: '부드러운 한글 스티치', copy: '모두를 포용하는 다정한 리더를 위한, 한글 웜 모던 룩', textureClass: 'texture-knit' }
+      ];
+      function getSoulByYear(year) {
+        var last = Math.abs(parseInt(year, 10) % 10);
+        if (last === 0 || last === 1) return SOUL_ELEMENTS[0];
+        if (last === 2 || last === 3) return SOUL_ELEMENTS[1];
+        if (last === 4 || last === 5) return SOUL_ELEMENTS[2];
+        if (last === 6 || last === 7) return SOUL_ELEMENTS[3];
+        return SOUL_ELEMENTS[4];
+      }
+      function runSoulColor() {
+        var dateEl = document.getElementById('soul-color-date');
+        var resultEl = document.getElementById('soul-color-result');
+        var chipEl = document.getElementById('soul-color-chip');
+        var keywordEl = document.getElementById('soul-color-keyword');
+        var personalityEl = document.getElementById('soul-color-personality');
+        var tagsEl = document.getElementById('soul-color-tags');
+        if (!dateEl || !resultEl) return;
+        var raw = (dateEl.value || '').trim();
+        if (!raw) {
+          resultEl.hidden = true;
+          return;
+        }
+        var year = raw.split('-')[0];
+        var soul = getSoulByYear(year);
+        chipEl.style.background = soul.color;
+        keywordEl.textContent = soul.keyword;
+        personalityEl.textContent = soul.personality;
+        tagsEl.textContent = soul.tags;
+        resultEl.setAttribute('data-soul-type', soul.type);
+        resultEl.setAttribute('data-soul-color', soul.color);
+        resultEl.setAttribute('data-soul-style-name', soul.styleName || '');
+        resultEl.setAttribute('data-soul-material', soul.material || '');
+        resultEl.setAttribute('data-soul-copy', soul.copy || '');
+        resultEl.setAttribute('data-soul-texture', soul.textureClass || '');
+        resultEl.setAttribute('data-soul-hangeul', soul.hangeulPoint || '');
+        resultEl.hidden = false;
+      }
+      function attachSoulColor() {
+        var btn = document.getElementById('soul-color-btn');
+        var dateEl = document.getElementById('soul-color-date');
+        if (btn) btn.onclick = runSoulColor;
+        if (dateEl) dateEl.addEventListener('change', runSoulColor);
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', attachSoulColor);
+      } else {
+        attachSoulColor();
+      }
+      window.getSoulByYear = getSoulByYear;
+      window.SOUL_ELEMENTS = SOUL_ELEMENTS;
+    })();
+  </script>
+  <script>
+    (function(){
+      var DEFAULT_SOUL = { type: 'metal', color: '#A0A0A0', styleName: 'Minimalist Tech-wear', material: '나일론, 실버 체인', copy: '차가운 도시의 지성인을 위한, 한글 모던 시크 룩', textureClass: 'texture-metal', hangeulPoint: '이름 자모 기하 패턴', paletteDesc: '당신의 차가운 지성(Gray)에 보라해의 따뜻한 감성(Purple)을 안감으로 더했습니다.' };
+      function getSoulDataForStyling() {
+        var resultEl = document.getElementById('soul-color-result');
+        var dateEl = document.getElementById('soul-color-date');
+        if (resultEl && resultEl.getAttribute('data-soul-type')) {
+          return {
+            type: resultEl.getAttribute('data-soul-type'),
+            color: resultEl.getAttribute('data-soul-color') || DEFAULT_SOUL.color,
+            styleName: resultEl.getAttribute('data-soul-style-name') || DEFAULT_SOUL.styleName,
+            material: resultEl.getAttribute('data-soul-material') || DEFAULT_SOUL.material,
+            copy: resultEl.getAttribute('data-soul-copy') || DEFAULT_SOUL.copy,
+            textureClass: resultEl.getAttribute('data-soul-texture') || DEFAULT_SOUL.textureClass,
+            hangeulPoint: resultEl.getAttribute('data-soul-hangeul') || DEFAULT_SOUL.hangeulPoint,
+            paletteDesc: DEFAULT_SOUL.paletteDesc
+          };
+        }
+        if (dateEl && dateEl.value && window.getSoulByYear) {
+          var year = (dateEl.value || '').split('-')[0];
+          var soul = window.getSoulByYear(year);
+          return {
+            type: soul.type,
+            color: soul.color,
+            styleName: soul.styleName || DEFAULT_SOUL.styleName,
+            material: soul.material || DEFAULT_SOUL.material,
+            copy: soul.copy || DEFAULT_SOUL.copy,
+            textureClass: soul.textureClass || DEFAULT_SOUL.textureClass,
+            hangeulPoint: soul.hangeulPoint || DEFAULT_SOUL.hangeulPoint,
+            paletteDesc: DEFAULT_SOUL.paletteDesc
+          };
+        }
+        return DEFAULT_SOUL;
+      }
+      function openStylingResult() {
+        var overlay = document.getElementById('styling-result-overlay');
+        var transition = document.getElementById('styling-result-transition');
+        var panel = document.getElementById('styling-result-panel');
+        var chipMorph = document.getElementById('styling-result-chip-morph');
+        var textureEl = document.getElementById('styling-result-texture');
+        if (!overlay || !panel) return;
+        var soul = getSoulDataForStyling();
+        chipMorph.style.background = soul.color;
+        textureEl.className = 'styling-result-texture ' + (soul.textureClass || 'texture-metal');
+        document.getElementById('styling-result-copy').textContent = soul.copy;
+        document.getElementById('styling-result-style-name').textContent = soul.styleName;
+        document.getElementById('styling-result-material').textContent = '소재: ' + soul.material;
+        var hangeulEl = document.getElementById('styling-result-hangeul');
+        if (hangeulEl) hangeulEl.textContent = '한글 포인트: ' + (soul.hangeulPoint || '이름 자모 기하 패턴');
+        document.getElementById('styling-result-main-color').style.background = soul.color;
+        var paletteDesc = document.querySelector('.styling-result-palette-desc');
+        if (paletteDesc) paletteDesc.textContent = soul.paletteDesc || DEFAULT_SOUL.paletteDesc;
+        var textureZoom = document.getElementById('styling-result-texture-zoom');
+        if (textureZoom) textureZoom.className = 'styling-result-texture-zoom ' + (soul.textureClass || 'texture-metal');
+        overlay.classList.add('active');
+        overlay.classList.remove('phase-texture', 'phase-result');
+        panel.hidden = true;
+        setTimeout(function() {
+          overlay.classList.add('phase-texture');
+        }, 400);
+        setTimeout(function() {
+          overlay.classList.add('phase-result');
+          panel.hidden = false;
+        }, 2600);
+      }
+      function closeStylingResult() {
+        var overlay = document.getElementById('styling-result-overlay');
+        var panel = document.getElementById('styling-result-panel');
+        if (overlay) {
+          overlay.classList.remove('active', 'phase-texture', 'phase-result');
+        }
+        if (panel) panel.hidden = true;
+      }
+      function attachStylingResult() {
+        var btn = document.getElementById('open-styling-result-btn');
+        var closeBtn = document.getElementById('styling-result-close');
+        var backdrop = document.querySelector('.styling-result-backdrop');
+        if (btn) btn.addEventListener('click', openStylingResult);
+        if (closeBtn) closeBtn.addEventListener('click', closeStylingResult);
+        if (backdrop) backdrop.addEventListener('click', closeStylingResult);
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', attachStylingResult);
+      } else {
+        attachStylingResult();
+      }
     })();
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous"></script>
