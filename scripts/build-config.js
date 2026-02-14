@@ -9,8 +9,11 @@ const fs = require('fs');
 const path = require('path');
 
 const root = path.resolve(__dirname, '..');
+const outDir = process.argv[2] || ''; // e.g. 'dist' → config.js를 dist/config.js에 생성
+const outPath = outDir
+  ? path.join(root, outDir, 'config.js')
+  : path.join(root, 'config.js');
 const envPath = path.join(root, '.env');
-const outPath = path.join(root, 'config.js');
 
 function parseEnv(content) {
   const env = {};
@@ -56,5 +59,9 @@ const configContent = `// SIMS Fashion AI - API 설정 (자동 생성, Git 제�
 })();
 `;
 
+if (outDir) {
+  const outDirPath = path.join(root, outDir);
+  if (!fs.existsSync(outDirPath)) fs.mkdirSync(outDirPath, { recursive: true });
+}
 fs.writeFileSync(outPath, configContent, 'utf8');
 console.log('config.js 생성 완료:', outPath);

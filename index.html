@@ -27,18 +27,24 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Noto+Serif+KR:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&family=Nanum+Pen+Script&family=Gamja+Flower&family=Hi+Melody&display=swap" rel="stylesheet">
 </head>
 <body>
-  <!-- 메인 배경 영상: movie/soave1.mp4 (11MB). R2 등 다른 URL 쓰려면 SOAVE_VIDEO_URL에 넣으면 됨 -->
+  <!-- 메인 배경 영상: movie/soave1.mp4 (11MB). 배포 시 빌드가 dist에 movie/ 포함해야 함. R2 등 절대 URL은 SOAVE_VIDEO_URL에 지정 -->
   <script>
   window.SOAVE_VIDEO_URL = 'movie/soave1.mp4';
   function applySoaveVideoUrl(){
     var url = window.SOAVE_VIDEO_URL;
     if (!url || typeof url !== 'string' || !url.trim()) return;
     var hVideo = document.getElementById('hero-soave-video');
-    var hDrive = document.getElementById('hero-soave-drive');
     var eVideo = document.getElementById('name-episodes-soave-video');
-    var eDrive = document.getElementById('name-episodes-soave-drive');
-    if (hVideo && hDrive) { hVideo.src = url; hVideo.style.display = 'block'; hDrive.style.display = 'none'; }
-    if (eVideo && eDrive) { eVideo.src = url; eVideo.style.display = 'block'; eDrive.style.display = 'none'; }
+    function hideHeroVideo(){ if (hVideo) hVideo.style.display = 'none'; }
+    function hideEpisodesVideo(){ if (eVideo) eVideo.style.display = 'none'; }
+    if (hVideo) {
+      hVideo.src = url; hVideo.style.display = 'block';
+      hVideo.addEventListener('error', hideHeroVideo, { once: true });
+    }
+    if (eVideo) {
+      eVideo.src = url; eVideo.style.display = 'block';
+      eVideo.addEventListener('error', hideEpisodesVideo, { once: true });
+    }
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', applySoaveVideoUrl);
   else applySoaveVideoUrl();
@@ -85,7 +91,6 @@
     <div class="hero-bg">
       <div class="hero-soave-bg" id="hero-soave-bg" aria-hidden="true"></div>
       <video id="hero-soave-video" class="hero-soave-video" muted loop playsinline autoplay aria-hidden="true" style="display:none"></video>
-      <iframe class="hero-soave-drive" id="hero-soave-drive" src="https://drive.google.com/file/d/11_w1FFmbl-3wTeRAxhSVplTedbfPh-GU/preview?autoplay=1&loop=1" title="배경 영상" allow="autoplay" allowfullscreen></iframe>
       <div class="hero-gradient"></div>
       <div class="floating-shapes">
         <div class="shape shape-1"></div>
@@ -373,7 +378,6 @@
             </div>
             <div class="name-episodes-visual-overlay"></div>
             <video id="name-episodes-soave-video" class="name-episodes-soave-video" muted loop playsinline autoplay aria-hidden="true" style="display:none"></video>
-            <iframe id="name-episodes-soave-drive" class="name-episodes-soave-drive" src="https://drive.google.com/file/d/11_w1FFmbl-3wTeRAxhSVplTedbfPh-GU/preview?autoplay=1&loop=1" title="배경 영상" allow="autoplay" allowfullscreen></iframe>
           </div>
         </div>
       </div>

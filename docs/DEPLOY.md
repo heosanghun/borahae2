@@ -31,7 +31,7 @@ Cloudflare는 **대시보드에서 GitHub 저장소를 연결**하는 방식이�
 | **GitHub 연결** | Workers & Pages → 프로젝트 → **Settings** → **Builds & deployments** | **Connected repository**에 `heosanghun/SIMS_Fashion` (또는 본인 계정/저장소) 표시되는지 |
 | **브랜치** | 위와 동일 | **Production branch**가 `main` 인지 |
 | **빌드 설정** | **Build configuration** | **Build command**: `npm run build` |
-| **빌드 출력** | 위와 동일 | **Build output directory**: `.` 또는 `/` (루트) |
+| **빌드 출력** | 위와 동일 | **Build output directory**: **`dist`** (메인 영상 재생을 위해 필수) |
 | **환경 변수** | **Settings** → **Environment variables** | **Production**에 `GEMINI_API_KEY` 등 필요한 변수 설정 여부 |
 
 **배포가 푸시마다 자동으로 되는지 확인:**

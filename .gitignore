@@ -25,7 +25,7 @@ config.js
 # Dependencies
 node_modules/
 
-# Build outputs
+# Build outputs (npm run build → dist/)
 dist/
 build/
 

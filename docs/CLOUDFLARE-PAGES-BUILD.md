@@ -14,9 +14,9 @@ Cloudflare Pages 대시보드에서:
 
 1. **프로젝트 설정** → **Builds & deployments** (또는 **빌드 및 배포**) 탭으로 이동
 2. **Build configuration** (빌드 구성) 섹션 확인:
-   - **Build command** (빌드 명령어): `npm run build` 또는 `node scripts/build-config.js`
-   - **Build output directory** (빌드 출력 디렉토리): `.` (현재 디렉토리)
-   - **Root directory** (루트 디렉토리): `SIMS_Fashion` (프로젝트 폴더가 루트가 아닌 경우)
+   - **Build command** (빌드 명령어): `npm run build` (권장. `dist/`에 정적 파일+movie/soave1.mp4 포함)
+   - **Build output directory** (빌드 출력 디렉토리): **`dist`** (필수. 메인 영상이 재생되려면 반드시 dist)
+   - **Root directory** (루트 디렉토리): (비워두거나 프로젝트 루트)
 
 ### 2. 환경 변수 확인
 
@@ -87,8 +87,8 @@ config.js 생성 완료: /path/to/config.js
 | 항목 | 값 |
 |------|-----|
 | **Framework preset** | None (또는 Static) |
-| **Build command** | `npm run build` |
-| **Build output directory** | `.` |
+| **Build command** | `npm run build` (dist 생성 + config.js) |
+| **Build output directory** | **`dist`** (메인 영상 movie/soave1.mp4 포함됨) |
 | **Root directory** | (비워두거나 `SIMS_Fashion` - 프로젝트 구조에 따라) |
 
 ### package.json (이미 설정됨)

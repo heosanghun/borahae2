@@ -365,14 +365,22 @@ button {
   background-color: #faf5ff;
 }
 
-.hero-soave-gif {
+.hero-soave-video {
   position: absolute;
-  inset: 0;
+  left: 50%;
+  top: 50%;
   z-index: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: 100vw;
+  height: 56.25vw;
+  max-width: 177.78vh;
+  max-height: 100vh;
+  transform: translate(-50%, -50%);
+  border: none;
+  pointer-events: none;
   opacity: 0.9;
+}
+.hero-soave-video {
+  object-fit: cover;
 }
 
 .hero-gradient {
@@ -981,14 +989,18 @@ section {
   background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(240,235,250,0.15) 50%, rgba(235,245,255,0.2) 100%);
   pointer-events: none;
 }
-.name-episodes-soave-gif {
+.name-episodes-soave-video {
   position: absolute;
   inset: 0;
   z-index: 3;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  border: none;
+  pointer-events: none;
   opacity: 0.5;
+}
+.name-episodes-soave-video {
+  object-fit: cover;
 }
 @media (max-width: 900px) {
   .name-episodes-visual { min-height: 280px; }
