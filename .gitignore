@@ -33,6 +33,7 @@ build/
 *.tmp
 *.temp
 
-# Large media (GitHub 100MB limit; deploy 시 외부 호스팅 또는 서버에 별도 배치)
+# Large media (GitHub 100MB limit). soave1.mp4(11MB)는 저장소에 포함
 movie/*.mp4
 movie/*.webm
+!movie/soave1.mp4
