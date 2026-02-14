@@ -544,16 +544,16 @@
             }
             pending--;
             if (pending === 0) {
+              if (aiVideoLoading) aiVideoLoading.style.display = 'none';
               var valid = cutDataUrls.filter(Boolean);
-              if (valid.length === 4) tryBuildVideo();
-              else if (aiVideoLoading) {
-                aiVideoLoading.style.display = 'none';
-                if (aiVideoError) {
-                  aiVideoError.textContent = window.__hasGeminiApiKey
-                    ? '4개의 컷 이미지가 모두 생성되면 영상을 만들 수 있어요. (실패 시: API 할당량·네트워크·키 유효성을 확인해 주세요.)'
-                    : 'API 키가 설정되지 않았어요. .env에 GEMINI_API_KEY를 넣고, 터미널에서 node scripts/build-config.js 를 실행한 뒤 페이지를 새로고침해 주세요.';
-                  aiVideoError.style.display = 'block';
-                }
+              if (valid.length === 4) {
+                var actionsWrap = document.getElementById('name-episodes-actions-wrap');
+                if (actionsWrap) actionsWrap.style.display = 'flex';
+              } else if (aiVideoError) {
+                aiVideoError.textContent = window.__hasGeminiApiKey
+                  ? '4개의 컷 이미지가 모두 생성되지 않았어요. (실패 시: API 할당량·네트워크·키 유효성을 확인해 주세요.)'
+                  : 'API 키가 설정되지 않았어요. .env에 GEMINI_API_KEY를 넣고, 터미널에서 node scripts/build-config.js 를 실행한 뒤 페이지를 새로고침해 주세요.';
+                aiVideoError.style.display = 'block';
               }
             }
           }).catch(function () {
@@ -570,7 +570,7 @@
               if (aiVideoLoading) aiVideoLoading.style.display = 'none';
               if (aiVideoError) {
                 aiVideoError.textContent = window.__hasGeminiApiKey
-                  ? '4개의 컷 이미지가 모두 생성되면 영상을 만들 수 있어요. (실패 시: API 할당량·네트워크·키 유효성을 확인해 주세요.)'
+                  ? '4개의 컷 이미지가 모두 생성되지 않았어요. (실패 시: API 할당량·네트워크·키 유효성을 확인해 주세요.)'
                   : 'API 키가 설정되지 않았어요. .env에 GEMINI_API_KEY를 넣고, 터미널에서 node scripts/build-config.js 를 실행한 뒤 페이지를 새로고침해 주세요.';
                 aiVideoError.style.display = 'block';
               }

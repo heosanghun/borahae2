@@ -1,7 +1,7 @@
 /**
  * 한글 공감각 건축 시스템 (Hangeul Synesthetic Architecture)
- * - 4군 x 7음계 매핑 (메뉴얼 v2.0)
- * - 사랑의 인사 (Salut d'Amour) Op.12 샘플 데이터 및 시각화
+ * - 4군 x 7음계 매핑 (메뉴얼 v2.0, doc/사랑의 인사_악보 한글번역.pdf 기준)
+ * - 규칙 기반: 악보별 음계 유추 → 한글 자모 그리드 생성
  */
 (function(global) {
   'use strict';
@@ -28,6 +28,130 @@
     // 제4군 수직 연결체
     'ㅠ': 'do', 'ㅡ': 're', 'ㅣ': 'mi', 'ㅔ': 'fa', 'ㅖ': 'sol', 'ㅐ': 'la', 'ㅒ': 'si'
   };
+
+  /**
+   * 한글 표준 메뉴얼: 음계(1~7) + 역할 → 자모
+   * 제1군(베이스), 제2군(멜로디), 제3군(오른손 반주), 제4군(왼손 반주)
+   */
+  var SCALE_DEGREE_TO_JAMO = {
+    1: { B: 'ㄱ', M: 'ㅇ', RAcc: 'ㅏ', LAcc: 'ㅠ' },   // 도
+    2: { B: 'ㄴ', M: 'ㅈ', RAcc: 'ㅑ', LAcc: 'ㅡ' },   // 레
+    3: { B: 'ㄷ', M: 'ㅊ', RAcc: 'ㅓ', LAcc: 'ㅣ' },   // 미
+    4: { B: 'ㄹ', M: 'ㅋ', RAcc: 'ㅕ', LAcc: 'ㅔ' },   // 파
+    5: { B: 'ㅁ', M: 'ㅌ', RAcc: 'ㅗ', LAcc: 'ㅖ' },   // 솔
+    6: { B: 'ㅂ', M: 'ㅍ', RAcc: 'ㅛ', LAcc: 'ㅐ' },   // 라
+    7: { B: 'ㅅ', M: 'ㅎ', RAcc: 'ㅜ', LAcc: 'ㅒ' }    // 시
+  };
+
+  /**
+   * 조(key)별 7음계 음이름 (도~시 = 1~7). #/b 동의이명 포함.
+   * 형식: keyName -> { degree: [note1, note2, ...] } (예: 'E Major' -> 1: ['C#','Db'])
+   */
+  var KEY_SCALE_NOTES = {
+    'C Major':   { 1: ['C'], 2: ['D'], 3: ['E'], 4: ['F'], 5: ['G'], 6: ['A'], 7: ['B'] },
+    'G Major':   { 1: ['G'], 2: ['A'], 3: ['B'], 4: ['C'], 5: ['D'], 6: ['E'], 7: ['F#'] },
+    'D Major':   { 1: ['D'], 2: ['E'], 3: ['F#'], 4: ['G'], 5: ['A'], 6: ['B'], 7: ['C#'] },
+    'A Major':   { 1: ['A'], 2: ['B'], 3: ['C#'], 4: ['D'], 5: ['E'], 6: ['F#'], 7: ['G#'] },
+    'E Major':   { 1: ['C#'], 2: ['D#'], 3: ['E'], 4: ['F#'], 5: ['G#'], 6: ['A'], 7: ['B'] },
+    'B Major':   { 1: ['B'], 2: ['C#'], 3: ['D#'], 4: ['E'], 5: ['F#'], 6: ['G#'], 7: ['A#'] },
+    'F# Major':  { 1: ['F#'], 2: ['G#'], 3: ['A#'], 4: ['B'], 5: ['C#'], 6: ['D#'], 7: ['E#'] },
+    'F Major':   { 1: ['F'], 2: ['G'], 3: ['A'], 4: ['Bb'], 5: ['C'], 6: ['D'], 7: ['E'] },
+    'Bb Major':  { 1: ['Bb'], 2: ['C'], 3: ['D'], 4: ['Eb'], 5: ['F'], 6: ['G'], 7: ['A'] },
+    'Eb Major':  { 1: ['Eb'], 2: ['F'], 3: ['G'], 4: ['Ab'], 5: ['Bb'], 6: ['C'], 7: ['D'] },
+    'Ab Major':  { 1: ['Ab'], 2: ['Bb'], 3: ['C'], 4: ['Db'], 5: ['Eb'], 6: ['F'], 7: ['G'] },
+    'Db Major':  { 1: ['Db'], 2: ['Eb'], 3: ['F'], 4: ['Gb'], 5: ['Ab'], 6: ['Bb'], 7: ['C'] },
+    'A Minor':   { 1: ['A'], 2: ['B'], 3: ['C'], 4: ['D'], 5: ['E'], 6: ['F'], 7: ['G'] },
+    'E Minor':   { 1: ['E'], 2: ['F#'], 3: ['G'], 4: ['A'], 5: ['B'], 6: ['C'], 7: ['D'] },
+    'D Minor':   { 1: ['D'], 2: ['E'], 3: ['F'], 4: ['G'], 5: ['A'], 6: ['Bb'], 7: ['C'] }
+  };
+
+  /** 음이름 정규화 (대문자 + #/b 통일) */
+  function normalizeNoteName(str) {
+    if (!str || typeof str !== 'string') return '';
+    var s = str.trim().replace(/\s/g, '');
+    var upper = s.charAt(0).toUpperCase();
+    var acc = s.slice(1).replace(/sharp|#/gi, '#').replace(/flat|b/gi, 'b').replace(/[^#b]/g, '');
+    if (acc.length > 1) acc = acc.includes('#') ? '#' : 'b';
+    return upper + acc;
+  }
+
+  /**
+   * 조(key)와 음이름으로 음계 도수(1~7) 반환. 없으면 null.
+   */
+  function noteToScaleDegree(noteName, keyName) {
+    var key = KEY_SCALE_NOTES[keyName];
+    if (!key) return null;
+    var n = normalizeNoteName(noteName);
+    for (var d = 1; d <= 7; d++) {
+      var list = key[d];
+      if (!list) continue;
+      for (var i = 0; i < list.length; i++) {
+        if (normalizeNoteName(list[i]) === n) return d;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * API/프롬프트에서 반환된 조 이름 정규화 (예: "E major" -> "E Major", "Bb" -> "Bb Major")
+   */
+  function normalizeKeyName(str) {
+    if (!str || typeof str !== 'string') return 'C Major';
+    var s = str.trim();
+    if (/major|minor|maj|min/i.test(s)) return s.replace(/\s*maj(or)?\s*/i, ' Major').replace(/\s*min(or)?\s*/i, ' Minor').replace(/\s+/g, ' ').trim();
+    var base = s.replace(/#|b/g, '').trim();
+    var acc = s.includes('#') ? '#' : s.includes('b') ? 'b' : '';
+    var letter = base.charAt(0).toUpperCase();
+    if (letter === 'B' && acc === 'b') return 'Bb Major';
+    if (letter === 'B') return 'B Major';
+    if (letter === 'E' && acc === 'b') return 'Eb Major';
+    if (letter === 'E') return 'E Major';
+    if (letter === 'A' && acc === 'b') return 'Ab Major';
+    if (letter === 'A') return 'A Major';
+    if (letter === 'D' && acc === 'b') return 'Db Major';
+    if (letter === 'D') return 'D Major';
+    if (letter === 'G' && acc === 'b') return 'Gb Major';
+    if (letter === 'G') return 'G Major';
+    if (letter === 'F' && acc === '#') return 'F# Major';
+    if (letter === 'F') return 'F Major';
+    if (letter === 'C' && acc === '#') return 'C# Major';
+    return 'C Major';
+  }
+
+  /**
+   * 악보 분석 결과(마디별 음이름) → 한글 자모 그리드 데이터로 변환 (메뉴얼 규칙 기반)
+   * @param {Array} analyzedBars - [ { bar: 1, B: ['E'], M: ['B'], RAcc: ['G#','B'], LAcc: ['G#','B'] }, ... ]
+   * @param {string} keyName - 예: 'E Major', 'C Major'
+   * @returns {Array} SALUT_DAMOUR_BARS 형식의 자모 배열 (최대 16마디)
+   */
+  function notesToJamoBars(analyzedBars, keyName) {
+    var normalizedKey = normalizeKeyName(keyName || '');
+    var key = KEY_SCALE_NOTES[normalizedKey] ? normalizedKey : 'C Major';
+    var out = [];
+    var roles = ['B', 'M', 'RAcc', 'LAcc'];
+    var maxBars = 16;
+    for (var i = 0; i < maxBars; i++) {
+      var src = analyzedBars && analyzedBars[i] ? analyzedBars[i] : { bar: i + 1 };
+      var barNum = typeof src.bar === 'number' ? src.bar : (i + 1);
+      var row = { bar: barNum };
+      for (var r = 0; r < roles.length; r++) {
+        var role = roles[r];
+        var notes = src[role];
+        var jamos = [];
+        if (Array.isArray(notes)) {
+          for (var n = 0; n < notes.length; n++) {
+            var deg = noteToScaleDegree(notes[n], key);
+            if (deg && SCALE_DEGREE_TO_JAMO[deg] && SCALE_DEGREE_TO_JAMO[deg][role]) {
+              jamos.push(SCALE_DEGREE_TO_JAMO[deg][role]);
+            }
+          }
+        }
+        row[role] = jamos;
+      }
+      out.push(row);
+    }
+    return out;
+  }
 
   // 역할 라벨 (한/영)
   var ROLE_LABELS = {
@@ -268,9 +392,14 @@
   global.HANGEUL_ARCHITECTURE = {
     SCALE_COLORS: SCALE_COLORS,
     JAMO_TO_SCALE: JAMO_TO_SCALE,
+    KEY_SCALE_NOTES: KEY_SCALE_NOTES,
+    SCALE_DEGREE_TO_JAMO: SCALE_DEGREE_TO_JAMO,
     ROLE_LABELS: ROLE_LABELS,
     SALUT_DAMOUR_BARS: SALUT_DAMOUR_BARS,
     getColorForJamo: getColorForJamo,
+    normalizeKeyName: normalizeKeyName,
+    noteToScaleDegree: noteToScaleDegree,
+    notesToJamoBars: notesToJamoBars,
     renderArchitectureGrid: renderArchitectureGrid,
     generateArchitectureImage: generateArchitectureImage
   };

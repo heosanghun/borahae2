@@ -21,7 +21,7 @@
   <link rel="manifest" href="image/favicon/manifest.json">
   <meta name="msapplication-TileColor" content="#7c3aed">
   <meta name="msapplication-config" content="image/favicon/browserconfig.xml">
-  <link href="style.css?v=soave2" rel="stylesheet">
+  <link href="style.css?v=demologo3" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Noto+Serif+KR:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&family=Nanum+Pen+Script&family=Gamja+Flower&family=Hi+Melody&display=swap" rel="stylesheet">
@@ -342,7 +342,7 @@
           <div class="ai-demo">
             <div class="demo-header">
               <img src="image/logo1-removebg-preview.png" alt="BORAHAE" class="demo-header-logo">
-              <span>Style Analysis</span>
+              <span class="demo-header-title">Style Analysis</span>
             </div>
             <div class="demo-content">
               <div class="analysis-item">
@@ -386,67 +386,72 @@
     </div>
   </section>
 
-  <!-- CREATE: 매직샵 (음악 → 한글 건축물 + 응원봉) -->
-  <section id="lightstick" class="features" style="background:var(--bg-secondary);">
+  <!-- CREATE: 매직샵 (음악 → 한글 건축물, 한글 페르소나와 동일 좌측 입력 / 우측 결과) -->
+  <section id="lightstick" class="ai-section" style="background:var(--bg-secondary);">
     <div class="container">
-      <div class="section-header">
+      <header class="persona-header">
         <span class="section-badge" data-i18n="lightstick.badge">CREATE · 매직샵</span>
         <h2 class="section-title" data-i18n="lightstick.title">노래가 건축이 되고, 그 공간의 열쇠가 응원봉이 됩니다 💜</h2>
-        <p class="section-description" data-i18n="lightstick.desc">음악(MIDI)을 업로드하면 한글 건축물이 생성되고, 그 안에 나만의 응원봉을 배치하세요</p>
+        <p class="persona-subtitle" data-i18n="lightstick.desc">음악(MIDI)을 업로드하면 한글 건축물이 생성되고, STORE에서 나만의 응원봉으로 소장할 수 있어요.</p>
+      </header>
+      <!-- 좌측 입력 / 우측 결과 (한글 페르소나와 동일 구조) -->
+      <div class="magicshop-block name-episodes-block">
+        <p class="persona-connector" data-i18n="magicshop.connector">음악으로 나만의 한글 건축물 · 매직샵</p>
+        <div class="magicshop-row name-episodes-row">
+          <div class="magicshop-left name-episodes-left">
+            <div class="magicshop-hero name-episodes-hero">
+              <h3 class="name-episodes-title" data-i18n="magicshop.input_title">당신의 최애곡을 들려주세요</h3>
+              <p class="name-episodes-desc" data-i18n="magicshop.input_desc">소리가 머무는 집을 지어드립니다. MIDI·PDF·악보 이미지를 올리거나 샘플을 사용하세요.</p>
+              <div class="magicshop-input-corner name-episodes-input-corner">
+                <div class="magicshop-dropzone" id="magicshop-dropzone">
+                  <p class="magicshop-dropzone-text" data-i18n="magicshop.dropzone">파일을 여기에 놓거나 클릭하여 선택</p>
+                  <input type="file" id="arch-midi-input" accept=".mid,.midi,audio/midi,.pdf,application/pdf,.png,.jpg,.jpeg,.gif,.webp,image/png,image/jpeg,image/gif,image/webp" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;" aria-label="MIDI PDF 악보 이미지 업로드">
+                </div>
+                <div class="magicshop-build-inputs magicshop-build-inputs--centered">
+                  <button type="button" class="btn-secondary magicshop-example-btn" id="arch-use-sample-btn" data-i18n="arch.use_sample">사랑의 인사 샘플 사용</button>
+                  <span class="magicshop-input-or">또는</span>
+                  <button type="button" class="btn-outline magicshop-upload-btn" id="arch-upload-trigger"><span data-i18n="arch.upload_midi_pdf">MIDI · PDF · 악보 이미지 업로드</span></button>
+                </div>
+                <p class="magicshop-build-status name-episodes-hint" id="arch-input-status" style="margin-top:12px;min-height:1.4em;" aria-live="polite"></p>
+                <button type="button" class="name-episodes-btn magicshop-start-btn" id="arch-generate-btn" disabled data-i18n="magicshop.start_btn">건축 시작하기</button>
+              </div>
+            </div>
+          </div>
+          <div class="magicshop-right">
+            <div id="magicshop-display" class="magicshop-display">
+              <div id="magicshop-display-idle" class="magicshop-display-idle">
+                <div class="magicshop-aurora"></div>
+                <p class="magicshop-display-idle-text" data-i18n="magicshop.display_idle">텅 빈 우주에 은은한 오로라가 일렁입니다. 음악을 올려 주세요.</p>
+              </div>
+              <div id="magicshop-display-loading" class="magicshop-display-loading" style="display:none;">
+                <div class="magicshop-loading-stage magicshop-loading-waveform"></div>
+                <p class="magicshop-loading-caption" data-i18n="magicshop.loading">파형이 한글 자모로, 건축물로 조립됩니다...</p>
+              </div>
+              <div id="magicshop-display-result" class="magicshop-display-result" style="display:none;">
+                <div class="magicshop-result-card magicshop-card-tilt" id="magicshop-result-card">
+                  <img id="magicshop-result-image" src="" alt="한글 건축물" style="width:100%;height:auto;border-radius:16px;display:block;">
+                </div>
+                <p class="magicshop-result-label" data-i18n="arch.step1_jamo_grid">1. 한글 자모 그리드</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="features-grid" style="grid-template-columns:repeat(4,1fr);">
-        <div class="feature-card" style="text-align:center;">
-          <div class="feature-icon" style="font-size:2rem;background:none;">✍️</div>
-          <h3 data-i18n="lightstick.step1_label">STEP 1</h3>
-          <p data-i18n-html="lightstick.step1_html">응원봉에 담을<br><strong>나의 마음</strong>을 새기다</p>
-        </div>
-        <div class="feature-card" style="text-align:center;">
-          <div class="feature-icon" style="font-size:2rem;background:none;">🎨</div>
-          <h3 data-i18n="lightstick.step2_label">STEP 2</h3>
-          <p data-i18n-html="lightstick.step2_html">마음을 비추는<br><strong>보라빛 7컬러</strong> 선택</p>
-        </div>
-        <div class="feature-card" style="text-align:center;">
-          <div class="feature-icon" style="font-size:2rem;background:none;">🤖</div>
-          <h3 data-i18n="lightstick.step3_label">STEP 3</h3>
-          <p data-i18n-html="lightstick.step3_html">AI가 빚어낸<br><strong>나만의 응원봉</strong> 탄생</p>
-        </div>
-        <div class="feature-card" style="text-align:center;">
-          <div class="feature-icon" style="font-size:2rem;background:none;">📤</div>
-          <h3 data-i18n="lightstick.step4_label">STEP 4</h3>
-          <p data-i18n-html="lightstick.step4_html">함께 나누는<br><strong>보라빛 응원</strong></p>
-        </div>
-      </div>
-      <div style="text-align:center;margin-top:32px;">
-        <button class="btn-primary btn-large" id="open-lightstick-btn" data-i18n="lightstick.btn_start" onclick="document.getElementById('lightstick-modal').classList.add('active');document.body.style.overflow='hidden';">나의 응원봉, 지금 만들기 💜</button>
-        <p style="margin-top:12px;font-size:0.85rem;color:var(--text-muted);" data-i18n="lightstick.plan_info">Free: 월 1회 | Purple: 월 10회 | VIP: 무제한 생성</p>
-      </div>
-      <!-- 음악 → 한글 건축물 생성 (샘플 업로드 + 생성 버튼 → 이미지) -->
-      <div class="magicshop-build-wrap" id="magicshop-build-wrap" style="margin-top:48px;padding:32px 24px;background:var(--bg-primary);border-radius:20px;border:2px solid var(--border-color);">
+      <!-- 기존 빌드 결과(그리드·컨셉·나노·최종)는 우측 아래 또는 모달로 유지. 여기서는 우측에 메인 결과만 표시하고 상세는 기존 wrap 안에 숨겨두거나 스크롤 영역으로 -->
+      <div class="magicshop-build-wrap" id="magicshop-build-wrap" style="margin-top:32px;padding:32px 24px;background:var(--bg-primary);border-radius:20px;border:2px solid var(--border-color);display:none;">
         <h3 class="magicshop-build-title" style="font-size:1.25rem;margin-bottom:8px;color:var(--text-primary);" data-i18n="arch.build_title">🎵 음악을 올리면 한글 건축물이 됩니다</h3>
         <p class="magicshop-build-desc" style="font-size:0.9rem;color:var(--text-muted);margin-bottom:24px;" data-i18n="arch.build_desc">샘플(사랑의 인사)을 선택하거나 MIDI·PDF 파일을 업로드한 뒤, 생성 버튼을 누르면 한글 건축물 이미지가 만들어집니다.</p>
-
-        <div class="magicshop-build-inputs" style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:20px;">
-          <button type="button" class="btn-secondary" id="arch-use-sample-btn" data-i18n="arch.use_sample">사랑의 인사 샘플 사용</button>
-          <span style="color:var(--text-muted);font-size:0.9rem;">또는</span>
-          <label class="btn-outline" style="cursor:pointer;margin:0;display:inline-flex;align-items:center;gap:8px;">
-            <input type="file" id="arch-midi-input" accept=".mid,.midi,audio/midi,.pdf,application/pdf,.png,.jpg,.jpeg,.gif,.webp,image/png,image/jpeg,image/gif,image/webp" style="display:none;">
-            <span data-i18n="arch.upload_midi_pdf">MIDI · PDF · 악보 이미지 업로드</span>
-          </label>
-        </div>
-        <p class="magicshop-build-status" id="arch-input-status" style="font-size:0.85rem;color:var(--text-muted);margin-bottom:16px;min-height:1.4em;" aria-live="polite"></p>
-
+        <p class="magicshop-build-status" id="arch-input-status-legacy" style="font-size:0.85rem;color:var(--text-muted);margin-bottom:16px;min-height:1.4em;" aria-live="polite"></p>
         <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:16px;">
-          <button type="button" class="btn-primary btn-large" id="arch-generate-btn" disabled data-i18n="arch.generate_btn">🏛️ 한글 건축물 생성</button>
-          <button type="button" class="btn-primary btn-large arch-video-experience-btn" id="open-architecture-video-btn" aria-label="한글 건축 영상 체험" data-i18n="arch.sample_video_btn" disabled style="opacity:0.7;cursor:not-allowed;">한글 건축 영상 체험하기</button>
+          <button type="button" class="btn-primary btn-large" id="arch-generate-btn-legacy" disabled data-i18n="arch.generate_btn">🏛️ 한글 건축물 생성</button>
         </div>
-        <p class="arch-video-hint" id="arch-video-hint" style="margin-top:8px;font-size:0.85rem;color:var(--text-muted);" data-i18n="arch.video_btn_hint">건축물 생성 후 영상 체험이 가능합니다.</p>
 
         <div class="magicshop-build-loading" id="arch-loading" style="display:none;text-align:center;padding:24px;">
           <p style="color:var(--primary);font-weight:600;" data-i18n="arch.generating">한글 건축물 이미지를 생성하고 있어요...</p>
         </div>
         <div class="magicshop-build-result" id="arch-result" style="display:none;margin-top:24px;text-align:center;">
-          <!-- 1) 색깔과 한글이 펼쳐지는 그리드 이미지 -->
-          <p class="magicshop-build-result-title" style="font-weight:600;margin-bottom:12px;color:var(--text-primary);" data-i18n="arch.result_title">생성된 한글 건축물</p>
+          <!-- 1) 한글 자모 그리드 (실제로는 그리드이므로 라벨 수정) -->
+          <p class="magicshop-build-result-title" style="font-weight:600;margin-bottom:12px;color:var(--text-primary);" data-i18n="arch.step1_jamo_grid">1. 한글 자모 그리드</p>
           <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:12px;" data-i18n="arch.result_grid_desc">구조·멜로디·반주 한글 자모 그리드</p>
           <div style="background:var(--bg-secondary);border-radius:16px;padding:16px;display:inline-block;">
             <img id="arch-result-image" alt="한글 건축물 그리드" style="max-width:100%;height:auto;border-radius:8px;display:block;">
@@ -456,9 +461,9 @@
             <button type="button" class="btn-outline" id="arch-generate-again-btn" data-i18n="arch.generate_again">🔄 다시 생성</button>
           </div>
 
-          <!-- 3) 컨셉 디자인 -->
+          <!-- 2) 건축 컨셉 디자인 -->
           <div id="arch-concept-section" style="margin-top:32px;padding-top:24px;border-top:1px solid var(--border-color);">
-            <p class="magicshop-build-result-title" style="font-weight:600;margin-bottom:8px;color:var(--text-primary);" data-i18n="arch.concept_design_title">3. 컨셉 디자인</p>
+            <p class="magicshop-build-result-title" style="font-weight:600;margin-bottom:8px;color:var(--text-primary);" data-i18n="arch.step2_concept_title">2. 건축 컨셉 디자인</p>
             <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:12px;" data-i18n="arch.concept_design_desc">건축 프레젠테이션 보드 (조감도·다이어그램·플랜·퍼스펙티브)</p>
             <div id="arch-concept-loading" class="arch-nano-loading" style="display:none;padding:24px;">
               <div class="loading-spinner" style="margin:0 auto 12px;width:40px;height:40px;border:3px solid var(--border-color);border-top-color:var(--primary);border-radius:50%;animation:spin 0.8s linear infinite;"></div>
@@ -472,31 +477,10 @@
             </div>
           </div>
 
-          <!-- 4) 한글 건축 이미지 생성 -->
-          <div id="arch-nano-section" style="margin-top:32px;padding-top:24px;border-top:1px solid var(--border-color);">
-            <p class="magicshop-build-result-title" style="font-weight:600;margin-bottom:8px;color:var(--text-primary);" data-i18n="arch.result_building_title">4. 한글 건축 이미지</p>
-            <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:8px;" data-i18n="arch.result_building_desc">나노 바나나가 한글 공감각 건축 메뉴얼로 건축물을 생성합니다</p>
-            <p style="font-size:0.85rem;color:var(--primary);margin-bottom:16px;" data-i18n="arch.auto_video_hint">이미지 생성 후 같은 이미지로 영상이 자동 생성됩니다.</p>
-            <div id="arch-nano-loading" class="arch-nano-loading" style="display:none;padding:24px;">
-              <div class="loading-spinner" style="margin:0 auto 12px;width:40px;height:40px;border:3px solid var(--border-color);border-top-color:var(--primary);border-radius:50%;animation:spin 0.8s linear infinite;"></div>
-              <p style="color:var(--primary);font-size:0.95rem;" data-i18n="arch.nano_building_loading">건축물 이미지를 생성하고 있어요... (약 10~30초)</p>
-            </div>
-            <div id="arch-nano-building-wrap" style="display:none;">
-              <div style="background:var(--bg-secondary);border-radius:16px;padding:16px;display:inline-block;">
-                <img id="arch-nano-building-image" alt="나노 바나나 건축물" style="max-width:100%;height:auto;border-radius:8px;display:block;">
-              </div>
-              <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;">
-                <a id="arch-nano-building-download" class="btn-primary btn-sm" download="hangeul-architecture-building.png" data-i18n="arch.download_btn">💾 이미지 저장</a>
-                <button type="button" class="btn-outline btn-sm" id="arch-video-from-building-btn" data-i18n="arch.video_retry_btn">🎬 영상 다시 생성</button>
-              </div>
-            </div>
-            <p id="arch-nano-building-error" style="display:none;font-size:0.9rem;color:var(--text-muted);margin-top:12px;" data-i18n="arch.error_no_api_key_short">API 키 설정 시 건축물 이미지를 생성할 수 있습니다.</p>
-          </div>
-
-          <!-- 5) 최종 한글 건축물 (영상 키프레임) -->
+          <!-- 3) 최종 건축 디자인 -->
           <div id="arch-final-section" style="margin-top:32px;padding-top:24px;border-top:1px solid var(--border-color);">
-            <p class="magicshop-build-result-title" style="font-weight:600;margin-bottom:8px;color:var(--text-primary);" data-i18n="arch.final_building_title">5. 최종 한글 건축물</p>
-            <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:12px;" data-i18n="arch.final_building_desc">이 이미지를 기준으로 영상이 생성됩니다.</p>
+            <p class="magicshop-build-result-title" style="font-weight:600;margin-bottom:8px;color:var(--text-primary);" data-i18n="arch.step3_final_title">3. 최종 건축 디자인</p>
+            <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:12px;" data-i18n="arch.final_building_desc">최종 한글 건축물 이미지입니다.</p>
             <div id="arch-final-loading" class="arch-nano-loading" style="display:none;padding:24px;">
               <div class="loading-spinner" style="margin:0 auto 12px;width:40px;height:40px;border:3px solid var(--border-color);border-top-color:var(--primary);border-radius:50%;animation:spin 0.8s linear infinite;"></div>
               <p style="color:var(--primary);font-size:0.95rem;" data-i18n="arch.final_loading">최종 건축물 이미지를 생성하고 있어요...</p>
@@ -505,9 +489,8 @@
               <div style="background:var(--bg-secondary);border-radius:16px;padding:16px;display:inline-block;">
                 <img id="arch-final-image" alt="최종 한글 건축물" style="max-width:100%;height:auto;border-radius:8px;display:block;">
               </div>
-              <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;">
+              <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:center;">
                 <a id="arch-final-download" class="btn-primary btn-sm" download="hangeul-architecture-final.png" data-i18n="arch.download_btn">💾 이미지 저장</a>
-                <button type="button" class="btn-outline btn-sm" id="arch-video-from-final-btn" data-i18n="arch.video_retry_btn">🎬 영상 다시 생성</button>
               </div>
             </div>
           </div>
@@ -544,21 +527,14 @@
           <p class="arch-modal-score-name" style="text-align:center;font-size:1rem;color:var(--text-secondary);margin:0 0 16px 0;" data-i18n="arch.modal_piece_title">작은것들을 위한 시</p>
           <div class="arch-modal-media-wrap" style="display:flex;justify-content:center;align-items:center;margin-bottom:20px;min-height:280px;">
             <img id="arch-nano-image" alt="나노 바나나 한글 건축물" style="max-width:100%;max-height:75vh;width:auto;height:auto;object-fit:contain;border-radius:12px;box-shadow:var(--shadow-lg);">
-            <video id="arch-nano-video" controls style="max-width:100%;max-height:75vh;border-radius:12px;box-shadow:var(--shadow-lg);display:none;"></video>
           </div>
           <p style="font-size:0.85rem;color:var(--text-muted);text-align:center;margin-top:-8px;margin-bottom:12px;" data-i18n="arch.modal_save_hint">닫기 전에 저장 버튼으로 다운로드하세요.</p>
           <div class="arch-modal-actions" style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;align-items:center;margin-bottom:24px;">
             <a id="arch-nano-download" class="btn-primary" href="#" download="hangeul-architecture-nano.png" data-i18n="arch.download_btn" style="cursor:pointer;">💾 이미지 저장</a>
-            <button type="button" class="btn-outline" id="arch-show-grid-btn" data-i18n="arch.show_grid">📋 자모 그리드 보기</button>
-          </div>
-          <div id="architecture-grid-wrap" style="display:none;margin-top:24px;padding-top:24px;border-top:1px solid var(--border-color);">
-            <h3 id="arch-grid-title" style="font-size:1.1rem;margin-bottom:12px;color:var(--text-secondary);" data-i18n="arch.modal_piece_title">작은것들을 위한 시</h3>
-            <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:12px;" data-i18n="arch.modal_subtitle">1~16마디 한글 자모 건축 그리드</p>
-            <div id="architecture-grid-container" class="architecture-grid-container"></div>
           </div>
         </div>
         <div id="arch-modal-error" class="arch-modal-error" style="display:none;text-align:center;padding:40px 24px;">
-          <p style="color:var(--text-danger, #dc2626);font-weight:600;margin-bottom:8px;" data-i18n="arch.error_title">건축물 생성에 실패했습니다</p>
+          <p id="arch-modal-error-title" style="color:var(--text-danger, #dc2626);font-weight:600;margin-bottom:8px;" data-i18n="arch.error_title">건축물 생성에 실패했습니다</p>
           <p id="arch-modal-error-msg" style="color:var(--text-muted);font-size:0.9rem;margin-bottom:16px;"></p>
           <button type="button" class="btn-outline" id="arch-retry-btn" data-i18n="arch.generate_again">🔄 다시 시도</button>
         </div>
@@ -764,6 +740,38 @@
         <a href="#shop-stationery" class="btn-outline shop-cat-btn" style="border-radius:20px;padding:8px 20px;font-size:0.9rem;" data-i18n="shop.cat_stationery">문구 · 다이어리</a>
         <a href="#shop-sticker" class="btn-outline shop-cat-btn" style="border-radius:20px;padding:8px 20px;font-size:0.9rem;" data-i18n="shop.cat_sticker">스티커 · 데코</a>
         <a href="#boratime" class="btn-outline shop-cat-btn" style="border-radius:20px;padding:8px 20px;font-size:0.9rem;border-color:var(--primary);color:var(--primary);" data-i18n="shop.cat_boratime">시계 · 보라타임</a>
+        <a href="#shop-lightstick" class="btn-outline shop-cat-btn" style="border-radius:20px;padding:8px 20px;font-size:0.9rem;border-color:var(--primary);color:var(--primary);" data-i18n="shop.cat_lightstick">응원봉 · 나만의 굿즈</a>
+      </div>
+
+      <!-- 응원봉 · 나만의 굿즈 (STORE 내 굿즈 코너) -->
+      <div id="shop-lightstick" class="shop-cat-block active" style="padding-top:32px;">
+        <div class="container">
+          <div class="section-header shop-cat-header" style="margin-bottom:24px;">
+            <h2 class="section-title shop-cat-title-lg" data-i18n="shop.cat_lightstick_title">나만의 응원봉 · 커스텀 굿즈</h2>
+            <p class="section-description shop-cat-desc-lg" style="max-width:560px;margin-left:auto;margin-right:auto;" data-i18n="shop.cat_lightstick_desc">매직샵에서 만든 건축물을 담은 응원봉으로, 세상에 하나뿐인 굿즈를 만드세요.</p>
+          </div>
+          <div class="shop-lightstick-sections" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;max-width:960px;margin:0 auto 32px;">
+            <div class="shop-lightstick-card" style="border-radius:20px;overflow:hidden;background:var(--bg-tertiary);border:2px solid var(--border-color);padding:24px;text-align:center;">
+              <h3 style="font-size:1.1rem;margin-bottom:8px;color:var(--text-primary);" data-i18n="shop.lightstick_digital">디지털 굿즈</h3>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:16px;" data-i18n="shop.lightstick_watchface">매직샵 건축물을 워치페이스로 다운로드</p>
+              <a href="#boratime" class="btn-outline btn-sm">워치페이스 보기</a>
+            </div>
+            <div class="shop-lightstick-card" style="border-radius:20px;overflow:hidden;background:var(--bg-tertiary);border:2px solid var(--border-color);padding:24px;text-align:center;">
+              <h3 style="font-size:1.1rem;margin-bottom:8px;color:var(--text-primary);" data-i18n="shop.lightstick_custom">커스텀 응원봉</h3>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:16px;" data-i18n="shop.lightstick_custom_desc">나만의 건축물을 담은 응원봉 · 홀로그램 프리뷰</p>
+              <div style="min-height:120px;background:linear-gradient(180deg, rgba(124,58,237,0.15) 0%, rgba(236,72,153,0.1) 100%);border-radius:12px;margin-bottom:16px;display:flex;align-items:center;justify-content:center;">
+                <span style="font-size:2.5rem;opacity:0.8;">💜</span>
+              </div>
+              <button type="button" class="btn-primary" id="open-lightstick-btn" data-i18n="lightstick.btn_start" onclick="document.getElementById('lightstick-modal').classList.add('active');document.body.style.overflow='hidden';">나의 응원봉, 지금 만들기 💜</button>
+              <p style="margin-top:12px;font-size:0.82rem;color:var(--text-muted);" data-i18n="lightstick.plan_info">Free: 월 1회 | Purple: 월 10회 | VIP: 무제한 생성</p>
+            </div>
+          </div>
+          <p style="text-align:center;margin-top:16px;">
+            <button type="button" class="btn-outline btn-sm" data-i18n="shop.lightstick_order_btn">제작 신청하기</button>
+            <span style="margin:0 8px;color:var(--text-muted);">·</span>
+            <button type="button" class="btn-outline btn-sm">NFT 발급받기</button>
+          </p>
+        </div>
       </div>
 
       <!-- 의류 -->
@@ -2475,6 +2483,57 @@
       } else {
         attachStylingResult();
       }
+    })();
+  </script>
+  <script>
+    (function(){
+      function magicshopPanelSync() {
+        var trigger = document.getElementById('arch-upload-trigger');
+        var fileInput = document.getElementById('arch-midi-input');
+        var genBtn = document.getElementById('arch-generate-btn');
+        var idle = document.getElementById('magicshop-display-idle');
+        var loading = document.getElementById('magicshop-display-loading');
+        var result = document.getElementById('magicshop-display-result');
+        var resultImg = document.getElementById('magicshop-result-image');
+        var archResult = document.getElementById('arch-result');
+        var archResultImg = document.getElementById('arch-result-image');
+        var againBtn = document.getElementById('arch-generate-again-btn');
+        var dropzone = document.getElementById('magicshop-dropzone');
+        if (trigger && fileInput) trigger.addEventListener('click', function(){ fileInput.click(); });
+        if (genBtn && loading && idle) {
+          genBtn.addEventListener('click', function() {
+            idle.style.display = 'none';
+            loading.style.display = 'flex';
+            if (result) result.style.display = 'none';
+          });
+        }
+        function checkResult() {
+          if (!archResult || !archResultImg || !result || !resultImg) return;
+          if (archResult.style.display === 'block' || archResult.style.display === '') {
+            if (archResultImg.src) {
+              resultImg.src = archResultImg.src;
+              resultImg.alt = archResultImg.alt || '한글 건축물';
+              loading.style.display = 'none';
+              result.style.display = 'flex';
+            }
+          }
+        }
+        setInterval(checkResult, 600);
+        if (againBtn && idle && loading && result) {
+          againBtn.addEventListener('click', function() {
+            idle.style.display = 'flex';
+            loading.style.display = 'none';
+            result.style.display = 'none';
+          });
+        }
+        if (dropzone && fileInput) {
+          dropzone.addEventListener('dragover', function(e){ e.preventDefault(); dropzone.classList.add('dragover'); });
+          dropzone.addEventListener('dragleave', function(){ dropzone.classList.remove('dragover'); });
+          dropzone.addEventListener('drop', function(e){ e.preventDefault(); dropzone.classList.remove('dragover'); if (fileInput && e.dataTransfer.files.length) { var dt = new DataTransfer(); dt.items.add(e.dataTransfer.files[0]); fileInput.files = dt.files; fileInput.dispatchEvent(new Event('change', { bubbles: true })); } });
+        }
+      }
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', magicshopPanelSync);
+      else magicshopPanelSync();
     })();
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous"></script>

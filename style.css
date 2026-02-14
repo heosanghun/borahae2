@@ -494,7 +494,7 @@ button {
   border-radius: 24px;
   transform-origin: center;
   color: transparent;
-  background-image: linear-gradient(135deg, #ffffff 0%, #f3e8ff 12%, #e9d5ff 25%, #c4b5fd 40%, #7c3aed 55%, #a855f7 70%, #ec4899 85%, #f472b6 100%);
+  background-image: linear-gradient(135deg, #ec4899 0%, #f472b6 25%, #c084fc 50%, #a855f7 75%, #7c3aed 100%);
   background-size: 200% 200%;
   background-clip: text;
   -webkit-background-clip: text;
@@ -956,6 +956,191 @@ section {
   grid-template-columns: 1fr;
   gap: 32px;
   align-items: start;
+}
+.magicshop-row {
+  display: grid;
+  grid-template-columns: 1fr minmax(320px, 1fr);
+  gap: 32px;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .magicshop-row {
+    grid-template-columns: 1fr;
+  }
+}
+.magicshop-left { min-width: 0; }
+.magicshop-right { min-width: 0; }
+.magicshop-dropzone {
+  position: relative;
+  min-height: 160px;
+  border: 2px dashed color-mix(in srgb, var(--primary) 40%, transparent);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--primary) 6%, var(--bg-primary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s, background 0.2s;
+}
+.magicshop-dropzone:hover,
+.magicshop-dropzone.dragover {
+  border-color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 12%, var(--bg-primary));
+}
+.magicshop-dropzone-text {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+/* 예제용 작은 글씨: 샘플 버튼 (한글 페르소나 '민수' 예시처럼) */
+.magicshop-example-btn {
+  font-size: 0.8rem !important;
+  color: var(--text-muted) !important;
+  padding: 6px 12px !important;
+  border-radius: 12px;
+}
+.magicshop-build-inputs--centered {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 16px;
+  text-align: center;
+}
+.magicshop-input-or {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+.magicshop-upload-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 200px;
+}
+.magicshop-start-btn { margin-top: 20px; width: 100%; }
+.magicshop-display {
+  min-height: 320px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: linear-gradient(165deg, #0a0a1a 0%, #0f0f23 25%, #1a1a2e 50%, #16213e 75%, #0f172a 100%);
+  border: 1px solid color-mix(in srgb, var(--primary) 25%, transparent);
+  position: relative;
+  box-shadow: inset 0 0 80px rgba(59, 130, 246, 0.06);
+}
+.magicshop-display-idle {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.magicshop-aurora {
+  position: absolute;
+  inset: -20%;
+  background:
+    radial-gradient(ellipse 120% 80% at 30% 20%, rgba(124, 58, 237, 0.5) 0%, transparent 50%),
+    radial-gradient(ellipse 100% 70% at 70% 80%, rgba(59, 130, 246, 0.45) 0%, transparent 50%),
+    radial-gradient(ellipse 90% 60% at 50% 50%, rgba(236, 72, 153, 0.35) 0%, transparent 55%),
+    radial-gradient(ellipse 80% 50% at 80% 30%, rgba(139, 92, 246, 0.4) 0%, transparent 45%);
+  animation: magicshop-aurora-flow 8s ease-in-out infinite;
+}
+.magicshop-aurora::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(105deg, transparent 0%, rgba(167, 139, 250, 0.2) 25%, transparent 50%, rgba(96, 165, 250, 0.2) 75%, transparent 100%);
+  background-size: 200% 200%;
+  animation: magicshop-aurora-shimmer 6s ease-in-out infinite;
+}
+.magicshop-aurora::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 40% at 50% 60%, rgba(34, 211, 238, 0.25) 0%, transparent 60%);
+  animation: magicshop-aurora-drift 10s ease-in-out infinite;
+}
+@keyframes magicshop-aurora-flow {
+  0%, 100% { opacity: 1; transform: scale(1) rotate(0deg) translate(0, 0); }
+  25% { opacity: 0.95; transform: scale(1.08) rotate(1deg) translate(2%, -3%); }
+  50% { opacity: 1; transform: scale(1.05) rotate(-0.5deg) translate(-2%, 2%); }
+  75% { opacity: 0.98; transform: scale(1.1) rotate(0.5deg) translate(1%, 1%); }
+}
+@keyframes magicshop-aurora-shimmer {
+  0%, 100% { background-position: 0% 50%; opacity: 0.8; }
+  50% { background-position: 100% 50%; opacity: 1; }
+}
+@keyframes magicshop-aurora-drift {
+  0%, 100% { opacity: 0.6; transform: translate(0, 0) scale(1); }
+  33% { opacity: 1; transform: translate(3%, -2%) scale(1.05); }
+  66% { opacity: 0.8; transform: translate(-2%, 2%) scale(0.98); }
+}
+.magicshop-display-idle-text {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-size: 0.95rem;
+  color: rgba(255,255,255,0.85);
+  text-align: center;
+  line-height: 1.6;
+}
+.magicshop-display-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: linear-gradient(180deg, #0f0f23 0%, #1a1a2e 100%);
+}
+.magicshop-loading-stage {
+  width: 120px;
+  height: 60px;
+  margin-bottom: 16px;
+  background: linear-gradient(90deg, transparent 0%, rgba(124, 58, 237, 0.6) 50%, transparent 100%);
+  border-radius: 50%;
+  animation: magicshop-waveform 1.5s ease-in-out infinite;
+}
+@keyframes magicshop-waveform {
+  0%, 100% { transform: scaleY(0.6); opacity: 0.7; }
+  50% { transform: scaleY(1); opacity: 1; }
+}
+.magicshop-loading-caption {
+  margin: 0;
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.8);
+}
+.magicshop-display-result {
+  position: absolute;
+  inset: 0;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #0f0f23 0%, #1a1a2e 100%);
+}
+.magicshop-result-card {
+  width: 100%;
+  max-width: 320px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 16px 48px rgba(124, 58, 237, 0.35);
+  transition: transform 0.3s ease;
+}
+.magicshop-card-tilt:hover {
+  transform: perspective(800px) rotateX(2deg) rotateY(-2deg);
+}
+.magicshop-result-label {
+  margin: 12px 0 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.9);
 }
 .name-episodes-left {
   min-width: 0;
@@ -1766,24 +1951,35 @@ section {
 
 .demo-header {
   background: var(--bg-tertiary);
-  padding: 16px 24px;
+  padding: 14px 20px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 16px;
   border-bottom: 1px solid var(--border-color);
 }
 
 .demo-header-logo {
-  height: 72px;
+  height: 62px;
   width: auto;
-  max-width: 260px;
+  max-width: 155px;
   object-fit: contain;
   display: block;
+  flex-shrink: 0;
+}
+
+.demo-header-title {
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: 0.02em;
+  color: var(--text-primary);
+  margin-left: auto;
+  white-space: nowrap;
 }
 
 .demo-header > span {
-  font-weight: 600;
-  font-size: 0.9rem;
+  font-weight: 700;
+  font-size: 1.15rem;
 }
 
 [data-theme="dark"] .demo-header {
