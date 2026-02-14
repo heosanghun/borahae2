@@ -8,7 +8,10 @@
   // Translation Data
   // ========================================
   var translations = {
-    // --- Navigation ---
+    // --- Navigation (BORAHAE 3.0: 3대 핵심) ---
+    'nav.play': { ko: 'PLAY (놀기)', en: 'PLAY' },
+    'nav.create': { ko: 'CREATE (짓기)', en: 'CREATE' },
+    'nav.store': { ko: 'STORE (소장)', en: 'STORE' },
     'nav.services': { ko: '서비스', en: 'Services' },
     'nav.styling': { ko: '스타일링', en: 'Styling' },
     'nav.shop': { ko: '굿즈샵', en: 'Shop' },
@@ -16,14 +19,14 @@
     'nav.login': { ko: '로그인', en: 'Login' },
     'nav.logout': { ko: '로그아웃', en: 'Logout' },
 
-    // --- Hero ---
-    'hero.badge': { ko: 'K-pop Fan Lifestyle Platform', en: 'K-pop Fan Lifestyle Platform' },
+    // --- Hero (BORAHAE 3.0 메인 카피) ---
+    'hero.badge': { ko: 'AI Magic Shop for Global Fandom', en: 'AI Magic Shop for Global Fandom' },
     'hero.tagline': { ko: 'I Purple You · 끝까지 함께', en: 'I Purple You · Together Forever' },
     'hero.title_line': { ko: '보라해', en: 'BORAHAE' },
-    'hero.title_highlight': { ko: '팬이 만드는 보라빛 세상', en: 'A Purple World Made by Fans' },
+    'hero.title_highlight': { ko: '당신의 이름이 캐릭터가 되고, 당신의 노래가 집이 되는 곳', en: 'Where your name becomes a character, and your song becomes a home' },
     'hero.desc': {
-      ko: 'K-pop을 사랑하는 팬들의 라이프스타일 플랫폼.<br>AI 스타일링, 팬 굿즈, 커뮤니티, 이벤트까지<br><strong>보라빛으로 물든</strong> 특별한 팬 경험을 시작하세요',
-      en: 'A lifestyle platform for K-pop fans.<br>AI styling, fan goods, community & events —<br>start your <strong>purple-tinted</strong> special fan experience'
+      ko: '한글 페르소나로 <strong>캐릭터</strong>를 만들고,<br>매직샵에서 <strong>노래로 집</strong>을 짓고,<br>보라 굿즈로 <strong>소장</strong>하세요',
+      en: 'Create your <strong>character</strong> with Hangeul Persona,<br>build a <strong>home from your song</strong> at Magic Shop,<br>and <strong>collect</strong> with Bora Goods'
     },
     'hero.cta_start': { ko: '무료로 시작하기', en: 'Get Started Free' },
     'hero.cta_explore': { ko: '어떤 경험인지 보기', en: 'See What\'s in Store' },
@@ -41,10 +44,19 @@
       en: 'Your <strong>purple-tinted style</strong> — start now'
     },
 
-    // --- Features ---
-    'features.badge': { ko: 'Services', en: 'Services' },
-    'features.title': { ko: '보라해가 만드는 팬 라이프스타일', en: 'Fan Lifestyle by BORAHAE' },
-    'features.desc': { ko: 'K-pop을 사랑하는 당신을 위한 올인원 플랫폼', en: 'All-in-one platform for K-pop lovers' },
+    // --- Features (BORAHAE 3.0: 3대 핵심 서비스) ---
+    'features.badge': { ko: 'BORAHAE 3.0', en: 'BORAHAE 3.0' },
+    'features.title': { ko: '캐릭터 만들고, 집 짓고, 시계에 넣는다', en: 'Create a character. Build a home. Put it on your watch.' },
+    'features.desc': { ko: '한글과 AI로 완성하는 글로벌 팬덤 경험', en: 'Global fandom experience powered by Hangeul & AI' },
+    'features.pillar1_title': { ko: '한글 페르소나', en: 'Hangeul Persona' },
+    'features.pillar1_desc': { ko: '이름으로 한글 캐릭터(툰)를 만들고, 그 캐릭터에게 어울리는 패션(OOTD)을 AI가 추천합니다', en: 'Create a Hangeul character from your name, then get AI OOTD recommendations for that character' },
+    'features.pillar1_btn': { ko: '놀기 · PLAY', en: 'PLAY' },
+    'features.pillar2_title': { ko: '매직샵', en: 'Magic Shop' },
+    'features.pillar2_desc': { ko: '음악(MIDI)을 업로드하면 한글 건축물이 생성되고, 그 공간의 열쇠가 되는 나만의 응원봉을 만듭니다', en: 'Upload music (MIDI) to generate Hangeul architecture, then create your lightstick as the key to that space' },
+    'features.pillar2_btn': { ko: '짓기 · CREATE', en: 'CREATE' },
+    'features.pillar3_title': { ko: '보라 굿즈', en: 'Bora Goods' },
+    'features.pillar3_desc': { ko: '페르소나·건축물을 워치페이스로, 실물 굿즈(무드등·포토카드·의류)로 소장하세요', en: 'Collect watch faces, mood lamps, photocards, apparel — digital and physical goods from your creations' },
+    'features.pillar3_btn': { ko: '소장 · STORE', en: 'STORE' },
     'features.styling_title': { ko: 'AI K-pop 스타일링', en: 'AI K-pop Styling' },
     'features.styling_desc': { ko: '콘서트, 팬미팅, 일상까지 — AI가 퍼스널 컬러와 체형을 분석해 K-pop 감성 코디를 추천합니다', en: 'From concerts to fan meetings & daily life — AI analyzes your personal color & body type to recommend K-pop style outfits' },
     'features.shop_title': { ko: '보라해 굿즈샵', en: 'Borahae Goods Shop' },
@@ -77,8 +89,8 @@
     'features.shopping_desc': { ko: '마음에 드는 아이템을 발견하면 파트너 브랜드에서 바로 구매할 수 있습니다', en: 'When you find an item you love, purchase it directly from our partner brands' },
 
     // --- AI Styling ---
-    'ai.badge': { ko: 'AI Styling', en: 'AI Styling' },
-    'ai.title': { ko: '3단계로 완성되는<br>K-pop 감성 코디', en: 'K-pop Style<br>in 3 Steps' },
+    'ai.badge': { ko: 'PLAY · 한글 페르소나', en: 'PLAY · Hangeul Persona' },
+    'ai.title': { ko: '이름으로 캐릭터를 만들고,<br>그 캐릭터의 OOTD를 받으세요', en: 'Create a character from your name,<br>get OOTD for that character' },
     'ai.step1_title': { ko: '프로필 분석', en: 'Profile Analysis' },
     'ai.step1_desc': { ko: '간단한 설문과 사진으로 AI가 퍼스널 컬러와 체형을 분석합니다', en: 'AI analyzes your personal color and body type' },
     'ai.step2_title': { ko: 'K-pop 스타일 매칭', en: 'K-pop Style Matching' },
@@ -88,9 +100,9 @@
     'ai.cta': { ko: '보라해 스타일링 시작', en: 'Start Borahae Styling' },
 
     // --- Shop ---
-    'shop.badge': { ko: 'Shop', en: 'Shop' },
-    'shop.title': { ko: '보라해 굿즈샵', en: 'Borahae Goods Shop' },
-    'shop.desc': { ko: '보라빛 감성을 담은 팬메이드 아이템', en: 'Fan-made items infused with purple vibes' },
+    'shop.badge': { ko: 'STORE · 보라 굿즈', en: 'STORE · Bora Goods' },
+    'shop.title': { ko: '만든 캐릭터와 공간을, 워치페이스와 굿즈로 소장', en: 'Collect your character & space as watch faces and goods' },
+    'shop.desc': { ko: '디지털 워치페이스, 무드등, 포토카드, 의류까지 — 생성한 결과물을 상품으로 만나보세요', en: 'Digital watch faces, mood lamps, photocards, apparel — turn your creations into products' },
     'shop.cat_clothing': { ko: '보라해 의류', en: 'Borahae Clothing' },
     'shop.cat_ecobag': { ko: '에코백', en: 'Eco Bags' },
     'shop.cat_phonecase': { ko: '폰케이스', en: 'Phone Cases' },
@@ -164,9 +176,9 @@
     'membership.btn_vip': { ko: 'VIP 시작', en: 'Start VIP' },
 
     // --- Lightstick Designer ---
-    'lightstick.badge': { ko: '보라빛 응원봉', en: 'Purple Lightstick' },
-    'lightstick.title': { ko: '보라빛 응원봉, 너를 위해 빛나는 💜', en: 'Purple Lightstick, Shining for You 💜' },
-    'lightstick.desc': { ko: '당신의 사랑과 응원을 담아, 세상에 단 하나뿐인 나만의 응원봉을 AI가 만들어드려요', en: 'Filled with your love & support, AI creates a one-of-a-kind lightstick just for you' },
+    'lightstick.badge': { ko: 'CREATE · 매직샵', en: 'CREATE · Magic Shop' },
+    'lightstick.title': { ko: '노래가 건축이 되고, 그 공간의 열쇠가 응원봉이 됩니다 💜', en: 'Your song becomes architecture; the key to that space is your lightstick 💜' },
+    'lightstick.desc': { ko: '음악(MIDI)을 업로드하면 한글 건축물이 생성되고, 그 안에 나만의 응원봉을 배치하세요', en: 'Upload music (MIDI) to generate Hangeul architecture, then place your own lightstick inside' },
     'lightstick.step1_label': { ko: 'STEP 1', en: 'STEP 1' },
     'lightstick.step1_html': { ko: '응원봉에 담을<br><strong>나의 마음</strong>을 새기다', en: 'Engrave <strong>your heart</strong><br>on the lightstick' },
     'lightstick.step2_label': { ko: 'STEP 2', en: 'STEP 2' },
@@ -214,6 +226,62 @@
     'lightstick.color_ocean': { ko: '오션 딥', en: 'Ocean Deep' },
     'lightstick.color_forest': { ko: '포레스트', en: 'Forest' },
     'lightstick.color_coral': { ko: '코랄 파이어', en: 'Coral Fire' },
+
+    // --- 한글 건축 (사랑의 인사 샘플) ---
+    'arch.sample_title': { ko: '사랑의 인사 (Salut d\'Amour) Op.12', en: 'Salut d\'Amour, Op.12' },
+    'arch.sample_desc': { ko: '에드워드 엘가 곡을 한글 공감각 건축 메뉴얼에 따라 1~16마디 한글 자모로 번역한 결과를 시각화합니다.', en: 'Visualize bars 1–16 translated into Hangeul jamo by the Hangeul Synesthetic Architecture manual (Edward Elgar).' },
+    'arch.sample_btn': { ko: '한글 건축 체험하기', en: 'Try Hangeul Architecture' },
+    'arch.sample_video_btn': { ko: '한글 건축 영상 체험하기', en: 'Try Hangeul Architecture Video' },
+    'arch.video_btn_hint': { ko: '건축물 생성 후 영상 체험이 가능합니다.', en: 'Video experience is available after the architecture is generated.' },
+    'arch.video_btn_ready': { ko: '한글 건축 영상 체험을 시작할 수 있습니다.', en: 'You can now try the Hangeul architecture video experience.' },
+    'arch.coming_soon_title': { ko: '곧 만나요', en: 'Coming soon' },
+    'arch.coming_soon_desc': { ko: '한글 건축 체험이 곧 준비되고 있어요. Google의 프로젝트 지니(Genie)와 함께 더 풍부한 세계를 만들 수 있도록 열심히 준비 중입니다. 조금만 기다려 주세요!', en: 'Hangeul architecture experience is in preparation. We\'re working with Google\'s Project Genie to bring you richer worlds—thank you for your patience!' },
+    'arch.coming_soon_confirm': { ko: '확인', en: 'OK' },
+    'arch.genie_caption': { ko: 'Create your own worlds', en: 'Create your own worlds' },
+    'arch.genie_desc': { ko: '한글 건축 체험은 Google의 실험적 프로젝트 지니(Genie)와 함께 무한히 다양한 세계를 만들고 탐험합니다.', en: 'Hangeul architecture experience is powered by Google\'s experimental Project Genie — create and explore infinitely diverse worlds.' },
+    'arch.modal_title': { ko: '사랑의 인사 (Salut d\'Amour), Op.12', en: 'Salut d\'Amour, Op.12' },
+    'arch.modal_piece_title': { ko: '작은것들을 위한 시', en: 'A Poem for Little Things' },
+    'arch.modal_subtitle': { ko: '1~16마디 한글 자모 건축 그리드', en: 'Bars 1–16 Hangeul jamo architecture grid' },
+    'arch.nano_loading': { ko: '나노 바나나가 한글 공감각 건축 메뉴얼을 기준으로 건축물을 생성하고 있습니다...', en: 'Nano Banana is generating architecture from the Hangeul Synesthetic Architecture manual...' },
+    'arch.nano_loading_sub': { ko: '구조·멜로디·반주 요소가 건축 이미지로 변환됩니다 (약 10~30초)', en: 'Structure, melody & accompaniment become architecture (about 10–30 sec)' },
+    'arch.nano_loading_video': { ko: '한글 건축 영상을 생성하고 있습니다... (1~2분 소요될 수 있습니다)', en: 'Generating Hangeul architecture video... (may take 1–2 minutes)' },
+    'arch.nano_loading_image_first': { ko: '1단계: 악보 그리드 기준 이미지를 생성하고 있습니다...', en: 'Step 1: Generating image from sheet music grid...' },
+    'arch.modal_save_hint': { ko: '닫기 전에 저장 버튼으로 다운로드하세요.', en: 'Use the save button to download before closing.' },
+    'arch.download_video_btn': { ko: '💾 영상 저장', en: '💾 Save video' },
+    'arch.modal_result_title': { ko: '나노 바나나가 만든 한글 건축물', en: 'Hangeul architecture by Nano Banana' },
+    'arch.modal_result_subtitle': { ko: '한글 공감각 건축 시스템 표준 설계 메뉴얼 기반', en: 'Based on Hangeul Synesthetic Architecture System Standard Manual' },
+    'arch.show_grid': { ko: '📋 자모 그리드 보기', en: '📋 View jamo grid' },
+    'arch.error_title': { ko: '건축물 생성에 실패했습니다', en: 'Architecture generation failed' },
+    'arch.error_no_api_key': { ko: 'Gemini API 키가 없습니다. 프로젝트 루트에 .env 파일을 만들고 GEMINI_API_KEY=키값 을 넣은 뒤, 터미널에서 node scripts/build-config.js 를 실행하고 페이지를 새로고침해 주세요.', en: 'Gemini API key is not set. Add GEMINI_API_KEY=your_key to a .env file in the project root, run node scripts/build-config.js, then refresh the page.' },
+    'arch.build_title': { ko: '🎵 음악을 올리면 한글 건축물이 됩니다', en: '🎵 Your music becomes Hangeul architecture' },
+    'arch.build_desc': { ko: '샘플(사랑의 인사)을 선택하거나 MIDI·PDF·악보 이미지를 업로드한 뒤, 생성 버튼을 누르면 한글 건축물 이미지가 만들어지고, 그 이미지로 영상이 자동 생성됩니다.', en: 'Choose the sample (Salut d\'Amour) or upload a MIDI, PDF or sheet music image, then click Generate. Your Hangeul architecture image will be created and a video will be generated automatically from it.' },
+    'arch.use_sample': { ko: '사랑의 인사 샘플 사용', en: 'Use Salut d\'Amour sample' },
+    'arch.upload_midi': { ko: 'MIDI 파일 업로드', en: 'Upload MIDI file' },
+    'arch.upload_midi_pdf': { ko: 'MIDI · PDF · 악보 이미지 업로드', en: 'Upload MIDI, PDF or sheet image' },
+    'arch.generate_btn': { ko: '🏛️ 한글 건축물 생성', en: '🏛️ Generate Hangeul architecture' },
+    'arch.generating': { ko: '한글 건축물 이미지를 생성하고 있어요...', en: 'Generating your Hangeul architecture image...' },
+    'arch.result_title': { ko: '생성된 한글 건축물', en: 'Your Hangeul architecture' },
+    'arch.result_grid_desc': { ko: '구조·멜로디·반주 한글 자모 그리드', en: 'Structure, melody & accompaniment jamo grid' },
+    'arch.download_grid': { ko: '💾 그리드 이미지 저장', en: '💾 Save grid image' },
+    'arch.result_building_title': { ko: '4. 한글 건축 이미지', en: '4. Hangeul architecture image' },
+    'arch.concept_design_title': { ko: '3. 컨셉 디자인', en: '3. Concept design' },
+    'arch.concept_design_desc': { ko: '건축 프레젠테이션 보드 (조감도·다이어그램·플랜·퍼스펙티브)', en: 'Architectural presentation board (aerial view, diagrams, plans, perspectives)' },
+    'arch.concept_loading': { ko: '컨셉 디자인 이미지를 생성하고 있어요...', en: 'Generating concept design image...' },
+    'arch.final_building_title': { ko: '5. 최종 한글 건축물', en: '5. Final Hangeul architecture' },
+    'arch.final_building_desc': { ko: '이 이미지를 기준으로 영상이 생성됩니다.', en: 'Video is generated from this image.' },
+    'arch.final_loading': { ko: '최종 건축물 이미지를 생성하고 있어요...', en: 'Generating final building image...' },
+    'arch.result_building_desc': { ko: '나노 바나나가 한글 공감각 건축 메뉴얼로 건축물을 생성합니다', en: 'Nano Banana generates a building from the Hangeul Synesthetic Architecture manual' },
+    'arch.nano_building_loading': { ko: '건축물 이미지를 생성하고 있어요... (약 10~30초)', en: 'Generating building image... (about 10–30 sec)' },
+    'arch.error_no_api_key_short': { ko: 'API 키 설정 시 건축물 이미지를 생성할 수 있습니다.', en: 'Building image is available when API key is set.' },
+    'arch.download_btn': { ko: '💾 이미지 저장', en: '💾 Save image' },
+    'arch.video_from_image_btn': { ko: '🎬 이 이미지로 영상 생성', en: '🎬 Generate video from this image' },
+    'arch.auto_video_hint': { ko: '이미지 생성 후 같은 이미지로 영상이 자동 생성됩니다.', en: 'After the image is created, a video is generated automatically from it.' },
+    'arch.video_retry_btn': { ko: '🎬 영상 다시 생성', en: '🎬 Generate video again' },
+    'arch.generate_again': { ko: '🔄 다시 생성', en: '🔄 Generate again' },
+    'arch.status_sample': { ko: '사랑의 인사 샘플이 선택되었습니다.', en: 'Salut d\'Amour sample selected.' },
+    'arch.status_uploaded': { ko: 'MIDI 파일이 업로드되었습니다. (생성 시 샘플로 시연)', en: 'MIDI file uploaded. (Demo uses sample for now)' },
+    'arch.status_uploaded_pdf': { ko: 'PDF 파일이 업로드되었습니다. (생성 시 샘플로 시연)', en: 'PDF file uploaded. (Demo uses sample for now)' },
+    'arch.status_uploaded_image': { ko: '악보 이미지가 업로드되었습니다. (생성 시 샘플로 시연)', en: 'Sheet music image uploaded. (Demo uses sample for now)' },
 
     // --- Footer extra ---
     'footer.ai_styling_link': { ko: 'AI 스타일링', en: 'AI Styling' },

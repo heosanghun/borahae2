@@ -1471,6 +1471,142 @@
     throw new Error('No image in response');
   }
 
+  /**
+   * Veo 3.1 텍스트→영상 생성 시작 (REST predictLongRunning)
+   * @returns {Promise<string>} operation name (e.g. "operations/xxx")
+   */
+  async function startVeoVideoGeneration(prompt) {
+    var url = 'https://generativelanguage.googleapis.com/v1beta/models/veo-3.1-generate-preview:predictLongRunning?key=' + encodeURIComponent(GEMINI_API_KEY);
+    var res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        instances: [{ prompt: prompt }],
+        parameters: { aspectRatio: '16:9' }
+      })
+    });
+    var data = await res.json();
+    if (data.error) throw new Error(data.error.message || 'Veo API error');
+    if (!res.ok) throw new Error(data.message || 'Veo request failed');
+    if (!data.name) throw new Error('No operation name in Veo response');
+    return data.name;
+  }
+
+  /**
+   * 이미지를 Gemini Files API로 업로드하고 file.uri 반환 (Veo 이미지 참조용)
+   */
+  async function uploadImageToGeminiFiles(imageBase64) {
+    var binary = atob(imageBase64);
+    var bytes = new Uint8Array(binary.length);
+    for (var i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    var numBytes = bytes.length;
+    var mimeType = 'image/png';
+
+    var startUrl = 'https://generativelanguage.googleapis.com/upload/v1beta/files?key=' + encodeURIComponent(GEMINI_API_KEY);
+    var startRes = await fetch(startUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Goog-Upload-Protocol': 'resumable',
+        'X-Goog-Upload-Command': 'start',
+        'X-Goog-Upload-Header-Content-Length': String(numBytes),
+        'X-Goog-Upload-Header-Content-Type': mimeType
+      },
+      body: JSON.stringify({ file: { display_name: 'hangeul-architecture-frame.png' } })
+    });
+    if (!startRes.ok) throw new Error('Files API start failed: ' + startRes.status);
+    var uploadUrl = startRes.headers.get('x-goog-upload-url');
+    if (!uploadUrl) throw new Error('No upload URL in Files API response');
+
+    var uploadRes = await fetch(uploadUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Length': String(numBytes),
+        'X-Goog-Upload-Offset': '0',
+        'X-Goog-Upload-Command': 'upload, finalize'
+      },
+      body: bytes
+    });
+    if (!uploadRes.ok) throw new Error('Files API upload failed: ' + uploadRes.status);
+    var fileInfo = await uploadRes.json();
+    var uri = fileInfo.file && fileInfo.file.uri;
+    if (!uri) throw new Error('No file URI in upload response');
+    return uri;
+  }
+
+  /**
+   * Veo 3.1 영상 생성. REST predictLongRunning는 image/fileUri/imageBytes 미지원하므로 텍스트 프롬프트만 전송.
+   * (생성된 건축 이미지 내용을 설명하는 프롬프트로 영상 테마 유지)
+   */
+  async function startVeoVideoGenerationFromImage(prompt, imageBase64) {
+    var url = 'https://generativelanguage.googleapis.com/v1beta/models/veo-3.1-generate-preview:predictLongRunning?key=' + encodeURIComponent(GEMINI_API_KEY);
+    var body = {
+      instances: [{ prompt: prompt }],
+      parameters: { aspectRatio: '16:9' }
+    };
+    var res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    var data = await res.json();
+    if (data.error) throw new Error(data.error.message || 'Veo API error');
+    if (!res.ok) throw new Error(data.message || 'Veo request failed');
+    if (!data.name) throw new Error('No operation name in Veo response');
+    return data.name;
+  }
+
+  /**
+   * Veo 오퍼레이션 폴링 (완료 시 응답 반환)
+   */
+  async function pollVeoOperation(operationName) {
+    var url = 'https://generativelanguage.googleapis.com/v1beta/' + operationName + '?key=' + encodeURIComponent(GEMINI_API_KEY);
+    for (var i = 0; i < 60; i++) {
+      var res = await fetch(url);
+      var data = await res.json();
+      if (data.error) throw new Error(data.error.message || 'Veo poll error');
+      if (data.done) return data;
+      await new Promise(function(r) { setTimeout(r, 10000); });
+    }
+    throw new Error('Veo video generation timed out');
+  }
+
+  /**
+   * Veo 결과 비디오 URI로부터 Blob 다운로드
+   */
+  async function fetchVeoVideoBlob(videoUri) {
+    var url = videoUri + (videoUri.indexOf('?') >= 0 ? '&' : '?') + 'key=' + encodeURIComponent(GEMINI_API_KEY);
+    var res = await fetch(url);
+    if (!res.ok) throw new Error('Video download failed');
+    return await res.blob();
+  }
+
+  /**
+   * 악보 이미지에서 곡 제목·아티스트 추출 (Gemini 텍스트 응답)
+   */
+  async function callGeminiImageToText(imageDataUrl, prompt) {
+    var parsed = parseDataUrl(imageDataUrl);
+    if (!parsed) throw new Error('Invalid image data');
+    var parts = [
+      { inlineData: { mimeType: parsed.mimeType, data: parsed.data } },
+      { text: prompt }
+    ];
+    var url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + encodeURIComponent(GEMINI_API_KEY);
+    var res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: parts }],
+        generationConfig: { maxOutputTokens: 200, temperature: 0.2 }
+      })
+    });
+    var data = await res.json();
+    if (data.error) throw new Error(data.error.message || 'Gemini error');
+    if (!res.ok) throw new Error(data.message || 'API error');
+    var text = data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0] && data.candidates[0].content.parts[0].text;
+    return (text && text.trim()) ? text.trim() : '';
+  }
+
   function compressFacePhoto(dataUrl, maxSize) {
     maxSize = maxSize || 768;
     return new Promise(function (resolve) {
@@ -2300,6 +2436,541 @@
     openBtn.addEventListener('click', openLightstickModal);
     lsCloseBtn.addEventListener('click', closeLightstickModal);
     lsModal.addEventListener('click', function(e) { if (e.target === lsModal) closeLightstickModal(); });
+
+    // 한글 건축 체험: 나노 바나나(Gemini)로 한글 공감각 건축 메뉴얼 기반 건축물 이미지 생성
+    var archModal = document.getElementById('architecture-modal');
+    var archCloseBtn = document.getElementById('architecture-modal-close');
+    var openArchBtn = document.getElementById('open-architecture-btn');
+    var archContainer = document.getElementById('architecture-grid-container');
+    var archLoading = document.getElementById('arch-modal-loading');
+    var archResult = document.getElementById('arch-modal-result');
+    var archError = document.getElementById('arch-modal-error');
+    var archNanoImage = document.getElementById('arch-nano-image');
+    var archNanoDownload = document.getElementById('arch-nano-download');
+    var archShowGridBtn = document.getElementById('arch-show-grid-btn');
+    var archGridWrap = document.getElementById('architecture-grid-wrap');
+    var archErrorMsg = document.getElementById('arch-modal-error-msg');
+    var archRetryBtn = document.getElementById('arch-retry-btn');
+
+    function buildArchitecturePrompt() {
+      return 'Generate a single photorealistic architectural image based on the following system.\n\n'
+        + '**Hangeul Synesthetic Architecture System (한글 공감각 건축):**\n'
+        + '- Structure: foundations, walls, ornament (windows, facades), beams, columns, expressed with 7 colors (Do=red, Re=orange, Mi=yellow, Fa=green, Sol=blue, La=indigo, Si=violet) and Hangeul jamo shapes.\n'
+        + '- Input piece: "Salut d\'Amour" Op.12. Express bass, melody, accompaniments as Hangeul-inspired architecture with the 7 colors.\n\n'
+        + '**Task:** Draw a beautiful, real-house-like main building that embodies this system. The building must feel distinctly Korean/Hangeul: use traditional Korean aesthetic cues (e.g. gentle roof lines, warm wood or hanok-inspired proportions, Hangeul jamo or calligraphic patterns on walls, gates, or facades—not just blocky letters, but elegant integration of 한글). Use the 7 colors in harmony. The main house should have a **yard (마당)** in front: open ground, maybe a few stepping stones or a low wall, so it looks like a real home.\n'
+        + '**Surroundings (required):** Show a **village-like context**: other small houses or structures in the background, narrow paths, perhaps trees or plants, so the scene looks like a peaceful Korean village or neighborhood, not an isolated building. Natural, lived-in atmosphere.\n'
+        + '**Style (required):** Photorealistic, natural daylight, soft shadows, detailed textures (tiles, wood, stone). Beautiful and serene. No text or labels in the image. One cohesive scene: main house with yard + village around it.\n\n'
+        + '**Composition:** Frame the main house with its yard in the foreground; village and surroundings in the mid/background. Entire scene visible, natural environment, no plain white background.';
+    }
+
+    function showArchLoading() {
+      if (archLoading) archLoading.style.display = 'block';
+      if (archResult) archResult.style.display = 'none';
+      if (archError) archError.style.display = 'none';
+      if (archGridWrap) archGridWrap.style.display = 'none';
+    }
+    var lastArchNanoBase64 = null;
+    var lastArchNanoVideoBlob = null;
+    var archNanoVideo = document.getElementById('arch-nano-video');
+
+    function showArchResult(imageBase64) {
+      lastArchNanoBase64 = imageBase64;
+      lastArchNanoVideoBlob = null;
+      if (archLoading) archLoading.style.display = 'none';
+      if (archError) archError.style.display = 'none';
+      if (archResult) archResult.style.display = 'block';
+      if (archNanoImage) {
+        archNanoImage.src = 'data:image/png;base64,' + imageBase64;
+        archNanoImage.style.display = '';
+      }
+      if (archNanoVideo) archNanoVideo.style.display = 'none';
+      if (archNanoDownload) {
+        archNanoDownload.href = 'data:image/png;base64,' + imageBase64;
+        archNanoDownload.download = 'hangeul-architecture-nano.png';
+        archNanoDownload.textContent = (window.__simsI18n && window.__simsI18n.t) ? window.__simsI18n.t('arch.download_btn') : '💾 이미지 저장';
+        archNanoDownload.removeAttribute('disabled');
+        archNanoDownload.style.pointerEvents = 'auto';
+        archNanoDownload.style.opacity = '1';
+      }
+    }
+
+    function showArchVideoResult(videoBlob) {
+      lastArchNanoBase64 = null;
+      lastArchNanoVideoBlob = videoBlob;
+      if (archLoading) archLoading.style.display = 'none';
+      if (archError) archError.style.display = 'none';
+      if (archResult) archResult.style.display = 'block';
+      if (archNanoImage) archNanoImage.style.display = 'none';
+      if (archNanoVideo) {
+        archNanoVideo.src = URL.createObjectURL(videoBlob);
+        archNanoVideo.style.display = '';
+      }
+      if (archNanoDownload) {
+        archNanoDownload.href = '#';
+        archNanoDownload.download = 'hangeul-architecture-nano.mp4';
+        archNanoDownload.textContent = (window.__simsI18n && window.__simsI18n.t) ? window.__simsI18n.t('arch.download_video_btn') : '💾 영상 저장';
+        archNanoDownload.style.pointerEvents = 'auto';
+        archNanoDownload.style.opacity = '1';
+      }
+    }
+    function showArchError(message) {
+      if (archLoading) archLoading.style.display = 'none';
+      if (archResult) archResult.style.display = 'none';
+      if (archError) archError.style.display = 'block';
+      if (archErrorMsg) archErrorMsg.textContent = message || '';
+    }
+
+    function closeArchitectureModal() {
+      if (archModal) {
+        archModal.classList.remove('active');
+        archModal.setAttribute('aria-hidden', 'true');
+      }
+      document.body.style.overflow = '';
+    }
+
+    function getArchErrorText(key) {
+      return (window.__simsI18n && window.__simsI18n.t) ? window.__simsI18n.t(key) : key;
+    }
+
+    function buildArchitectureVideoPrompt() {
+      return 'A cinematic, isometric 8-second video of a single 3D architectural structure. The building is made of colorful blocks in red, orange, yellow, green, blue, indigo, and violet, with clear structural parts (base, walls), decorative facades (windows, openings), and connecting elements (beams, columns, a spiral element). Style: clean architectural visualization, Hangeul synesthetic architecture. The camera slowly orbits or pans around the building. Centered in frame, plain background. No text or labels. One cohesive building that looks like music translated into architecture.';
+    }
+
+    function buildArchitectureVideoPromptFromImage() {
+      return 'Cinematic 8-second video of the EXACT SAME building shown in the attached image. This is the final Hangeul architecture building—maintain the same building shape, roof form, color distribution (7 colors: red, orange, yellow, green, blue, indigo, violet), yard (마당) layout, and surrounding village context as shown in the image. The camera slowly orbits or pans around the house and yard; other small houses and paths visible in the background. Photorealistic, natural daylight, soft shadows. No text or labels. Serene, lived-in atmosphere. Keep the building design consistent with the attached image—this video is part of the same architectural story (concept board → final building → video).';
+    }
+
+    async function runNanoBananaArchitecture() {
+      showArchLoading();
+      var loadingText = document.getElementById('arch-modal-loading-text');
+      if (loadingText) loadingText.setAttribute('data-i18n', 'arch.nano_loading');
+      if (archModal) {
+        archModal.classList.add('active');
+        archModal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      }
+
+      if (!GEMINI_API_KEY) {
+        showArchError(getArchErrorText('arch.error_no_api_key'));
+        return;
+      }
+
+      try {
+        var prompt = buildArchitecturePrompt();
+        var imageBase64 = await callGeminiImageGeneration(prompt, null);
+        if (imageBase64) showArchResult(imageBase64);
+        else showArchError('이미지가 생성되지 않았습니다.');
+      } catch (err) {
+        var msg = (err && err.message) ? String(err.message) : '';
+        if (/unregistered callers|API Key|API key|identity/i.test(msg)) {
+          msg = getArchErrorText('arch.error_no_api_key');
+        }
+        showArchError(msg || '나노 바나나(Gemini) 생성 중 오류가 발생했습니다.');
+        console.error('Architecture generation error:', err);
+      }
+    }
+
+    async function runNanoBananaArchitectureVideo() {
+      showArchLoading();
+      var loadingText = document.getElementById('arch-modal-loading-text');
+      function setLoadingVideo() {
+        if (loadingText) {
+          loadingText.setAttribute('data-i18n', 'arch.nano_loading_video');
+          loadingText.textContent = (window.__simsI18n && window.__simsI18n.t) ? window.__simsI18n.t('arch.nano_loading_video') : '한글 건축 영상을 생성하고 있습니다... (1~2분 소요될 수 있습니다)';
+        }
+      }
+      function setLoadingImage() {
+        if (loadingText) {
+          loadingText.textContent = (window.__simsI18n && window.__simsI18n.t) ? window.__simsI18n.t('arch.nano_loading_image_first') : '1단계: 악보 그리드 기준 이미지를 생성하고 있습니다...';
+        }
+      }
+      if (archModal) {
+        archModal.classList.add('active');
+        archModal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      }
+
+      if (!GEMINI_API_KEY) {
+        showArchError(getArchErrorText('arch.error_no_api_key'));
+        return;
+      }
+
+      try {
+        var imageBase64 = window.__lastArchBuildingImageBase64 || null;
+        if (!imageBase64) {
+          setLoadingImage();
+          var imgPrompt = buildArchitecturePrompt();
+          imageBase64 = await callGeminiImageGeneration(imgPrompt, null);
+          if (!imageBase64) {
+            showArchError('이미지가 생성되지 않아 영상을 만들 수 없습니다.');
+            return;
+          }
+          window.__lastArchBuildingImageBase64 = imageBase64;
+        }
+        setLoadingVideo();
+        var videoPrompt = buildArchitectureVideoPromptFromImage();
+        var opName = await startVeoVideoGenerationFromImage(videoPrompt, imageBase64);
+        var result = await pollVeoOperation(opName);
+        var videoUri = result.response && result.response.generateVideoResponse && result.response.generateVideoResponse.generatedSamples && result.response.generateVideoResponse.generatedSamples[0] && result.response.generateVideoResponse.generatedSamples[0].video && result.response.generateVideoResponse.generatedSamples[0].video.uri;
+        if (!videoUri) {
+          showArchError('영상 생성 결과를 가져올 수 없습니다.');
+          return;
+        }
+        var blob = await fetchVeoVideoBlob(videoUri);
+        showArchVideoResult(blob);
+      } catch (err) {
+        var msg = (err && err.message) ? String(err.message) : '';
+        if (/unregistered callers|API Key|API key|identity|quota|not available|403|404/i.test(msg)) {
+          msg = getArchErrorText('arch.error_no_api_key') + ' (Veo 영상 생성은 별도 활성화가 필요할 수 있습니다.)';
+        }
+        showArchError(msg || '한글 건축 영상 생성 중 오류가 발생했습니다.');
+        console.error('Architecture video error:', err);
+      }
+    }
+
+    var archComingSoonModal = document.getElementById('arch-coming-soon-modal');
+    var archComingSoonClose = document.getElementById('arch-coming-soon-close');
+    var archComingSoonConfirm = document.getElementById('arch-coming-soon-confirm');
+    function openArchComingSoonModal() {
+      if (archComingSoonModal) {
+        archComingSoonModal.classList.add('active');
+        archComingSoonModal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+    function closeArchComingSoonModal() {
+      if (archComingSoonModal) {
+        archComingSoonModal.classList.remove('active');
+        archComingSoonModal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+    }
+    if (archComingSoonClose) archComingSoonClose.addEventListener('click', closeArchComingSoonModal);
+    if (archComingSoonConfirm) archComingSoonConfirm.addEventListener('click', closeArchComingSoonModal);
+    if (archComingSoonModal) archComingSoonModal.addEventListener('click', function(e) { if (e.target === archComingSoonModal) closeArchComingSoonModal(); });
+
+    if (archModal && openArchBtn) {
+      openArchBtn.addEventListener('click', function() {
+        openArchComingSoonModal();
+      });
+      archCloseBtn.addEventListener('click', closeArchitectureModal);
+      archModal.addEventListener('click', function(e) { if (e.target === archModal) closeArchitectureModal(); });
+    }
+
+    var openArchVideoBtn = document.getElementById('open-architecture-video-btn');
+    if (archModal && openArchVideoBtn) {
+      openArchVideoBtn.addEventListener('click', function() { runNanoBananaArchitectureVideo(); });
+    }
+    var archVideoFromBuildingBtn = document.getElementById('arch-video-from-building-btn');
+    if (archVideoFromBuildingBtn) {
+      archVideoFromBuildingBtn.addEventListener('click', function() { runNanoBananaArchitectureVideo(); });
+    }
+    var archVideoFromFinalBtn = document.getElementById('arch-video-from-final-btn');
+    if (archVideoFromFinalBtn) {
+      archVideoFromFinalBtn.addEventListener('click', function() { runNanoBananaArchitectureVideo(); });
+    }
+
+    if (archNanoDownload) {
+      archNanoDownload.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        try {
+          if (lastArchNanoVideoBlob) {
+            var url = URL.createObjectURL(lastArchNanoVideoBlob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'hangeul-architecture-nano.mp4';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            return;
+          }
+          if (!lastArchNanoBase64) return;
+          var bin = atob(lastArchNanoBase64);
+          var arr = new Uint8Array(bin.length);
+          for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+          var blob = new Blob([arr], { type: 'image/png' });
+          var url = URL.createObjectURL(blob);
+          var a = document.createElement('a');
+          a.href = url;
+          a.download = 'hangeul-architecture-nano.png';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        } catch (err) { console.error('Download failed:', err); }
+      });
+    }
+
+    if (archShowGridBtn && archContainer && archGridWrap && typeof window.HANGEUL_ARCHITECTURE !== 'undefined') {
+      archShowGridBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var isHidden = archGridWrap.style.display === 'none';
+        archGridWrap.style.display = isHidden ? 'block' : 'none';
+        var lang = (window.__simsI18n && window.__simsI18n.getLang()) ? window.__simsI18n.getLang() : (document.documentElement.lang || 'ko');
+        if (isHidden) {
+          window.HANGEUL_ARCHITECTURE.renderArchitectureGrid(archContainer, { lang: lang });
+          archGridWrap.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }
+      });
+    }
+    if (archRetryBtn) {
+      archRetryBtn.addEventListener('click', runNanoBananaArchitecture);
+    }
+
+    // 음악 입력 → 한글 건축물 이미지 생성 (샘플 / MIDI 업로드 → 생성 버튼 → 이미지)
+    (function initArchitectureGenerate() {
+      var useSampleBtn = document.getElementById('arch-use-sample-btn');
+      var midiInput = document.getElementById('arch-midi-input');
+      var statusEl = document.getElementById('arch-input-status');
+      var generateBtn = document.getElementById('arch-generate-btn');
+      var loadingEl = document.getElementById('arch-loading');
+      var resultEl = document.getElementById('arch-result');
+      var resultImg = document.getElementById('arch-result-image');
+      var downloadLink = document.getElementById('arch-download-link');
+      var againBtn = document.getElementById('arch-generate-again-btn');
+
+      if (!useSampleBtn || !generateBtn || !resultImg || typeof window.HANGEUL_ARCHITECTURE === 'undefined') return;
+
+      function t(key) {
+        return (window.__simsI18n && window.__simsI18n.t) ? window.__simsI18n.t(key) : key;
+      }
+      function setInputReady(message) {
+        if (statusEl) statusEl.textContent = message;
+        generateBtn.disabled = false;
+      }
+
+      var archUploadedImageDataUrl = null;
+
+      useSampleBtn.addEventListener('click', function() {
+        if (midiInput) midiInput.value = '';
+        archUploadedImageDataUrl = null;
+        setInputReady(t('arch.status_sample'));
+      });
+
+      if (midiInput) {
+        midiInput.addEventListener('change', function() {
+          var file = this.files && this.files[0];
+          if (file) {
+            var isPdf = file.type === 'application/pdf' || (file.name && file.name.toLowerCase().endsWith('.pdf'));
+            var isImage = (file.type && file.type.indexOf('image/') === 0) || (file.name && /\.(png|jpe?g|gif|webp)$/i.test(file.name));
+            if (isImage) {
+              var fr = new FileReader();
+              fr.onload = function() { archUploadedImageDataUrl = fr.result; };
+              fr.readAsDataURL(file);
+            } else {
+              archUploadedImageDataUrl = null;
+            }
+            var msg = isPdf ? t('arch.status_uploaded_pdf') : isImage ? t('arch.status_uploaded_image') : t('arch.status_uploaded');
+            setInputReady(msg);
+          } else {
+            archUploadedImageDataUrl = null;
+            if (statusEl) statusEl.textContent = '';
+            generateBtn.disabled = true;
+          }
+        });
+      }
+
+      function buildArchitecturePromptForNano(pieceTitle, useSheetImage) {
+        var pieceLine = (pieceTitle && useSheetImage)
+          ? ('The attached image is sheet music for the piece: **' + pieceTitle + '**. ')
+          : 'Input piece: "Salut d\'Amour" (Love\'s Greeting) Op.12, E Major. ';
+        return 'Generate a single photorealistic architectural image based on the following system.\n\n'
+          + '**Hangeul Synesthetic Architecture System (한글 공감각 건축):**\n'
+          + '- Structure: foundations, walls, ornament (windows, facades), beams, columns, expressed with 7 colors (Do=red, Re=orange, Mi=yellow, Fa=green, Sol=blue, La=indigo, Si=violet) and Hangeul jamo shapes.\n'
+          + '- ' + pieceLine + 'Express bass, melody, accompaniments as Hangeul-inspired architecture with the 7 colors.\n\n'
+          + '**Task:** Draw a beautiful, real-house-like main building that embodies this system and represents THIS piece of music. The building must feel distinctly Korean/Hangeul: use traditional Korean aesthetic cues (e.g. gentle roof lines, warm wood or hanok-inspired proportions, Hangeul jamo or calligraphic patterns on walls, gates, or facades—elegant integration of 한글, not just blocky letters). Use the 7 colors in harmony. The main house should have a **yard (마당)** in front: open ground, stepping stones or a low wall, so it looks like a real home.\n'
+          + '**Surroundings (required):** Show a **village-like context**: other small houses or structures in the background, narrow paths, trees or plants, so the scene looks like a peaceful Korean village or neighborhood, not an isolated building. Natural, lived-in atmosphere.\n'
+          + '**Style (required):** Photorealistic, natural daylight, soft shadows, detailed textures (tiles, wood, stone). Beautiful and serene. No text or labels. One cohesive scene: main house with yard + village around it.\n\n'
+          + '**Composition:** Frame the main house with its yard in the foreground; village and surroundings in the mid/background. Entire scene visible, natural environment, no plain white background.';
+      }
+
+      /** 3단계: 컨셉 디자인 — 참조 이미지(최종 건축물)와 동일한 건축물이 보드에 나오도록 (일치성 확보) */
+      function buildArchitectureConceptDesignPromptFromReference(pieceTitle, useSheetImage) {
+        var pieceLine = (pieceTitle && useSheetImage) ? ('Project title: "Hangeul Culture Sharing Block @ ' + pieceTitle + '". ') : 'Project title: "Hangeul Culture Sharing Block @ Salut d\'Amour". ';
+        return 'Generate a single architectural concept design PRESENTATION BOARD (one image), professional and clean.\n\n'
+          + '**CRITICAL — BUILDING IDENTITY (MANDATORY CONSISTENCY):** The ATTACHED image is the KEY BUILDING. This is the SINGLE SOURCE OF TRUTH. You MUST depict THIS EXACT SAME BUILDING in your board:\n'
+          + '- Same building shape, roof form, and proportions\n'
+          + '- Same color distribution (7 colors: red, orange, yellow, green, blue, indigo, violet)\n'
+          + '- Same yard (마당) layout and surrounding structures\n'
+          + '- Same Hangeul-inspired patterns or jamo elements\n'
+          + 'Do NOT invent a different building. Do NOT change the building design. The aerial view at the top of the board must show THIS EXACT BUILDING from above. The perspective thumbnails (3–6 images) must show THE SAME BUILDING from different angles. Every building shown in the board must be the same as the attached image. Consistency is mandatory—this building will also be used for video generation.\n\n'
+          + '**Board layout (like Have A Nice Place @ Culture Sharing Block):** Top = aerial 3D bird\'s-eye view featuring THE ATTACHED BUILDING and its site (yard, paths, surrounding structures). Below or around: small diagrams (concept, massing evolution, program diagram with icons), simplified floor plans, one exploded axonometric, and 3–6 perspective thumbnails in a grid—ALL showing THE SAME ATTACHED BUILDING. Muted palette for board background: whites, light grays, beige, soft greens. The building itself keeps its 7 colors from the attached image. One cohesive presentation board. No long text labels; minimal annotations only. Architectural competition style.';
+      }
+
+      /** 5단계: 최종 한글 건축물 (영상·컨셉보드 일치성의 기준 이미지) — 샘플 스타일 반영 */
+      function buildArchitectureFinalBuildingPrompt(pieceTitle, useSheetImage) {
+        var pieceLine = (pieceTitle && useSheetImage) ? ('Piece: ' + pieceTitle + '. ') : 'Piece: Salut d\'Amour. ';
+        return 'Generate ONE final architectural image. This image is the SINGLE SOURCE OF TRUTH for both the concept board and the video. It will be shown in an aerial view in the concept board and animated in the video—make it distinctive and recognizable.\n\n'
+          + '**Hangeul Synesthetic Architecture:** ' + pieceLine + 'One main building: 7 colors (red, orange, yellow, green, blue, indigo, violet) distributed clearly across the building (e.g. colored blocks, patterns, or sections). Hangeul jamo-inspired shapes integrated elegantly (not just blocky letters). Korean aesthetic: front yard (마당) with stepping stones or low walls, traditional-modern blend (gentle roof lines, warm materials like wood/tiles). Village context: other small structures or narrow paths visible in the background. Photorealistic, natural daylight, soft shadows, detailed textures (tiles, wood, stone).\n\n'
+          + '**Composition:** Single centered building, full structure visible from eye-level perspective. No text or labels. Clear silhouette, distinctive roof shape, and recognizable color distribution so this EXACT building can be identified from above (aerial view) and from different angles. The building design must be consistent enough that it can be redrawn in a concept board\'s aerial view and perspective thumbnails while maintaining the same identity. This image will be reused as-is in the concept board and as the video keyframe—keep the design strong, memorable, and consistent.';
+      }
+
+      var nanoLoadingEl = document.getElementById('arch-nano-loading');
+      var nanoBuildingWrap = document.getElementById('arch-nano-building-wrap');
+      var nanoBuildingImg = document.getElementById('arch-nano-building-image');
+      var nanoBuildingDownload = document.getElementById('arch-nano-building-download');
+      var nanoBuildingError = document.getElementById('arch-nano-building-error');
+      var archConceptLoading = document.getElementById('arch-concept-loading');
+      var archConceptWrap = document.getElementById('arch-concept-wrap');
+      var archConceptImage = document.getElementById('arch-concept-image');
+      var archConceptDownload = document.getElementById('arch-concept-download');
+      var archFinalLoading = document.getElementById('arch-final-loading');
+      var archFinalWrap = document.getElementById('arch-final-wrap');
+      var archFinalImage = document.getElementById('arch-final-image');
+      var archFinalDownload = document.getElementById('arch-final-download');
+
+      function doGenerate() {
+        loadingEl.style.display = 'block';
+        resultEl.style.display = 'none';
+        generateBtn.disabled = true;
+        var videoBtn = document.getElementById('open-architecture-video-btn');
+        var videoHint = document.getElementById('arch-video-hint');
+        if (videoBtn) {
+          videoBtn.disabled = true;
+          videoBtn.style.opacity = '0.7';
+          videoBtn.style.cursor = 'not-allowed';
+        }
+        if (videoHint) videoHint.setAttribute('data-i18n', 'arch.video_btn_hint');
+        if (nanoLoadingEl) nanoLoadingEl.style.display = 'none';
+        if (nanoBuildingWrap) nanoBuildingWrap.style.display = 'none';
+        if (nanoBuildingError) nanoBuildingError.style.display = 'none';
+        if (archConceptLoading) archConceptLoading.style.display = 'none';
+        if (archConceptWrap) archConceptWrap.style.display = 'none';
+        if (archFinalLoading) archFinalLoading.style.display = 'none';
+        if (archFinalWrap) archFinalWrap.style.display = 'none';
+
+        var lang = (window.__simsI18n && window.__simsI18n.getLang()) ? window.__simsI18n.getLang() : (document.documentElement.lang || 'ko');
+        var bars = window.HANGEUL_ARCHITECTURE.SALUT_DAMOUR_BARS;
+        var hasSheetImage = !!archUploadedImageDataUrl;
+
+        (async function() {
+          var pieceTitle = null;
+          if (hasSheetImage && typeof callGeminiImageToText === 'function' && GEMINI_API_KEY) {
+            try {
+              pieceTitle = await callGeminiImageToText(archUploadedImageDataUrl,
+                'This image is sheet music. Reply with ONLY the piece title and artist in one line, e.g. "Dynamite - BTS". No other text.');
+            } catch (e) {
+              pieceTitle = null;
+            }
+          }
+          if (hasSheetImage && !pieceTitle) pieceTitle = lang === 'ko' ? '업로드한 악보' : 'Uploaded sheet music';
+          var titleForGrid = pieceTitle || (lang === 'ko' ? '사랑의 인사 (Salut d\'Amour), Op.12' : 'Salut d\'Amour, Op.12');
+          var dataUrl = window.HANGEUL_ARCHITECTURE.generateArchitectureImage(bars, { lang: lang, title: titleForGrid });
+
+          resultImg.src = dataUrl;
+          downloadLink.href = dataUrl;
+          downloadLink.download = 'hangeul-architecture-grid.png';
+          loadingEl.style.display = 'none';
+          resultEl.style.display = 'block';
+          generateBtn.disabled = false;
+
+          if (!GEMINI_API_KEY) {
+            if (nanoBuildingError) {
+              nanoBuildingError.textContent = t('arch.error_no_api_key_short');
+              nanoBuildingError.style.display = 'block';
+            }
+            return;
+          }
+          var sheetImageForNano = hasSheetImage ? archUploadedImageDataUrl : null;
+          try {
+            // [일치성 확보] 5단계 최종 건축물을 먼저 생성 → 컨셉 보드는 이 이미지를 참조하여 동일 건축물로 그림
+            if (archFinalLoading) archFinalLoading.style.display = 'block';
+            var finalPrompt = buildArchitectureFinalBuildingPrompt(pieceTitle || titleForGrid, hasSheetImage);
+            var finalBase64 = await callGeminiImageGeneration(finalPrompt, sheetImageForNano);
+            if (archFinalLoading) archFinalLoading.style.display = 'none';
+            if (!finalBase64) {
+              if (nanoBuildingError) {
+                nanoBuildingError.textContent = t('arch.error_no_api_key_short');
+                nanoBuildingError.style.display = 'block';
+              }
+            } else {
+              if (archFinalWrap && archFinalImage) {
+                archFinalImage.src = 'data:image/png;base64,' + finalBase64;
+                archFinalDownload.href = 'data:image/png;base64,' + finalBase64;
+                archFinalDownload.download = 'hangeul-architecture-final.png';
+                archFinalWrap.style.display = 'block';
+              }
+              window.__lastArchBuildingImageBase64 = finalBase64;
+
+              // 3단계: 컨셉 디자인 — 최종 건축물 이미지를 참조하여 같은 건축물이 보드에 나오도록
+              // (최종 건축물이 성공했을 때만 컨셉 생성 시도)
+              try {
+                if (archConceptLoading) archConceptLoading.style.display = 'block';
+                var conceptPrompt = buildArchitectureConceptDesignPromptFromReference(pieceTitle || titleForGrid, hasSheetImage);
+                var conceptBase64 = await callGeminiImageGeneration(conceptPrompt, 'data:image/png;base64,' + finalBase64);
+                if (archConceptLoading) archConceptLoading.style.display = 'none';
+                if (conceptBase64 && archConceptWrap && archConceptImage) {
+                  archConceptImage.src = 'data:image/png;base64,' + conceptBase64;
+                  if (archConceptDownload) {
+                    archConceptDownload.href = 'data:image/png;base64,' + conceptBase64;
+                    archConceptDownload.download = 'hangeul-architecture-concept.png';
+                  }
+                  archConceptWrap.style.display = 'block';
+                }
+              } catch (conceptErr) {
+                if (archConceptLoading) archConceptLoading.style.display = 'none';
+                console.warn('Concept design generation failed, but final building is ready:', conceptErr);
+                // 컨셉 생성 실패해도 최종 건축물은 유지 (영상 생성 가능)
+              }
+
+              // 4단계: 한글 건축 이미지 (독립 생성, 실패해도 최종 건축물과 영상은 유지)
+              try {
+                if (nanoLoadingEl) nanoLoadingEl.style.display = 'block';
+                var nanoPrompt = buildArchitecturePromptForNano(pieceTitle || titleForGrid, hasSheetImage);
+                var imageBase64 = await callGeminiImageGeneration(nanoPrompt, sheetImageForNano);
+                if (nanoLoadingEl) nanoLoadingEl.style.display = 'none';
+                if (imageBase64 && nanoBuildingWrap && nanoBuildingImg) {
+                  nanoBuildingImg.src = 'data:image/png;base64,' + imageBase64;
+                  nanoBuildingDownload.href = 'data:image/png;base64,' + imageBase64;
+                  nanoBuildingDownload.download = 'hangeul-architecture-building.png';
+                  nanoBuildingWrap.style.display = 'block';
+                  if (nanoBuildingError) nanoBuildingError.style.display = 'none';
+                } else if (nanoBuildingError) {
+                  nanoBuildingError.textContent = t('arch.error_no_api_key_short');
+                  nanoBuildingError.style.display = 'block';
+                }
+              } catch (nanoErr) {
+                if (nanoLoadingEl) nanoLoadingEl.style.display = 'none';
+                console.warn('Nano building generation failed, but final building is ready:', nanoErr);
+                if (nanoBuildingError) {
+                  nanoBuildingError.textContent = (nanoErr && nanoErr.message) ? String(nanoErr.message) : t('arch.error_no_api_key_short');
+                  nanoBuildingError.style.display = 'block';
+                }
+              }
+
+              // 최종 건축물이 성공했으므로 영상 생성 가능 (일치성 확보: 컨셉·최종·영상 모두 같은 건축물)
+              if (videoBtn) {
+                videoBtn.disabled = false;
+                videoBtn.style.opacity = '';
+                videoBtn.style.cursor = '';
+              }
+              if (videoHint) {
+                videoHint.setAttribute('data-i18n', 'arch.video_btn_ready');
+                videoHint.textContent = (window.__simsI18n && window.__simsI18n.t) ? window.__simsI18n.t('arch.video_btn_ready') : '한글 건축 영상 체험을 시작할 수 있습니다.';
+              }
+              // 최종 건축물 이미지 기준으로 영상 자동 생성 (일치성: 컨셉·최종·영상 모두 같은 건축물)
+              runNanoBananaArchitectureVideo().catch(function(e) {
+                console.error('Auto architecture video start failed', e);
+              });
+            }
+          } catch (err) {
+            if (nanoLoadingEl) nanoLoadingEl.style.display = 'none';
+            if (archConceptLoading) archConceptLoading.style.display = 'none';
+            if (archFinalLoading) archFinalLoading.style.display = 'none';
+            if (nanoBuildingError) {
+              nanoBuildingError.textContent = (err && err.message) ? String(err.message) : t('arch.error_no_api_key_short');
+              nanoBuildingError.style.display = 'block';
+            }
+          }
+        })();
+      }
+
+      generateBtn.addEventListener('click', doGenerate);
+      if (againBtn) againBtn.addEventListener('click', doGenerate);
+    })();
 
     // Step navigation
     function showLsStep(n) {

@@ -5415,3 +5415,131 @@ section {
     padding: 20px 16px;
   }
 }
+
+/* ========================================
+   한글 공감각 건축 그리드 (사랑의 인사 샘플)
+   ======================================== */
+.info-modal-content--wide {
+  max-width: 960px;
+}
+
+/* 지니 스타일 · 곧 만나요 안내 팝업 */
+.genie-coming-soon-modal .genie-coming-soon-content {
+  background: #fff;
+}
+.genie-coming-soon-inner {
+  width: 100%;
+}
+@media (max-width: 480px) {
+  .genie-coming-soon-inner {
+    flex-direction: column;
+  }
+  .genie-coming-soon-visual {
+    min-height: 160px !important;
+    width: 100%;
+  }
+  .genie-coming-soon-text {
+    min-width: 100% !important;
+  }
+}
+
+.architecture-grid-container {
+  overflow-x: auto;
+  padding: 8px 0;
+}
+.hangeul-arch-grid-wrap {
+  width: 100%;
+}
+.hangeul-arch-grid {
+  display: inline-block;
+  min-width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.hangeul-arch-row {
+  display: flex;
+  align-items: stretch;
+  border-bottom: 1px solid var(--border-color);
+}
+.hangeul-arch-row:last-child {
+  border-bottom: none;
+}
+.hangeul-arch-cell {
+  flex: 0 0 auto;
+  padding: 6px 4px;
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+}
+.hangeul-arch-cell:last-child {
+  border-right: none;
+}
+.hangeul-arch-header .hangeul-arch-cell {
+  background: var(--bg-secondary);
+  font-weight: 700;
+  min-width: 44px;
+}
+.hangeul-arch-corner {
+  min-width: 100px;
+  max-width: 120px;
+}
+.hangeul-arch-bar-num {
+  min-width: 40px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+.hangeul-arch-role-label {
+  justify-content: flex-start;
+  padding-left: 10px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+.hangeul-arch-bar-cell {
+  min-width: 44px;
+  background: var(--bg-tertiary);
+}
+.hangeul-arch-blocks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  justify-content: center;
+  align-items: center;
+}
+.hangeul-arch-block {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+}
+.hangeul-arch-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-color);
+}
+.hangeul-arch-legend-item {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+@media (max-width: 768px) {
+  .hangeul-arch-bar-num,
+  .hangeul-arch-bar-cell { min-width: 32px; }
+  .hangeul-arch-block { width: 18px; height: 18px; font-size: 0.75rem; }
+  .hangeul-arch-role-label { font-size: 0.7rem; min-width: 72px; }
+  .architecture-modal-inner { padding: 16px; }
+}

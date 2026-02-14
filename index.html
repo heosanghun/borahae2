@@ -35,10 +35,9 @@
         <img src="image/logo_dark.png" alt="BORAHAE" class="logo-img logo-img-dark" width="140" height="40">
       </a>
       <div class="nav-links">
-        <a href="#services" data-i18n="nav.services">서비스</a>
-        <a href="#styling" data-i18n="nav.styling">스타일링</a>
-        <a href="#shop" data-i18n="nav.shop">굿즈샵</a>
-        <a href="#membership" data-i18n="nav.membership">멤버십</a>
+        <a href="#styling" data-i18n="nav.play">PLAY (놀기)</a>
+        <a href="#lightstick" data-i18n="nav.create">CREATE (짓기)</a>
+        <a href="#shop" data-i18n="nav.store">STORE (소장)</a>
       </div>
       <div class="nav-actions">
         <div class="lang-toggle" aria-label="Language">
@@ -76,16 +75,16 @@
       </div>
     </div>
     <div class="hero-content">
-      <div class="hero-badge" data-i18n="hero.badge">K-pop Fan Lifestyle Platform</div>
+      <div class="hero-badge" data-i18n="hero.badge">AI Magic Shop for Global Fandom</div>
       <p class="hero-tagline" data-i18n="hero.tagline">I Purple You · 끝까지 함께</p>
       <h1 class="hero-title">
         <span class="title-line" data-i18n="hero.title_line">보라해</span>
-        <span class="title-highlight" data-i18n="hero.title_highlight">팬이 만드는 보라빛 세상</span>
+        <span class="title-highlight" data-i18n="hero.title_highlight">당신의 이름이 캐릭터가 되고, 당신의 노래가 집이 되는 곳</span>
       </h1>
       <p class="hero-description" data-i18n-html="hero.desc">
-        K-pop을 사랑하는 팬들의 라이프스타일 플랫폼.<br>
-        AI 스타일링, 팬 굿즈, 커뮤니티, 이벤트까지<br>
-        <strong>보라빛으로 물든</strong> 특별한 팬 경험을 시작하세요
+        한글 페르소나로 <strong>캐릭터</strong>를 만들고,<br>
+        매직샵에서 <strong>노래로 집</strong>을 짓고,<br>
+        보라 굿즈로 <strong>소장</strong>하세요
       </p>
       <div class="hero-cta">
         <button class="btn-primary btn-large">
@@ -149,13 +148,13 @@
     </div>
   </section>
 
-  <!-- Services Section -->
+  <!-- BORAHAE 3.0: 3대 핵심 서비스 -->
   <section id="services" class="features">
     <div class="container">
       <div class="section-header">
-        <span class="section-badge" data-i18n="features.badge">Services</span>
-        <h2 class="section-title" data-i18n="features.title">보라해가 만드는 팬 라이프스타일</h2>
-        <p class="section-description" data-i18n="features.desc">K-pop을 사랑하는 당신을 위한 올인원 플랫폼</p>
+        <span class="section-badge" data-i18n="features.badge">BORAHAE 3.0</span>
+        <h2 class="section-title" data-i18n="features.title">캐릭터 만들고, 집 짓고, 시계에 넣는다</h2>
+        <p class="section-description" data-i18n="features.desc">한글과 AI로 완성하는 글로벌 팬덤 경험</p>
       </div>
       <div class="features-grid">
         <div class="feature-card">
@@ -166,81 +165,43 @@
               <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"/>
             </svg>
           </div>
-          <h3 data-i18n="features.styling_title">AI K-pop 스타일링</h3>
-          <p data-i18n="features.styling_desc">콘서트, 팬미팅, 일상까지 — AI가 퍼스널 컬러와 체형을 분석해 K-pop 감성 코디를 추천합니다</p>
-          <p style="margin-top:12px;"><a href="#styling" class="btn-outline btn-sm feature-card-cta" data-i18n="features.styling_btn">스타일링 시작하기</a></p>
+          <h3 data-i18n="features.pillar1_title">한글 페르소나</h3>
+          <p data-i18n="features.pillar1_desc">이름으로 한글 캐릭터(툰)를 만들고, 그 캐릭터에게 어울리는 패션(OOTD)을 AI가 추천합니다</p>
+          <p style="margin-top:12px;"><a href="#styling" class="btn-outline btn-sm feature-card-cta" data-i18n="features.pillar1_btn">놀기 · PLAY</a></p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <circle cx="9" cy="21" r="1"/>
-              <circle cx="20" cy="21" r="1"/>
-              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
             </svg>
           </div>
-          <h3 data-i18n="features.shop_title">보라해 굿즈샵</h3>
-          <p data-i18n="features.shop_desc">보라빛 감성의 팬메이드 굿즈 마켓플레이스. 의류, 액세서리, 문구, 폰케이스까지 한곳에서</p>
-          <p style="margin-top:12px;"><a href="#shop" class="btn-outline btn-sm feature-card-cta" data-i18n="features.shop_btn">굿즈샵 보기</a></p>
+          <h3 data-i18n="features.pillar2_title">매직샵</h3>
+          <p data-i18n="features.pillar2_desc">음악(MIDI)을 업로드하면 한글 건축물이 생성되고, 그 공간의 열쇠가 되는 나만의 응원봉을 만듭니다</p>
+          <p style="margin-top:12px;"><a href="#lightstick" class="btn-outline btn-sm feature-card-cta" data-i18n="features.pillar2_btn">짓기 · CREATE</a></p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-              <circle cx="9" cy="7" r="4"/>
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
             </svg>
           </div>
-          <h3 data-i18n="features.community_title">팬 커뮤니티</h3>
-          <p data-i18n="features.community_desc">같은 마음으로 보라해를 외치는 팬들과 소통하고, 덕질 일상을 공유하는 따뜻한 공간</p>
-          <p style="margin-top:12px;"><a href="#community" class="btn-outline btn-sm feature-card-cta" data-i18n="features.community_btn">커뮤니티 들어가기</a></p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-              <line x1="16" y1="2" x2="16" y2="6"/>
-              <line x1="8" y1="2" x2="8" y2="6"/>
-              <line x1="3" y1="10" x2="21" y2="10"/>
-            </svg>
-          </div>
-          <h3 data-i18n="features.event_title">이벤트 기획</h3>
-          <p data-i18n="features.event_desc">생일 카페, 스트리밍 파티, 팬 프로젝트 — 함께 만드는 특별한 순간을 기획하고 참여하세요</p>
-          <p style="margin-top:12px;"><a href="#events" class="btn-outline btn-sm feature-card-cta" data-i18n="features.event_btn">이벤트 더보기</a></p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <rect x="3" y="3" width="18" height="18" rx="2"/>
-              <circle cx="8.5" cy="8.5" r="1.5"/>
-              <polyline points="21 15 16 10 5 21"/>
-            </svg>
-          </div>
-          <h3 data-i18n="features.content_title">팬 콘텐츠</h3>
-          <p data-i18n="features.content_desc">팬아트, 팬픽션, 에디트 영상 — 크리에이터들의 작품을 감상하고, 내 작품도 공유하세요</p>
-          <p style="margin-top:12px;"><a href="#content" class="btn-outline btn-sm feature-card-cta" data-i18n="features.content_btn">콘텐츠 보기</a></p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-            </svg>
-          </div>
-          <h3 data-i18n="features.membership_title">프리미엄 멤버십</h3>
-          <p data-i18n="features.membership_desc">독점 콘텐츠, 굿즈 할인, 이벤트 우선 참여 — 보라해 VIP만의 특별한 혜택을 누리세요</p>
-          <p style="margin-top:12px;"><a href="#membership" class="btn-outline btn-sm feature-card-cta" data-i18n="features.membership_btn">멤버십 알아보기</a></p>
+          <h3 data-i18n="features.pillar3_title">보라 굿즈</h3>
+          <p data-i18n="features.pillar3_desc">페르소나·건축물을 워치페이스로, 실물 굿즈(무드등·포토카드·의류)로 소장하세요</p>
+          <p style="margin-top:12px;"><a href="#shop" class="btn-outline btn-sm feature-card-cta" data-i18n="features.pillar3_btn">소장 · STORE</a></p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- AI Styling Section -->
+  <!-- PLAY: 한글 페르소나 (이름 → 캐릭터/웹툰 → 패션 OOTD) -->
   <section id="styling" class="ai-section">
     <div class="container">
       <div class="ai-content">
         <div class="ai-text">
-          <span class="section-badge" data-i18n="ai.badge">AI Styling</span>
-          <h2 class="section-title" data-i18n-html="ai.title">3단계로 완성되는<br>K-pop 감성 코디</h2>
+          <span class="section-badge" data-i18n="ai.badge">PLAY · 한글 페르소나</span>
+          <h2 class="section-title" data-i18n-html="ai.title">이름으로 캐릭터를 만들고,<br>그 캐릭터의 OOTD를 받으세요</h2>
           <div class="steps">
             <div class="step">
               <div class="step-number">01</div>
@@ -316,13 +277,13 @@
     </div>
   </section>
 
-  <!-- Borahae Lightstick Designer Section -->
+  <!-- CREATE: 매직샵 (음악 → 한글 건축물 + 응원봉) -->
   <section id="lightstick" class="features" style="background:var(--bg-secondary);">
     <div class="container">
       <div class="section-header">
-        <span class="section-badge" data-i18n="lightstick.badge">보라빛 응원봉</span>
-        <h2 class="section-title" data-i18n="lightstick.title">보라빛 응원봉, 너를 위해 빛나는 💜</h2>
-        <p class="section-description" data-i18n="lightstick.desc">당신의 사랑과 응원을 담아, 세상에 단 하나뿐인 나만의 응원봉을 AI가 만들어드려요</p>
+        <span class="section-badge" data-i18n="lightstick.badge">CREATE · 매직샵</span>
+        <h2 class="section-title" data-i18n="lightstick.title">노래가 건축이 되고, 그 공간의 열쇠가 응원봉이 됩니다 💜</h2>
+        <p class="section-description" data-i18n="lightstick.desc">음악(MIDI)을 업로드하면 한글 건축물이 생성되고, 그 안에 나만의 응원봉을 배치하세요</p>
       </div>
       <div class="features-grid" style="grid-template-columns:repeat(4,1fr);">
         <div class="feature-card" style="text-align:center;">
@@ -350,8 +311,168 @@
         <button class="btn-primary btn-large" id="open-lightstick-btn" data-i18n="lightstick.btn_start" onclick="document.getElementById('lightstick-modal').classList.add('active');document.body.style.overflow='hidden';">나의 응원봉, 지금 만들기 💜</button>
         <p style="margin-top:12px;font-size:0.85rem;color:var(--text-muted);" data-i18n="lightstick.plan_info">Free: 월 1회 | Purple: 월 10회 | VIP: 무제한 생성</p>
       </div>
+      <!-- 음악 → 한글 건축물 생성 (샘플 업로드 + 생성 버튼 → 이미지) -->
+      <div class="magicshop-build-wrap" id="magicshop-build-wrap" style="margin-top:48px;padding:32px 24px;background:var(--bg-primary);border-radius:20px;border:2px solid var(--border-color);">
+        <h3 class="magicshop-build-title" style="font-size:1.25rem;margin-bottom:8px;color:var(--text-primary);" data-i18n="arch.build_title">🎵 음악을 올리면 한글 건축물이 됩니다</h3>
+        <p class="magicshop-build-desc" style="font-size:0.9rem;color:var(--text-muted);margin-bottom:24px;" data-i18n="arch.build_desc">샘플(사랑의 인사)을 선택하거나 MIDI·PDF 파일을 업로드한 뒤, 생성 버튼을 누르면 한글 건축물 이미지가 만들어집니다.</p>
+
+        <div class="magicshop-build-inputs" style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:20px;">
+          <button type="button" class="btn-secondary" id="arch-use-sample-btn" data-i18n="arch.use_sample">사랑의 인사 샘플 사용</button>
+          <span style="color:var(--text-muted);font-size:0.9rem;">또는</span>
+          <label class="btn-outline" style="cursor:pointer;margin:0;display:inline-flex;align-items:center;gap:8px;">
+            <input type="file" id="arch-midi-input" accept=".mid,.midi,audio/midi,.pdf,application/pdf,.png,.jpg,.jpeg,.gif,.webp,image/png,image/jpeg,image/gif,image/webp" style="display:none;">
+            <span data-i18n="arch.upload_midi_pdf">MIDI · PDF · 악보 이미지 업로드</span>
+          </label>
+        </div>
+        <p class="magicshop-build-status" id="arch-input-status" style="font-size:0.85rem;color:var(--text-muted);margin-bottom:16px;min-height:1.4em;" aria-live="polite"></p>
+
+        <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:16px;">
+          <button type="button" class="btn-primary btn-large" id="arch-generate-btn" disabled data-i18n="arch.generate_btn">🏛️ 한글 건축물 생성</button>
+          <button type="button" class="btn-primary btn-large arch-video-experience-btn" id="open-architecture-video-btn" aria-label="한글 건축 영상 체험" data-i18n="arch.sample_video_btn" disabled style="opacity:0.7;cursor:not-allowed;">한글 건축 영상 체험하기</button>
+        </div>
+        <p class="arch-video-hint" id="arch-video-hint" style="margin-top:8px;font-size:0.85rem;color:var(--text-muted);" data-i18n="arch.video_btn_hint">건축물 생성 후 영상 체험이 가능합니다.</p>
+
+        <div class="magicshop-build-loading" id="arch-loading" style="display:none;text-align:center;padding:24px;">
+          <p style="color:var(--primary);font-weight:600;" data-i18n="arch.generating">한글 건축물 이미지를 생성하고 있어요...</p>
+        </div>
+        <div class="magicshop-build-result" id="arch-result" style="display:none;margin-top:24px;text-align:center;">
+          <!-- 1) 색깔과 한글이 펼쳐지는 그리드 이미지 -->
+          <p class="magicshop-build-result-title" style="font-weight:600;margin-bottom:12px;color:var(--text-primary);" data-i18n="arch.result_title">생성된 한글 건축물</p>
+          <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:12px;" data-i18n="arch.result_grid_desc">구조·멜로디·반주 한글 자모 그리드</p>
+          <div style="background:var(--bg-secondary);border-radius:16px;padding:16px;display:inline-block;">
+            <img id="arch-result-image" alt="한글 건축물 그리드" style="max-width:100%;height:auto;border-radius:8px;display:block;">
+          </div>
+          <div style="margin-top:16px;display:flex;flex-wrap:wrap;gap:12px;justify-content:center;">
+            <a id="arch-download-link" class="btn-primary" download="hangeul-architecture-grid.png" data-i18n="arch.download_grid">💾 그리드 이미지 저장</a>
+            <button type="button" class="btn-outline" id="arch-generate-again-btn" data-i18n="arch.generate_again">🔄 다시 생성</button>
+          </div>
+
+          <!-- 3) 컨셉 디자인 -->
+          <div id="arch-concept-section" style="margin-top:32px;padding-top:24px;border-top:1px solid var(--border-color);">
+            <p class="magicshop-build-result-title" style="font-weight:600;margin-bottom:8px;color:var(--text-primary);" data-i18n="arch.concept_design_title">3. 컨셉 디자인</p>
+            <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:12px;" data-i18n="arch.concept_design_desc">건축 프레젠테이션 보드 (조감도·다이어그램·플랜·퍼스펙티브)</p>
+            <div id="arch-concept-loading" class="arch-nano-loading" style="display:none;padding:24px;">
+              <div class="loading-spinner" style="margin:0 auto 12px;width:40px;height:40px;border:3px solid var(--border-color);border-top-color:var(--primary);border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+              <p style="color:var(--primary);font-size:0.95rem;" data-i18n="arch.concept_loading">컨셉 디자인 이미지를 생성하고 있어요...</p>
+            </div>
+            <div id="arch-concept-wrap" style="display:none;">
+              <div style="background:var(--bg-secondary);border-radius:16px;padding:16px;display:inline-block;">
+                <img id="arch-concept-image" alt="한글 건축 컨셉 디자인" style="max-width:100%;height:auto;border-radius:8px;display:block;">
+              </div>
+              <div style="margin-top:12px;"><a id="arch-concept-download" class="btn-outline btn-sm" download="hangeul-architecture-concept.png" data-i18n="arch.download_btn">💾 이미지 저장</a></div>
+            </div>
+          </div>
+
+          <!-- 4) 한글 건축 이미지 생성 -->
+          <div id="arch-nano-section" style="margin-top:32px;padding-top:24px;border-top:1px solid var(--border-color);">
+            <p class="magicshop-build-result-title" style="font-weight:600;margin-bottom:8px;color:var(--text-primary);" data-i18n="arch.result_building_title">4. 한글 건축 이미지</p>
+            <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:8px;" data-i18n="arch.result_building_desc">나노 바나나가 한글 공감각 건축 메뉴얼로 건축물을 생성합니다</p>
+            <p style="font-size:0.85rem;color:var(--primary);margin-bottom:16px;" data-i18n="arch.auto_video_hint">이미지 생성 후 같은 이미지로 영상이 자동 생성됩니다.</p>
+            <div id="arch-nano-loading" class="arch-nano-loading" style="display:none;padding:24px;">
+              <div class="loading-spinner" style="margin:0 auto 12px;width:40px;height:40px;border:3px solid var(--border-color);border-top-color:var(--primary);border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+              <p style="color:var(--primary);font-size:0.95rem;" data-i18n="arch.nano_building_loading">건축물 이미지를 생성하고 있어요... (약 10~30초)</p>
+            </div>
+            <div id="arch-nano-building-wrap" style="display:none;">
+              <div style="background:var(--bg-secondary);border-radius:16px;padding:16px;display:inline-block;">
+                <img id="arch-nano-building-image" alt="나노 바나나 건축물" style="max-width:100%;height:auto;border-radius:8px;display:block;">
+              </div>
+              <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;">
+                <a id="arch-nano-building-download" class="btn-primary btn-sm" download="hangeul-architecture-building.png" data-i18n="arch.download_btn">💾 이미지 저장</a>
+                <button type="button" class="btn-outline btn-sm" id="arch-video-from-building-btn" data-i18n="arch.video_retry_btn">🎬 영상 다시 생성</button>
+              </div>
+            </div>
+            <p id="arch-nano-building-error" style="display:none;font-size:0.9rem;color:var(--text-muted);margin-top:12px;" data-i18n="arch.error_no_api_key_short">API 키 설정 시 건축물 이미지를 생성할 수 있습니다.</p>
+          </div>
+
+          <!-- 5) 최종 한글 건축물 (영상 키프레임) -->
+          <div id="arch-final-section" style="margin-top:32px;padding-top:24px;border-top:1px solid var(--border-color);">
+            <p class="magicshop-build-result-title" style="font-weight:600;margin-bottom:8px;color:var(--text-primary);" data-i18n="arch.final_building_title">5. 최종 한글 건축물</p>
+            <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:12px;" data-i18n="arch.final_building_desc">이 이미지를 기준으로 영상이 생성됩니다.</p>
+            <div id="arch-final-loading" class="arch-nano-loading" style="display:none;padding:24px;">
+              <div class="loading-spinner" style="margin:0 auto 12px;width:40px;height:40px;border:3px solid var(--border-color);border-top-color:var(--primary);border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+              <p style="color:var(--primary);font-size:0.95rem;" data-i18n="arch.final_loading">최종 건축물 이미지를 생성하고 있어요...</p>
+            </div>
+            <div id="arch-final-wrap" style="display:none;">
+              <div style="background:var(--bg-secondary);border-radius:16px;padding:16px;display:inline-block;">
+                <img id="arch-final-image" alt="최종 한글 건축물" style="max-width:100%;height:auto;border-radius:8px;display:block;">
+              </div>
+              <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;">
+                <a id="arch-final-download" class="btn-primary btn-sm" download="hangeul-architecture-final.png" data-i18n="arch.download_btn">💾 이미지 저장</a>
+                <button type="button" class="btn-outline btn-sm" id="arch-video-from-final-btn" data-i18n="arch.video_retry_btn">🎬 영상 다시 생성</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 한글 건축 체험 · 구글 지니(Genie) 암시 배너 -->
+      <div class="genie-arch-banner" style="margin-top:32px;padding:24px;background:linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);border-radius:20px;border:1px solid var(--border-color);display:flex;flex-wrap:wrap;align-items:center;gap:24px;justify-content:center;">
+        <div style="flex:0 0 auto;max-width:280px;">
+          <img src="image/project-genie.png" alt="Project Genie by Google" style="width:100%;height:auto;border-radius:12px;display:block;box-shadow:0 8px 24px rgba(0,0,0,0.12);" loading="lazy">
+        </div>
+        <div style="flex:1;min-width:240px;text-align:center;">
+          <p class="genie-arch-caption" style="font-size:1rem;color:var(--text-primary);margin:0 0 8px;font-weight:600;" data-i18n="arch.genie_caption">Create your own worlds</p>
+          <p style="font-size:0.9rem;color:var(--text-muted);margin:0 0 16px;line-height:1.5;" data-i18n="arch.genie_desc">한글 건축 체험은 Google의 실험적 프로젝트 지니(Genie)와 함께 무한히 다양한 세계를 만들고 탐험합니다.</p>
+          <div class="magicshop-sample-wrap" style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;">
+            <button type="button" class="btn-outline btn-large" id="open-architecture-btn" aria-label="한글 건축 체험" data-i18n="arch.sample_btn">한글 건축 체험하기</button>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
+
+  <!-- 한글 건축 체험 모달: 나노 바나나 생성 → 이미지 표시 / 그리드 미리보기 -->
+  <div class="info-modal" id="architecture-modal" aria-hidden="true">
+    <div class="info-modal-content info-modal-content--wide" style="max-width:960px;max-height:90vh;display:flex;flex-direction:column;">
+      <button class="info-modal-close" id="architecture-modal-close" aria-label="닫기"><svg viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+      <div class="architecture-modal-inner" style="padding:24px 32px 32px;overflow-y:auto;max-height:calc(90vh - 60px);-webkit-overflow-scrolling:touch;">
+        <div id="arch-modal-loading" class="arch-modal-loading" style="text-align:center;padding:40px 24px;">
+          <div class="loading-spinner" style="margin:0 auto 16px;width:48px;height:48px;border:4px solid var(--border-color);border-top-color:var(--primary);border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+          <p id="arch-modal-loading-text" style="color:var(--primary);font-weight:600;margin-bottom:4px;" data-i18n="arch.nano_loading">나노 바나나가 한글 공감각 건축 메뉴얼을 기준으로 건축물을 생성하고 있습니다...</p>
+          <p style="font-size:0.9rem;color:var(--text-muted);" data-i18n="arch.nano_loading_sub">구조·멜로디·반주 요소가 건축 이미지로 변환됩니다 (약 10~30초)</p>
+        </div>
+        <div id="arch-modal-result" class="arch-modal-result" style="display:none;">
+          <p class="arch-modal-score-name" style="text-align:center;font-size:1rem;color:var(--text-secondary);margin:0 0 16px 0;" data-i18n="arch.modal_piece_title">작은것들을 위한 시</p>
+          <div class="arch-modal-media-wrap" style="display:flex;justify-content:center;align-items:center;margin-bottom:20px;min-height:280px;">
+            <img id="arch-nano-image" alt="나노 바나나 한글 건축물" style="max-width:100%;max-height:75vh;width:auto;height:auto;object-fit:contain;border-radius:12px;box-shadow:var(--shadow-lg);">
+            <video id="arch-nano-video" controls style="max-width:100%;max-height:75vh;border-radius:12px;box-shadow:var(--shadow-lg);display:none;"></video>
+          </div>
+          <p style="font-size:0.85rem;color:var(--text-muted);text-align:center;margin-top:-8px;margin-bottom:12px;" data-i18n="arch.modal_save_hint">닫기 전에 저장 버튼으로 다운로드하세요.</p>
+          <div class="arch-modal-actions" style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;align-items:center;margin-bottom:24px;">
+            <a id="arch-nano-download" class="btn-primary" href="#" download="hangeul-architecture-nano.png" data-i18n="arch.download_btn" style="cursor:pointer;">💾 이미지 저장</a>
+            <button type="button" class="btn-outline" id="arch-show-grid-btn" data-i18n="arch.show_grid">📋 자모 그리드 보기</button>
+          </div>
+          <div id="architecture-grid-wrap" style="display:none;margin-top:24px;padding-top:24px;border-top:1px solid var(--border-color);">
+            <h3 id="arch-grid-title" style="font-size:1.1rem;margin-bottom:12px;color:var(--text-secondary);" data-i18n="arch.modal_piece_title">작은것들을 위한 시</h3>
+            <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:12px;" data-i18n="arch.modal_subtitle">1~16마디 한글 자모 건축 그리드</p>
+            <div id="architecture-grid-container" class="architecture-grid-container"></div>
+          </div>
+        </div>
+        <div id="arch-modal-error" class="arch-modal-error" style="display:none;text-align:center;padding:40px 24px;">
+          <p style="color:var(--text-danger, #dc2626);font-weight:600;margin-bottom:8px;" data-i18n="arch.error_title">건축물 생성에 실패했습니다</p>
+          <p id="arch-modal-error-msg" style="color:var(--text-muted);font-size:0.9rem;margin-bottom:16px;"></p>
+          <button type="button" class="btn-outline" id="arch-retry-btn" data-i18n="arch.generate_again">🔄 다시 시도</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 한글 건축 체험 · 곧 만나요 (지니 스타일 안내 팝업) -->
+  <div class="info-modal genie-coming-soon-modal" id="arch-coming-soon-modal" aria-hidden="true">
+    <div class="info-modal-content genie-coming-soon-content" style="max-width:520px;border-radius:24px;overflow:hidden;box-shadow:0 24px 48px rgba(0,0,0,0.12);">
+      <button class="info-modal-close" id="arch-coming-soon-close" aria-label="닫기"><svg viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+      <div class="genie-coming-soon-inner" style="display:flex;flex-wrap:wrap;align-items:center;gap:0;">
+        <div class="genie-coming-soon-visual" style="flex:0 0 200px;min-height:200px;background:linear-gradient(160deg, #1a1f36 0%, #2d3748 100%);display:flex;align-items:center;justify-content:center;padding:24px;">
+          <img src="image/project-genie.png" alt="" style="width:100%;height:auto;max-height:180px;object-fit:contain;border-radius:12px;" loading="lazy">
+        </div>
+        <div class="genie-coming-soon-text" style="flex:1;min-width:240px;padding:28px 24px;">
+          <h2 class="genie-coming-soon-title" style="font-size:1.35rem;font-weight:700;color:#1a1f36;margin:0 0 12px;letter-spacing:-0.02em;" data-i18n="arch.coming_soon_title">곧 만나요</h2>
+          <p class="genie-coming-soon-desc" style="font-size:0.95rem;color:#4a5568;line-height:1.6;margin:0 0 20px;" data-i18n="arch.coming_soon_desc">한글 건축 체험이 곧 준비되고 있어요. Google의 프로젝트 지니(Genie)와 함께 더 풍부한 세계를 만들 수 있도록 열심히 준비 중입니다. 조금만 기다려 주세요!</p>
+          <button type="button" class="btn-outline genie-coming-soon-btn" id="arch-coming-soon-confirm" style="border-radius:12px;padding:12px 20px;font-weight:600;color:#1a1f36;border-color:#cbd5e0;" data-i18n="arch.coming_soon_confirm">확인</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Lightstick Designer Modal -->
   <div class="info-modal" id="lightstick-modal">
@@ -518,12 +639,13 @@
   </div>
 
   <!-- Shop Section (NEW) -->
+  <!-- STORE: 보라 굿즈 (워치페이스 · 실물 굿즈) -->
   <section id="shop" class="lookbook">
     <div class="container">
       <div class="section-header">
-        <span class="section-badge" data-i18n="shop.badge">Shop</span>
-        <h2 class="section-title" data-i18n="shop.title">보라해 굿즈샵</h2>
-        <p class="section-description" data-i18n="shop.desc">보라빛 감성을 담은 팬메이드 아이템</p>
+        <span class="section-badge" data-i18n="shop.badge">STORE · 보라 굿즈</span>
+        <h2 class="section-title" data-i18n="shop.title">만든 캐릭터와 공간을, 워치페이스와 굿즈로 소장</h2>
+        <p class="section-description" data-i18n="shop.desc">디지털 워치페이스, 무드등, 포토카드, 의류까지 — 생성한 결과물을 상품으로 만나보세요</p>
       </div>
       <div class="shop-categories" style="display:flex;gap:12px;justify-content:center;margin-bottom:32px;flex-wrap:wrap;">
         <a href="#shop-clothing" class="btn-outline shop-cat-btn" style="border-radius:20px;padding:8px 20px;font-size:0.9rem;" data-i18n="shop.cat_clothing">보라해 의류</a>
@@ -1950,6 +2072,7 @@
     window.GradioClient = Client;
   </script>
   <script type="text/javascript" src="i18n.js"></script>
+  <script type="text/javascript" src="hangeul-architecture.js"></script>
   <script defer type="text/javascript" src="main.js"></script>
 </body>
 </html>
