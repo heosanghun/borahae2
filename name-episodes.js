@@ -643,6 +643,8 @@
         shareBtn.addEventListener('click', function () {
           var cur = window.__nameEpisodesLastResult;
           if (!cur) return;
+          
+          // 공유 카드 내용 업데이트 (다운로드용)
           var titleEl = document.getElementById('name-episodes-share-title');
           var charsEl = document.getElementById('name-episodes-share-chars');
           var cutsEl = document.getElementById('name-episodes-share-cuts');
@@ -661,16 +663,84 @@
               cutsEl.appendChild(im);
             });
           }
-          if (typeof html2canvas !== 'undefined') {
-            html2canvas(shareCard, { scale: 0.5, useCORS: true, allowTaint: true, width: 1080, height: 1350 }).then(function (canvas) {
-              var link = document.createElement('a');
-              link.download = (cur.name || '나만의-에피소드') + '-인스타-공유.png';
-              link.href = canvas.toDataURL('image/png');
-              link.click();
-            });
-          } else {
-            alert('공유 이미지 생성 중입니다. 잠시 후 다시 시도해 주세요.');
+
+          // 공유 옵션 모달 생성
+          var modalId = 'name-episodes-share-modal';
+          var existing = document.getElementById(modalId);
+          if (existing) existing.remove();
+
+          var overlay = document.createElement('div');
+          overlay.id = modalId;
+          overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:9999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);';
+          
+          var box = document.createElement('div');
+          box.style.cssText = 'background:var(--bg-secondary, #2d2a4a);padding:24px;border-radius:20px;width:90%;max-width:340px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,0.5);border:1px solid rgba(124,58,237,0.3);animation:fadeIn 0.2s ease-out;';
+          
+          var title = document.createElement('h3');
+          title.textContent = '✨ 에피소드 공유하기';
+          title.style.cssText = 'margin:0 0 24px;color:var(--text-primary, #fff);font-size:1.3rem;font-weight:700;';
+          box.appendChild(title);
+
+          var grid = document.createElement('div');
+          grid.style.cssText = 'display:grid;gap:12px;';
+
+          function createBtn(text, bg, icon, onClick) {
+            var b = document.createElement('button');
+            b.innerHTML = '<span style="margin-right:8px;">' + icon + '</span>' + text;
+            b.style.cssText = 'width:100%;padding:14px;border:none;border-radius:12px;background:' + bg + ';color:#fff;font-weight:600;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:transform 0.1s, opacity 0.2s;box-shadow:0 4px 6px rgba(0,0,0,0.1);';
+            b.onmouseover = function() { b.style.opacity = '0.9'; b.style.transform = 'translateY(-1px)'; };
+            b.onmouseout = function() { b.style.opacity = '1'; b.style.transform = 'translateY(0)'; };
+            b.onclick = onClick;
+            return b;
           }
+
+          // 1. 이미지 다운로드
+          grid.appendChild(createBtn('이미지 저장', 'linear-gradient(135deg, #7c3aed, #ec4899)', '⬇️', function() {
+            overlay.remove();
+            if (typeof html2canvas !== 'undefined') {
+              html2canvas(shareCard, { scale: 2, useCORS: true, allowTaint: true, backgroundColor: '#1a1a2e' }).then(function (canvas) {
+                var link = document.createElement('a');
+                link.download = (cur.name || '나만의-에피소드') + '-인스타-공유.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+              });
+            } else {
+              alert('이미지 생성 라이브러리를 불러오지 못했어요.');
+            }
+          }));
+
+          // 2. 트위터/X
+          grid.appendChild(createBtn('X (트위터) 공유', '#000000', '🐦', function() {
+            var url = encodeURIComponent(window.location.href);
+            var text = encodeURIComponent('나만의 한글 에이전트 에피소드를 만들었어요! #보라해 #Borahae #HangulAgent');
+            window.open('https://twitter.com/intent/tweet?url=' + url + '&text=' + text, '_blank');
+          }));
+
+          // 3. 페이스북
+          grid.appendChild(createBtn('페이스북 공유', '#1877f2', '📘', function() {
+            var url = encodeURIComponent(window.location.href);
+            window.open('https://www.facebook.com/sharer/sharer.php?u=' + url, '_blank');
+          }));
+
+          // 4. 링크 복사
+          grid.appendChild(createBtn('링크 복사', '#4b5563', '🔗', function() {
+            navigator.clipboard.writeText(window.location.href).then(function() {
+              alert('링크가 클립보드에 복사되었습니다!');
+              overlay.remove();
+            }).catch(function() {
+              alert('링크 복사에 실패했어요.');
+            });
+          }));
+          
+          var closeBtn = document.createElement('button');
+          closeBtn.textContent = '닫기';
+          closeBtn.style.cssText = 'margin-top:20px;background:transparent;border:none;color:var(--text-muted, #9ca3af);text-decoration:underline;cursor:pointer;font-size:0.9rem;padding:8px;';
+          closeBtn.onclick = function() { overlay.remove(); };
+
+          box.appendChild(grid);
+          box.appendChild(closeBtn);
+          overlay.appendChild(box);
+          document.body.appendChild(overlay);
         });
       }
     } catch (err) { /* 보조 리스너 실패해도 onclick으로 동작 */ }
