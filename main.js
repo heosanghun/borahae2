@@ -2865,7 +2865,9 @@ ${soulInfo ? soulInfo : ''}
             <h2 style="margin-bottom: 20px; color: var(--accent);">🎨 팬 콘텐츠 갤러리</h2>
             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
               <div style="aspect-ratio: 1; background: #eee; border-radius: 8px; overflow: hidden; background-image: url('image/contents/1.png'); background-size: cover; background-position: center;"></div>
-              <div style="aspect-ratio: 1; background: #eee; border-radius: 88px; overflow: hidden; background-image: url('image/contents/2.png'); background-size: cover; background-position: center;"></div>
+              <div style="aspect-ratio: 1; background: #eee; border-radius: 88px; overflow: hidden; position: relative;">
+                <video src="image/contents/22.mp4" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>
+              </div>
               <div style="aspect-ratio: 1; background: #eee; border-radius: 8px; overflow: hidden; background-image: url('image/contents/3.png'); background-size: cover; background-position: center;"></div>
               <div style="aspect-ratio: 1; background: #eee; border-radius: 8px; overflow: hidden; background-image: url('image/contents/4.png'); background-size: cover; background-position: center;"></div>
               <div style="aspect-ratio: 1; background: #eee; border-radius: 8px; overflow: hidden; background-image: url('image/contents/5.png'); background-size: cover; background-position: center;"></div>
