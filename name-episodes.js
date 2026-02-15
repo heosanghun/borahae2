@@ -121,7 +121,14 @@
     var choArr = SANG_EXPAND[choChar] || [choChar];
     for (var c = 0; c < choArr.length; c++) arr.push(choArr[c]);
     arr.push(basicJung);
-    if (basicJung === '\u3157' || basicJung === 'ㅗ') arr.push('\u314F'); // ㅗ/ㅘ/ㅚ 등 → ㅗ+ㅏ 추가
+    // [수정] 복합 모음 정밀 분해 (홍길동 'ㅏ' 중복 방지 & 환 'ㅏ' 누락 방지)
+    // ㅘ(wa) -> ㅗ + ㅏ
+    if (jungChar === 'ㅘ') arr.push('ㅏ');
+    // ㅝ(wo) -> ㅜ + ㅓ
+    if (jungChar === 'ㅝ') arr.push('ㅓ');
+    // ㅢ(ui) -> ㅡ + ㅣ
+    if (jungChar === 'ㅢ') arr.push('ㅣ');
+    
     if (jongIdx > 0) {
       var jongChar = JONG[jongIdx];
       var sangJong = SANG_EXPAND[jongChar];
@@ -455,6 +462,18 @@
       if (aiVideoError) aiVideoError.style.display = 'none';
       window.__nameEpisodesCurrent = { name: name, charList: charList };
 
+      // [수정] 공유하기 데이터 미리 생성 (버튼 즉시 활성화)
+      var staticCuts = [];
+      for (var i = 1; i <= 4; i++) staticCuts.push(BASE + '/episode/episode-cut' + i + '.png');
+      // API 키가 있으면 나중에 덮어씌워짐, 없으면 이 데이터 사용
+      window.__nameEpisodesLastResult = {
+        name: name,
+        charList: charList,
+        list: list,
+        story: story,
+        cutDataUrls: staticCuts
+      };
+
       if (!hasApiKey) {
         if (cutsContainer) cutsContainer.style.display = 'grid';
         if (aiVideoError) {
@@ -462,6 +481,19 @@
           aiVideoError.style.display = 'block';
         }
         hasApiKey = false;
+        
+        // [수정] 정적 모드에서도 공유하기가 가능하도록 결과 데이터 저장
+        var staticCuts = [];
+        for (var i = 1; i <= 4; i++) staticCuts.push(BASE + '/episode/episode-cut' + i + '.png');
+        window.__nameEpisodesLastResult = {
+          name: name,
+          charList: charList,
+          list: list,
+          story: story,
+          cutDataUrls: staticCuts
+        };
+        var actionsWrap = document.getElementById('name-episodes-actions-wrap');
+        if (actionsWrap) actionsWrap.style.display = 'flex';
       }
 
       var loadingPhrases = ['망치를 찾는 중', '물감을 섞는 중', '노래를 준비하는 중', '포즈를 잡는 중', '장면을 그리는 중', '빛을 맞추는 중', '친구들을 부르는 중', '이야기를 만드는 중'];
@@ -547,6 +579,14 @@
               if (aiVideoLoading) aiVideoLoading.style.display = 'none';
               var valid = cutDataUrls.filter(Boolean);
               if (valid.length === 4) {
+                // [수정] 공유하기 위해 결과 데이터 저장 (비디오 생성이 없더라도)
+                window.__nameEpisodesLastResult = {
+                  name: name,
+                  charList: charList,
+                  list: list,
+                  story: story,
+                  cutDataUrls: cutDataUrls.slice()
+                };
                 var actionsWrap = document.getElementById('name-episodes-actions-wrap');
                 if (actionsWrap) actionsWrap.style.display = 'flex';
               } else if (aiVideoError) {
@@ -664,22 +704,46 @@
             });
           }
 
-          // 공유 옵션 모달 생성
-          var modalId = 'name-episodes-share-modal';
-          var existing = document.getElementById(modalId);
-          if (existing) existing.remove();
+          // [수정] 공유 옵션: 소셜 링크 노출 및 이미지 다운로드 바로 실행
+          var socialLinks = document.getElementById('name-episodes-social-links');
+          if (socialLinks) {
+            socialLinks.style.display = 'block';
+            socialLinks.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
 
-          var overlay = document.createElement('div');
-          overlay.id = modalId;
-          overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:9999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);';
-          
-          var box = document.createElement('div');
-          box.style.cssText = 'background:var(--bg-secondary, #2d2a4a);padding:24px;border-radius:20px;width:90%;max-width:340px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,0.5);border:1px solid rgba(124,58,237,0.3);animation:fadeIn 0.2s ease-out;';
-          
-          var title = document.createElement('h3');
-          title.textContent = '✨ 에피소드 공유하기';
-          title.style.cssText = 'margin:0 0 24px;color:var(--text-primary, #fff);font-size:1.3rem;font-weight:700;';
-          box.appendChild(title);
+          // 이미지 다운로드 실행
+          if (typeof html2canvas !== 'undefined') {
+            // 버튼 텍스트 변경
+            var originalText = shareBtn.textContent;
+            shareBtn.textContent = '이미지 생성 중...';
+            shareBtn.disabled = true;
+
+            html2canvas(shareCard, { scale: 2, useCORS: true, allowTaint: true, backgroundColor: '#1a1a2e' }).then(function (canvas) {
+              var link = document.createElement('a');
+              link.download = (cur.name || '나만의-에피소드') + '-한글에이전트.png';
+              link.href = canvas.toDataURL('image/png');
+              link.click();
+              
+              // 복원
+              shareBtn.textContent = originalText;
+              shareBtn.disabled = false;
+              
+              // 알림
+              setTimeout(function() {
+                alert('이미지가 저장되었습니다! 아래 링크를 통해 팬들과 공유해보세요.');
+              }, 500);
+            }).catch(function(err) {
+              console.error(err);
+              shareBtn.textContent = originalText;
+              shareBtn.disabled = false;
+              alert('이미지 생성에 실패했습니다. 다시 시도해 주세요.');
+            });
+          } else {
+            alert('이미지 생성 라이브러리를 불러오지 못했어요.');
+          }
+          return; // 기존 모달 로직 실행 방지
+
+          // (이하 기존 모달 코드는 삭제 예정)
 
           var grid = document.createElement('div');
           grid.style.cssText = 'display:grid;gap:12px;';

@@ -272,6 +272,19 @@
       html.removeAttribute('data-theme');
     }
     localStorage.setItem('theme', theme);
+
+    // Disqus 테마 적용을 위한 리로드
+    if (typeof DISQUS !== 'undefined') {
+      setTimeout(function() {
+        DISQUS.reset({
+          reload: true,
+          config: function () {
+            this.page.identifier = 'sims-fashion-main';
+            this.page.url = (window.location.origin || 'https://sims-fashion.pages.dev') + (window.location.pathname || '/');
+          }
+        });
+      }, 200);
+    }
   }
 
   setTheme(getPreferredTheme());
@@ -524,7 +537,7 @@
   // ========================================
   const lookbookData = {
     'look-1': {
-      image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&q=80',
+      image: 'https://images.unsplash.com/photo-1549490349-8643362247b5?w=800&q=80',
       tag: 'Concert',
       title: '콘서트 글램',
       desc: '무대 위 조명 아래 빛나는 보라빛 콘서트 룩. 글리터와 시퀸으로 포인트를 주고, 응원봉과 어울리는 코디로 특별한 밤을 완성하세요.',
@@ -537,10 +550,10 @@
       colors: ['#7c3aed', '#a78bfa', '#c084fc', '#1A1A1A', '#FFFFFF']
     },
     'look-2': {
-      image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&q=80',
+      image: 'https://images.unsplash.com/photo-1581044777550-4cfa60707c03?w=800&q=80',
       tag: 'Fan Meeting',
-      title: '팬미팅 코디',
-      desc: '좋아하는 아티스트를 가까이에서 만나는 특별한 날. 깔끔하면서도 센스있는 코디로 설레는 순간을 빛내보세요.',
+      title: '매직샵 팬미팅 스타일',
+      desc: '팬미팅에서 당신을 더욱 특별하게 만들어줄 로맨틱하고 세련된 스타일링입니다.',
       items: [
         { icon: '👕', name: '라벤더 니트' },
         { icon: '👖', name: '슬림 데님' },
@@ -550,7 +563,7 @@
       colors: ['#E6E6FA', '#9370DB', '#FFFFFF', '#F0F0F0', '#7B68EE']
     },
     'look-3': {
-      image: 'https://images.unsplash.com/photo-1507680434567-5739c80be1ac?w=800&q=80',
+      image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&q=80',
       tag: 'Daily K-pop',
       title: '데일리 K-pop',
       desc: '일상에서도 K-pop 감성을 놓치지 않는 트렌디 룩. 아이돌 공항패션에서 영감받은 스타일리시한 데일리 코디.',
@@ -587,6 +600,45 @@
         { icon: '💜', name: '바이올렛 미니백' }
       ],
       colors: ['#E6E6FA', '#DDA0DD', '#9370DB', '#7c3aed', '#4B0082']
+    },
+    'look-6': {
+      image: 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=800&q=80',
+      tag: 'Airport',
+      title: '아이돌 공항 패션',
+      desc: '무심한 듯 시크하게. 공항에서 포착된 아이돌들의 스타일리시한 출국길 룩을 재현해보세요.',
+      items: [
+        { icon: '🧥', name: '맥시 코트' },
+        { icon: '🕶️', name: '선글라스' },
+        { icon: '👜', name: '토트백' },
+        { icon: '👢', name: '앵클 부츠' }
+      ],
+      colors: ['#1A1A1A', '#555555', '#FFFFFF', '#7c3aed', '#BDB76B']
+    },
+    'look-7': {
+      image: 'https://images.unsplash.com/photo-1537832816519-689ad163238b?w=800&q=80',
+      tag: 'Backstage',
+      title: '백스테이지 스타일',
+      desc: '무대 뒤의 긴장감과 열정. 프로페셔널하면서도 엣지 있는 백스테이지 스타일링을 제안합니다.',
+      items: [
+        { icon: '👚', name: '가죽 자켓' },
+        { icon: '👖', name: '슬림 슬랙스' },
+        { icon: '👠', name: '스틸레토 힐' },
+        { icon: '💄', name: '레드 립' }
+      ],
+      colors: ['#000000', '#800000', '#7c3aed', '#C0C0C0', '#F5F5F5']
+    },
+    'look-8': {
+      image: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&q=80',
+      tag: 'Street',
+      title: '스트릿 보라해',
+      desc: '도시의 거리에서 돋보이는 힙한 스트릿 감성. 자유롭고 개성 넘치는 보라빛 스트릿 룩입니다.',
+      items: [
+        { icon: '🧥', name: '바시티 자켓' },
+        { icon: '👕', name: '그래픽 티셔츠' },
+        { icon: '👖', name: '카고 팬츠' },
+        { icon: '👟', name: '하이탑 스니커즈' }
+      ],
+      colors: ['#FF4500', '#0000FF', '#7c3aed', '#FFFF00', '#FFFFFF']
     }
   };
 
@@ -1914,10 +1966,14 @@
   async function startAIAnalysis() {
     const loadingStatus = document.getElementById('loading-status');
     const loadingBar = document.getElementById('loading-bar');
+    
+    // 소울 컬러 데이터 확인
+    const soulResult = document.getElementById('soul-color-result');
+    const hasSoulColor = soulResult && !soulResult.hidden && soulResult.getAttribute('data-soul-color');
 
     const statuses = [
       '데이터 수집 중...',
-      '체형 분석 중...',
+      hasSoulColor ? '소울 컬러 DNA 이식 중...' : '체형 분석 중...',
       '퍼스널 컬러 분석 중...',
       '스타일 매칭 중...',
       '추천 생성 중...'
@@ -1943,7 +1999,22 @@
   }
 
   async function getAIStylingRecommendation() {
+    // 소울 컬러 데이터 가져오기
+    var soulInfo = '';
+    var soulResult = document.getElementById('soul-color-result');
+    if (soulResult && !soulResult.hidden && soulResult.getAttribute('data-soul-color')) {
+      var sColor = soulResult.getAttribute('data-soul-color');
+      var sKeyword = soulResult.getAttribute('data-soul-keyword') || '';
+      var sStyle = soulResult.getAttribute('data-soul-style-name') || '';
+      var sMaterial = soulResult.getAttribute('data-soul-material') || '';
+      soulInfo = `
+- [중요] 사용자 소울 컬러: ${sColor} (${sKeyword})
+- [중요] 추천 반영 요소: ${sStyle}, ${sMaterial}
+- [지시] 위 '소울 컬러'와 '소재'를 반드시 스타일링 추천에 메인 테마나 포인트로 강력하게 반영하세요.`;
+    }
+
     var prompt = `당신은 K-pop 감성 전문 패션 스타일리스트입니다. 다음 사용자 정보를 바탕으로 K-pop 콘서트, 팬미팅, 일상에 어울리는 맞춤형 스타일링 분석 결과를 JSON 형식으로만 제공해주세요. 보라색/퍼플 계열 컬러를 팔레트에 반드시 포함하세요. 다른 설명 없이 JSON만 출력하세요.
+${soulInfo ? soulInfo : ''}
 
 사용자 정보:
 - 성별: ${stylingData.gender || '미선택'}

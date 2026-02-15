@@ -1912,8 +1912,20 @@ section {
   width: 100%;
   aspect-ratio: 3/4;
   border-radius: 12px;
-  background: var(--bg-secondary);
+  background: linear-gradient(135deg, var(--bg-secondary), var(--border-color));
+  border: 1px dashed var(--border-color);
   margin-bottom: 10px;
+  position: relative;
+  overflow: hidden;
+}
+.styling-result-card-thumb::after {
+  content: 'Coming Soon';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  opacity: 0.7;
 }
 .styling-result-card span {
   font-size: 0.9rem;
@@ -2199,11 +2211,15 @@ section {
   border-radius: 24px;
   overflow: hidden;
   position: relative;
+  border: 1px solid rgba(124, 58, 237, 0.1);
+  box-shadow: 0 10px 30px -10px rgba(124, 58, 237, 0.1);
+  transition: var(--transition);
 }
 
-.look-large {
-  grid-column: span 2;
-  grid-row: span 2;
+.look-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px -15px rgba(124, 58, 237, 0.3);
+  border-color: var(--primary);
 }
 
 .look-image {
@@ -2212,27 +2228,41 @@ section {
   background-size: cover;
   background-position: center;
   position: relative;
+  filter: saturate(1.1) brightness(1.05);
+}
+
+.look-image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.15) 0%, rgba(236, 72, 153, 0.1) 100%);
+  mix-blend-mode: soft-light;
+  pointer-events: none;
 }
 
 .look-1 {
-  background: linear-gradient(135deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.05) 100%),
-              url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&q=80') center/cover;
+  background: url('https://images.unsplash.com/photo-1549490349-8643362247b5?w=800&q=80') center/cover; /* Female fashion purple tones */
 }
 .look-2 {
-  background: linear-gradient(135deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.05) 100%),
-              url('https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&q=80') center/cover;
+  background: url('https://images.unsplash.com/photo-1581044777550-4cfa60707c03?w=600&q=80') center/cover; /* Romantic female style */
 }
 .look-3 {
-  background: linear-gradient(135deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.05) 100%),
-              url('https://images.unsplash.com/photo-1507680434567-5739c80be1ac?w=600&q=80') center/cover;
+  background: url('https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&q=80') center/cover; /* Casual female fashion */
 }
 .look-4 {
-  background: linear-gradient(135deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.05) 100%),
-              url('https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&q=80') center/cover;
+  background: url('https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&q=80') center/cover; /* Modern female casual */
 }
 .look-5 {
-  background: linear-gradient(135deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.05) 100%),
-              url('https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=600&q=80') center/cover;
+  background: url('https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=600&q=80') center/cover; /* Dreamy purple fashion */
+}
+.look-6 {
+  background: url('https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=600&q=80') center/cover; /* Stylish airport fashion */
+}
+.look-7 {
+  background: url('https://images.unsplash.com/photo-1537832816519-689ad163238b?w=600&q=80') center/cover; /* Professional backstage look */
+}
+.look-8 {
+  background: url('https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&q=80') center/cover; /* Street fashion */
 }
 
 .look-overlay {
@@ -2719,6 +2749,7 @@ section {
   border-radius: 24px;
   overflow: hidden;
   box-shadow: var(--shadow-xl);
+  background-color: #f8fafc; /* Light background for the woman image */
 }
 
 .about-img-wrapper img {
@@ -2813,62 +2844,6 @@ section {
   color: var(--text-muted);
 }
 
-.about-team {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.about-team > span {
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  font-weight: 500;
-}
-
-.team-avatars {
-  display: flex;
-  align-items: center;
-}
-
-.team-avatar {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 0.7rem;
-  font-weight: 700;
-  margin-left: -12px;
-  border: 3px solid var(--bg-primary);
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.team-avatar:first-child {
-  margin-left: 0;
-}
-
-.team-avatar:hover {
-  transform: scale(1.15);
-  z-index: 10;
-}
-
-.team-more {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: var(--bg-tertiary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--text-secondary);
-  margin-left: -12px;
-  border: 3px solid var(--bg-primary);
-}
 
 @media (max-width: 1024px) {
   .about-content {
@@ -2888,9 +2863,6 @@ section {
     text-align: center;
   }
 
-  .about-team {
-    justify-content: center;
-  }
 }
 
 /* ========================================

@@ -20,13 +20,13 @@
     'nav.logout': { ko: '로그아웃', en: 'Logout' },
 
     // --- Hero (BORAHAE 3.0 메인 카피) ---
-    'hero.badge': { ko: 'AI Magic Shop for Global Fandom', en: 'AI Magic Shop for Global Fandom' },
-    'hero.tagline': { ko: 'I Purple You · 끝까지 함께', en: 'I Purple You · Together Forever' },
+    'hero.badge': { ko: 'Borahae Life Navigation', en: 'Borahae Life Navigation' },
+    'hero.tagline': { ko: 'Discover. Build. Navigate.', en: 'Discover. Build. Navigate.' },
     'hero.title_line': { ko: '보라해', en: 'BORAHAE' },
-    'hero.title_highlight': { ko: '당신의 이름이 캐릭터가 되고, 당신의 노래가 집이 되는 곳', en: 'Where your name becomes a character, and your song becomes a home' },
+    'hero.title_highlight': { ko: 'Borahae Life Navigation', en: 'Borahae Life Navigation' },
     'hero.desc': {
-      ko: '한글 페르소나로 <strong>캐릭터</strong>를 만들고,<br>매직샵에서 <strong>노래로 집</strong>을 짓고,<br>보라 굿즈로 <strong>소장</strong>하세요',
-      en: 'Create your <strong>character</strong> with Hangeul Persona,<br>build a <strong>home from your song</strong> at Magic Shop,<br>and <strong>collect</strong> with Bora Goods'
+      ko: '이름과 생일 속에 숨겨진 고유한 <strong>나(Me)</strong>를 발견하고,<br>영감으로 <strong>나만의 우주(Space)</strong>를 건축하며,<br>미래의 기술로 당신의 삶을 <strong>인도(Navigate)</strong>합니다.',
+      en: 'Discover the unique <strong>Me</strong> hidden in your name and birthday,<br>Build your own <strong>Space</strong> with inspiration,<br>and <strong>Navigate</strong> your life with future technology.'
     },
     'hero.cta_start': { ko: '무료로 시작하기', en: 'Get Started Free' },
     'hero.cta_explore': { ko: '어떤 경험인지 보기', en: 'See What\'s in Store' },
@@ -45,9 +45,9 @@
     },
 
     // --- Features (BORAHAE 3.0: 3대 핵심 서비스) ---
-    'features.badge': { ko: 'BORAHAE 3.0', en: 'BORAHAE 3.0' },
-    'features.title': { ko: '캐릭터 만들고, 집 짓고, 시계에 넣는다', en: 'Create a character. Build a home. Put it on your watch.' },
-    'features.desc': { ko: '한글과 AI로 완성하는 글로벌 팬덤 경험', en: 'Global fandom experience powered by Hangeul & AI' },
+    'features.badge': { ko: 'BORAHAE UNIVERSE', en: 'BORAHAE UNIVERSE' },
+    'features.title': { ko: '어제보다 더 나를 사랑하는 방법', en: 'How to love myself more than yesterday' },
+    'features.desc': { ko: '믿음과 사랑으로 끝까지 함께하는 보라해(Borahae)의 약속', en: 'The promise of Borahae: Trust and love together until the end' },
     'features.pillar1_title': { ko: '한글 페르소나', en: 'Hangeul Persona' },
     'features.pillar1_desc': { ko: '이름으로 재미있는 한글 캐릭터 웹툰이 만들어지고, 쉬운 선택으로 취향을 담아 나를 위한 초개인맞춤 스타일을 AI가 추천합니다', en: 'Your name becomes a fun Hangeul character webtoon; then easy choices shape your taste so AI recommends ultra-personalized style for you' },
     'features.pillar1_btn': { ko: '놀기 · PLAY', en: 'PLAY' },
@@ -89,8 +89,8 @@
     'features.shopping_desc': { ko: '마음에 드는 아이템을 발견하면 파트너 브랜드에서 바로 구매할 수 있습니다', en: 'When you find an item you love, purchase it directly from our partner brands' },
 
     // --- AI Styling ---
-    'ai.badge': { ko: 'PLAY · 한글 페르소나', en: 'PLAY · Hangeul Persona' },
-    'ai.title': { ko: '이름으로 캐릭터를 만들고,<br>나만의 스타일 추천 받으세요', en: 'Create a character from your name,<br>get your own style recommendations' },
+    'ai.badge': { ko: 'Chapter 1. Discovery', en: 'Chapter 1. Discovery' },
+    'ai.title': { ko: '세상에 단 하나뿐인<br>당신의 고유한 주파수를 찾습니다', en: 'Finding your unique frequency,<br>the only one in the world' },
     'ai.step1_title': { ko: '프로필 분석', en: 'Profile Analysis' },
     'ai.step1_desc': { ko: '쉬운 선택(성별·연령·체형)으로 당신의 기본 프로필을 담습니다', en: 'Easy choices (gender, age, body type) capture your profile' },
     'ai.step2_title': { ko: 'K-pop 스타일 매칭', en: 'K-pop Style Matching' },
@@ -98,7 +98,7 @@
     'ai.step3_title': { ko: '보라해 코디 완성', en: 'Borahae Outfit Complete' },
     'ai.step3_desc': { ko: '당신만을 위한 초개인맞춤 코디로 보라빛 감성을 완성하세요', en: 'Complete your purple vibe with ultra-personalized outfits for you' },
     'ai.cta': { ko: '보라해 스타일링 시작', en: 'Start Borahae Styling' },
-    'ai.subtitle': { ko: '나만의 이름으로 캐릭터도 만들고, 나만의 컬러로 패션 AI 추천도 받아보세요.', en: 'Create your character from your name and get fashion AI recommendations in your colors.' },
+    'ai.subtitle': { ko: '이름과 생일 속에 숨겨진 코드를 찾아, 진정한 나를 마주하는 첫 번째 여정입니다.', en: 'The first journey to face your true self by finding the codes hidden in your name and birthday.' },
     'ai.connector': { ko: '이름으로 나만의 캐릭터 · 에피소드 만들기', en: 'Create your character & episode from your name' },
 
     // --- Shop ---
@@ -148,9 +148,9 @@
     'magicshop.loading': { ko: '파형이 한글 자모로, 건축물로 조립됩니다...', en: 'Waveform becomes jamo, then assembles into architecture...' },
 
     // --- BORATIME (시계 디자인 · 팬심 소장) ---
-    'boratime.badge': { ko: 'BORATIME', en: 'BORATIME' },
-    'boratime.title': { ko: '시계도 패션이다.<br>팬심을 간직하다', en: 'Watches Are Fashion.<br>Keep Your Fan Heart' },
-    'boratime.desc': { ko: '앱에서 다운로드로 보라빛 시계 페이스를 소장하세요. 콘서트, 보라해, 일곱 개의 달, 꽃길까지—소중한 순간을 시계에 담습니다.', en: 'Download watch faces in the app. Purple ocean, seven moons, flower path—keep your precious moments on your wrist.' },
+    'boratime.badge': { ko: 'Chapter 3. Voyage', en: 'Chapter 3. Voyage' },
+    'boratime.title': { ko: '인생의 나침반,<br>당신의 모든 순간을 기록하고 인도합니다', en: 'Compass of Life,<br>Recording and Guiding Your Every Moment' },
+    'boratime.desc': { ko: '당신의 호흡과 맥박을 기억하는 영혼의 파트너. 잠든 순간부터 깨어있는 모든 시간까지, 당신이 길을 잃지 않도록 가장 나다운 리듬으로 미래를 안내합니다.', en: 'A soul partner that remembers your breath and pulse. From the moment you sleep to every waking hour, it guides your future with your most authentic rhythm so you never lose your way.' },
     'boratime.cta': { ko: '앱에서 만나기', en: 'Get the App' },
     'boratime.cta_sub': { ko: '앱스토어 · 플레이스토어 다운로드', en: 'Download on App Store & Play Store' },
     'boratime.jamo_consonant': { ko: '자음타임', en: 'Consonant Time' },
@@ -199,9 +199,9 @@
     'membership.btn_vip': { ko: 'VIP 시작', en: 'Start VIP' },
 
     // --- Lightstick Designer ---
-    'lightstick.badge': { ko: 'CREATE · 매직샵', en: 'CREATE · Magic Shop' },
-    'lightstick.title': { ko: '노래가 건축이 되고, 그 공간의 열쇠가 응원봉이 됩니다 💜', en: 'Your song becomes architecture; the key to that space is your lightstick 💜' },
-    'lightstick.desc': { ko: '음악(MIDI)을 업로드하면 한글 건축물이 생성되고, 그 안에 나만의 응원봉을 배치하세요', en: 'Upload music (MIDI) to generate Hangeul architecture, then place your own lightstick inside' },
+    'lightstick.badge': { ko: 'Chapter 2. Sanctuary', en: 'Chapter 2. Sanctuary' },
+    'lightstick.title': { ko: '당신의 선율은 단단한 건축물이 되고, 당신의 심장 박동은 내일의 이정표가 됩니다 💜', en: 'Your melody becomes architecture, and your heartbeat becomes tomorrow\'s compass 💜' },
+    'lightstick.desc': { ko: '무형의 선율이 유형의 안식처가 되는 순간. 당신의 영감이 깃든 이 공간은 마음이 쉬어가는 가장 안전한 매직샵입니다.', en: 'The moment intangible melody becomes a tangible sanctuary. This space infused with your inspiration is the safest Magic Shop for your heart.' },
     'lightstick.step1_label': { ko: 'STEP 1', en: 'STEP 1' },
     'lightstick.step1_html': { ko: '응원봉에 담을<br><strong>나의 마음</strong>을 새기다', en: 'Engrave <strong>your heart</strong><br>on the lightstick' },
     'lightstick.step2_label': { ko: 'STEP 2', en: 'STEP 2' },
@@ -322,14 +322,17 @@
 
     // --- Lookbook ---
     'lookbook.badge': { ko: 'Lookbook', en: 'Lookbook' },
-    'lookbook.title': { ko: "K-pop 감성 Today's Pick", en: "K-pop Today's Pick" },
-    'lookbook.desc': { ko: '보라해 AI가 추천하는 오늘의 K-pop 코디', en: "Today's K-pop outfits recommended by Borahae AI" },
-    'lookbook.concert': { ko: '콘서트 글램', en: 'Concert Glam' },
-    'lookbook.concert_desc': { ko: '무대 위 조명 아래 빛나는 보라빛 콘서트 룩', en: 'A purple concert look that shines under stage lights' },
-    'lookbook.fanmeeting': { ko: '팬미팅 코디', en: 'Fan Meeting' },
-    'lookbook.daily': { ko: '데일리 K-pop', en: 'Daily K-pop' },
-    'lookbook.casual': { ko: '덕질 캐주얼', en: 'Fan Casual' },
-    'lookbook.purple': { ko: '보라해 무드', en: 'Borahae Mood' },
+    'lookbook.title': { ko: "Borahae Signature Lookbook", en: "Borahae Signature Lookbook" },
+    'lookbook.desc': { ko: '보라해 AI가 제안하는 오늘의 시그니처 코디', en: "Today's signature outfits recommended by Borahae AI" },
+    'lookbook.concert': { ko: '보라빛 콘서트 룩', en: 'Purple Concert Look' },
+    'lookbook.concert_desc': { ko: '무대 위 조명 아래 가장 나답게 빛나는 보라빛 스타일', en: 'A purple style that shines brightest on you under stage lights' },
+    'lookbook.fanmeeting': { ko: '매직샵 팬미팅 스타일', en: 'Magic Shop Fan Meeting' },
+    'lookbook.daily': { ko: '일상 속 보라해', en: 'Everyday Borahae' },
+    'lookbook.casual': { ko: '시그니처 아미 스타일', en: 'Signature ARMY Style' },
+    'lookbook.purple': { ko: '일곱 개의 달 감성', en: 'Seven Moons Aesthetic' },
+    'lookbook.airport': { ko: '아이돌 공항 패션', en: 'Idol Airport Style' },
+    'lookbook.backstage': { ko: '백스테이지 스타일', en: 'Backstage Style' },
+    'lookbook.street': { ko: '스트릿 보라해', en: 'Street Borahae' },
 
     // --- Testimonials ---
     'testimonials.badge': { ko: 'Reviews', en: 'Reviews' },
@@ -354,18 +357,18 @@
     'testimonials.author3_role': { ko: '보라해 VIP, 32세', en: 'Borahae VIP, 32' },
 
     // --- About ---
-    'about.badge': { ko: 'About Us', en: 'About Us' },
-    'about.title': { ko: '보라해,<br>팬이 만드는 세상', en: 'BORAHAE,<br>A World Made by Fans' },
+    'about.badge': { ko: 'BORAHAE ETHOS', en: 'BORAHAE ETHOS' },
+    'about.title': { ko: '보라해, 당신의 고유한 리듬을 지키는 약속', en: 'BORAHAE, The Promise that Protects Your Unique Rhythm' },
     'about.desc': {
-      ko: '보라해(BORAHAE)는 K-pop을 사랑하는 팬들이 만들어가는 독립 라이프스타일 플랫폼입니다. AI 스타일링, 팬 굿즈, 커뮤니티, 이벤트를 통해 팬덤의 새로운 가능성을 열어갑니다.',
-      en: 'BORAHAE is an independent lifestyle platform built by K-pop fans. We open new possibilities for fandom through AI styling, fan goods, community, and events.'
+      ko: '단순한 플랫폼을 넘어, 당신의 고유한 존재를 증명하고 내면의 세계를 건축하며, 삶의 올바른 방향을 함께 찾아가는 동반자가 되겠습니다. 끝까지 믿고 사랑하는 \'보라해(I Purple You)\'의 진심을 미래 기술에 담았습니다.',
+      en: 'Beyond a simple platform, we strive to be a companion that validates your unique existence, builds your inner world, and navigates your life path together. We have infused the heart of \'Borahae (I Purple You)\'—to love and trust until the end—into future technology.'
     },
-    'about.tech_title': { ko: 'AI 스타일링', en: 'AI Styling' },
-    'about.tech_desc': { ko: 'K-pop 감성 맞춤 코디 추천', en: 'K-pop vibe custom outfit recommendations' },
-    'about.realtime_title': { ko: '팬 커뮤니티', en: 'Fan Community' },
-    'about.realtime_desc': { ko: '보라해를 외치는 팬들의 공간', en: 'A space for fans who say Borahae' },
-    'about.users_title': { ko: '50K+ 보라해 팬', en: '50K+ Borahae Fans' },
-    'about.users_desc': { ko: '함께 만드는 팬 라이프', en: 'Fan life built together' },
+    'about.tech_title': { ko: '자아의 발견 (Discovery)', en: 'Discovery of Self' },
+    'about.tech_desc': { ko: '이름과 컬러 속에 숨겨진 고유 주파수 탐색', en: 'Exploring unique frequencies hidden in names and colors' },
+    'about.realtime_title': { ko: '마음의 안식처 (Sanctuary)', en: 'Sanctuary for the Soul' },
+    'about.realtime_desc': { ko: '영감이 머무는 나만의 매직샵 건축', en: 'Building a personal Magic Shop where inspiration stays' },
+    'about.users_title': { ko: '인생의 항해 (Voyage)', en: 'Voyage of Life' },
+    'about.users_desc': { ko: '삶의 방향을 비추는 보라빛 나침반', en: 'A purple compass illuminating the path of life' },
 
     // --- CTA ---
     'cta.title': { ko: '보라해, 끝까지 함께해요', en: 'BORAHAE, Together Forever' },
