@@ -2897,6 +2897,69 @@ ${soulInfo ? soulInfo : ''}
       }
     });
 
+    // TEROS Story Modal Logic
+    var terosModal = document.getElementById('teros-story-modal');
+    var terosClose = document.getElementById('teros-story-close');
+    var terosAppBtn = document.getElementById('boratime-app-cta');
+    var shopAppBtns = document.querySelectorAll('.shop-app-cta');
+    var terosNext = document.getElementById('teros-next');
+    var terosPrev = document.getElementById('teros-prev');
+    var terosSteps = document.querySelectorAll('.teros-step');
+    var terosDots = document.querySelectorAll('.teros-dot');
+    var currentTerosStep = 0;
+
+    function updateTerosModal() {
+      terosSteps.forEach((step, idx) => {
+        step.classList.toggle('active', idx === currentTerosStep);
+      });
+      terosDots.forEach((dot, idx) => {
+        dot.classList.toggle('active', idx === currentTerosStep);
+      });
+      terosPrev.disabled = currentTerosStep === 0;
+      terosNext.textContent = currentTerosStep === terosSteps.length - 1 ? '시작하기' : '다음 →';
+    }
+
+    function showTerosStory(e) {
+      e.preventDefault();
+      currentTerosStep = 0;
+      updateTerosModal();
+      terosModal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    terosAppBtn?.addEventListener('click', showTerosStory);
+    shopAppBtns.forEach(btn => btn.addEventListener('click', showTerosStory));
+
+    terosClose?.addEventListener('click', function() {
+      terosModal.classList.remove('active');
+      document.body.style.overflow = '';
+    });
+
+    terosNext?.addEventListener('click', function() {
+      if (currentTerosStep < terosSteps.length - 1) {
+        currentTerosStep++;
+        updateTerosModal();
+      } else {
+        terosModal.classList.remove('active');
+        document.body.style.overflow = '';
+        // Could redirect or show a final toast here
+      }
+    });
+
+    terosPrev?.addEventListener('click', function() {
+      if (currentTerosStep > 0) {
+        currentTerosStep--;
+        updateTerosModal();
+      }
+    });
+
+    terosModal?.addEventListener('click', function(e) {
+      if (e.target === terosModal) {
+        terosModal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
+
     if (archNanoDownload) {
       archNanoDownload.addEventListener('click', function(e) {
         e.preventDefault();
