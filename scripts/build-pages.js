@@ -49,6 +49,9 @@ for (const f of rootFiles) {
 // image/ 전체
 copyDir(path.join(root, 'image'), path.join(dist, 'image'));
 
+// book/ 전체 (전자책 포함)
+copyDir(path.join(root, 'book'), path.join(dist, 'book'));
+
 // movie/soave1.mp4 (및 README) — 배포에 영상 포함 보장
 mkdirp(path.join(dist, 'movie'));
 const soaveMp4 = path.join(root, 'movie', 'soave1.mp4');
