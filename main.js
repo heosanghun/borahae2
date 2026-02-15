@@ -2864,12 +2864,12 @@ ${soulInfo ? soulInfo : ''}
           <div style="text-align: center;">
             <h2 style="margin-bottom: 20px; color: var(--accent);">🎨 팬 콘텐츠 갤러리</h2>
             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
-              <div style="aspect-ratio: 1; background: #eee; border-radius: 8px; overflow: hidden; background-image: url('https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=300'); background-size: cover;"></div>
-              <div style="aspect-ratio: 1; background: #eee; border-radius: 8px; overflow: hidden; background-image: url('https://images.unsplash.com/photo-1544273677-277f72479df7?w=300'); background-size: cover;"></div>
-              <div style="aspect-ratio: 1; background: #eee; border-radius: 8px; overflow: hidden; background-image: url('https://images.unsplash.com/photo-1459749411177-042180ce673c?w=300'); background-size: cover;"></div>
-              <div style="aspect-ratio: 1; background: #eee; border-radius: 8px; overflow: hidden; background-image: url('https://images.unsplash.com/photo-1541462608141-ad43b3dfa3d3?w=300'); background-size: cover;"></div>
-              <div style="aspect-ratio: 1; background: #eee; border-radius: 8px; overflow: hidden; background-image: url('https://images.unsplash.com/photo-1520315342629-6ea920342248?w=300'); background-size: cover;"></div>
-              <div style="aspect-ratio: 1; background: #eee; border-radius: 8px; overflow: hidden; background-image: url('https://images.unsplash.com/photo-1549490349-8643362247b5?w=300'); background-size: cover;"></div>
+              <div style="aspect-ratio: 1; background: #eee; border-radius: 8px; overflow: hidden; background-image: url('image/contents/1.png'); background-size: cover; background-position: center;"></div>
+              <div style="aspect-ratio: 1; background: #eee; border-radius: 88px; overflow: hidden; background-image: url('image/contents/2.png'); background-size: cover; background-position: center;"></div>
+              <div style="aspect-ratio: 1; background: #eee; border-radius: 8px; overflow: hidden; background-image: url('image/contents/3.png'); background-size: cover; background-position: center;"></div>
+              <div style="aspect-ratio: 1; background: #eee; border-radius: 8px; overflow: hidden; background-image: url('image/contents/4.png'); background-size: cover; background-position: center;"></div>
+              <div style="aspect-ratio: 1; background: #eee; border-radius: 8px; overflow: hidden; background-image: url('image/contents/5.png'); background-size: cover; background-position: center;"></div>
+              <div style="aspect-ratio: 1; background: #eee; border-radius: 8px; overflow: hidden; background-image: url('image/contents/6.png'); background-size: cover; background-position: center;"></div>
             </div>
             <p style="margin-top: 20px; font-size: 0.9rem; color: var(--text-muted);">여러분의 소중한 팬 콘텐츠를 앱에서 더 많이 확인하세요.</p>
             <button class="btn-primary" style="margin-top: 10px; background: var(--accent);">작품 업로드</button>
