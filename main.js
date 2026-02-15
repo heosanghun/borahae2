@@ -2804,6 +2804,97 @@ ${soulInfo ? soulInfo : ''}
       archModal.addEventListener('click', function(e) { if (e.target === archModal) closeArchitectureModal(); });
     }
 
+    // Fandom Modal (Community, Events, Content)
+    var fandomModal = document.getElementById('fandom-modal');
+    var fandomModalClose = document.getElementById('fandom-modal-close');
+    var fandomModalBody = document.getElementById('fandom-modal-body');
+
+    function openFandomModal(type) {
+      if (!fandomModal || !fandomModalBody) return;
+      var content = '';
+      if (type === 'community') {
+        content = `
+          <div style="text-align: center;">
+            <h2 style="margin-bottom: 20px; color: var(--primary);">💜 팬 커뮤니티</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: left;">
+              <div class="feature-card" style="padding: 20px;">
+                <h4>#자유게시판</h4>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">아미들과 자유롭게 소통하는 공간</p>
+                <div style="margin-top: 10px; font-size: 0.8rem;">최근 게시글: 보라해 3.0 너무 좋아요! (방금전)</div>
+              </div>
+              <div class="feature-card" style="padding: 20px;">
+                <h4>#나눔장터</h4>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">굿즈 나눔 및 교환 정보 공유</p>
+              </div>
+              <div class="feature-card" style="padding: 20px;">
+                <h4>#팬아트</h4>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">여러분의 금손 실력을 보여주세요</p>
+              </div>
+              <div class="feature-card" style="padding: 20px;">
+                <h4>#응원글</h4>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">아티스트에게 전하는 따뜻한 메시지</p>
+              </div>
+            </div>
+            <button class="btn-primary" style="margin-top: 30px;">글쓰기</button>
+          </div>
+        `;
+      } else if (type === 'events') {
+        content = `
+          <div style="text-align: center;">
+            <h2 style="margin-bottom: 20px; color: var(--secondary);">✨ 이벤트 기획</h2>
+            <div style="text-align: left;">
+              <div style="margin-bottom: 20px; padding: 15px; border-left: 4px solid var(--primary); background: var(--bg-secondary);">
+                <div style="font-weight: 700;">[진행중] 2월 보라해 컵홀더 이벤트</div>
+                <div style="font-size: 0.85rem; color: var(--text-muted);">강남구 테헤란로 소재 카페 보라</div>
+              </div>
+              <div style="margin-bottom: 20px; padding: 15px; border-left: 4px solid var(--secondary); background: var(--bg-secondary);">
+                <div style="font-weight: 700;">[예정] 3월 보라빛 스트리밍 파티</div>
+                <div style="font-size: 0.85rem; color: var(--text-muted);">3월 10일 오후 8시 (온라인)</div>
+              </div>
+              <div style="margin-bottom: 20px; padding: 15px; border-left: 4px solid var(--accent); background: var(--bg-secondary);">
+                <div style="font-weight: 700;">[상시] 팬메이드 굿즈 공모전</div>
+                <div style="font-size: 0.85rem; color: var(--text-muted);">최우수작 실제 굿즈 제작 지원</div>
+              </div>
+            </div>
+            <button class="btn-primary" style="margin-top: 20px; background: var(--secondary);">이벤트 제안하기</button>
+          </div>
+        `;
+      } else if (type === 'content') {
+        content = `
+          <div style="text-align: center;">
+            <h2 style="margin-bottom: 20px; color: var(--accent);">🎨 팬 콘텐츠 갤러리</h2>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+              <div style="aspect-ratio: 1; background: #eee; border-radius: 8px; overflow: hidden; background-image: url('https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=300'); background-size: cover;"></div>
+              <div style="aspect-ratio: 1; background: #eee; border-radius: 8px; overflow: hidden; background-image: url('https://images.unsplash.com/photo-1544273677-277f72479df7?w=300'); background-size: cover;"></div>
+              <div style="aspect-ratio: 1; background: #eee; border-radius: 8px; overflow: hidden; background-image: url('https://images.unsplash.com/photo-1459749411177-042180ce673c?w=300'); background-size: cover;"></div>
+              <div style="aspect-ratio: 1; background: #eee; border-radius: 8px; overflow: hidden; background-image: url('https://images.unsplash.com/photo-1541462608141-ad43b3dfa3d3?w=300'); background-size: cover;"></div>
+              <div style="aspect-ratio: 1; background: #eee; border-radius: 8px; overflow: hidden; background-image: url('https://images.unsplash.com/photo-1520315342629-6ea920342248?w=300'); background-size: cover;"></div>
+              <div style="aspect-ratio: 1; background: #eee; border-radius: 8px; overflow: hidden; background-image: url('https://images.unsplash.com/photo-1549490349-8643362247b5?w=300'); background-size: cover;"></div>
+            </div>
+            <p style="margin-top: 20px; font-size: 0.9rem; color: var(--text-muted);">여러분의 소중한 팬 콘텐츠를 앱에서 더 많이 확인하세요.</p>
+            <button class="btn-primary" style="margin-top: 10px; background: var(--accent);">작품 업로드</button>
+          </div>
+        `;
+      }
+      fandomModalBody.innerHTML = content;
+      fandomModal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    document.getElementById('open-community-btn')?.addEventListener('click', function() { openFandomModal('community'); });
+    document.getElementById('open-events-btn')?.addEventListener('click', function() { openFandomModal('events'); });
+    document.getElementById('open-content-btn')?.addEventListener('click', function() { openFandomModal('content'); });
+    fandomModalClose?.addEventListener('click', function() {
+      fandomModal.classList.remove('active');
+      document.body.style.overflow = '';
+    });
+    fandomModal?.addEventListener('click', function(e) {
+      if (e.target === fandomModal) {
+        fandomModal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
+
     if (archNanoDownload) {
       archNanoDownload.addEventListener('click', function(e) {
         e.preventDefault();
