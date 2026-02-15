@@ -1,5 +1,5 @@
 /**
- * 이름 → 자·모음 분리 → 28 한글 에이전트 에피소드
+ * 이름 → 자·모음 분리 → 28 한글 페르소나 서사
  * 이미지: image/name/ja(자음14), image/name/mo(모음14), image/name/hangeulalpabat(28 자모 흰배경), image/name/hangeulalpabat/only(28 자모 배경제거)
  */
 (function () {
@@ -13,15 +13,15 @@
   // 쌍자음 5개 → 쌍둥이 컨셉: 같은 기본 자음 2개로 확장 (ㄲ→ㄱㄱ, ㄸ→ㄷㄷ, ㅃ→ㅂㅂ, ㅆ→ㅅㅅ, ㅉ→ㅈㅈ)
   var SANG_EXPAND = { 'ㄲ':['ㄱ','ㄱ'],'ㄸ':['ㄷ','ㄷ'],'ㅃ':['ㅂ','ㅂ'],'ㅆ':['ㅅ','ㅅ'],'ㅉ':['ㅈ','ㅈ'] };
 
-  // 복합 모음 → 기본 모음(14) 매핑 (ㅘ→ㅗ, ㅝ→ㅜ 등). 우리 에이전트는 기본 14모음만 있음.
+  // 복합 모음 → 기본 모음(14) 매핑 (ㅘ→ㅗ, ㅝ→ㅜ 등). 우리 페르소나는 기본 14모음만 있음.
   var JUNG_TO_BASIC = { 'ㅘ':'ㅗ','ㅙ':'ㅐ','ㅚ':'ㅗ','ㅝ':'ㅜ','ㅞ':'ㅔ','ㅟ':'ㅣ','ㅢ':'ㅡ' };
 
-  // 자음(14+쌍/겹자음) → 에이전트 파일명(ja 폴더). 쌍자음은 해당 단자음과 동일 캐릭터로.
+  // 자음(14+쌍/겹자음) → 페르소나 파일명(ja 폴더). 쌍자음은 해당 단자음과 동일 페르소나로.
   var JA_MAP = { 'ㄱ':'golong','ㄲ':'golong','ㄴ':'nolong','ㄷ':'dolong','ㄸ':'dolong','ㄹ':'lolong','ㅁ':'molong','ㅂ':'bolong','ㅃ':'bolong','ㅅ':'solong','ㅆ':'solong','ㅇ':'olong','ㅈ':'jolong','ㅉ':'jolong','ㅊ':'cholong','ㅋ':'kolong','ㅌ':'tolong','ㅍ':'polong','ㅎ':'holong','ㄳ':'golong','ㄵ':'nolong','ㄶ':'nolong','ㄺ':'lolong','ㄻ':'molong','ㄼ':'lolong','ㄽ':'solong','ㄾ':'lolong','ㄿ':'polong','ㅀ':'lolong','ㅄ':'bolong' };
-  // 모음(14) → 에이전트 파일명(mo 폴더, 한글 이름)
+  // 모음(14) → 페르소나 파일명(mo 폴더, 한글 이름)
   var MO_MAP = { 'ㅏ':'아롱','ㅐ':'애롱','ㅑ':'야롱','ㅒ':'얍롱','ㅓ':'어롱','ㅔ':'에이롱','ㅕ':'여롱','ㅖ':'예롱','ㅗ':'오롱','ㅛ':'요롱','ㅜ':'우롱','ㅠ':'유롱','ㅡ':'으롱','ㅣ':'이롱' };
 
-  // 자음/모음 → 캐릭터 이름·역할 (표시용). ㅗ→오롱(웃음꽃), ㅏ→아롱(화가)
+  // 자음/모음 → 페르소나 이름·역할 (표시용). ㅗ→오롱(웃음꽃), ㅏ→아롱(화가)
   var JA_INFO = { 'ㄱ':{ name:'고롱', role:'발명가' },'ㄴ':{ name:'노롱', role:'가수' },'ㄷ':{ name:'도롱', role:'도우미' },'ㄹ':{ name:'로롱', role:'요리사' },'ㅁ':{ name:'모롱', role:'뚝딱이' },'ㅂ':{ name:'보롱', role:'천문학자' },'ㅅ':{ name:'소롱', role:'시인' },'ㅇ':{ name:'오롱', role:'웃음꽃' },'ㅈ':{ name:'조롱', role:'상상가' },'ㅊ':{ name:'초롱', role:'댄서' },'ㅋ':{ name:'코롱', role:'파수꾼' },'ㅌ':{ name:'토롱', role:'달변가' },'ㅍ':{ name:'포롱', role:'탐정' },'ㅎ':{ name:'호롱', role:'천하장사' } };
   var MO_INFO = { 'ㅏ':{ name:'아롱', role:'화가' },'ㅐ':{ name:'애롱', role:'선생님' },'ㅑ':{ name:'야롱', role:'전령사' },'ㅒ':{ name:'얍롱', role:'사진가' },'ㅓ':{ name:'어롱', role:'정원사' },'ㅔ':{ name:'에이롱', role:'길잡이' },'ㅕ':{ name:'여롱', role:'치유사' },'ㅖ':{ name:'예롱', role:'연주가' },'ㅗ':{ name:'오롱', role:'웃음꽃' },'ㅛ':{ name:'요롱', role:'동물 조련사' },'ㅜ':{ name:'우롱', role:'기록가' },'ㅠ':{ name:'유롱', role:'해양 탐험가' },'ㅡ':{ name:'으롱', role:'명상가' },'ㅣ':{ name:'이롱', role:'재단사' } };
 
@@ -159,7 +159,7 @@
   // 쌍/겹자음 → 표시용 단자음 (이름·역할은 14자음 기준)
   var JA_DISPLAY = { 'ㄲ':'ㄱ','ㄸ':'ㄷ','ㅃ':'ㅂ','ㅆ':'ㅅ','ㅉ':'ㅈ','ㄳ':'ㄱ','ㄵ':'ㄴ','ㄶ':'ㄴ','ㄺ':'ㄹ','ㄻ':'ㅁ','ㄼ':'ㄹ','ㄽ':'ㅅ','ㄾ':'ㄹ','ㄿ':'ㅍ','ㅀ':'ㄹ','ㅄ':'ㅂ' };
 
-  /** 자모 하나가 자음인지 모음인지 판별 후 에이전트 이미지 경로·정보 반환 */
+  /** 자모 하나가 자음인지 모음인지 판별 후 페르소나 이미지 경로·정보 반환 */
   function getAgentForJamo(jamo) {
     var isJa = JA_MAP.hasOwnProperty(jamo);
     var charName, role, imgUrl, jamoImgUrl, jamoOnlyUrl;
@@ -183,7 +183,7 @@
     return { jamo: jamo, name: charName, role: role, characterImage: imgUrl, jamoImage: jamoImgUrl, jamoOnly: jamoOnlyUrl, isConsonant: isJa };
   }
 
-  /** 이름으로 에피소드용 리스트 생성 (자·모음 순서대로 각 에이전트 정보) */
+  /** 이름으로 서사용 리스트 생성 (자·모음 순서대로 각 페르소나 정보) */
   function nameToEpisodeList(name) {
     var jamos = decomposeName(name);
     var list = [];
@@ -195,15 +195,15 @@
   }
 
   /** 4컷 기승전결: 각 장면 제목 + 이미지용 장면 설명 */
-  var EPISODE_SCENES = [
-    { phase: 'Setup', caption: '이름 속 에이전트가 모여요', prompt: 'All characters gathering together in a cozy place, welcoming [이름]. Fluffy sheep-like creatures with soft wool, round faces, bright eyes.' },
-    { phase: 'Conflict', caption: '첫 번째 에이전트가 반갑게 맞아요', prompt: 'First character greeting [이름] warmly, small fun commotion or surprise. Cute chaos, expressive faces.' },
+  var NARRATIVE_SCENES = [
+    { phase: 'Setup', caption: '이름 속 페르소나가 모여요', prompt: 'All characters gathering together in a cozy place, welcoming [이름]. Fluffy sheep-like creatures with soft wool, round faces, bright eyes.' },
+    { phase: 'Conflict', caption: '첫 번째 페르소나가 반갑게 맞아요', prompt: 'First character greeting [이름] warmly, small fun commotion or surprise. Cute chaos, expressive faces.' },
     { phase: 'Action', caption: '각자의 재능을 보여 줘요', prompt: 'Each character showing their unique talent and role, solving something together. Teamwork, variety of actions.' },
     { phase: 'Ending', caption: '특별한 하루가 되어요', prompt: 'Everyone laughing together or striking a cool pose, happy ending. Group shot, warm atmosphere, memorable moment.' }
   ];
   /** 이미지 생성용 고정 스타일 (Pixar 통일) */
-  var EPISODE_STYLE_PREFIX = 'Cute 3D Pixar Style render, bright lighting, soft texture. Hangul agent diary, fluffy white sheep-like creatures. Characters: [캐릭터]. For [이름]. ';
-  var EPISODE_PROMPT_TEMPLATE = '[스타일][장면] Full body or group shot, no text.';
+  var NARRATIVE_STYLE_PREFIX = 'Cute 3D Pixar Style render, bright lighting, soft texture. Hangul persona diary, fluffy white sheep-like creatures. Characters: [페르소나]. For [이름]. ';
+  var NARRATIVE_PROMPT_TEMPLATE = '[스타일][장면] Full body or group shot, no text.';
 
   /** 4개 이미지 URL로 슬라이드 영상(WebM) 생성. 각 이미지 2초씩. */
   function buildVideoFromFourImages(dataUrls, options) {
@@ -283,18 +283,18 @@
     return s;
   }
 
-  /** 에피소드 스토리 생성 (한글 에이전트 다이어리 톤: 친근·따뜻, 역할 반영) */
+  /** 서사 스토리 생성 (한글 페르소나 다이어리 톤: 진결·따뜻, 역할 반영) */
   function buildEpisodeStory(list, name) {
     if (!list || list.length === 0) return { title: '', paragraphs: [] };
     var names = list.map(function (a) { return a.name; });
-    var title = name + '의 한글 에이전트 이야기';
+    var title = name + '의 한글 페르소나 이야기';
     if (names.length <= 2) {
       var nameList = names.length === 2 ? (names[0] + '와 ' + names[1] + '가') : (names[0] + '가');
       return {
         title: title,
         paragraphs: [
-          name + '의 이름 속에는 ' + nameList + ' 숨어 있어요.',
-          list[0].name + '는 ' + list[0].role + '답게 ' + (list.length > 1 ? list[1].name + '는 ' + list[1].role + '답게 ' : '') + name + '를 위해 오늘도 특별한 하루를 만들어 주었어요.'
+          name + '의 이름 속에는 ' + nameList + ' 당신의 본질을 투영하고 있어요.',
+          list[0].name + '는 ' + list[0].role + '로서 ' + (list.length > 1 ? list[1].name + '는 ' + list[1].role + '로서 ' : '') + name + '님의 여정을 위해 특별한 서사를 깨웠습니다.'
         ]
       };
     }
@@ -302,9 +302,9 @@
     var mid = list.slice(1, -1);
     var last = list[list.length - 1];
     var midText = mid.map(function (a) { return a.name + '(' + a.role + ')'; }).join(', ');
-    var p1 = name + '의 이름 속에는 ' + names.join(', ') + '이 숨어 있어요. 오늘은 그들이 모여 ' + name + '을 위한 작은 이야기를 만들었어요.';
-    var p2 = first.name + '는 ' + first.role + '답게 맨 앞에서 반갑게 맞아 주었고, ' + midText + '이 차례로 등장해 각자의 재능을 보여 주었어요.';
-    var p3 = '마지막으로 ' + last.name + '(' + last.role + ')이 이야기를 마무리하며, ' + name + '의 하루가 더 특별해졌어요.';
+    var p1 = name + '님의 이름 속에는 ' + names.join(', ') + '이 깃들어 있습니다. 이들은 오늘 ' + name + '님의 삶을 비추는 고유한 서사를 펼쳐 보입니다.';
+    var p2 = first.name + '는 ' + first.role + '로서 서사의 서막을 열었고, ' + midText + '이 차례로 등장하여 당신의 다채로운 페르소나를 보여 주었습니다.';
+    var p3 = '마지막으로 ' + last.name + '(' + last.role + ')이 여정의 의미를 되새기며, ' + name + '님의 본질은 더욱 깊고 풍성해졌습니다.';
     return { title: title, paragraphs: [p1, p2, p3] };
   }
 
@@ -315,9 +315,9 @@
     if (!stripEl || !resultEl) return;
     var names = list.map(function (a) { return a.name; });
     if (romanInput) {
-      summaryEl.innerHTML = '<span class="name-episodes-roman-result">' + escapeHtml(romanInput) + ' → <strong>' + escapeHtml(name) + '</strong></span><br>' + name + '의 이름에는 ' + names.join(', ') + '이 숨어 있어요.';
+      summaryEl.innerHTML = '<span class="name-episodes-roman-result">' + escapeHtml(romanInput) + ' → <strong>' + escapeHtml(name) + '</strong></span><br>' + name + '님의 이름에는 ' + names.join(', ') + '이 깃들어 있습니다.';
     } else {
-      summaryEl.textContent = name + '의 이름에는 ' + names.join(', ') + '이 숨어 있어요.';
+      summaryEl.textContent = name + '님의 이름에는 ' + names.join(', ') + '이 깃들어 있습니다.';
     }
     stripEl.innerHTML = '';
     var rarityColors = ['#c9a227', '#e8b923', '#7c3aed', '#a78bfa', '#ec4899'];
@@ -385,6 +385,9 @@
       stripEl.appendChild(card);
     });
     resultEl.style.display = 'block';
+    // 미리보기 목업 숨기기
+    var previewEl = document.getElementById('name-episodes-preview');
+    if (previewEl) previewEl.style.display = 'none';
     var cards = stripEl.querySelectorAll('.name-episode-card');
     cards.forEach(function (card, idx) {
       var delay = 180 + idx * 220;
@@ -413,7 +416,7 @@
         });
       }
       if (cutsContainer) cutsContainer.style.display = 'none';
-      var scenes = EPISODE_SCENES;
+      var scenes = NARRATIVE_SCENES;
       var charList = list.map(function (a) { return a.name + '(' + a.role + ')'; }).join(', ');
       var cutDataUrls = [];
       var cutLoadingEls = [];
@@ -429,7 +432,7 @@
           var cutCap = cutEl.querySelector('.name-episodes-cut-caption');
           if (cutCap) cutCap.textContent = scenes[c - 1].caption;
           if (cutImg) {
-            cutImg.alt = name + ' 에피소드 컷 ' + c;
+            cutImg.alt = name + ' 서사 컷 ' + c;
             cutImg.onerror = function () { this.style.display = 'none'; };
           }
           if (hasApiKey) {
@@ -530,7 +533,7 @@
             }
             if (aiVideoSave) {
               aiVideoSave.href = videoUrl;
-              aiVideoSave.download = (name || '나만의-에피소드') + '-영상-' + Date.now() + '.webm';
+              aiVideoSave.download = (name || '나만의-서사') + '-영상-' + Date.now() + '.webm';
               aiVideoSave.style.display = 'inline-block';
             }
           })
@@ -551,9 +554,9 @@
         (function (cutIndex) {
           var charName = list[cutIndex % list.length].name;
           var phrase = loadingPhrases[cutIndex % loadingPhrases.length];
-          setCutLoadingText(cutIndex, charName + '이가 ' + phrase + '...');
+          setCutLoadingText(cutIndex, charName + ' 페르소나가 ' + phrase + '...');
           var sceneInfo = scenes[cutIndex];
-          var stylePart = fillPromptTemplate(EPISODE_STYLE_PREFIX, { '이름': name, '캐릭터': charList });
+          var stylePart = fillPromptTemplate(NARRATIVE_STYLE_PREFIX, { '이름': name, '페르소나': charList });
           var scenePart = fillPromptTemplate(sceneInfo.prompt, { '이름': name });
           var filled = stylePart + scenePart + ' Full body or group shot, no text.';
           generateCut(filled).then(function (base64) {
@@ -689,7 +692,7 @@
           var charsEl = document.getElementById('name-episodes-share-chars');
           var cutsEl = document.getElementById('name-episodes-share-cuts');
           var summaryEl = document.getElementById('name-episodes-share-summary');
-          if (titleEl) titleEl.textContent = cur.name + '의 한글 에이전트 이야기';
+          if (titleEl) titleEl.textContent = cur.name + '님의 한글 페르소나 이야기';
           if (charsEl) charsEl.textContent = cur.list.map(function (a) { return a.name; }).join(' · ');
           if (summaryEl) summaryEl.textContent = (cur.story && cur.story.paragraphs && cur.story.paragraphs[0]) ? cur.story.paragraphs[0] : '';
           if (cutsEl && cur.cutDataUrls && cur.cutDataUrls.length) {
@@ -720,7 +723,7 @@
 
             html2canvas(shareCard, { scale: 2, useCORS: true, allowTaint: true, backgroundColor: '#1a1a2e' }).then(function (canvas) {
               var link = document.createElement('a');
-              link.download = (cur.name || '나만의-에피소드') + '-한글에이전트.png';
+              link.download = (cur.name || '나만의-서사') + '-한글페르소나.png';
               link.href = canvas.toDataURL('image/png');
               link.click();
               
@@ -764,7 +767,7 @@
             if (typeof html2canvas !== 'undefined') {
               html2canvas(shareCard, { scale: 2, useCORS: true, allowTaint: true, backgroundColor: '#1a1a2e' }).then(function (canvas) {
                 var link = document.createElement('a');
-                link.download = (cur.name || '나만의-에피소드') + '-인스타-공유.png';
+                link.download = (cur.name || '나만의-서사') + '-인스타-공유.png';
                 link.href = canvas.toDataURL('image/png');
                 link.click();
               });
@@ -776,7 +779,7 @@
           // 2. 트위터/X
           grid.appendChild(createBtn('X (트위터) 공유', '#000000', '🐦', function() {
             var url = encodeURIComponent(window.location.href);
-            var text = encodeURIComponent('나만의 한글 에이전트 에피소드를 만들었어요! #보라해 #Borahae #HangulAgent');
+            var text = encodeURIComponent('나만의 한글 페르소나 서사를 일깨웠어요! #보라해 #Borahae #HangulPersona');
             window.open('https://twitter.com/intent/tweet?url=' + url + '&text=' + text, '_blank');
           }));
 
@@ -833,7 +836,7 @@
     var list = nameToEpisodeList('환');
     var ok = jamos.length === 4 && list.length === 4 && list[2].name === '아롱';
     if (!ok && typeof console !== 'undefined' && console.warn) {
-      console.warn('[name-episodes] 셀프검증: 환 분해 자모=', jamos, '캐릭터 수=', list.length, list.length >= 3 ? '이름=' + list.map(function(a){ return a.name; }).join(',') : '');
+      console.warn('[name-episodes] 셀프검증: 환 분해 자모=', jamos, '페르소나 수=', list.length, list.length >= 3 ? '이름=' + list.map(function(a){ return a.name; }).join(',') : '');
     }
   })();
 })();
