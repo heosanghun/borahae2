@@ -2464,19 +2464,18 @@ section {
 }
 
 .book-badge-tag {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  background: rgba(0, 0, 0, 0.6);
+  position: relative;
+  display: inline-block;
+  background: var(--primary);
   color: white;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 0.65rem;
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 0.7rem;
   font-weight: 700;
-  z-index: 10;
-  backdrop-filter: blur(4px);
+  margin-bottom: 12px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   letter-spacing: 1px;
+  box-shadow: 0 4px 10px rgba(124, 58, 237, 0.3);
 }
 
 .book-spine {
