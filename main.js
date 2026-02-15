@@ -2799,9 +2799,7 @@ ${soulInfo ? soulInfo : ''}
     if (archComingSoonModal) archComingSoonModal.addEventListener('click', function(e) { if (e.target === archComingSoonModal) closeArchComingSoonModal(); });
 
     if (archModal && openArchBtn) {
-      openArchBtn.addEventListener('click', function() {
-        openArchComingSoonModal();
-      });
+      // openArchBtn is now an <a> tag in index.html, no need for click listener here
       archCloseBtn.addEventListener('click', closeArchitectureModal);
       archModal.addEventListener('click', function(e) { if (e.target === archModal) closeArchitectureModal(); });
     }
