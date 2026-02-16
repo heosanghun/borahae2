@@ -3625,18 +3625,22 @@ ${soulInfo ? soulInfo : ''}
       if (pos >= totalVideos) { shuffleOrder(); pos = 0; }
       playPos = pos;
       var poolIdx = playOrder[playPos];
+      video.style.opacity = '0';
       if (overlay) overlay.style.opacity = '1';
       video.src = videoPool[poolIdx];
       if (counter) counter.textContent = (playPos + 1) + ' / ' + totalVideos;
       video.load();
-      video.play().catch(function() {});
     }
 
     function nextVideo() { loadVideoAt(playPos + 1); }
     function prevVideo() { loadVideoAt(playPos - 1); }
 
     video.addEventListener('canplay', function() {
-      if (overlay) overlay.style.opacity = '0';
+      video.style.opacity = '1';
+      video.play().catch(function() {});
+      setTimeout(function() {
+        if (overlay) overlay.style.opacity = '0';
+      }, 80);
     });
 
     video.addEventListener('ended', function() {

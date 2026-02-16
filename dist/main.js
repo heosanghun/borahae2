@@ -540,7 +540,7 @@
       image: 'https://images.unsplash.com/photo-1549490349-8643362247b5?w=800&q=80',
       tag: 'Concert',
       title: '콘서트 글램',
-      desc: '무대 위 조명 아래 빛나는 보라빛 콘서트 룩. 글리터와 시퀸으로 포인트를 주고, 응원봉과 어울리는 코디로 특별한 밤을 완성하세요.',
+      desc: '무대 위 조명 아래 빛나는 보라빛 콘서트 룩. 글리터와 시퀸으로 포인트를 주고, 기억의 등불과 어울리는 코디로 특별한 밤을 완성하세요.',
       items: [
         { icon: '✨', name: '글리터 크롭탑' },
         { icon: '👖', name: '하이웨이스트 와이드팬츠' },
@@ -983,7 +983,7 @@
     }
   }
 
-  // Open modal buttons (에피소드 만들기 버튼은 제외)
+  // Open modal buttons (서사 일깨우기 버튼은 제외)
   document.querySelectorAll('.btn-primary').forEach(btn => {
     if (btn.id === 'name-episodes-btn') return;
     const text = btn.textContent || btn.innerText;
@@ -1530,7 +1530,7 @@
     throw new Error('No image in response');
   }
 
-  /** 나노 바나나(에피소드 등)에서 프롬프트로 이미지 생성 시 사용. 프롬프트만 전달하면 됨. */
+  /** 나노 바나나(서사·페르소나 등)에서 프롬프트로 이미지 생성 시 사용. 프롬프트만 전달하면 됨. */
   window.__simsGenerateImage = async function(prompt) {
     if (!GEMINI_API_KEY) return null;
     try {
@@ -2964,14 +2964,15 @@ ${soulInfo ? soulInfo : ''}
     var currentTerosStep = 0;
 
     function updateTerosModal() {
-      terosSteps.forEach((step, idx) => {
+      var t = (window.__simsI18n && window.__simsI18n.t) ? window.__simsI18n.t : function(k, d) { return d || k; };
+      terosSteps.forEach(function(step, idx) {
         step.classList.toggle('active', idx === currentTerosStep);
       });
-      terosDots.forEach((dot, idx) => {
+      terosDots.forEach(function(dot, idx) {
         dot.classList.toggle('active', idx === currentTerosStep);
       });
       terosPrev.disabled = currentTerosStep === 0;
-      terosNext.textContent = currentTerosStep === terosSteps.length - 1 ? '시작하기' : '다음 →';
+      terosNext.textContent = currentTerosStep === terosSteps.length - 1 ? t('teros.start_btn') : t('teros.next');
     }
 
     function showTerosStory(e) {
@@ -3362,7 +3363,7 @@ ${soulInfo ? soulInfo : ''}
       showLsStep(4);
       document.getElementById('ls-loading').style.display = 'block';
       document.getElementById('ls-result-image-wrap').style.display = 'none';
-      document.getElementById('ls-result-title').textContent = _t('lightstick.loading', '✨ AI가 응원봉을 디자인하고 있어요...');
+      document.getElementById('ls-result-title').textContent = _t('lightstick.loading', '✨ AI가 기억의 등불을 빚고 있어요...');
       document.getElementById('ls-result-subtitle').textContent = _t('lightstick.loading_sub', '약 10~30초 정도 소요됩니다');
 
       var designPrompt = buildLightstickPrompt();
@@ -3376,12 +3377,12 @@ ${soulInfo ? soulInfo : ''}
           document.getElementById('ls-result-image-wrap').style.display = 'block';
           var isEn = _lang() === 'en';
           document.getElementById('ls-result-title').textContent = isEn
-            ? '🎉 ' + lsState.name + '\'s Purple Lightstick is Ready!'
-            : '🎉 ' + lsState.name + '님의 보라빛 응원봉 완성!';
+            ? '🎉 ' + lsState.name + '\'s Lantern of Memory is Ready!'
+            : '🎉 ' + lsState.name + '님의 기억의 등불 완성!';
           var shapeDesc = lsState.shapeName ? lsState.shapeName + ' ' : '';
           document.getElementById('ls-result-subtitle').textContent = isEn
-            ? lsState.colorName + ' · ' + shapeDesc + 'A lightstick shining with your love'
-            : lsState.colorName + ' 컬러 · ' + shapeDesc + '당신의 사랑이 빛나는 응원봉';
+            ? lsState.colorName + ' · ' + shapeDesc + 'A lantern shining with your soul'
+            : lsState.colorName + ' 컬러 · ' + shapeDesc + '당신의 마음이 머무는 등불';
         } else {
           throw new Error('No image data');
         }
@@ -3406,32 +3407,32 @@ ${soulInfo ? soulInfo : ''}
 
       // 모양: 사용자가 선택한 모양 또는 기본 라운드
       var shapeDesc = shape
-        ? 'The lightstick head/top is shaped like: ' + shape + '.'
-        : 'The lightstick has an elegant, unique shape designed by the user\'s preference.';
+        ? 'The lantern head/top is shaped like: ' + shape + '.'
+        : 'The lantern has an elegant, unique shape designed by the user\'s preference.';
 
       // 테마/분위기
       var themeDesc = userPrompt
-        ? 'User\'s design vision and theme: "' + userPrompt + '". Interpret this creatively and incorporate it into the lightstick design, decorations, patterns, and overall mood.'
+        ? 'User\'s design vision and theme: "' + userPrompt + '". Interpret this creatively and incorporate it into the lantern design, decorations, patterns, and overall mood.'
         : 'The overall design should be elegant, premium, and visually stunning.';
 
-      return 'Generate a single beautiful product photo of a custom K-pop fan lightstick (응원봉, cheering stick).\n\n'
+      return 'Generate a single beautiful product photo of a custom decorative lantern, a "Lantern of Memory" (기억의 등불, cheering stick style but more philosophical/artistic).\n\n'
         + 'USER\'S DESIGN CHOICES:\n'
-        + '- Name to display: "' + userName + '" — elegantly engraved, illuminated, or embossed on the lightstick body\n'
-        + '- Primary glow color: ' + colorName + ' (' + colorHex + ') — the lightstick emits and glows in this color\n'
+        + '- Name to display: "' + userName + '" — elegantly engraved, illuminated, or embossed on the lantern body\n'
+        + '- Primary glow color: ' + colorName + ' (' + colorHex + ') — the lantern emits and glows in this color\n'
         + '- ' + shapeDesc + '\n'
         + '- ' + themeDesc + '\n\n'
-        + 'LIGHTSTICK STRUCTURE:\n'
-        + '- A handheld lightstick with a decorative glowing head on top and a grip handle at the bottom\n'
+        + 'LANTERN STRUCTURE:\n'
+        + '- A handheld decorative lantern with a beautiful glowing head on top and a premium grip handle at the bottom\n'
         + '- The head/top part is the main design element (where the shape and glow are)\n'
-        + '- Transparent or semi-transparent crystal/glass-like material with inner LED glow\n'
+        + '- Transparent or semi-transparent crystal/glass-like material with inner LED glow, intricate patterns\n'
         + '- The handle should look sleek and premium (metallic, matte black, or matching the theme)\n\n'
         + 'PHOTO STYLE:\n'
         + '- Dark/black studio background to showcase the glowing effect beautifully\n'
         + '- Professional product photography with soft studio lighting\n'
-        + '- Single lightstick centered in frame, slightly angled for a dynamic look\n'
+        + '- Single lantern centered in frame, slightly angled for a dynamic look\n'
         + '- Photorealistic, high detail, 4K quality\n\n'
         + 'IMPORTANT: Do NOT include any real brand logos, real artist/group names, or trademarked symbols. '
-        + 'This is an original fan-designed lightstick concept. Focus on the user\'s creative vision.';
+        + 'This is an original philosophical lantern concept. Focus on the user\'s creative vision.';
     }
 
     async function callGeminiLightstick(prompt) {
@@ -3624,18 +3625,22 @@ ${soulInfo ? soulInfo : ''}
       if (pos >= totalVideos) { shuffleOrder(); pos = 0; }
       playPos = pos;
       var poolIdx = playOrder[playPos];
+      video.style.opacity = '0';
       if (overlay) overlay.style.opacity = '1';
       video.src = videoPool[poolIdx];
       if (counter) counter.textContent = (playPos + 1) + ' / ' + totalVideos;
       video.load();
-      video.play().catch(function() {});
     }
 
     function nextVideo() { loadVideoAt(playPos + 1); }
     function prevVideo() { loadVideoAt(playPos - 1); }
 
     video.addEventListener('canplay', function() {
-      if (overlay) overlay.style.opacity = '0';
+      video.style.opacity = '1';
+      video.play().catch(function() {});
+      setTimeout(function() {
+        if (overlay) overlay.style.opacity = '0';
+      }, 80);
     });
 
     video.addEventListener('ended', function() {
