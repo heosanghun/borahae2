@@ -717,7 +717,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #000;
+  background: linear-gradient(135deg, #f3e8ff 0%, #fce7f3 50%, #ede9fe 100%);
 }
 .soave-hero-video {
   width: 100%;
