@@ -3591,12 +3591,14 @@ ${soulInfo ? soulInfo : ''}
     });
   })();
 
-  // 소아베 히어로 비디오 — 랜덤 재생 & 자동 전환 (ani_soave 65개 + ani_han 5개)
+  // 소아베 히어로 비디오 — 순차 자동재생 + 좌우 네비게이션 (ani_soave 65개 + ani_han 5개)
   (function() {
     var video = document.getElementById('soave-hero-video');
     var overlay = document.getElementById('soave-video-overlay');
     var counter = document.getElementById('soave-video-counter');
     var muteBtn = document.getElementById('soave-mute-btn');
+    var prevBtn = document.getElementById('soave-nav-prev');
+    var nextBtn = document.getElementById('soave-nav-next');
     if (!video) return;
 
     var videoPool = [];
@@ -3604,38 +3606,49 @@ ${soulInfo ? soulInfo : ''}
     for (i = 1; i <= 65; i++) videoPool.push('image/soave/ani/ani_soave/ (' + i + ').mp4');
     for (i = 1; i <= 5; i++) videoPool.push('image/soave/ani/ani_han/2 (' + i + ').mp4');
     var totalVideos = videoPool.length;
-    var played = [];
-    var currentIdx = 0;
 
-    function pickRandom() {
-      if (played.length >= totalVideos) played = [];
-      var n;
-      do { n = Math.floor(Math.random() * totalVideos); } while (played.indexOf(n) !== -1);
-      played.push(n);
-      currentIdx = n;
-      return videoPool[n];
+    // 셔플된 재생 순서 생성
+    var playOrder = [];
+    function shuffleOrder() {
+      playOrder = [];
+      for (var j = 0; j < totalVideos; j++) playOrder.push(j);
+      for (var k = playOrder.length - 1; k > 0; k--) {
+        var r = Math.floor(Math.random() * (k + 1));
+        var tmp = playOrder[k]; playOrder[k] = playOrder[r]; playOrder[r] = tmp;
+      }
     }
+    shuffleOrder();
+    var playPos = 0;
 
-    function loadVideo() {
+    function loadVideoAt(pos) {
+      if (pos < 0) pos = totalVideos - 1;
+      if (pos >= totalVideos) { shuffleOrder(); pos = 0; }
+      playPos = pos;
+      var poolIdx = playOrder[playPos];
       if (overlay) overlay.style.opacity = '1';
-      var src = pickRandom();
-      video.src = src;
-      if (counter) counter.textContent = (played.length) + ' / ' + totalVideos;
+      video.src = videoPool[poolIdx];
+      if (counter) counter.textContent = (playPos + 1) + ' / ' + totalVideos;
       video.load();
       video.play().catch(function() {});
     }
 
-    video.addEventListener('loadeddata', function() {
+    function nextVideo() { loadVideoAt(playPos + 1); }
+    function prevVideo() { loadVideoAt(playPos - 1); }
+
+    video.addEventListener('canplay', function() {
       if (overlay) overlay.style.opacity = '0';
     });
 
     video.addEventListener('ended', function() {
-      loadVideo();
+      nextVideo();
     });
 
     video.addEventListener('error', function() {
-      setTimeout(loadVideo, 500);
+      setTimeout(nextVideo, 300);
     });
+
+    if (prevBtn) prevBtn.addEventListener('click', function() { prevVideo(); });
+    if (nextBtn) nextBtn.addEventListener('click', function() { nextVideo(); });
 
     if (muteBtn) {
       muteBtn.addEventListener('click', function() {
@@ -3645,7 +3658,7 @@ ${soulInfo ? soulInfo : ''}
       });
     }
 
-    loadVideo();
+    loadVideoAt(0);
   })();
 
   console.log('BORAHAE loaded successfully!');
