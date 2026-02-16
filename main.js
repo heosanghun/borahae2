@@ -2309,6 +2309,10 @@ ${soulInfo ? soulInfo : ''}
 4. **스타일링 시작**: \`[ACTION:start-styling]\`
    - 사용자가 "스타일링 해줘", "코디 추천해줘" 등 말하면 사용
 
+5. **매직샵 샘플 체험 (사랑의 인사)**: \`[ACTION:magicshop-sample]\`
+   - 사용자가 "사랑의 인사 샘플 보여줘", "매직샵 체험해보고 싶어", "고전 선율 사용해서 결과 보여줘", "안식처 만들어줘", "건축물 샘플 보여줘" 등 말하면 사용
+   - 샘플 음악(사랑의 인사)을 자동 선택하고 즉시 안식처 건축을 시작
+
 ### 액션 태그 규칙:
 - 액션 태그는 반드시 응답 텍스트의 **맨 마지막 줄**에 작성
 - 하나의 응답에 액션 태그는 **하나만** 사용
@@ -2321,6 +2325,7 @@ ${soulInfo ? soulInfo : ''}
 - 사용자: "매직샵 보여줘" → "매직샵으로 안내할게! 당신의 선율이 안식처가 되는 마법의 공간이야 ✨ [ACTION:navigate:lightstick]"
 - 사용자: "굿즈 구경하고 싶어" → "보라 굿즈 페이지로 안내할게! 💜 [ACTION:navigate:shop]"
 - 사용자: "내 생일은 2000년 5월 20일이야" → "2000년 5월 20일! 당신의 소울 컬러를 찾아볼게 💜 [ACTION:input-birthday:2000-05-20]"
+- 사용자: "사랑의 인사 샘플로 건축물 보여줘" → "사랑의 인사 샘플로 안식처를 만들어 볼게! 무형의 선율이 유형의 건축물로 태어나는 마법을 함께 봐 ✨ [ACTION:magicshop-sample]"
 
 ## 중요 규칙
 - 특정 K-pop 아티스트 이름, 그룹명, 소속사명을 직접 언급하지 마세요
@@ -2733,6 +2738,9 @@ ${soulInfo ? soulInfo : ''}
             if (stylingBtn) stylingBtn.click();
           }, 800);
           break;
+        case 'magicshop-sample':
+          runMagicShopSample();
+          break;
       }
     }, 1500);
   }
@@ -2782,6 +2790,26 @@ ${soulInfo ? soulInfo : ''}
           dateBtn.click();
         }, 500);
       }, 600);
+    }, 300);
+  }
+
+  function runMagicShopSample() {
+    if (chatWidget) chatWidget.classList.remove('active');
+    setTimeout(function() {
+      var section = document.getElementById('lightstick');
+      if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(function() {
+        var sampleBtn = document.getElementById('arch-use-sample-btn');
+        if (sampleBtn) {
+          sampleBtn.click();
+          setTimeout(function() {
+            var generateBtn = document.getElementById('arch-generate-btn');
+            if (generateBtn && !generateBtn.disabled) {
+              generateBtn.click();
+            }
+          }, 800);
+        }
+      }, 800);
     }, 300);
   }
 
