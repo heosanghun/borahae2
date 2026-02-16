@@ -1,6 +1,6 @@
 export async function onRequestPost(context) {
   const { request, env } = context;
-  const apiKey = env.OPENAI_API_KEY;
+  const apiKey = env.OPENAI_API_KEY || env['OpenAI API KEY'] || env['OpenAI_API_KEY'] || env['openai_api_key'] || '';
 
   if (!apiKey) {
     return new Response(JSON.stringify({ error: { message: 'OPENAI_API_KEY not configured' } }), {
