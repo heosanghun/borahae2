@@ -3603,7 +3603,7 @@ ${soulInfo ? soulInfo : ''}
     var videoPool = [];
     var i;
     for (i = 1; i <= 65; i++) videoPool.push('image/soave/ani/ani_soave/ (' + i + ').mp4');
-    for (i = 1; i <= 5; i++) videoPool.push('image/soave/ani/ani_han/2 (' + i + ').mp4');
+    for (i = 1; i <= 4; i++) videoPool.push('image/soave/ani/ani_han/2 (' + i + ').mp4');
     var totalVideos = videoPool.length;
 
     // 셔플된 재생 순서 생성
