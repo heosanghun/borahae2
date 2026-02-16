@@ -4,10 +4,11 @@
   'use strict';
 
   // ========================================
-  // API Keys (.env → config.js 에서 주입, Gemini만 사용)
+  // API Keys (.env → config.js 에서 주입)
   // ========================================
   const GEMINI_API_KEY = (typeof window !== 'undefined' && window.__SIMS_GEMINI_KEY__) || '';
   if (typeof window !== 'undefined') window.__hasGeminiApiKey = !!GEMINI_API_KEY;
+  const OPENAI_API_KEY = (typeof window !== 'undefined' && window.__SIMS_OPENAI_KEY__) || '';
 
   // ========================================
   // Supabase Auth (회원가입 / 로그인)
@@ -2395,8 +2396,9 @@ ${soulInfo ? soulInfo : ''}
 
     chatHistory.push({ role: 'user', content: message });
 
-    if (!GEMINI_API_KEY) {
-      addMessage('assistant', 'API 키가 설정되지 않았습니다. 프로젝트 루트에 .env 파일에 GEMINI_API_KEY 를 입력한 뒤, 터미널에서 <code>node scripts/build-config.js</code> 를 실행하고 페이지를 새로고침해주세요.');
+    var chatApiKey = OPENAI_API_KEY || GEMINI_API_KEY;
+    if (!chatApiKey) {
+      addMessage('assistant', 'API 키가 설정되지 않았습니다. 프로젝트 루트에 .env 파일에 OPENAI_API_KEY 를 입력한 뒤, 터미널에서 <code>node scripts/build-config.js</code> 를 실행하고 페이지를 새로고침해주세요.');
       isTyping = false;
       if (chatSend) chatSend.disabled = false;
       return;
@@ -2416,7 +2418,7 @@ ${soulInfo ? soulInfo : ''}
     if (chatSend) chatSend.disabled = true;
 
     try {
-      var response = await callGeminiChat(message);
+      var response = OPENAI_API_KEY ? await callOpenAIChat(message) : await callGeminiChat(message);
       hideTypingIndicator();
       addMessage('assistant', response);
       chatHistory.push({ role: 'assistant', content: response });
@@ -2472,6 +2474,45 @@ ${soulInfo ? soulInfo : ''}
         throw new Error('Gemini: finishReason ' + data.candidates[0].finishReason);
       }
       throw new Error('Gemini: no text in response');
+    }
+    return text;
+  }
+
+  // OpenAI Chat Completions API (소아베 채팅 전용)
+  async function callOpenAIChat(userMessage) {
+    var messages = [
+      { role: 'system', content: SYSTEM_PROMPT_BASE + getChatUserContext() }
+    ];
+    for (var i = 0; i < chatHistory.length; i++) {
+      var msg = chatHistory[i];
+      if (i >= chatHistory.length - 10) {
+        messages.push({ role: msg.role, content: msg.content });
+      }
+    }
+    var res = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + OPENAI_API_KEY
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: messages,
+        max_tokens: 500,
+        temperature: 0.8
+      })
+    });
+    var data = await res.json().catch(function() { return {}; });
+    if (!res.ok) {
+      var errMsg = (data.error && data.error.message) ? data.error.message : ('HTTP ' + res.status);
+      if (res.status === 429) {
+        throw new Error('QUOTA_LIMIT');
+      }
+      throw new Error('OpenAI: ' + errMsg);
+    }
+    var text = data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
+    if (!text) {
+      throw new Error('OpenAI: no text in response');
     }
     return text;
   }
