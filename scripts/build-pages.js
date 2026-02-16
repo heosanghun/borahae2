@@ -39,6 +39,13 @@ if (fs.existsSync(dist)) {
 }
 mkdirp(dist);
 
+// _worker.js (Cloudflare Pages Worker - OpenAI 채팅 프록시)
+const workerSrc = path.join(root, '_worker.js');
+if (fs.existsSync(workerSrc)) {
+  copyFile(workerSrc, path.join(dist, '_worker.js'));
+  console.log('_worker.js 복사됨');
+}
+
 // 루트 정적 파일
 const rootFiles = ['index.html', 'style.css', 'main.js', 'name-episodes.js', 'i18n.js', 'hangeul-architecture.js'];
 for (const f of rootFiles) {
