@@ -2739,7 +2739,12 @@ ${soulInfo ? soulInfo : ''}
       addMessage('assistant', parsed.text);
       chatHistory.push({ role: 'assistant', content: parsed.text });
       if (ttsEnabled) { playSoaveTTS(parsed.text); }
-      if (parsed.action) { executeAction(parsed.action); }
+      if (parsed.action) {
+        executeAction(parsed.action);
+      } else {
+        var fallback = detectActionFromUserMessage(message);
+        if (fallback) executeAction(fallback);
+      }
     } catch (error) {
       hideTypingIndicator();
       var errMsg = (error && error.message) ? error.message : String(error);
@@ -2958,6 +2963,48 @@ ${soulInfo ? soulInfo : ''}
   // ========================================
   // Action Parser & Executor (Voice Navigation)
   // ========================================
+
+  function detectActionFromUserMessage(message) {
+    var msg = message.trim().replace(/\s+/g, ' ').toLowerCase();
+    var navPatterns = [
+      { id: 'shop-clothing', re: /의류|보라해\s?옷|옷\s?보여|clothing/ },
+      { id: 'shop-ecobag', re: /에코백|ecobag/ },
+      { id: 'shop-phonecase', re: /폰\s?케이스|핸드폰\s?케이스|phonecase/ },
+      { id: 'shop-keyring', re: /키링|악?세서리|keyring|accessory/ },
+      { id: 'shop-stationery', re: /문구|다이어리|stationery/ },
+      { id: 'shop-sticker', re: /스티커|데코|sticker/ },
+      { id: 'shop-lightstick', re: /응원봉|등불|lightstick/ },
+      { id: 'shop', re: /굿즈|스토어|쇼핑|store|goods/ },
+      { id: 'styling', re: /플레이|페르소나|이름\s?분석|한글\s?페르소나|play/ },
+      { id: 'soul-color-section', re: /소울\s?컬러|생일\s?분석|soul\s?color/ },
+      { id: 'lightstick', re: /매직\s?샵|크리에이트|안식처|magic\s?shop|create/ },
+      { id: 'boratime', re: /보라타임|워치|시계|boratime|watch/ },
+      { id: 'community', re: /커뮤니티|팬\s?모임|community/ },
+      { id: 'events', re: /이벤트|행사|event/ },
+      { id: 'content', re: /콘텐츠|팬\s?아트|갤러리|content/ },
+      { id: 'membership', re: /멤버십|구독|가격|membership/ },
+      { id: 'about', re: /보라해\s?소개|어바웃|about/ },
+      { id: 'ebook', re: /전자책|이북|ebook/ },
+      { id: 'comments', re: /댓글|코멘트|comment/ },
+      { id: 'services', re: /서비스|뭐가\s?있/ }
+    ];
+    for (var i = 0; i < navPatterns.length; i++) {
+      if (navPatterns[i].re.test(msg)) {
+        return { type: 'navigate', value: navPatterns[i].id };
+      }
+    }
+    if (/다크\s?모드|어둡게|dark/i.test(msg)) return { type: 'click', value: 'theme-toggle' };
+    if (/라이트\s?모드|밝게|light/i.test(msg)) return { type: 'click', value: 'theme-toggle' };
+    if (/영어로|english/i.test(msg)) return { type: 'click', value: 'lang-en' };
+    if (/한국어로|korean/i.test(msg)) return { type: 'click', value: 'lang-ko' };
+    if (/로그인/i.test(msg)) return { type: 'click', value: 'nav-login-btn' };
+    if (/로그아웃/i.test(msg)) return { type: 'click', value: 'nav-logout-btn' };
+    if (/스타일링\s?시작|코디\s?추천/i.test(msg)) return { type: 'click', value: 'open-styling-result-btn' };
+    if (/샘플|사랑의\s?인사.*체험|매직샵\s?체험/i.test(msg)) return { type: 'magicshop-sample', value: '' };
+    if (/맨\s?위|처음으로|홈으로|scroll.*top/i.test(msg)) return { type: 'scroll-top', value: '' };
+    return null;
+  }
+
   function parseActionFromResponse(response) {
     var actionRegex = /\[ACTION:([\w-]+)(?::([^\]]*))?\]\s*$/;
     var match = response.match(actionRegex);
