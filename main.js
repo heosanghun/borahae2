@@ -2442,6 +2442,7 @@ ${soulInfo ? soulInfo : ''}
       hideTypingIndicator();
       addMessage('assistant', response);
       chatHistory.push({ role: 'assistant', content: response });
+      if (ttsEnabled) { playSoaveTTS(response); }
     } catch (error) {
       hideTypingIndicator();
       var errMsg = (error && error.message) ? error.message : String(error);
@@ -2532,6 +2533,129 @@ ${soulInfo ? soulInfo : ''}
       throw new Error('OpenAI: no text in response');
     }
     return text;
+  }
+
+  // ========================================
+  // Voice: STT (Speech Recognition) + TTS (OpenAI)
+  // ========================================
+  var ttsEnabled = false;
+  var currentAudio = null;
+  var micBtn = document.getElementById('chat-mic-btn');
+  var ttsToggle = document.getElementById('chat-tts-toggle');
+  var recognition = null;
+  var isRecording = false;
+
+  var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (SpeechRecognition) {
+    recognition = new SpeechRecognition();
+    recognition.lang = 'ko-KR';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+    recognition.continuous = false;
+
+    recognition.onresult = function(event) {
+      var transcript = event.results[0][0].transcript;
+      if (chatInput && transcript.trim()) {
+        chatInput.value = transcript.trim();
+        sendMessage();
+      }
+      stopRecording();
+    };
+
+    recognition.onerror = function(event) {
+      console.error('Speech recognition error:', event.error);
+      stopRecording();
+      if (event.error === 'not-allowed') {
+        addMessage('assistant', '마이크 사용 권한이 필요합니다. 브라우저 설정에서 마이크를 허용해 주세요. 🎤');
+      }
+    };
+
+    recognition.onend = function() {
+      stopRecording();
+    };
+  }
+
+  function startRecording() {
+    if (!recognition) return;
+    if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+    isRecording = true;
+    if (micBtn) {
+      micBtn.classList.add('recording');
+      micBtn.querySelector('.icon-mic').style.display = 'none';
+      micBtn.querySelector('.icon-mic-recording').style.display = '';
+    }
+    try { recognition.start(); } catch(e) {}
+  }
+
+  function stopRecording() {
+    isRecording = false;
+    if (micBtn) {
+      micBtn.classList.remove('recording');
+      micBtn.querySelector('.icon-mic').style.display = '';
+      micBtn.querySelector('.icon-mic-recording').style.display = 'none';
+    }
+    try { recognition.stop(); } catch(e) {}
+  }
+
+  if (micBtn) {
+    if (!SpeechRecognition) {
+      micBtn.style.display = 'none';
+    } else {
+      micBtn.addEventListener('click', function() {
+        if (isRecording) {
+          stopRecording();
+        } else {
+          startRecording();
+        }
+      });
+    }
+  }
+
+  if (ttsToggle) {
+    ttsToggle.addEventListener('click', function() {
+      ttsEnabled = !ttsEnabled;
+      ttsToggle.classList.toggle('active', ttsEnabled);
+      ttsToggle.querySelector('.icon-speaker-on').style.display = ttsEnabled ? '' : '';
+      ttsToggle.querySelector('.icon-speaker-off').style.display = 'none';
+      if (ttsEnabled) {
+        ttsToggle.querySelector('.icon-speaker-on').style.display = '';
+        ttsToggle.querySelector('.icon-speaker-off').style.display = 'none';
+      } else {
+        ttsToggle.querySelector('.icon-speaker-on').style.display = 'none';
+        ttsToggle.querySelector('.icon-speaker-off').style.display = '';
+        if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+      }
+    });
+  }
+
+  async function playSoaveTTS(text) {
+    if (!text) return;
+    var cleanText = text.replace(/<[^>]*>/g, '').replace(/[💜✨🌟🟣👗🏠🎤🎨]/g, '').trim();
+    if (!cleanText || cleanText.length < 2) return;
+    if (cleanText.length > 500) cleanText = cleanText.slice(0, 500);
+
+    try {
+      var res = await fetch('/api/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          input: cleanText,
+          voice: 'nova'
+        })
+      });
+      if (!res.ok) {
+        console.error('TTS error:', res.status);
+        return;
+      }
+      var blob = await res.blob();
+      var url = URL.createObjectURL(blob);
+      if (currentAudio) { currentAudio.pause(); }
+      currentAudio = new Audio(url);
+      currentAudio.play().catch(function(e) { console.error('TTS play error:', e); });
+      currentAudio.onended = function() { URL.revokeObjectURL(url); currentAudio = null; };
+    } catch (err) {
+      console.error('TTS fetch error:', err);
+    }
   }
 
   var SOAVE_AVATAR_URL = 'image/soave/soave-avatar-face.png';

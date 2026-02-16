@@ -6,9 +6,80 @@ export default {
       return handleChat(request, env);
     }
 
+    if (url.pathname === '/api/tts' && request.method === 'POST') {
+      return handleTTS(request, env);
+    }
+
     return env.ASSETS.fetch(request);
   }
 };
+
+async function handleTTS(request, env) {
+  const apiKey = env.OPENAI_API_KEY || env['OpenAI API KEY'] || env['OPENAI_API_KEY'] || '';
+
+  if (!apiKey) {
+    return new Response(JSON.stringify({ error: { message: 'OPENAI_API_KEY not configured' } }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  }
+
+  var body;
+  try {
+    body = await request.json();
+  } catch (e) {
+    return new Response(JSON.stringify({ error: { message: 'Invalid JSON body' } }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+
+  if (!body.input || typeof body.input !== 'string') {
+    return new Response(JSON.stringify({ error: { message: 'Missing "input" text' } }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+
+  var payload = {
+    model: body.model || 'tts-1',
+    input: body.input.slice(0, 4096),
+    voice: body.voice || 'nova',
+    response_format: 'mp3'
+  };
+
+  try {
+    var res = await fetch('https://api.openai.com/v1/audio/speech', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + apiKey
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) {
+      var errData = await res.text();
+      return new Response(errData, {
+        status: res.status,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    return new Response(res.body, {
+      status: 200,
+      headers: {
+        'Content-Type': 'audio/mpeg',
+        'Access-Control-Allow-Origin': '*'
+      }
+    });
+  } catch (err) {
+    return new Response(JSON.stringify({ error: { message: err.message || 'TTS proxy failed' } }), {
+      status: 502,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+}
 
 async function handleChat(request, env) {
   const apiKey = env.OPENAI_API_KEY || env['OpenAI API KEY'] || env['OPENAI_API_KEY'] || '';
