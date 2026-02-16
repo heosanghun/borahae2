@@ -439,15 +439,15 @@
     'chat.status': { ko: '온라인', en: 'Online' },
     'chat.hello': { ko: '안녕!', en: 'Hey!' },
     'chat.intro': {
-      ko: '나는 보라해를 사랑하는 아미, <strong>소아베</strong>야.<br>코디나 스타일 고민 같이 나눠 보자.',
-      en: "I'm Soave, an ARMY who loves BORAHAE.<br>Let's talk about outfit & style together."
+      ko: '나는 <strong>소아베</strong>야. 소리가 색으로 보이는 공감각 소녀이자, 보라해의 안내자야 💜<br>홈페이지 기능, 스타일링, AI 이야기까지 뭐든 물어봐!',
+      en: "I'm <strong>Soave</strong>, a synesthesia girl who sees sounds as colors, and your BORAHAE guide 💜<br>Ask me anything about features, styling, or AI!"
     },
     'chat.placeholder': { ko: '메시지를 입력하세요...', en: 'Type a message...' },
-    'chat.q1': { ko: '💜 콘서트 코디 추천', en: '💜 Concert Outfit' },
-    'chat.q2': { ko: '🎨 퍼스널 컬러 진단', en: '🎨 Personal Color' },
-    'chat.q3': { ko: '🎤 팬미팅 스타일링', en: '🎤 Fan Meeting Style' },
-    'chat.q4': { ko: '🟣 보라해 코디', en: '🟣 Purple Outfit' },
-    'chat.q5': { ko: '✨ 내 취향 말해줘', en: '✨ Tell My Taste' },
+    'chat.q1': { ko: '💜 소아베 소개', en: '💜 Meet Soave' },
+    'chat.q2': { ko: '🌟 홈페이지 기능 안내', en: '🌟 Site Features' },
+    'chat.q3': { ko: '✨ 한글 페르소나', en: '✨ Hangul Persona' },
+    'chat.q4': { ko: '🏠 매직샵 안내', en: '🏠 Magic Shop' },
+    'chat.q5': { ko: '👗 스타일링 추천', en: '👗 Style Tips' },
 
     // --- TEROS Story Modal ---
     'teros.vol1_title': { ko: '영혼의 거울, TEROS의 각성', en: 'Mirror of the Soul, Awakening of TEROS' },
