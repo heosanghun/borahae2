@@ -3238,9 +3238,41 @@ ${soulInfo ? soulInfo : ''}
       }
       var data = await res.json();
       if (data.data && data.data[0] && data.data[0].url) {
+        var imgUrl = data.data[0].url;
         var bubble = msgDiv.querySelector('.message-bubble');
-        bubble.innerHTML = '<img src="' + data.data[0].url + '" alt="패션 이미지" class="chat-msg-image" onclick="window.open(this.src,\'_blank\')" style="max-width:100%;border-radius:12px;">' +
+        bubble.innerHTML = '<img src="' + imgUrl + '" alt="패션 이미지" class="chat-msg-image" onclick="window.open(this.src,\'_blank\')" style="max-width:100%;border-radius:12px;cursor:pointer;">' +
+          '<div class="chat-img-actions">' +
+            '<button class="chat-img-download-btn" title="이미지 다운로드"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> 다운로드</button>' +
+            '<button class="chat-img-newtab-btn" title="새 탭에서 보기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 새 탭</button>' +
+          '</div>' +
           '<p style="margin-top:8px;font-size:0.85rem;color:var(--text-muted)">💜 이 옷을 직접 입혀보고 싶다면 <strong>보라해 스타일링</strong>에서 가상 피팅도 가능해!</p>';
+        var dlBtn = bubble.querySelector('.chat-img-download-btn');
+        if (dlBtn) {
+          dlBtn.addEventListener('click', function() {
+            dlBtn.disabled = true;
+            dlBtn.textContent = '저장 중...';
+            fetch('/api/image-proxy?url=' + encodeURIComponent(imgUrl)).then(function(r) { return r.blob(); }).then(function(blob) {
+              var a = document.createElement('a');
+              a.href = URL.createObjectURL(blob);
+              a.download = 'borahae-fashion-' + Date.now() + '.png';
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+              URL.revokeObjectURL(a.href);
+              dlBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> 다운로드';
+              dlBtn.disabled = false;
+            }).catch(function(e) {
+              console.error('Image download error:', e);
+              window.open(imgUrl, '_blank');
+              dlBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> 다운로드';
+              dlBtn.disabled = false;
+            });
+          });
+        }
+        var ntBtn = bubble.querySelector('.chat-img-newtab-btn');
+        if (ntBtn) {
+          ntBtn.addEventListener('click', function() { window.open(imgUrl, '_blank'); });
+        }
         if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
       } else {
         var errMsg = (data.error && data.error.message) ? data.error.message : JSON.stringify(data);

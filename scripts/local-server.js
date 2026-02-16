@@ -177,6 +177,35 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  if (parsed.pathname === '/api/image-proxy' && req.method === 'GET') {
+    var imgUrl = parsed.searchParams.get('url');
+    if (!imgUrl) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Missing url parameter' }));
+      return;
+    }
+    try {
+      var u = new URL(imgUrl);
+      var https = require('https');
+      var proxyReq = https.get(imgUrl, function(proxyRes) {
+        res.writeHead(200, {
+          'Content-Type': proxyRes.headers['content-type'] || 'image/png',
+          'Content-Disposition': 'attachment; filename="borahae-fashion-' + Date.now() + '.png"',
+          'Access-Control-Allow-Origin': '*'
+        });
+        proxyRes.pipe(res);
+      });
+      proxyReq.on('error', function(e) {
+        res.writeHead(502, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: e.message }));
+      });
+    } catch(e) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: e.message }));
+    }
+    return;
+  }
+
   let filePath = path.join(root, decodeURIComponent(parsed.pathname));
   if (filePath.endsWith(path.sep) || fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()) {
     filePath = path.join(filePath, 'index.html');

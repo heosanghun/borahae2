@@ -14,6 +14,10 @@ export default {
       return handleImage(request, env);
     }
 
+    if (url.pathname === '/api/image-proxy' && request.method === 'GET') {
+      return handleImageProxy(url);
+    }
+
     return env.ASSETS.fetch(request);
   }
 };
@@ -171,6 +175,35 @@ async function handleChat(request, env) {
     });
   } catch (err) {
     return new Response(JSON.stringify({ error: { message: err.message || 'Proxy fetch failed' } }), {
+      status: 502,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+}
+
+async function handleImageProxy(url) {
+  var imgUrl = url.searchParams.get('url');
+  if (!imgUrl) {
+    return new Response(JSON.stringify({ error: 'Missing url parameter' }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+  try {
+    var imgRes = await fetch(imgUrl);
+    if (!imgRes.ok) {
+      return new Response('Image fetch failed', { status: imgRes.status });
+    }
+    var blob = await imgRes.blob();
+    return new Response(blob, {
+      headers: {
+        'Content-Type': imgRes.headers.get('content-type') || 'image/png',
+        'Content-Disposition': 'attachment; filename="borahae-fashion-' + Date.now() + '.png"',
+        'Access-Control-Allow-Origin': '*'
+      }
+    });
+  } catch (e) {
+    return new Response(JSON.stringify({ error: e.message }), {
       status: 502,
       headers: { 'Content-Type': 'application/json' }
     });
