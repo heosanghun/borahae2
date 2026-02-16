@@ -2283,49 +2283,100 @@ ${soulInfo ? soulInfo : ''}
 11. **멤버십**: Free(무료), Purple(월 4,900원), VIP(월 14,900원) 3단계
 
 ## 음성 명령 및 액션 기능 (매우 중요!)
-사용자가 페이지 이동, 이름 입력, 기능 실행을 요청하면 반드시 응답 텍스트 맨 끝에 액션 태그를 추가하세요.
+사용자가 페이지 이동, 버튼 클릭, 입력, 기능 실행을 요청하면 반드시 응답 텍스트 맨 끝에 액션 태그를 추가하세요.
+마우스·키보드 없이 음성만으로 홈페이지의 모든 기능을 제어할 수 있도록 해야 합니다.
 
-### 사용 가능한 액션 태그:
-1. **페이지 이동**: \`[ACTION:navigate:섹션ID]\`
-   - services → 핵심 서비스 소개
-   - styling → PLAY / 한글 페르소나
-   - soul-color-section → 소울 컬러
-   - lightstick → CREATE / 매직샵
-   - shop → STORE / 굿즈
-   - boratime → 보라타임 / 스마트워치
-   - community → 팬 커뮤니티
-   - events → 이벤트
-   - content → 팬 콘텐츠
-   - membership → 멤버십
-   - about → 어바웃 / 보라해 소개
-   - ebook → 전자책
+### 1. 페이지/섹션 이동: \`[ACTION:navigate:섹션ID]\`
+| 섹션ID | 설명 | 사용자 말 예시 |
+|--------|------|---------------|
+| services | 핵심 서비스 소개 | "서비스 보여줘", "뭐가 있어?" |
+| styling | PLAY/한글 페르소나 | "플레이", "페르소나", "이름 분석" |
+| soul-color-section | 소울 컬러 | "소울 컬러", "생일 분석" |
+| lightstick | CREATE/매직샵 | "매직샵", "크리에이트", "안식처" |
+| shop | STORE/굿즈 | "굿즈", "스토어", "쇼핑" |
+| shop-clothing | 의류 | "보라해 옷", "의류" |
+| shop-ecobag | 에코백 | "에코백" |
+| shop-phonecase | 폰케이스 | "폰케이스", "핸드폰 케이스" |
+| shop-keyring | 키링/악세서리 | "키링", "악세서리" |
+| shop-stationery | 문구/다이어리 | "문구", "다이어리" |
+| shop-sticker | 스티커/데코 | "스티커", "데코" |
+| shop-lightstick | 응원봉/기억의 등불 | "응원봉", "등불" |
+| boratime | 보라타임/스마트워치 | "보라타임", "워치", "시계" |
+| community | 팬 커뮤니티 | "커뮤니티", "팬 모임" |
+| events | 이벤트 | "이벤트", "행사" |
+| content | 팬 콘텐츠 | "콘텐츠", "팬아트", "갤러리" |
+| membership | 멤버십 | "멤버십", "구독", "가격" |
+| about | 어바웃/소개 | "보라해 소개", "어바웃" |
+| ebook | 전자책 | "전자책", "책", "이북" |
+| comments | 댓글 | "댓글", "코멘트" |
 
-2. **이름 입력 + 페르소나 생성**: \`[ACTION:input-name:사용자이름]\`
-   - 사용자가 "내 이름은 민수야", "김민수로 해줘", "이름 민수 넣어줘" 등 말하면 이름을 추출하여 사용
+### 2. 이름 입력 + 페르소나 생성: \`[ACTION:input-name:사용자이름]\`
+- "내 이름은 민수야", "이름 민수", "김민수로 해줘"
 
-3. **생년월일 입력 + 소울컬러 분석**: \`[ACTION:input-birthday:YYYY-MM-DD]\`
-   - 사용자가 "내 생일은 1995년 3월 15일이야" 등 말하면 날짜를 추출하여 사용
+### 3. 생년월일 입력 + 소울컬러: \`[ACTION:input-birthday:YYYY-MM-DD]\`
+- "내 생일은 1995년 3월 15일", "생일 2000-05-20"
 
-4. **스타일링 시작**: \`[ACTION:start-styling]\`
-   - 사용자가 "스타일링 해줘", "코디 추천해줘" 등 말하면 사용
+### 4. 버튼 클릭: \`[ACTION:click:버튼ID]\`
+| 버튼ID | 기능 | 사용자 말 예시 |
+|--------|------|---------------|
+| open-styling-result-btn | 스타일링 시작 | "스타일링 시작", "코디 추천" |
+| arch-use-sample-btn | 고전선율(사랑의 인사) 샘플 선택 | "샘플 선택", "사랑의 인사 선택" |
+| arch-generate-btn | 안식처 건축 시작 | "건축 시작", "안식처 만들어" |
+| open-lightstick-btn | 응원봉(등불) 만들기 | "응원봉 만들래", "등불 밝히기" |
+| theme-toggle | 다크모드/라이트모드 전환 | "다크모드", "라이트모드", "화면 어둡게", "화면 밝게" |
+| lang-ko | 한국어로 변경 | "한국어로 바꿔" |
+| lang-en | 영어로 변경 | "영어로 바꿔", "English" |
+| nav-login-btn | 로그인 | "로그인 해줘" |
+| open-partnership-form | 제휴문의 | "제휴문의", "파트너십" |
+| name-episodes-share-btn | 페르소나 결과 공유 | "결과 공유해줘", "인스타 공유" |
+| open-community-btn | 커뮤니티 이용하기 | "커뮤니티 열어" |
+| open-events-btn | 이벤트 일정 보기 | "이벤트 보여줘" |
+| open-content-btn | 콘텐츠 갤러리 | "갤러리 보여줘" |
+| save-result | 스타일링 결과 저장 | "결과 저장해줘" |
+| retry-analysis | 스타일링 다시 분석 | "다시 분석해줘" |
+| generate-fashion-btn | 패션 이미지 생성 | "패션 이미지 만들어줘" |
+| regenerate-fashion-btn | 패션 이미지 재생성 | "다른 패션 보여줘" |
+| finish-styling | 스타일링 완료 | "스타일링 끝", "완료" |
 
-5. **매직샵 샘플 체험 (사랑의 인사)**: \`[ACTION:magicshop-sample]\`
-   - 사용자가 "사랑의 인사 샘플 보여줘", "매직샵 체험해보고 싶어", "고전 선율 사용해서 결과 보여줘", "안식처 만들어줘", "건축물 샘플 보여줘" 등 말하면 사용
-   - 샘플 음악(사랑의 인사)을 자동 선택하고 즉시 안식처 건축을 시작
+### 5. 매직샵 샘플 자동 실행: \`[ACTION:magicshop-sample]\`
+- "사랑의 인사 샘플 보여줘", "매직샵 체험", "건축물 샘플", "안식처 샘플"
+- 샘플 선택 + 건축 시작 자동 실행
+
+### 6. 전자책 다운로드: \`[ACTION:download-ebook:권수]\`
+| 권수 | 내용 |
+|------|------|
+| 1 | 1권: AI, 마음을 스케치하다 |
+| 2 | 2권: AI, 재능의 우주를 항해하다 |
+| 3 | 3권: AI, 그림자를 조각하다 |
+| 4 | 4권: AI, 내일을 조각하다 |
+| all | 전권 패키지 (ZIP) |
+
+### 7. 맨 위로 이동: \`[ACTION:scroll-top]\`
+- "맨 위로", "처음으로", "홈으로"
 
 ### 액션 태그 규칙:
 - 액션 태그는 반드시 응답 텍스트의 **맨 마지막 줄**에 작성
 - 하나의 응답에 액션 태그는 **하나만** 사용
-- 태그 앞에 자연스러운 안내 멘트를 반드시 포함 (예: "한글 페르소나 페이지로 안내할게! 💜")
-- 사용자가 명확히 이동/입력을 요청한 경우에만 태그 사용 (일반 대화에서는 사용하지 마세요)
+- 태그 앞에 자연스러운 안내 멘트를 반드시 포함
+- 사용자가 명확히 이동/실행을 요청한 경우에만 태그 사용 (일반 대화에서는 사용하지 마세요)
 
 ### 예시:
-- 사용자: "플레이 페이지로 가줘" → "한글 페르소나 페이지로 안내할게! 당신의 이름 속에 숨겨진 영혼을 찾아보자 💜 [ACTION:navigate:styling]"
-- 사용자: "내 이름은 민수야" → "민수! 아름다운 이름이야. 지금 바로 이름을 입력해서 페르소나를 일깨워 볼게 💜 [ACTION:input-name:민수]"
-- 사용자: "매직샵 보여줘" → "매직샵으로 안내할게! 당신의 선율이 안식처가 되는 마법의 공간이야 ✨ [ACTION:navigate:lightstick]"
-- 사용자: "굿즈 구경하고 싶어" → "보라 굿즈 페이지로 안내할게! 💜 [ACTION:navigate:shop]"
-- 사용자: "내 생일은 2000년 5월 20일이야" → "2000년 5월 20일! 당신의 소울 컬러를 찾아볼게 💜 [ACTION:input-birthday:2000-05-20]"
-- 사용자: "사랑의 인사 샘플로 건축물 보여줘" → "사랑의 인사 샘플로 안식처를 만들어 볼게! 무형의 선율이 유형의 건축물로 태어나는 마법을 함께 봐 ✨ [ACTION:magicshop-sample]"
+- "플레이로 가줘" → "한글 페르소나 페이지로 안내할게! 💜 [ACTION:navigate:styling]"
+- "내 이름은 민수야" → "민수! 이름을 입력해서 페르소나를 일깨워 볼게 💜 [ACTION:input-name:민수]"
+- "다크모드로 바꿔" → "화면을 어둡게 전환할게! 🌙 [ACTION:click:theme-toggle]"
+- "영어로 바꿔줘" → "영어로 전환할게! 🌐 [ACTION:click:lang-en]"
+- "스타일링 해줘" → "보라해 스타일링을 시작할게! 👗 [ACTION:click:open-styling-result-btn]"
+- "매직샵 샘플 보여줘" → "사랑의 인사 샘플로 안식처를 만들어 볼게! ✨ [ACTION:magicshop-sample]"
+- "응원봉 만들고 싶어" → "나만의 기억의 등불을 만들어보자! 💜 [ACTION:click:open-lightstick-btn]"
+- "의류 보여줘" → "보라해 의류 코너로 안내할게! 👗 [ACTION:navigate:shop-clothing]"
+- "1권 다운로드" → "1권 'AI, 마음을 스케치하다' 다운로드할게! 📖 [ACTION:download-ebook:1]"
+- "전자책 전권 다운로드" → "전권 패키지를 다운로드할게! 📚 [ACTION:download-ebook:all]"
+- "맨 위로 가줘" → "홈 화면으로 돌아갈게! 💜 [ACTION:scroll-top]"
+- "로그인 해줘" → "로그인 화면을 열어줄게! 🔐 [ACTION:click:nav-login-btn]"
+- "내 생일은 2000년 5월 20일이야" → "소울 컬러를 찾아볼게! 💜 [ACTION:input-birthday:2000-05-20]"
+- "제휴문의 하고 싶어" → "제휴문의 폼을 열어줄게! 📋 [ACTION:click:open-partnership-form]"
+- "에코백 보여줘" → "에코백 코너로 안내할게! 🛍️ [ACTION:navigate:shop-ecobag]"
+- "폰케이스 보고 싶어" → "폰케이스 코너로 안내할게! 📱 [ACTION:navigate:shop-phonecase]"
 
 ## 중요 규칙
 - 특정 K-pop 아티스트 이름, 그룹명, 소속사명을 직접 언급하지 마세요
@@ -2731,27 +2782,72 @@ ${soulInfo ? soulInfo : ''}
         case 'input-birthday':
           inputBirthdayAndAnalyze(action.value);
           break;
-        case 'start-styling':
-          navigateToSection('styling');
-          setTimeout(function() {
-            var stylingBtn = document.getElementById('open-styling-result-btn');
-            if (stylingBtn) stylingBtn.click();
-          }, 800);
+        case 'click':
+          clickButton(action.value);
           break;
         case 'magicshop-sample':
           runMagicShopSample();
+          break;
+        case 'download-ebook':
+          downloadEbook(action.value);
+          break;
+        case 'scroll-top':
+          closeChat();
+          setTimeout(function() { window.scrollTo({ top: 0, behavior: 'smooth' }); }, 300);
+          break;
+        case 'start-styling':
+          clickButton('open-styling-result-btn');
           break;
       }
     }, 1500);
   }
 
+  function closeChat() {
+    if (chatWidget) chatWidget.classList.remove('active');
+  }
+
   function navigateToSection(sectionId) {
     var el = document.getElementById(sectionId);
     if (!el) return;
-    if (chatWidget) chatWidget.classList.remove('active');
+    closeChat();
     setTimeout(function() {
       el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 300);
+  }
+
+  function clickButton(btnId) {
+    if (!btnId) return;
+    var noCloseIds = ['theme-toggle', 'lang-ko', 'lang-en', 'name-episodes-share-btn',
+      'save-result', 'retry-analysis', 'generate-fashion-btn', 'regenerate-fashion-btn',
+      'taste-like-fashion-btn', 'finish-styling'];
+    var needsNavigate = {
+      'open-styling-result-btn': 'styling',
+      'arch-use-sample-btn': 'lightstick',
+      'arch-generate-btn': 'lightstick',
+      'open-lightstick-btn': 'shop-lightstick',
+      'open-community-btn': 'community',
+      'open-events-btn': 'events',
+      'open-content-btn': 'content'
+    };
+    var shouldClose = noCloseIds.indexOf(btnId) === -1;
+    if (shouldClose) closeChat();
+
+    var nav = needsNavigate[btnId];
+    if (nav) {
+      setTimeout(function() {
+        var section = document.getElementById(nav);
+        if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setTimeout(function() {
+          var btn = document.getElementById(btnId);
+          if (btn) btn.click();
+        }, 800);
+      }, 300);
+    } else {
+      setTimeout(function() {
+        var btn = document.getElementById(btnId);
+        if (btn) btn.click();
+      }, shouldClose ? 300 : 100);
+    }
   }
 
   function inputNameAndGenerate(name) {
@@ -2759,16 +2855,14 @@ ${soulInfo ? soulInfo : ''}
     var nameInput = document.getElementById('name-episodes-input');
     var nameBtn = document.getElementById('name-episodes-btn');
     if (!nameInput || !nameBtn) return;
-    if (chatWidget) chatWidget.classList.remove('active');
+    closeChat();
     setTimeout(function() {
       var section = document.getElementById('styling');
       if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
       setTimeout(function() {
         nameInput.value = name;
         nameInput.dispatchEvent(new Event('input', { bubbles: true }));
-        setTimeout(function() {
-          nameBtn.click();
-        }, 500);
+        setTimeout(function() { nameBtn.click(); }, 500);
       }, 600);
     }, 300);
   }
@@ -2778,7 +2872,7 @@ ${soulInfo ? soulInfo : ''}
     var dateInput = document.getElementById('soul-color-date');
     var dateBtn = document.getElementById('soul-color-btn');
     if (!dateInput || !dateBtn) return;
-    if (chatWidget) chatWidget.classList.remove('active');
+    closeChat();
     setTimeout(function() {
       var section = document.getElementById('soul-color-section');
       if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -2786,15 +2880,13 @@ ${soulInfo ? soulInfo : ''}
         dateInput.value = dateStr;
         dateInput.dispatchEvent(new Event('input', { bubbles: true }));
         dateInput.dispatchEvent(new Event('change', { bubbles: true }));
-        setTimeout(function() {
-          dateBtn.click();
-        }, 500);
+        setTimeout(function() { dateBtn.click(); }, 500);
       }, 600);
     }, 300);
   }
 
   function runMagicShopSample() {
-    if (chatWidget) chatWidget.classList.remove('active');
+    closeChat();
     setTimeout(function() {
       var section = document.getElementById('lightstick');
       if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -2809,6 +2901,40 @@ ${soulInfo ? soulInfo : ''}
             }
           }, 800);
         }
+      }, 800);
+    }, 300);
+  }
+
+  var ebookLinks = {
+    '1': 'book/ai-sketch-heart.pdf',
+    '2': 'book/ai-art-spark.pdf',
+    '3': 'book/ai-sculpt-shadow.pdf',
+    '4': 'book/ai-design-future.pdf',
+    'all': 'book/ai-books-all.zip'
+  };
+  var ebookNames = {
+    '1': '1권_AI_마음을_스케치하다.pdf',
+    '2': '2권_AI_재능의_우주를_항해하다.pdf',
+    '3': '3권_AI_그림자를_조각하다.pdf',
+    '4': '4권_AI_내일을_조각하다.pdf',
+    'all': '보라해_AI_전자책_전권.zip'
+  };
+
+  function downloadEbook(vol) {
+    var href = ebookLinks[vol];
+    var name = ebookNames[vol];
+    if (!href) return;
+    closeChat();
+    setTimeout(function() {
+      var section = document.getElementById('ebook');
+      if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(function() {
+        var a = document.createElement('a');
+        a.href = href;
+        a.download = name;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
       }, 800);
     }, 300);
   }
