@@ -749,6 +749,24 @@ button {
   align-items: center;
   gap: 6px;
 }
+.soave-mute-btn {
+  background: rgba(124,58,237,0.12);
+  border: 1px solid rgba(124,58,237,0.25);
+  border-radius: 50%;
+  width: 28px; height: 28px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, transform 0.2s;
+  padding: 0;
+  line-height: 1;
+}
+.soave-mute-btn:hover {
+  background: rgba(124,58,237,0.25);
+  transform: scale(1.1);
+}
 .soave-video-counter {
   font-size: 0.7rem;
   color: var(--text-muted, #999);

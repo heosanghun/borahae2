@@ -3591,32 +3591,36 @@ ${soulInfo ? soulInfo : ''}
     });
   })();
 
-  // 소아베 히어로 비디오 — 랜덤 재생 & 자동 전환
+  // 소아베 히어로 비디오 — 랜덤 재생 & 자동 전환 (ani_soave 65개 + ani_han 5개)
   (function() {
     var video = document.getElementById('soave-hero-video');
     var overlay = document.getElementById('soave-video-overlay');
     var counter = document.getElementById('soave-video-counter');
+    var muteBtn = document.getElementById('soave-mute-btn');
     if (!video) return;
 
-    var totalVideos = 65;
-    var basePath = 'image/soave/ani/ani_soave/ (';
+    var videoPool = [];
+    var i;
+    for (i = 1; i <= 65; i++) videoPool.push('image/soave/ani/ani_soave/ (' + i + ').mp4');
+    for (i = 1; i <= 5; i++) videoPool.push('image/soave/ani/ani_han/2 (' + i + ').mp4');
+    var totalVideos = videoPool.length;
     var played = [];
     var currentIdx = 0;
 
     function pickRandom() {
       if (played.length >= totalVideos) played = [];
       var n;
-      do { n = Math.floor(Math.random() * totalVideos) + 1; } while (played.indexOf(n) !== -1);
+      do { n = Math.floor(Math.random() * totalVideos); } while (played.indexOf(n) !== -1);
       played.push(n);
       currentIdx = n;
-      return basePath + n + ').mp4';
+      return videoPool[n];
     }
 
     function loadVideo() {
       if (overlay) overlay.style.opacity = '1';
       var src = pickRandom();
       video.src = src;
-      if (counter) counter.textContent = currentIdx + ' / ' + totalVideos;
+      if (counter) counter.textContent = (played.length) + ' / ' + totalVideos;
       video.load();
       video.play().catch(function() {});
     }
@@ -3632,6 +3636,14 @@ ${soulInfo ? soulInfo : ''}
     video.addEventListener('error', function() {
       setTimeout(loadVideo, 500);
     });
+
+    if (muteBtn) {
+      muteBtn.addEventListener('click', function() {
+        video.muted = !video.muted;
+        muteBtn.textContent = video.muted ? '🔇' : '🔊';
+        muteBtn.title = video.muted ? '소리 켜기' : '소리 끄기';
+      });
+    }
 
     loadVideo();
   })();
