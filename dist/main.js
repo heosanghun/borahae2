@@ -2282,6 +2282,46 @@ ${soulInfo ? soulInfo : ''}
 10. **팬 콘텐츠**: 팬아트, 팬픽션, 에디트 영상 갤러리
 11. **멤버십**: Free(무료), Purple(월 4,900원), VIP(월 14,900원) 3단계
 
+## 음성 명령 및 액션 기능 (매우 중요!)
+사용자가 페이지 이동, 이름 입력, 기능 실행을 요청하면 반드시 응답 텍스트 맨 끝에 액션 태그를 추가하세요.
+
+### 사용 가능한 액션 태그:
+1. **페이지 이동**: \`[ACTION:navigate:섹션ID]\`
+   - services → 핵심 서비스 소개
+   - styling → PLAY / 한글 페르소나
+   - soul-color-section → 소울 컬러
+   - lightstick → CREATE / 매직샵
+   - shop → STORE / 굿즈
+   - boratime → 보라타임 / 스마트워치
+   - community → 팬 커뮤니티
+   - events → 이벤트
+   - content → 팬 콘텐츠
+   - membership → 멤버십
+   - about → 어바웃 / 보라해 소개
+   - ebook → 전자책
+
+2. **이름 입력 + 페르소나 생성**: \`[ACTION:input-name:사용자이름]\`
+   - 사용자가 "내 이름은 민수야", "김민수로 해줘", "이름 민수 넣어줘" 등 말하면 이름을 추출하여 사용
+
+3. **생년월일 입력 + 소울컬러 분석**: \`[ACTION:input-birthday:YYYY-MM-DD]\`
+   - 사용자가 "내 생일은 1995년 3월 15일이야" 등 말하면 날짜를 추출하여 사용
+
+4. **스타일링 시작**: \`[ACTION:start-styling]\`
+   - 사용자가 "스타일링 해줘", "코디 추천해줘" 등 말하면 사용
+
+### 액션 태그 규칙:
+- 액션 태그는 반드시 응답 텍스트의 **맨 마지막 줄**에 작성
+- 하나의 응답에 액션 태그는 **하나만** 사용
+- 태그 앞에 자연스러운 안내 멘트를 반드시 포함 (예: "한글 페르소나 페이지로 안내할게! 💜")
+- 사용자가 명확히 이동/입력을 요청한 경우에만 태그 사용 (일반 대화에서는 사용하지 마세요)
+
+### 예시:
+- 사용자: "플레이 페이지로 가줘" → "한글 페르소나 페이지로 안내할게! 당신의 이름 속에 숨겨진 영혼을 찾아보자 💜 [ACTION:navigate:styling]"
+- 사용자: "내 이름은 민수야" → "민수! 아름다운 이름이야. 지금 바로 이름을 입력해서 페르소나를 일깨워 볼게 💜 [ACTION:input-name:민수]"
+- 사용자: "매직샵 보여줘" → "매직샵으로 안내할게! 당신의 선율이 안식처가 되는 마법의 공간이야 ✨ [ACTION:navigate:lightstick]"
+- 사용자: "굿즈 구경하고 싶어" → "보라 굿즈 페이지로 안내할게! 💜 [ACTION:navigate:shop]"
+- 사용자: "내 생일은 2000년 5월 20일이야" → "2000년 5월 20일! 당신의 소울 컬러를 찾아볼게 💜 [ACTION:input-birthday:2000-05-20]"
+
 ## 중요 규칙
 - 특정 K-pop 아티스트 이름, 그룹명, 소속사명을 직접 언급하지 마세요
 - "좋아하는 아티스트", "K-pop 아티스트" 등 일반적 표현을 사용하세요
@@ -2440,9 +2480,11 @@ ${soulInfo ? soulInfo : ''}
     try {
       var response = await callOpenAIChat(message);
       hideTypingIndicator();
-      addMessage('assistant', response);
-      chatHistory.push({ role: 'assistant', content: response });
-      if (ttsEnabled) { playSoaveTTS(response); }
+      var parsed = parseActionFromResponse(response);
+      addMessage('assistant', parsed.text);
+      chatHistory.push({ role: 'assistant', content: parsed.text });
+      if (ttsEnabled) { playSoaveTTS(parsed.text); }
+      if (parsed.action) { executeAction(parsed.action); }
     } catch (error) {
       hideTypingIndicator();
       var errMsg = (error && error.message) ? error.message : String(error);
@@ -2656,6 +2698,91 @@ ${soulInfo ? soulInfo : ''}
     } catch (err) {
       console.error('TTS fetch error:', err);
     }
+  }
+
+  // ========================================
+  // Action Parser & Executor (Voice Navigation)
+  // ========================================
+  function parseActionFromResponse(response) {
+    var actionRegex = /\[ACTION:([\w-]+)(?::([^\]]*))?\]\s*$/;
+    var match = response.match(actionRegex);
+    if (!match) return { text: response, action: null };
+    var text = response.replace(actionRegex, '').trim();
+    return {
+      text: text,
+      action: { type: match[1], value: match[2] || '' }
+    };
+  }
+
+  function executeAction(action) {
+    setTimeout(function() {
+      switch (action.type) {
+        case 'navigate':
+          navigateToSection(action.value);
+          break;
+        case 'input-name':
+          inputNameAndGenerate(action.value);
+          break;
+        case 'input-birthday':
+          inputBirthdayAndAnalyze(action.value);
+          break;
+        case 'start-styling':
+          navigateToSection('styling');
+          setTimeout(function() {
+            var stylingBtn = document.getElementById('open-styling-result-btn');
+            if (stylingBtn) stylingBtn.click();
+          }, 800);
+          break;
+      }
+    }, 1500);
+  }
+
+  function navigateToSection(sectionId) {
+    var el = document.getElementById(sectionId);
+    if (!el) return;
+    if (chatWidget) chatWidget.classList.remove('active');
+    setTimeout(function() {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 300);
+  }
+
+  function inputNameAndGenerate(name) {
+    if (!name) return;
+    var nameInput = document.getElementById('name-episodes-input');
+    var nameBtn = document.getElementById('name-episodes-btn');
+    if (!nameInput || !nameBtn) return;
+    if (chatWidget) chatWidget.classList.remove('active');
+    setTimeout(function() {
+      var section = document.getElementById('styling');
+      if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(function() {
+        nameInput.value = name;
+        nameInput.dispatchEvent(new Event('input', { bubbles: true }));
+        setTimeout(function() {
+          nameBtn.click();
+        }, 500);
+      }, 600);
+    }, 300);
+  }
+
+  function inputBirthdayAndAnalyze(dateStr) {
+    if (!dateStr) return;
+    var dateInput = document.getElementById('soul-color-date');
+    var dateBtn = document.getElementById('soul-color-btn');
+    if (!dateInput || !dateBtn) return;
+    if (chatWidget) chatWidget.classList.remove('active');
+    setTimeout(function() {
+      var section = document.getElementById('soul-color-section');
+      if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(function() {
+        dateInput.value = dateStr;
+        dateInput.dispatchEvent(new Event('input', { bubbles: true }));
+        dateInput.dispatchEvent(new Event('change', { bubbles: true }));
+        setTimeout(function() {
+          dateBtn.click();
+        }, 500);
+      }, 600);
+    }, 300);
   }
 
   var SOAVE_AVATAR_URL = 'image/soave/soave-avatar-face.png';

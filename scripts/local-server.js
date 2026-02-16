@@ -71,6 +71,61 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  if (parsed.pathname === '/api/tts' && req.method === 'POST') {
+    let body = '';
+    req.on('data', c => body += c);
+    req.on('end', async () => {
+      if (!OPENAI_API_KEY) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: { message: 'OPENAI_API_KEY not set in .env' } }));
+        return;
+      }
+      try {
+        const payload = JSON.parse(body);
+        if (!payload.input) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: { message: 'Missing "input" text' } }));
+          return;
+        }
+        const https = require('https');
+        const data = JSON.stringify({
+          model: payload.model || 'tts-1',
+          input: payload.input.slice(0, 4096),
+          voice: payload.voice || 'nova',
+          response_format: 'mp3'
+        });
+        const options = {
+          hostname: 'api.openai.com', port: 443, path: '/v1/audio/speech',
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + OPENAI_API_KEY, 'Content-Length': Buffer.byteLength(data) }
+        };
+        const apiReq = https.request(options, apiRes => {
+          if (apiRes.statusCode !== 200) {
+            let errBody = '';
+            apiRes.on('data', c => errBody += c);
+            apiRes.on('end', () => {
+              res.writeHead(apiRes.statusCode, { 'Content-Type': 'application/json' });
+              res.end(errBody);
+            });
+            return;
+          }
+          res.writeHead(200, { 'Content-Type': 'audio/mpeg' });
+          apiRes.pipe(res);
+        });
+        apiReq.on('error', e => {
+          res.writeHead(502, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: { message: e.message } }));
+        });
+        apiReq.write(data);
+        apiReq.end();
+      } catch (e) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: { message: e.message } }));
+      }
+    });
+    return;
+  }
+
   let filePath = path.join(root, decodeURIComponent(parsed.pathname));
   if (filePath.endsWith(path.sep) || fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()) {
     filePath = path.join(filePath, 'index.html');
