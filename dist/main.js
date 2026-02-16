@@ -3590,71 +3590,49 @@ ${soulInfo ? soulInfo : ''}
     });
   })();
 
-  // 디지털 옷장 - 소아베 패션 자동 슬라이드 애니메이션
+  // 소아베 히어로 비디오 — 랜덤 재생 & 자동 전환
   (function() {
-    var fashionSlides = document.querySelectorAll('.fashion-slide');
-    var indicatorDots = document.querySelectorAll('.indicator-dot');
-    var currentSlide = 0;
-    var slideInterval = null;
-    var slideDuration = 3000; // 3초마다 변경
+    var video = document.getElementById('soave-hero-video');
+    var overlay = document.getElementById('soave-video-overlay');
+    var counter = document.getElementById('soave-video-counter');
+    if (!video) return;
 
-    if (fashionSlides.length === 0) return;
+    var totalVideos = 65;
+    var basePath = 'image/soave/ani/ani_soave/ (';
+    var played = [];
+    var currentIdx = 0;
 
-    function showSlide(index) {
-      // 모든 슬라이드 비활성화
-      fashionSlides.forEach(function(slide) {
-        slide.classList.remove('active');
-      });
-      indicatorDots.forEach(function(dot) {
-        dot.classList.remove('active');
-      });
-
-      // 현재 슬라이드 활성화
-      if (fashionSlides[index]) {
-        fashionSlides[index].classList.add('active');
-      }
-      if (indicatorDots[index]) {
-        indicatorDots[index].classList.add('active');
-      }
-
-      currentSlide = index;
+    function pickRandom() {
+      if (played.length >= totalVideos) played = [];
+      var n;
+      do { n = Math.floor(Math.random() * totalVideos) + 1; } while (played.indexOf(n) !== -1);
+      played.push(n);
+      currentIdx = n;
+      return basePath + n + ').mp4';
     }
 
-    function nextSlide() {
-      var next = (currentSlide + 1) % fashionSlides.length;
-      showSlide(next);
+    function loadVideo() {
+      if (overlay) overlay.style.opacity = '1';
+      var src = pickRandom();
+      video.src = src;
+      if (counter) counter.textContent = currentIdx + ' / ' + totalVideos;
+      video.load();
+      video.play().catch(function() {});
     }
 
-    function startAutoSlide() {
-      if (slideInterval) clearInterval(slideInterval);
-      slideInterval = setInterval(nextSlide, slideDuration);
-    }
-
-    function stopAutoSlide() {
-      if (slideInterval) {
-        clearInterval(slideInterval);
-        slideInterval = null;
-      }
-    }
-
-    // 인디케이터 클릭 이벤트
-    indicatorDots.forEach(function(dot, index) {
-      dot.addEventListener('click', function() {
-        showSlide(index);
-        startAutoSlide(); // 클릭 후 자동 슬라이드 재시작
-      });
+    video.addEventListener('loadeddata', function() {
+      if (overlay) overlay.style.opacity = '0';
     });
 
-    // 마우스 호버 시 일시정지
-    var fashionShowcase = document.querySelector('.fashion-showcase');
-    if (fashionShowcase) {
-      fashionShowcase.addEventListener('mouseenter', stopAutoSlide);
-      fashionShowcase.addEventListener('mouseleave', startAutoSlide);
-    }
+    video.addEventListener('ended', function() {
+      loadVideo();
+    });
 
-    // 초기 슬라이드 표시 및 자동 슬라이드 시작
-    showSlide(0);
-    startAutoSlide();
+    video.addEventListener('error', function() {
+      setTimeout(loadVideo, 500);
+    });
+
+    loadVideo();
   })();
 
   console.log('BORAHAE loaded successfully!');

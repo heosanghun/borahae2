@@ -147,21 +147,18 @@
             <span class="app-header-title" data-i18n="hero.phone_title">보라해 스타일링</span>
             <span class="app-header-sub" data-i18n="hero.phone_sub">나만의 K-pop 코디</span>
           </div>
-          <div class="fashion-showcase">
-            <div class="fashion-slide active" data-index="0">
-              <img src="image/soave/soave-fashion-1.png" alt="소아베 패션 1" class="fashion-image">
-            </div>
-            <div class="fashion-slide" data-index="1">
-              <img src="image/soave/soave-fashion-2.png" alt="소아베 패션 2" class="fashion-image">
-            </div>
-            <div class="fashion-slide" data-index="2">
-              <img src="image/soave/soave-fashion-3.png" alt="소아베 패션 3" class="fashion-image">
+          <div class="fashion-showcase soave-video-showcase">
+            <video id="soave-hero-video" autoplay muted loop playsinline
+                   poster="image/soave/soave-fashion-1.png"
+                   class="soave-hero-video">
+              <source src="" type="video/mp4">
+            </video>
+            <div class="soave-video-overlay" id="soave-video-overlay">
+              <div class="soave-video-loader"></div>
             </div>
           </div>
-          <div class="fashion-indicators" aria-hidden="true">
-            <span class="indicator-dot active" data-slide="0"></span>
-            <span class="indicator-dot" data-slide="1"></span>
-            <span class="indicator-dot" data-slide="2"></span>
+          <div class="fashion-indicators soave-video-indicators" aria-hidden="true">
+            <span class="soave-video-counter" id="soave-video-counter"></span>
           </div>
           <div class="ai-suggestion">
             <div class="ai-icon">AI</div>
