@@ -2547,6 +2547,138 @@ ${soulInfo ? soulInfo : ''}
     });
   });
 
+  // Voice Command Guide
+  var voiceGuideBtn = document.getElementById('voice-guide-btn');
+  if (voiceGuideBtn) {
+    voiceGuideBtn.addEventListener('click', function() {
+      showVoiceGuide();
+    });
+  }
+
+  function showVoiceGuide() {
+    var guideData = [
+      { icon: '📍', title: '페이지 이동', items: [
+        { icon: '🎭', text: '한글 페르소나', cmd: '플레이로 가줘' },
+        { icon: '🎨', text: '소울 컬러', cmd: '소울 컬러 보여줘' },
+        { icon: '🏠', text: '매직샵', cmd: '매직샵 보여줘' },
+        { icon: '🛍️', text: '굿즈 스토어', cmd: '굿즈 보여줘' },
+        { icon: '👗', text: '의류', cmd: '의류 보여줘' },
+        { icon: '👜', text: '에코백', cmd: '에코백 보여줘' },
+        { icon: '📱', text: '폰케이스', cmd: '폰케이스 보여줘' },
+        { icon: '🔑', text: '키링', cmd: '키링 보여줘' },
+        { icon: '📝', text: '문구', cmd: '문구 보여줘' },
+        { icon: '🌟', text: '스티커', cmd: '스티커 보여줘' },
+        { icon: '💡', text: '응원봉', cmd: '응원봉 보여줘' },
+        { icon: '⌚', text: '보라타임', cmd: '보라타임 보여줘' },
+        { icon: '👥', text: '커뮤니티', cmd: '커뮤니티 보여줘' },
+        { icon: '🎉', text: '이벤트', cmd: '이벤트 보여줘' },
+        { icon: '🎨', text: '팬 콘텐츠', cmd: '콘텐츠 보여줘' },
+        { icon: '💎', text: '멤버십', cmd: '멤버십 보여줘' },
+        { icon: '📖', text: '전자책', cmd: '전자책 보여줘' },
+        { icon: '💬', text: '댓글', cmd: '댓글 보여줘' },
+        { icon: 'ℹ️', text: '어바웃', cmd: '어바웃 보여줘' },
+        { icon: '🏠', text: '맨 위로', cmd: '맨 위로 가줘' }
+      ]},
+      { icon: '✍️', title: '입력 + 자동 실행', items: [
+        { icon: '🧑', text: '이름 입력 → 페르소나', cmd: '내 이름은 민수야' },
+        { icon: '🎂', text: '생년월일 → 소울컬러', cmd: '내 생일은 2000-05-20' },
+        { icon: '🏛️', text: '매직샵 샘플 체험', cmd: '사랑의 인사 샘플 보여줘' }
+      ]},
+      { icon: '▶️', title: '기능 실행', items: [
+        { icon: '👗', text: '스타일링 시작', cmd: '스타일링 시작해줘' },
+        { icon: '💡', text: '응원봉 만들기', cmd: '응원봉 만들래' },
+        { icon: '🖼️', text: '패션 이미지 생성', cmd: '패션 이미지 만들어' },
+        { icon: '👔', text: '가상 피팅', cmd: '가상 피팅 해볼래' },
+        { icon: '💾', text: '결과 저장', cmd: '결과 저장해줘' },
+        { icon: '🔄', text: '다시 분석', cmd: '다시 분석해줘' },
+        { icon: '🏛️', text: '건축물 재생성', cmd: '건축물 다시 만들어' },
+        { icon: '💡', text: '응원봉 저장', cmd: '응원봉 저장해줘' },
+        { icon: '📤', text: '응원봉 공유', cmd: '응원봉 공유해줘' }
+      ]},
+      { icon: '📚', title: '전자책 다운로드', items: [
+        { icon: '📕', text: '1권 다운로드', cmd: '1권 다운로드해줘' },
+        { icon: '📗', text: '2권 다운로드', cmd: '2권 다운로드해줘' },
+        { icon: '📘', text: '3권 다운로드', cmd: '3권 다운로드해줘' },
+        { icon: '📙', text: '4권 다운로드', cmd: '4권 다운로드해줘' },
+        { icon: '📦', text: '전권 다운로드', cmd: '전자책 전권 다운로드' }
+      ]},
+      { icon: '🎬', title: '영상 제어', items: [
+        { icon: '⏮️', text: '이전 영상', cmd: '이전 영상 보여줘' },
+        { icon: '⏭️', text: '다음 영상', cmd: '다음 영상 보여줘' },
+        { icon: '🔊', text: '소리 켜기/끄기', cmd: '영상 소리 켜줘' }
+      ]},
+      { icon: '⚙️', title: '설정 변경', items: [
+        { icon: '🌙', text: '다크모드', cmd: '다크모드로 바꿔' },
+        { icon: '☀️', text: '라이트모드', cmd: '라이트모드로 바꿔' },
+        { icon: '🇰🇷', text: '한국어', cmd: '한국어로 바꿔' },
+        { icon: '🇺🇸', text: '영어', cmd: '영어로 바꿔' },
+        { icon: '🔊', text: '음성 응답 켜기', cmd: '음성 응답 켜줘' },
+        { icon: '🔇', text: '음성 응답 끄기', cmd: '음성 응답 꺼줘' },
+        { icon: '🔐', text: '로그인', cmd: '로그인 해줘' },
+        { icon: '👋', text: '로그아웃', cmd: '로그아웃' }
+      ]},
+      { icon: '📋', title: '정보/도움말', items: [
+        { icon: '💰', text: '가격 정책', cmd: '가격 정책 보여줘' },
+        { icon: '❓', text: '도움말', cmd: '도움말 보여줘' },
+        { icon: '📞', text: '연락처', cmd: '연락처 알려줘' },
+        { icon: '🔒', text: '개인정보 처리방침', cmd: '개인정보 처리방침' },
+        { icon: '📄', text: '이용약관', cmd: '이용약관 보여줘' },
+        { icon: '📰', text: '블로그', cmd: '블로그 보여줘' },
+        { icon: '💼', text: '채용 정보', cmd: '채용 정보 보여줘' },
+        { icon: '📢', text: '보도 자료', cmd: '보도 자료 보여줘' },
+        { icon: '🤝', text: '제휴문의', cmd: '제휴문의 하고 싶어' },
+        { icon: '🤖', text: 'TEROS 이야기', cmd: '테로스 이야기 보여줘' }
+      ]}
+    ];
+
+    var html = '<div class="voice-guide-panel">';
+    html += '<div style="text-align:center;margin-bottom:12px;"><strong style="font-size:0.95rem;">🎤 음성 명령 가이드</strong><br>';
+    html += '<span style="font-size:0.75rem;color:var(--text-muted);">마이크 버튼을 누르고 말하거나, 아래 칩을 터치하세요!</span></div>';
+
+    for (var s = 0; s < guideData.length; s++) {
+      var sec = guideData[s];
+      html += '<div class="voice-guide-section">';
+      html += '<div class="voice-guide-section-title" data-vg-toggle="' + s + '">';
+      html += '<span class="vg-arrow">▼</span> ' + sec.icon + ' ' + sec.title + ' <span style="font-size:0.7rem;color:var(--text-muted);">(' + sec.items.length + ')</span>';
+      html += '</div>';
+      html += '<div class="voice-guide-items" id="vg-items-' + s + '">';
+      for (var i = 0; i < sec.items.length; i++) {
+        var item = sec.items[i];
+        html += '<span class="voice-guide-chip" data-vg-cmd="' + escapeHtml(item.cmd) + '" title="&quot;' + escapeHtml(item.cmd) + '&quot;">';
+        html += '<span class="vg-icon">' + item.icon + '</span>' + item.text + '</span>';
+      }
+      html += '</div></div>';
+    }
+    html += '</div>';
+
+    addMessage('assistant', html);
+
+    setTimeout(function() {
+      if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
+      var chips = chatMessages.querySelectorAll('.voice-guide-chip');
+      chips.forEach(function(chip) {
+        chip.addEventListener('click', function() {
+          var cmd = this.getAttribute('data-vg-cmd');
+          if (chatInput && cmd) {
+            chatInput.value = cmd;
+            sendMessage();
+          }
+        });
+      });
+      var toggles = chatMessages.querySelectorAll('.voice-guide-section-title');
+      toggles.forEach(function(toggle) {
+        toggle.addEventListener('click', function() {
+          var idx = this.getAttribute('data-vg-toggle');
+          var items = document.getElementById('vg-items-' + idx);
+          if (items) {
+            items.classList.toggle('hidden');
+            this.classList.toggle('collapsed');
+          }
+        });
+      });
+    }, 100);
+  }
+
   // Auto-resize textarea
   if (chatInput) {
     chatInput.addEventListener('input', () => {
