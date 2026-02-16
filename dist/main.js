@@ -540,7 +540,7 @@
       image: 'https://images.unsplash.com/photo-1549490349-8643362247b5?w=800&q=80',
       tag: 'Concert',
       title: '콘서트 글램',
-      desc: '무대 위 조명 아래 빛나는 보라빛 콘서트 룩. 글리터와 시퀸으로 포인트를 주고, 기억의 등불과 어울리는 코디로 특별한 밤을 완성하세요.',
+      desc: '무대 위 조명 아래 빛나는 보라빛 콘서트 룩. 글리터와 시퀸으로 포인트를 주고, 응원봉(기억의 등불)과 어울리는 코디로 특별한 밤을 완성하세요.',
       items: [
         { icon: '✨', name: '글리터 크롭탑' },
         { icon: '👖', name: '하이웨이스트 와이드팬츠' },
@@ -3363,7 +3363,7 @@ ${soulInfo ? soulInfo : ''}
       showLsStep(4);
       document.getElementById('ls-loading').style.display = 'block';
       document.getElementById('ls-result-image-wrap').style.display = 'none';
-      document.getElementById('ls-result-title').textContent = _t('lightstick.loading', '✨ AI가 기억의 등불을 빚고 있어요...');
+      document.getElementById('ls-result-title').textContent = _t('lightstick.loading', '✨ AI가 응원봉(기억의 등불)을 빚고 있어요...');
       document.getElementById('ls-result-subtitle').textContent = _t('lightstick.loading_sub', '약 10~30초 정도 소요됩니다');
 
       var designPrompt = buildLightstickPrompt();
@@ -3378,7 +3378,7 @@ ${soulInfo ? soulInfo : ''}
           var isEn = _lang() === 'en';
           document.getElementById('ls-result-title').textContent = isEn
             ? '🎉 ' + lsState.name + '\'s Lantern of Memory is Ready!'
-            : '🎉 ' + lsState.name + '님의 기억의 등불 완성!';
+            : '🎉 ' + lsState.name + '님의 응원봉(기억의 등불) 완성!';
           var shapeDesc = lsState.shapeName ? lsState.shapeName + ' ' : '';
           document.getElementById('ls-result-subtitle').textContent = isEn
             ? lsState.colorName + ' · ' + shapeDesc + 'A lantern shining with your soul'
