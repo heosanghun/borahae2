@@ -2830,7 +2830,12 @@ ${soulInfo ? soulInfo : ''}
         executeAction(parsed.action);
       } else {
         var fallback = detectActionFromUserMessage(message);
-        if (fallback) executeAction(fallback);
+        if (fallback) {
+          executeAction(fallback);
+        } else {
+          var fashionFromResponse = detectFashionFromAIResponse(parsed.text, message, !!attachedImage);
+          if (fashionFromResponse) executeAction(fashionFromResponse);
+        }
       }
     } catch (error) {
       hideTypingIndicator();
@@ -3099,19 +3104,57 @@ ${soulInfo ? soulInfo : ''}
     if (/스타일링\s?시작|코디\s?추천/i.test(msg)) return { type: 'click', value: 'open-styling-result-btn' };
     if (/샘플|사랑의\s?인사.*체험|매직샵\s?체험/i.test(msg)) return { type: 'magicshop-sample', value: '' };
     if (/맨\s?위|처음으로|홈으로|scroll.*top/i.test(msg)) return { type: 'scroll-top', value: '' };
-    if (/패션\s?이미지|옷\s?만들|코디\s?만들|옷\s?그려|패션\s?그려/i.test(msg)) {
-      var style = 'casual';
-      if (/캐쥬얼|캐주얼|casual/i.test(msg)) style = 'casual';
-      else if (/포멀|formal|정장/i.test(msg)) style = 'formal';
-      else if (/콘서트|concert|무대/i.test(msg)) style = 'concert';
-      else if (/스트릿|street/i.test(msg)) style = 'street';
-      var prompts = {
-        casual: 'A stylish K-pop inspired casual outfit on a faceless white mannequin, purple oversized hoodie with I PURPLE YOU text, wide-leg jeans, white sneakers, purple tote bag, soft pastel studio background, fashion photography, no face, no human features',
-        formal: 'An elegant K-pop inspired formal outfit flat lay on white background, lavender silk blouse, tailored purple blazer, black slim pants, pearl accessories, fashion magazine editorial style, no face, no human',
-        concert: 'A dazzling K-pop concert outfit on a faceless mannequin, sparkly purple sequin crop top, black leather mini skirt, platform boots, purple lightstick accessory, dramatic stage lighting background, fashion editorial, no face',
-        street: 'A trendy K-pop street fashion outfit on a faceless mannequin, oversized purple bomber jacket, graphic tee, cargo pants, chunky sneakers, bucket hat, urban background, street style photography, no face'
-      };
-      return { type: 'generate-fashion', value: prompts[style] };
+    var fashionAction = buildFashionAction(msg);
+    if (fashionAction) return fashionAction;
+    return null;
+  }
+
+  var FASHION_PROMPTS = {
+    casual: 'A stylish K-pop inspired casual outfit on a faceless white mannequin, purple oversized hoodie with I PURPLE YOU text, wide-leg jeans, white sneakers, purple tote bag, soft pastel studio background, fashion photography style, no face, no human features',
+    formal: 'An elegant K-pop inspired formal outfit flat lay on white background, lavender silk blouse, tailored purple blazer, black slim pants, pearl accessories, fashion magazine editorial style, no face, no human',
+    concert: 'A dazzling K-pop concert outfit on a faceless mannequin, sparkly purple sequin crop top, black leather mini skirt, platform boots, purple lightstick accessories, dramatic stage lighting, fashion editorial, no face, no human',
+    street: 'A trendy K-pop street fashion outfit on a faceless mannequin, oversized purple bomber jacket, graphic tee, cargo pants, chunky sneakers, bucket hat, urban city background, street style photography, no face, no human',
+    cute: 'An adorable K-pop cute style outfit on a faceless mannequin, pastel purple cardigan, pleated mini skirt, mary jane shoes, ribbon accessories, soft pink and lavender color palette, dreamy studio background, fashion photography, no face, no human',
+    sporty: 'A sporty K-pop athleisure outfit on a faceless mannequin, purple cropped hoodie, black leggings, white running shoes, cap, gym bag, clean white studio background, fitness fashion photography, no face, no human',
+    vintage: 'A vintage retro K-pop inspired outfit on a faceless mannequin, purple corduroy jacket, high-waist flare pants, platform shoes, retro sunglasses, warm film-grain aesthetic background, fashion editorial, no face, no human',
+    romantic: 'A romantic K-pop date outfit on a faceless mannequin, flowing lavender dress with lace details, delicate jewelry, strappy heels, small clutch purse, soft bokeh garden background, fashion photography, no face, no human'
+  };
+
+  function detectFashionStyle(msg) {
+    if (/캐쥬얼|캐주얼|casual|편한|일상/i.test(msg)) return 'casual';
+    if (/포멀|formal|정장|격식|비즈니스/i.test(msg)) return 'formal';
+    if (/콘서트|concert|무대|공연|라이브/i.test(msg)) return 'concert';
+    if (/스트릿|street|힙합|힙/i.test(msg)) return 'street';
+    if (/큐트|cute|귀여|러블리|lovely/i.test(msg)) return 'cute';
+    if (/스포티|sporty|운동|애슬레저|스포츠/i.test(msg)) return 'sporty';
+    if (/빈티지|vintage|레트로|retro|복고/i.test(msg)) return 'vintage';
+    if (/로맨틱|romantic|데이트|여성스러|우아/i.test(msg)) return 'romantic';
+    return null;
+  }
+
+  function buildFashionAction(msg) {
+    var isFashionReq = /패션|옷|코디|스타일|의상|룩|fashion|outfit|look|style/i.test(msg) &&
+                       /만들|보여|생성|그려|추천|이미지|사진|image|create|show|generate/i.test(msg);
+    var directStyle = detectFashionStyle(msg);
+    if (isFashionReq || directStyle) {
+      var style = directStyle || 'casual';
+      return { type: 'generate-fashion', value: FASHION_PROMPTS[style] || FASHION_PROMPTS.casual };
+    }
+    return null;
+  }
+
+  function detectFashionFromAIResponse(aiText, userMsg, hasImage) {
+    var aiLower = aiText.toLowerCase();
+    var userLower = userMsg.toLowerCase();
+    var aiMentionsFashion = /패션|코디|스타일링|만들어|이미지.*생성|옷.*만들/i.test(aiLower);
+    var userWantsFashion = /패션|옷|코디|스타일|의상|룩|만들어|보여줘|생성|캐쥬얼|캐주얼|포멀|콘서트|스트릿|큐트|스포티|빈티지|로맨틱/i.test(userLower);
+    if (aiMentionsFashion && userWantsFashion) {
+      var style = detectFashionStyle(userLower) || 'casual';
+      return { type: 'generate-fashion', value: FASHION_PROMPTS[style] || FASHION_PROMPTS.casual };
+    }
+    if (hasImage && userWantsFashion) {
+      var style = detectFashionStyle(userLower) || 'casual';
+      return { type: 'generate-fashion', value: FASHION_PROMPTS[style] || FASHION_PROMPTS.casual };
     }
     return null;
   }
