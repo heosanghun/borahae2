@@ -2396,13 +2396,7 @@ ${soulInfo ? soulInfo : ''}
 
     chatHistory.push({ role: 'user', content: message });
 
-    var chatApiKey = OPENAI_API_KEY || GEMINI_API_KEY;
-    if (!chatApiKey) {
-      addMessage('assistant', 'API 키가 설정되지 않았습니다. 프로젝트 루트에 .env 파일에 OPENAI_API_KEY 를 입력한 뒤, 터미널에서 <code>node scripts/build-config.js</code> 를 실행하고 페이지를 새로고침해주세요.');
-      isTyping = false;
-      if (chatSend) chatSend.disabled = false;
-      return;
-    }
+    // 채팅은 서버 프록시(/api/chat)를 사용하므로 클라이언트 키 불필요
 
     var quota = getChatQuota();
     if (quota.count >= CHAT_DAILY_LIMIT) {
@@ -2418,7 +2412,7 @@ ${soulInfo ? soulInfo : ''}
     if (chatSend) chatSend.disabled = true;
 
     try {
-      var response = OPENAI_API_KEY ? await callOpenAIChat(message) : await callGeminiChat(message);
+      var response = await callOpenAIChat(message);
       hideTypingIndicator();
       addMessage('assistant', response);
       chatHistory.push({ role: 'assistant', content: response });
@@ -2478,7 +2472,7 @@ ${soulInfo ? soulInfo : ''}
     return text;
   }
 
-  // OpenAI Chat Completions API (소아베 채팅 전용)
+  // OpenAI Chat via Cloudflare Pages Function proxy (/api/chat)
   async function callOpenAIChat(userMessage) {
     var messages = [
       { role: 'system', content: SYSTEM_PROMPT_BASE + getChatUserContext() }
@@ -2489,12 +2483,9 @@ ${soulInfo ? soulInfo : ''}
         messages.push({ role: msg.role, content: msg.content });
       }
     }
-    var res = await fetch('https://api.openai.com/v1/chat/completions', {
+    var res = await fetch('/api/chat', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + OPENAI_API_KEY
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'gpt-4o-mini',
         messages: messages,
