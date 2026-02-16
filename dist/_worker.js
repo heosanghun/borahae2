@@ -10,6 +10,10 @@ export default {
       return handleTTS(request, env);
     }
 
+    if (url.pathname === '/api/image' && request.method === 'POST') {
+      return handleImage(request, env);
+    }
+
     return env.ASSETS.fetch(request);
   }
 };
@@ -77,6 +81,48 @@ async function handleTTS(request, env) {
     return new Response(JSON.stringify({ error: { message: err.message || 'TTS proxy failed' } }), {
       status: 502,
       headers: { 'Content-Type': 'application/json' }
+    });
+  }
+}
+
+async function handleImage(request, env) {
+  const apiKey = env.OPENAI_API_KEY || env['OpenAI API KEY'] || env['OPENAI_API_KEY'] || '';
+  if (!apiKey) {
+    return new Response(JSON.stringify({ error: { message: 'OPENAI_API_KEY not configured' } }), {
+      status: 500, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  }
+  var body;
+  try { body = await request.json(); } catch (e) {
+    return new Response(JSON.stringify({ error: { message: 'Invalid JSON body' } }), {
+      status: 400, headers: { 'Content-Type': 'application/json' }
+    });
+  }
+  if (!body.prompt || typeof body.prompt !== 'string') {
+    return new Response(JSON.stringify({ error: { message: 'Missing "prompt" text' } }), {
+      status: 400, headers: { 'Content-Type': 'application/json' }
+    });
+  }
+  var payload = {
+    model: body.model || 'dall-e-3',
+    prompt: body.prompt.slice(0, 4000),
+    n: 1,
+    size: body.size || '1024x1024',
+    quality: body.quality || 'standard'
+  };
+  try {
+    var res = await fetch('https://api.openai.com/v1/images/generations', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+      body: JSON.stringify(payload)
+    });
+    var data = await res.json();
+    return new Response(JSON.stringify(data), {
+      status: res.status, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  } catch (err) {
+    return new Response(JSON.stringify({ error: { message: err.message || 'Image proxy failed' } }), {
+      status: 502, headers: { 'Content-Type': 'application/json' }
     });
   }
 }
