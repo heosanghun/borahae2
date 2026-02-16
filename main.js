@@ -2550,7 +2550,8 @@ ${soulInfo ? soulInfo : ''}
   // Voice Command Guide
   var voiceGuideBtn = document.getElementById('voice-guide-btn');
   if (voiceGuideBtn) {
-    voiceGuideBtn.addEventListener('click', function() {
+    voiceGuideBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
       showVoiceGuide();
     });
   }
@@ -3018,7 +3019,20 @@ ${soulInfo ? soulInfo : ''}
     if (!el) return;
     closeChat();
     setTimeout(function() {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (el.classList.contains('shop-cat-block')) {
+        var allBlocks = document.querySelectorAll('.shop-cat-block');
+        var allBtns = document.querySelectorAll('.shop-cat-btn');
+        allBlocks.forEach(function(b) { b.classList.remove('active'); });
+        allBtns.forEach(function(b) { b.classList.remove('active'); });
+        el.classList.add('active');
+        var matchBtn = document.querySelector('.shop-cat-btn[href="#' + sectionId + '"]');
+        if (matchBtn) matchBtn.classList.add('active');
+        setTimeout(function() {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 150);
+      } else {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     }, 300);
   }
 
