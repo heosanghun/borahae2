@@ -40,8 +40,8 @@
     'hero.mood_1': { ko: '무드 · 보라빛 에너지', en: 'Mood · Purple Energy' },
     'hero.mood_2': { ko: '무드 · 설레는 만남', en: 'Mood · Exciting Encounter' },
     'hero.ai_suggestion': {
-      ko: '<strong>OpenAI</strong>가 빚어내는 당신만의 보라빛 세계',
-      en: 'Your purple universe, powered by <strong>OpenAI</strong>'
+      ko: '<strong>OpenAI</strong>가 빚어내는 당신만의 보라빛 세계, 지금 <strong>OpenAI</strong>와 함께 시작하세요',
+      en: 'Your purple universe, powered by <strong>OpenAI</strong> — Start with <strong>OpenAI</strong> now'
     },
 
     // --- Features (BORAHAE 3.0: 3대 핵심 서비스) ---
