@@ -3208,17 +3208,18 @@ ${soulInfo ? soulInfo : ''}
           openTerosStory();
           break;
         case 'generate-fashion':
-          generateFashionImage(action.value);
+          generateChatFashionImage(action.value);
           break;
       }
     }, 1500);
   }
 
-  async function generateFashionImage(prompt) {
+  async function generateChatFashionImage(prompt) {
     if (!prompt) return;
     var msgDiv = document.createElement('div');
-    msgDiv.className = 'chat-message assistant';
-    msgDiv.innerHTML = '<div class="chat-msg-avatar"><img src="image/soave/soave-avatar-face.png" alt="소아베" width="32" height="32"></div><div class="chat-msg-content"><div class="chat-generating-indicator"><div class="spinner"></div><span>패션 이미지를 생성하고 있어요...</span></div></div>';
+    msgDiv.className = 'message assistant';
+    var time = new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
+    msgDiv.innerHTML = '<div class="message-avatar"><img src="image/soave/soave-avatar-face.png" alt="소아베" class="message-avatar-img" width="36" height="36"></div><div class="message-content"><div class="message-bubble"><div class="chat-generating-indicator"><div class="spinner"></div><span>패션 이미지를 생성하고 있어요... (약 10~15초)</span></div></div><span class="message-time">' + time + '</span></div>';
     var chatMessages = document.getElementById('chat-messages');
     if (chatMessages) { chatMessages.appendChild(msgDiv); chatMessages.scrollTop = chatMessages.scrollHeight; }
     try {
@@ -3227,20 +3228,30 @@ ${soulInfo ? soulInfo : ''}
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt: prompt, size: '1024x1024', quality: 'standard' })
       });
+      if (!res.ok) {
+        var errText = await res.text();
+        console.error('DALL-E API error:', res.status, errText);
+        try { var errJson = JSON.parse(errText); errText = (errJson.error && errJson.error.message) || errText; } catch(e) {}
+        var bubble = msgDiv.querySelector('.message-bubble');
+        bubble.innerHTML = '<p>😢 이미지 생성 실패: ' + errText.slice(0, 200) + '</p>';
+        return;
+      }
       var data = await res.json();
       if (data.data && data.data[0] && data.data[0].url) {
-        var content = msgDiv.querySelector('.chat-msg-content');
-        content.innerHTML = '<img src="' + data.data[0].url + '" alt="패션 이미지" class="chat-msg-image" onclick="window.open(this.src,\'_blank\')">' +
-          '<p style="margin-top:8px;font-size:0.85rem;color:var(--text-muted)">💜 이 옷을 직접 나한테 입혀보고 싶다면 <strong>보라해 스타일링</strong>에서 가상 피팅도 해볼 수 있어!</p>';
+        var bubble = msgDiv.querySelector('.message-bubble');
+        bubble.innerHTML = '<img src="' + data.data[0].url + '" alt="패션 이미지" class="chat-msg-image" onclick="window.open(this.src,\'_blank\')" style="max-width:100%;border-radius:12px;">' +
+          '<p style="margin-top:8px;font-size:0.85rem;color:var(--text-muted)">💜 이 옷을 직접 입혀보고 싶다면 <strong>보라해 스타일링</strong>에서 가상 피팅도 가능해!</p>';
         if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
       } else {
-        var errMsg = (data.error && data.error.message) ? data.error.message : '이미지 생성에 실패했어요';
-        var content = msgDiv.querySelector('.chat-msg-content');
-        content.innerHTML = '<p>😢 ' + errMsg + '</p>';
+        var errMsg = (data.error && data.error.message) ? data.error.message : JSON.stringify(data);
+        console.error('DALL-E response error:', errMsg);
+        var bubble = msgDiv.querySelector('.message-bubble');
+        bubble.innerHTML = '<p>😢 ' + errMsg.slice(0, 200) + '</p>';
       }
     } catch (err) {
-      var content = msgDiv.querySelector('.chat-msg-content');
-      content.innerHTML = '<p>😢 이미지 생성 중 오류가 발생했어요. 다시 시도해 주세요!</p>';
+      console.error('generateChatFashionImage error:', err);
+      var bubble = msgDiv.querySelector('.message-bubble');
+      bubble.innerHTML = '<p>😢 네트워크 오류: ' + (err.message || '알 수 없는 오류') + '</p>';
     }
   }
 
