@@ -1790,7 +1790,7 @@
     }
 
     if (tryonResult) {
-      tryonResult.innerHTML = '<div class="tryon-loading"><div class="loading-spinner"></div><p>나노 바나나(Gemini)로 Try-On 이미지를 생성하고 있습니다...</p><small>약 10~30초 소요</small></div>';
+      tryonResult.innerHTML = '<div class="tryon-loading"><div class="loading-spinner"></div><p>OpenAI로 Try-On 이미지를 생성하고 있습니다...</p><small>약 10~30초 소요</small></div>';
     }
 
     try {
@@ -2714,7 +2714,7 @@ ${soulInfo ? soulInfo : ''}
         if (/unregistered callers|API Key|API key|identity/i.test(msg)) {
           msg = getArchErrorText('arch.error_no_api_key');
         }
-        showArchError(msg || '나노 바나나(Gemini) 생성 중 오류가 발생했습니다.');
+        showArchError(msg || 'OpenAI 생성 중 오류가 발생했습니다.');
         console.error('Architecture generation error:', err);
       }
     }
