@@ -2317,30 +2317,64 @@ ${soulInfo ? soulInfo : ''}
 - "내 생일은 1995년 3월 15일", "생일 2000-05-20"
 
 ### 4. 버튼 클릭: \`[ACTION:click:버튼ID]\`
+
+**기본 기능 버튼:**
 | 버튼ID | 기능 | 사용자 말 예시 |
 |--------|------|---------------|
 | open-styling-result-btn | 스타일링 시작 | "스타일링 시작", "코디 추천" |
-| arch-use-sample-btn | 고전선율(사랑의 인사) 샘플 선택 | "샘플 선택", "사랑의 인사 선택" |
-| arch-generate-btn | 안식처 건축 시작 | "건축 시작", "안식처 만들어" |
+| arch-use-sample-btn | 고전선율 샘플 선택 | "샘플 선택" |
+| arch-generate-btn | 안식처 건축 시작 | "건축 시작" |
 | open-lightstick-btn | 응원봉(등불) 만들기 | "응원봉 만들래", "등불 밝히기" |
-| theme-toggle | 다크모드/라이트모드 전환 | "다크모드", "라이트모드", "화면 어둡게", "화면 밝게" |
-| lang-ko | 한국어로 변경 | "한국어로 바꿔" |
-| lang-en | 영어로 변경 | "영어로 바꿔", "English" |
-| nav-login-btn | 로그인 | "로그인 해줘" |
-| open-partnership-form | 제휴문의 | "제휴문의", "파트너십" |
-| name-episodes-share-btn | 페르소나 결과 공유 | "결과 공유해줘", "인스타 공유" |
-| open-community-btn | 커뮤니티 이용하기 | "커뮤니티 열어" |
-| open-events-btn | 이벤트 일정 보기 | "이벤트 보여줘" |
+| open-partnership-form | 제휴문의 | "제휴문의" |
+| name-episodes-share-btn | 페르소나 결과 공유 | "결과 공유해줘" |
+| open-community-btn | 커뮤니티 이용 | "커뮤니티 열어" |
+| open-events-btn | 이벤트 일정 | "이벤트 보여줘" |
 | open-content-btn | 콘텐츠 갤러리 | "갤러리 보여줘" |
-| save-result | 스타일링 결과 저장 | "결과 저장해줘" |
-| retry-analysis | 스타일링 다시 분석 | "다시 분석해줘" |
-| generate-fashion-btn | 패션 이미지 생성 | "패션 이미지 만들어줘" |
-| regenerate-fashion-btn | 패션 이미지 재생성 | "다른 패션 보여줘" |
-| finish-styling | 스타일링 완료 | "스타일링 끝", "완료" |
+
+**설정/전환 버튼:**
+| 버튼ID | 기능 | 사용자 말 예시 |
+|--------|------|---------------|
+| theme-toggle | 다크모드/라이트모드 | "다크모드", "라이트모드" |
+| lang-ko | 한국어로 변경 | "한국어로 바꿔" |
+| lang-en | 영어로 변경 | "영어로 바꿔" |
+| nav-login-btn | 로그인 | "로그인" |
+| nav-logout-btn | 로그아웃 | "로그아웃" |
+
+**영상 제어:**
+| 버튼ID | 기능 | 사용자 말 예시 |
+|--------|------|---------------|
+| soave-nav-prev | 이전 영상 | "이전 영상", "앞 영상" |
+| soave-nav-next | 다음 영상 | "다음 영상" |
+| soave-mute-btn | 영상 소리 켜기/끄기 | "영상 소리 켜줘", "음소거" |
+
+**스타일링 모달 제어:**
+| 버튼ID | 기능 | 사용자 말 예시 |
+|--------|------|---------------|
+| generate-fashion-btn | 패션 이미지 생성 | "패션 이미지 만들어" |
+| regenerate-fashion-btn | 패션 다시 생성 | "다른 패션 보여줘" |
+| save-result | 결과 저장 | "결과 저장" |
+| retry-analysis | 다시 분석 | "다시 분석" |
+| go-to-tryon | 가상 피팅으로 이동 | "가상 피팅 해볼래", "입어보기" |
+| generate-tryon-btn | 가상 피팅 생성 | "피팅 이미지 만들어" |
+| download-tryon-btn | 가상 피팅 저장 | "피팅 결과 저장" |
+| finish-styling | 스타일링 완료 | "스타일링 끝" |
+
+**매직샵/건축물 제어:**
+| 버튼ID | 기능 | 사용자 말 예시 |
+|--------|------|---------------|
+| arch-generate-again-btn | 건축물 다시 생성 | "건축물 다시 만들어" |
+| arch-retry-btn | 건축물 재시도 | "다시 시도" |
+
+**응원봉(등불) 제어:**
+| 버튼ID | 기능 | 사용자 말 예시 |
+|--------|------|---------------|
+| ls-download-btn | 응원봉 이미지 저장 | "응원봉 저장", "등불 저장" |
+| ls-share-btn | 응원봉 공유 | "응원봉 공유" |
+| ls-retry-btn | 응원봉 다시 만들기 | "응원봉 다시 만들어" |
+| ls-generate-btn | 응원봉 생성 | "등불 밝히기 실행" |
 
 ### 5. 매직샵 샘플 자동 실행: \`[ACTION:magicshop-sample]\`
-- "사랑의 인사 샘플 보여줘", "매직샵 체험", "건축물 샘플", "안식처 샘플"
-- 샘플 선택 + 건축 시작 자동 실행
+- "사랑의 인사 샘플 보여줘", "매직샵 체험", "안식처 샘플"
 
 ### 6. 전자책 다운로드: \`[ACTION:download-ebook:권수]\`
 | 권수 | 내용 |
@@ -2353,6 +2387,29 @@ ${soulInfo ? soulInfo : ''}
 
 ### 7. 맨 위로 이동: \`[ACTION:scroll-top]\`
 - "맨 위로", "처음으로", "홈으로"
+
+### 8. 채팅/음성 제어: \`[ACTION:chat:명령]\`
+| 명령 | 기능 | 사용자 말 예시 |
+|------|------|---------------|
+| open | 채팅창 열기 | "채팅 열어", "소아베 불러줘" |
+| close | 채팅창 닫기 | "채팅 닫아" |
+| tts-on | 음성 응답 켜기 | "음성 응답 켜줘", "소리로 대답해" |
+| tts-off | 음성 응답 끄기 | "음성 응답 꺼줘", "텍스트로만" |
+
+### 9. 정보 모달 열기: \`[ACTION:open-modal:모달명]\`
+| 모달명 | 내용 | 사용자 말 예시 |
+|--------|------|---------------|
+| pricing | 가격 정책 | "가격 정책 보여줘" |
+| help | 도움말/FAQ | "도움말", "자주 묻는 질문" |
+| contact | 연락처 | "연락처 알려줘" |
+| privacy | 개인정보 처리방침 | "개인정보 처리방침" |
+| terms | 이용약관 | "이용약관 보여줘" |
+| blog | 블로그 | "블로그 보여줘" |
+| careers | 채용 정보 | "채용 정보" |
+| press | 보도 자료 | "보도 자료", "프레스" |
+
+### 10. TEROS 이야기: \`[ACTION:teros-story]\`
+- "테로스 이야기 보여줘", "TEROS 스토리", "AI 이야기"
 
 ### 액션 태그 규칙:
 - 액션 태그는 반드시 응답 텍스트의 **맨 마지막 줄**에 작성
@@ -2377,6 +2434,15 @@ ${soulInfo ? soulInfo : ''}
 - "제휴문의 하고 싶어" → "제휴문의 폼을 열어줄게! 📋 [ACTION:click:open-partnership-form]"
 - "에코백 보여줘" → "에코백 코너로 안내할게! 🛍️ [ACTION:navigate:shop-ecobag]"
 - "폰케이스 보고 싶어" → "폰케이스 코너로 안내할게! 📱 [ACTION:navigate:shop-phonecase]"
+- "음성 응답 켜줘" → "알겠어! 이제 음성으로 대답할게 🔊 [ACTION:chat:tts-on]"
+- "다크모드로 바꿔" → "화면을 어둡게 전환할게! 🌙 [ACTION:click:theme-toggle]"
+- "다음 영상 보여줘" → "다음 영상으로 넘길게! ▶️ [ACTION:click:soave-nav-next]"
+- "가격 정책 알려줘" → "가격 정책을 보여줄게! 💰 [ACTION:open-modal:pricing]"
+- "테로스 이야기 보여줘" → "AI TEROS의 이야기를 보여줄게! 🤖 [ACTION:teros-story]"
+- "응원봉 저장해줘" → "등불 이미지를 저장할게! 💾 [ACTION:click:ls-download-btn]"
+- "가상 피팅 해볼래" → "가상 피팅 페이지로 안내할게! 👗 [ACTION:click:go-to-tryon]"
+- "로그아웃" → "로그아웃할게! 👋 [ACTION:click:nav-logout-btn]"
+- "도움말 보여줘" → "도움말을 열어줄게! ❓ [ACTION:open-modal:help]"
 
 ## 중요 규칙
 - 특정 K-pop 아티스트 이름, 그룹명, 소속사명을 직접 언급하지 마세요
@@ -2798,6 +2864,15 @@ ${soulInfo ? soulInfo : ''}
         case 'start-styling':
           clickButton('open-styling-result-btn');
           break;
+        case 'chat':
+          handleChatAction(action.value);
+          break;
+        case 'open-modal':
+          openInfoModal(action.value);
+          break;
+        case 'teros-story':
+          openTerosStory();
+          break;
       }
     }, 1500);
   }
@@ -2819,11 +2894,16 @@ ${soulInfo ? soulInfo : ''}
     if (!btnId) return;
     var noCloseIds = ['theme-toggle', 'lang-ko', 'lang-en', 'name-episodes-share-btn',
       'save-result', 'retry-analysis', 'generate-fashion-btn', 'regenerate-fashion-btn',
-      'taste-like-fashion-btn', 'finish-styling'];
+      'taste-like-fashion-btn', 'finish-styling', 'soave-nav-prev', 'soave-nav-next',
+      'soave-mute-btn', 'nav-logout-btn', 'go-to-tryon', 'generate-tryon-btn',
+      'download-tryon-btn', 'arch-generate-again-btn', 'arch-retry-btn',
+      'ls-download-btn', 'ls-share-btn', 'ls-retry-btn', 'ls-generate-btn'];
     var needsNavigate = {
       'open-styling-result-btn': 'styling',
       'arch-use-sample-btn': 'lightstick',
       'arch-generate-btn': 'lightstick',
+      'arch-generate-again-btn': 'lightstick',
+      'arch-retry-btn': 'lightstick',
       'open-lightstick-btn': 'shop-lightstick',
       'open-community-btn': 'community',
       'open-events-btn': 'events',
@@ -2936,6 +3016,58 @@ ${soulInfo ? soulInfo : ''}
         a.click();
         document.body.removeChild(a);
       }, 800);
+    }, 300);
+  }
+
+  function handleChatAction(cmd) {
+    switch (cmd) {
+      case 'open':
+        if (chatWidget && !chatWidget.classList.contains('active')) {
+          chatWidget.classList.add('active');
+          if (chatInput) chatInput.focus();
+        }
+        break;
+      case 'close':
+        closeChat();
+        break;
+      case 'tts-on':
+        ttsEnabled = true;
+        if (ttsToggle) {
+          ttsToggle.classList.add('active');
+          ttsToggle.querySelector('.icon-speaker-on').style.display = '';
+          ttsToggle.querySelector('.icon-speaker-off').style.display = 'none';
+        }
+        break;
+      case 'tts-off':
+        ttsEnabled = false;
+        if (ttsToggle) {
+          ttsToggle.classList.remove('active');
+          ttsToggle.querySelector('.icon-speaker-on').style.display = 'none';
+          ttsToggle.querySelector('.icon-speaker-off').style.display = '';
+        }
+        if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+        break;
+    }
+  }
+
+  function openInfoModal(modalName) {
+    closeChat();
+    setTimeout(function() {
+      var link = document.querySelector('[data-modal="' + modalName + '"]');
+      if (link) {
+        link.click();
+      }
+    }, 300);
+  }
+
+  function openTerosStory() {
+    closeChat();
+    setTimeout(function() {
+      var modal = document.getElementById('teros-story-modal');
+      if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
     }, 300);
   }
 
