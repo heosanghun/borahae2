@@ -3677,6 +3677,31 @@ section {
   transform: translateY(0) scale(1);
 }
 
+/* 이벤트 모달 스크롤 영역 */
+.events-scroll-area {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(124, 58, 237, 0.25) transparent;
+}
+.events-scroll-area::-webkit-scrollbar {
+  width: 5px;
+}
+.events-scroll-area::-webkit-scrollbar-track {
+  background: transparent;
+}
+.events-scroll-area::-webkit-scrollbar-thumb {
+  background: rgba(124, 58, 237, 0.25);
+  border-radius: 10px;
+}
+.events-scroll-area::-webkit-scrollbar-thumb:hover {
+  background: rgba(124, 58, 237, 0.45);
+}
+.events-scroll-area img {
+  transition: transform 0.3s ease;
+}
+.events-scroll-area img:hover {
+  transform: scale(1.02);
+}
+
 .lookbook-modal-content {
   max-width: 900px;
 }

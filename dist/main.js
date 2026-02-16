@@ -2842,19 +2842,74 @@ ${soulInfo ? soulInfo : ''}
         content = `
           <div style="text-align: center;">
             <h2 style="margin-bottom: 20px; color: var(--secondary);">✨ 이벤트 기획</h2>
-            <div style="text-align: left;">
-              <div style="margin-bottom: 20px; padding: 15px; border-left: 4px solid var(--primary); background: var(--bg-secondary);">
-                <div style="font-weight: 700;">[진행중] 2월 보라해 컵홀더 이벤트</div>
-                <div style="font-size: 0.85rem; color: var(--text-muted);">강남구 테헤란로 소재 카페 보라</div>
+            <div style="max-height: 65vh; overflow-y: auto; padding-right: 4px;" class="events-scroll-area">
+
+              <!-- 메인 이미지 (0번) -->
+              <div style="margin-bottom: 20px; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.1);">
+                <img src="image/contents/instagram/0.jpg" alt="BTS ARIRANG 컴백" style="width:100%; display:block; border-radius: 16px;">
               </div>
-              <div style="margin-bottom: 20px; padding: 15px; border-left: 4px solid var(--secondary); background: var(--bg-secondary);">
-                <div style="font-weight: 700;">[예정] 3월 보라빛 스트리밍 파티</div>
-                <div style="font-size: 0.85rem; color: var(--text-muted);">3월 10일 오후 8시 (온라인)</div>
+
+              <!-- BTS 아리랑 · 광화문 공연 (팩트 뉴스) -->
+              <div style="margin-bottom: 20px; padding: 18px; border-left: 4px solid #7C3AED; background: linear-gradient(135deg, rgba(124,58,237,0.06), rgba(124,58,237,0.02)); border-radius: 0 12px 12px 0; text-align: left;">
+                <div style="font-weight: 800; font-size: 1.05rem; margin-bottom: 6px;">🔥 [예정] BTS 정규 5집 'ARIRANG' 발매 & 광화문 컴백 라이브</div>
+                <div style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.65;">
+                  <strong>3월 20일 오후 1시</strong> — BTS 정규 5집 'ARIRANG' 전 세계 동시 발매 (14곡 수록)<br>
+                  <strong>3월 21일 오후 8시</strong> — 서울 광화문 광장 'BTS 컴백 라이브: ARIRANG' 개최<br>
+                  광화문 광장 최초 가수 단독 공연 · 약 3만 4천 석 규모 (무료, 위버스 사전예약)<br>
+                  <strong>넷플릭스 190개국 실시간 생중계</strong> (넷플릭스 최초 단독 콘서트 실시간 중계)<br>
+                  3월 27일 넷플릭스 다큐멘터리 'BTS: 더 리턴' 공개<br>
+                  3월 20일~4월 12일 'BTS 더 시티 아리랑 서울' — 서울 랜드마크 미디어 파사드 · 참여형 이벤트
+                </div>
+                <div style="margin-top: 8px; font-size: 0.75rem; color: var(--text-muted);">출처: 조선일보, YTN, 문화체육관광부</div>
               </div>
-              <div style="margin-bottom: 20px; padding: 15px; border-left: 4px solid var(--accent); background: var(--bg-secondary);">
-                <div style="font-weight: 700;">[상시] 팬메이드 굿즈 공모전</div>
-                <div style="font-size: 0.85rem; color: var(--text-muted);">최우수작 실제 굿즈 제작 지원</div>
+
+              <div style="text-align: left;">
+                <div style="margin-bottom: 16px; padding: 15px; border-left: 4px solid var(--primary); background: var(--bg-secondary); border-radius: 0 12px 12px 0;">
+                  <div style="font-weight: 700;">[진행중] 2월 보라해 컵홀더 이벤트</div>
+                  <div style="font-size: 0.85rem; color: var(--text-muted);">강남구 테헤란로 소재 카페 보라</div>
+                </div>
+                <div style="margin-bottom: 16px; padding: 15px; border-left: 4px solid var(--secondary); background: var(--bg-secondary); border-radius: 0 12px 12px 0;">
+                  <div style="font-weight: 700;">[예정] 3월 보라빛 스트리밍 파티</div>
+                  <div style="font-size: 0.85rem; color: var(--text-muted);">3월 10일 오후 8시 (온라인)</div>
+                </div>
+                <div style="margin-bottom: 16px; padding: 15px; border-left: 4px solid var(--accent); background: var(--bg-secondary); border-radius: 0 12px 12px 0;">
+                  <div style="font-weight: 700;">[상시] 팬메이드 굿즈 공모전</div>
+                  <div style="font-size: 0.85rem; color: var(--text-muted);">최우수작 실제 굿즈 제작 지원</div>
+                </div>
               </div>
+
+              <!-- 한글런 이벤트 -->
+              <div style="margin-top: 16px; margin-bottom: 20px; padding: 18px; border-left: 4px solid #10B981; background: linear-gradient(135deg, rgba(16,185,129,0.06), rgba(16,185,129,0.02)); border-radius: 0 12px 12px 0; text-align: left;">
+                <div style="font-weight: 800; font-size: 1.05rem; margin-bottom: 6px;">🏃 [예정] 보라해 한글런 — 한글의 길을 달리다</div>
+                <div style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.65;">
+                  <strong>4월 19일(토) 오전 8시</strong> — 서울 여의도 한강공원 출발<br>
+                  한글 자음 'ㄱ~ㅎ' 14자를 코스에 새긴 7km 러닝 · 보라빛 야광 레이스<br>
+                  완주자 전원 <strong>한글 페르소나 메달 + 보라해 피니셔 티셔츠</strong> 증정<br>
+                  참가비 무료 (보라해 앱 사전등록 선착순 5,000명)<br>
+                  BTS 'ARIRANG' 수록곡이 흐르는 구간별 응원 스테이션 운영<br>
+                  달리면서 만나는 한글 조형물 포토존 · 완주 후 팬 커뮤니티 애프터 파티
+                </div>
+                <div style="margin-top: 8px; font-size: 0.75rem; color: var(--text-muted);">주최: 보라해 BORAHAE · 서울시체육회 | 후원: 한글문화연대</div>
+              </div>
+
+              <!-- 한글런 이미지 -->
+              <div style="margin-bottom: 20px; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.1);">
+                <img src="image/contents/run/all.jpeg" alt="보라해 한글런 — 한글의 길을 달리다" style="width:100%; display:block; border-radius: 16px;">
+              </div>
+
+              <!-- 인스타그램 이미지 갤러리 (6장) -->
+              <div style="margin-top: 12px; margin-bottom: 16px;">
+                <p style="font-weight: 700; font-size: 0.95rem; margin-bottom: 12px; text-align: left;">📸 팬 이벤트 현장 스케치</p>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+                  <div style="aspect-ratio: 1; border-radius: 10px; overflow: hidden;"><img src="image/contents/instagram/1.jpg" alt="이벤트 현장 1" style="width:100%; height:100%; object-fit:cover;"></div>
+                  <div style="aspect-ratio: 1; border-radius: 10px; overflow: hidden;"><img src="image/contents/instagram/2.jpg" alt="이벤트 현장 2" style="width:100%; height:100%; object-fit:cover;"></div>
+                  <div style="aspect-ratio: 1; border-radius: 10px; overflow: hidden;"><img src="image/contents/instagram/3.jpg" alt="이벤트 현장 3" style="width:100%; height:100%; object-fit:cover;"></div>
+                  <div style="aspect-ratio: 1; border-radius: 10px; overflow: hidden;"><img src="image/contents/instagram/4.jpg" alt="이벤트 현장 4" style="width:100%; height:100%; object-fit:cover;"></div>
+                  <div style="aspect-ratio: 1; border-radius: 10px; overflow: hidden;"><img src="image/contents/instagram/5.jpg" alt="이벤트 현장 5" style="width:100%; height:100%; object-fit:cover;"></div>
+                  <div style="aspect-ratio: 1; border-radius: 10px; overflow: hidden;"><img src="image/contents/instagram/0.jpg" alt="BTS ARIRANG" style="width:100%; height:100%; object-fit:cover;"></div>
+                </div>
+              </div>
+
             </div>
             <button class="btn-primary" style="margin-top: 20px; background: var(--secondary);">이벤트 제안하기</button>
           </div>
