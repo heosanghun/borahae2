@@ -2343,6 +2343,14 @@
 
       <div class="chat-input-container">
         <div class="chat-input-wrapper">
+          <input type="file" id="chat-image-input" accept="image/*" style="display:none">
+          <button id="chat-image-btn" class="chat-image-btn" aria-label="이미지 업로드" title="사진 첨부">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+          </button>
           <textarea id="chat-input" placeholder="메시지를 입력하세요..." rows="1" data-i18n-placeholder="chat.placeholder"></textarea>
           <button id="chat-send" class="chat-send" aria-label="전송">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

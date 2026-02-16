@@ -2444,6 +2444,46 @@ ${soulInfo ? soulInfo : ''}
 - "로그아웃" → "로그아웃할게! 👋 [ACTION:click:nav-logout-btn]"
 - "도움말 보여줘" → "도움말을 열어줄게! ❓ [ACTION:open-modal:help]"
 
+## 패션 이미지 생성 기능 (DALL-E 3)
+
+### 11. 패션 이미지 생성: \`[ACTION:generate-fashion:영어 프롬프트]\`
+사용자가 패션/옷/코디 이미지를 만들어달라고 하면, 영어로 된 DALL-E 3 프롬프트를 작성하여 태그로 전달하세요.
+
+**프롬프트 작성 규칙:**
+- 반드시 영어로 작성 (DALL-E 3는 영어가 최적)
+- "K-pop inspired fashion outfit" 테마 유지
+- 옷/코디 중심 묘사 (마네킹 또는 플랫레이 스타일)
+- 보라색/퍼플 톤 포함
+- 사람의 얼굴은 절대 포함하지 않음 (faceless mannequin 또는 clothing flat lay)
+
+**예시:**
+- "캐쥬얼 옷 만들어줘" → "예쁜 캐쥬얼 코디를 만들어 볼게! 잠시만 기다려 💜 [ACTION:generate-fashion:A stylish K-pop inspired casual outfit on a faceless mannequin, purple oversized hoodie, wide-leg jeans, white sneakers, purple tote bag, soft pastel studio background, fashion photography style, no face]"
+- "콘서트 코디 이미지 보여줘" → "콘서트에 딱 맞는 코디를 그려볼게! ✨ [ACTION:generate-fashion:K-pop concert outfit on a faceless mannequin, sparkly purple crop top, black leather skirt, platform boots, purple lightstick accessory, stage lighting background, fashion editorial style, no face]"
+- "포멀 패션 이미지" → "고급스러운 포멀 룩을 만들어 볼게! 💎 [ACTION:generate-fashion:Elegant formal K-pop inspired outfit flat lay, lavender silk blouse, tailored purple blazer, black slim pants, pearl accessories, minimalist white background, fashion magazine style, no face]"
+
+### 사진 업로드 & 가상 피팅 → 보라해 스타일링으로 안내 (매우 중요!)
+
+사용자가 다음과 같은 요청을 하면, 절대로 "안 돼" 또는 "불가능해"라고 말하지 마세요.
+대신 자연스럽고 설레는 톤으로 **보라해 스타일링** 서비스를 추천하세요:
+
+- 사진을 업로드했을 때
+- "내 얼굴로 합성해줘", "내 사진에 옷 입혀줘"
+- "가상 피팅", "나한테 이 옷 입혀줘"
+- "내 얼굴로 코디 만들어줘"
+
+**응답 패턴 (자연스럽고 매력적으로):**
+"와~ 사진 고마워! 💜 여기서 예쁜 옷 코디는 내가 바로 만들어줄 수 있어! 그리고 이 옷을 직접 내 모습에 입혀보고 싶다면, '보라해 스타일링'에서 AI가 퍼스널 컬러 분석부터 체형 맞춤 코디, 가상 피팅까지 전부 해줘! 완전 신세계야~ 한번 체험해볼까? 😍 [ACTION:click:open-styling-result-btn]"
+
+**절대 하지 말 것:**
+- "DALL-E로는 합성이 안 됩니다" ❌
+- "이 기능은 지원하지 않습니다" ❌
+- "기술적 한계로 불가합니다" ❌
+
+**항상 이렇게:**
+- "더 완벽한 결과를 원한다면 보라해 스타일링이 최고야!" ✅
+- "AI가 직접 분석해서 나만의 코디를 완성해줘!" ✅
+- "거기서 가상 피팅도 해볼 수 있어!" ✅
+
 ## 중요 규칙
 - 특정 K-pop 아티스트 이름, 그룹명, 소속사명을 직접 언급하지 마세요
 - "좋아하는 아티스트", "K-pop 아티스트" 등 일반적 표현을 사용하세요
@@ -2700,22 +2740,69 @@ ${soulInfo ? soulInfo : ''}
     if (getChatQuota().count >= CHAT_DAILY_LIMIT) chatSend.disabled = true;
   }
 
+  var pendingImageBase64 = null;
+  var chatImageBtn = document.getElementById('chat-image-btn');
+  var chatImageInput = document.getElementById('chat-image-input');
+
+  if (chatImageBtn && chatImageInput) {
+    chatImageBtn.addEventListener('click', function() { chatImageInput.click(); });
+    chatImageInput.addEventListener('change', function() {
+      var file = this.files && this.files[0];
+      if (!file) return;
+      if (file.size > 5 * 1024 * 1024) {
+        alert('이미지 크기는 5MB 이하로 업로드해 주세요.');
+        this.value = '';
+        return;
+      }
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        pendingImageBase64 = e.target.result;
+        chatImageBtn.classList.add('has-image');
+        var existing = document.querySelector('.chat-image-preview-bar');
+        if (existing) existing.remove();
+        var bar = document.createElement('div');
+        bar.className = 'chat-image-preview-bar';
+        bar.innerHTML = '<img src="' + pendingImageBase64 + '" alt="preview"><span>사진 첨부됨</span><button class="remove-image" title="제거">✕</button>';
+        bar.querySelector('.remove-image').addEventListener('click', function() {
+          pendingImageBase64 = null;
+          chatImageBtn.classList.remove('has-image');
+          bar.remove();
+          chatImageInput.value = '';
+        });
+        var inputContainer = document.querySelector('.chat-input-container');
+        if (inputContainer) inputContainer.insertBefore(bar, inputContainer.firstChild);
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
   async function sendMessage() {
     if (!chatInput || !chatMessages) return;
 
     const message = chatInput.value.trim();
     if (!message || isTyping) return;
 
+    var attachedImage = pendingImageBase64;
+    pendingImageBase64 = null;
+    if (chatImageBtn) chatImageBtn.classList.remove('has-image');
+    var previewBar = document.querySelector('.chat-image-preview-bar');
+    if (previewBar) previewBar.remove();
+    if (chatImageInput) chatImageInput.value = '';
+
     const welcomeScreen = chatMessages.querySelector('.chat-welcome');
     if (welcomeScreen) {
       welcomeScreen.style.display = 'none';
     }
 
-    addMessage('user', message);
+    if (attachedImage) {
+      addMessage('user', message + '<br><img src="' + attachedImage + '" class="chat-msg-image" style="max-width:200px;margin-top:6px;">');
+    } else {
+      addMessage('user', message);
+    }
     chatInput.value = '';
     chatInput.style.height = 'auto';
 
-    chatHistory.push({ role: 'user', content: message });
+    chatHistory.push({ role: 'user', content: attachedImage ? message + ' [사진 첨부됨]' : message });
 
     // 채팅은 서버 프록시(/api/chat)를 사용하므로 클라이언트 키 불필요
 
@@ -2733,7 +2820,7 @@ ${soulInfo ? soulInfo : ''}
     if (chatSend) chatSend.disabled = true;
 
     try {
-      var response = await callOpenAIChat(message);
+      var response = await callOpenAIChat(message, attachedImage || null);
       hideTypingIndicator();
       var parsed = parseActionFromResponse(response);
       addMessage('assistant', parsed.text);
@@ -2802,7 +2889,7 @@ ${soulInfo ? soulInfo : ''}
   }
 
   // OpenAI Chat via Cloudflare Pages Function proxy (/api/chat)
-  async function callOpenAIChat(userMessage) {
+  async function callOpenAIChat(userMessage, imageBase64) {
     var messages = [
       { role: 'system', content: SYSTEM_PROMPT_BASE + getChatUserContext() }
     ];
@@ -2812,11 +2899,21 @@ ${soulInfo ? soulInfo : ''}
         messages.push({ role: msg.role, content: msg.content });
       }
     }
+    if (imageBase64) {
+      messages[messages.length - 1] = {
+        role: 'user',
+        content: [
+          { type: 'text', text: userMessage },
+          { type: 'image_url', image_url: { url: imageBase64, detail: 'low' } }
+        ]
+      };
+    }
+    var useModel = imageBase64 ? 'gpt-4o-mini' : 'gpt-4o-mini';
     var res = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: useModel,
         messages: messages,
         max_tokens: 500,
         temperature: 0.8
@@ -3002,6 +3099,20 @@ ${soulInfo ? soulInfo : ''}
     if (/스타일링\s?시작|코디\s?추천/i.test(msg)) return { type: 'click', value: 'open-styling-result-btn' };
     if (/샘플|사랑의\s?인사.*체험|매직샵\s?체험/i.test(msg)) return { type: 'magicshop-sample', value: '' };
     if (/맨\s?위|처음으로|홈으로|scroll.*top/i.test(msg)) return { type: 'scroll-top', value: '' };
+    if (/패션\s?이미지|옷\s?만들|코디\s?만들|옷\s?그려|패션\s?그려/i.test(msg)) {
+      var style = 'casual';
+      if (/캐쥬얼|캐주얼|casual/i.test(msg)) style = 'casual';
+      else if (/포멀|formal|정장/i.test(msg)) style = 'formal';
+      else if (/콘서트|concert|무대/i.test(msg)) style = 'concert';
+      else if (/스트릿|street/i.test(msg)) style = 'street';
+      var prompts = {
+        casual: 'A stylish K-pop inspired casual outfit on a faceless white mannequin, purple oversized hoodie with I PURPLE YOU text, wide-leg jeans, white sneakers, purple tote bag, soft pastel studio background, fashion photography, no face, no human features',
+        formal: 'An elegant K-pop inspired formal outfit flat lay on white background, lavender silk blouse, tailored purple blazer, black slim pants, pearl accessories, fashion magazine editorial style, no face, no human',
+        concert: 'A dazzling K-pop concert outfit on a faceless mannequin, sparkly purple sequin crop top, black leather mini skirt, platform boots, purple lightstick accessory, dramatic stage lighting background, fashion editorial, no face',
+        street: 'A trendy K-pop street fashion outfit on a faceless mannequin, oversized purple bomber jacket, graphic tee, cargo pants, chunky sneakers, bucket hat, urban background, street style photography, no face'
+      };
+      return { type: 'generate-fashion', value: prompts[style] };
+    }
     return null;
   }
 
@@ -3053,8 +3164,41 @@ ${soulInfo ? soulInfo : ''}
         case 'teros-story':
           openTerosStory();
           break;
+        case 'generate-fashion':
+          generateFashionImage(action.value);
+          break;
       }
     }, 1500);
+  }
+
+  async function generateFashionImage(prompt) {
+    if (!prompt) return;
+    var msgDiv = document.createElement('div');
+    msgDiv.className = 'chat-message assistant';
+    msgDiv.innerHTML = '<div class="chat-msg-avatar"><img src="image/soave/soave-avatar-face.png" alt="소아베" width="32" height="32"></div><div class="chat-msg-content"><div class="chat-generating-indicator"><div class="spinner"></div><span>패션 이미지를 생성하고 있어요...</span></div></div>';
+    var chatMessages = document.getElementById('chat-messages');
+    if (chatMessages) { chatMessages.appendChild(msgDiv); chatMessages.scrollTop = chatMessages.scrollHeight; }
+    try {
+      var res = await fetch('/api/image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: prompt, size: '1024x1024', quality: 'standard' })
+      });
+      var data = await res.json();
+      if (data.data && data.data[0] && data.data[0].url) {
+        var content = msgDiv.querySelector('.chat-msg-content');
+        content.innerHTML = '<img src="' + data.data[0].url + '" alt="패션 이미지" class="chat-msg-image" onclick="window.open(this.src,\'_blank\')">' +
+          '<p style="margin-top:8px;font-size:0.85rem;color:var(--text-muted)">💜 이 옷을 직접 나한테 입혀보고 싶다면 <strong>보라해 스타일링</strong>에서 가상 피팅도 해볼 수 있어!</p>';
+        if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
+      } else {
+        var errMsg = (data.error && data.error.message) ? data.error.message : '이미지 생성에 실패했어요';
+        var content = msgDiv.querySelector('.chat-msg-content');
+        content.innerHTML = '<p>😢 ' + errMsg + '</p>';
+      }
+    } catch (err) {
+      var content = msgDiv.querySelector('.chat-msg-content');
+      content.innerHTML = '<p>😢 이미지 생성 중 오류가 발생했어요. 다시 시도해 주세요!</p>';
+    }
   }
 
   function closeChat() {

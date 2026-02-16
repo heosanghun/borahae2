@@ -126,6 +126,57 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  if (parsed.pathname === '/api/image' && req.method === 'POST') {
+    let body = '';
+    req.on('data', c => body += c);
+    req.on('end', async () => {
+      if (!OPENAI_API_KEY) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: { message: 'OPENAI_API_KEY not set in .env' } }));
+        return;
+      }
+      try {
+        const payload = JSON.parse(body);
+        if (!payload.prompt) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: { message: 'Missing "prompt" text' } }));
+          return;
+        }
+        const https = require('https');
+        const data = JSON.stringify({
+          model: payload.model || 'dall-e-3',
+          prompt: payload.prompt.slice(0, 4000),
+          n: 1,
+          size: payload.size || '1024x1024',
+          quality: payload.quality || 'standard'
+        });
+        const options = {
+          hostname: 'api.openai.com', port: 443, path: '/v1/images/generations',
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + OPENAI_API_KEY, 'Content-Length': Buffer.byteLength(data) }
+        };
+        const apiReq = https.request(options, apiRes => {
+          let resBody = '';
+          apiRes.on('data', c => resBody += c);
+          apiRes.on('end', () => {
+            res.writeHead(apiRes.statusCode, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+            res.end(resBody);
+          });
+        });
+        apiReq.on('error', e => {
+          res.writeHead(502, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: { message: e.message } }));
+        });
+        apiReq.write(data);
+        apiReq.end();
+      } catch (e) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: { message: e.message } }));
+      }
+    });
+    return;
+  }
+
   let filePath = path.join(root, decodeURIComponent(parsed.pathname));
   if (filePath.endsWith(path.sep) || fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()) {
     filePath = path.join(filePath, 'index.html');
