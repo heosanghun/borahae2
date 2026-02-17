@@ -65,6 +65,12 @@ if (fs.existsSync(path.join(root, 'video'))) {
   console.log('video/ 복사됨');
 }
 
+// music/ (BGM – 보라빛 신호, LOVE ARMY 등)
+if (fs.existsSync(path.join(root, 'music'))) {
+  copyDir(path.join(root, 'music'), path.join(dist, 'music'));
+  console.log('music/ 복사됨');
+}
+
 // movie/soave1.mp4 (및 README) — 배포에 영상 포함 보장
 mkdirp(path.join(dist, 'movie'));
 const soaveMp4 = path.join(root, 'movie', 'soave1.mp4');
