@@ -5988,8 +5988,53 @@ ${soulInfo ? soulInfo : ''}
         }
       });
     }
+    (function () {
+      var urlInput = document.getElementById('oneclick-photo-url');
+      var urlBtn = document.getElementById('oneclick-photo-url-btn');
+      if (!urlInput || !urlBtn || !photoHint || !photoPreviewImg || !photoPreviewWrap) return;
+      function setPreviewFromDataUrl(dataUrl) {
+        selectedFaceDataUrl = dataUrl;
+        if (typeof window !== 'undefined') window.__oneclickRunwayFaceDataUrl = selectedFaceDataUrl;
+        photoPreviewImg.src = dataUrl;
+        photoPreviewWrap.style.display = 'block';
+        if (photoHint) photoHint.textContent = 'URL에서 불러옴';
+      }
+      urlBtn.addEventListener('click', function () {
+        var raw = (urlInput.value || '').trim();
+        if (!raw) {
+          if (photoHint) photoHint.textContent = '이미지 주소를 입력해 주세요.';
+          return;
+        }
+        if (photoHint) photoHint.textContent = '불러오는 중...';
+        var proxyUrl = '/api/image-proxy?url=' + encodeURIComponent(raw);
+        fetch(proxyUrl)
+          .then(function (r) {
+            if (r.ok) return r.blob();
+            return fetch(raw, { mode: 'cors' }).then(function (r2) { return r2.ok ? r2.blob() : Promise.reject(new Error('이미지를 불러올 수 없습니다.')); });
+          })
+          .then(function (blob) {
+            var reader = new FileReader();
+            reader.onload = function () { setPreviewFromDataUrl(reader.result); };
+            reader.onerror = function () {
+              if (photoHint) photoHint.textContent = '이미지 변환에 실패했습니다.';
+            };
+            reader.readAsDataURL(blob);
+          })
+          .catch(function (err) {
+            if (photoHint) photoHint.textContent = err.message || '인터넷 이미지를 불러오지 못했습니다. URL을 확인하거나 파일로 올려 주세요.';
+          });
+      });
+    })();
     setFaceSelection('female');
 
+    var fallbackBackgroundList = [
+      { id: 'gwanghwamun1', name: '광화문 공연장소 1', desc: '', image: 'runwayuse/a.jpeg' },
+      { id: 'gwanghwamun2', name: '광화문 공연장소 2', desc: '', image: 'runwayuse/b.jpeg' },
+      { id: 'gwanghwamun3', name: '광화문 공연장소 3', desc: '', image: 'runwayuse/c.jpeg' },
+      { id: 'mv1', name: '1 뮤직비디오 장소', desc: '', image: 'runwayuse/1.jpeg' },
+      { id: 'mv2', name: '2 뮤직비디오 장소', desc: '', image: 'runwayuse/2.jpeg' },
+      { id: 'mv3', name: '3 뮤직비디오 장소', desc: '', image: 'runwayuse/3.jpeg' }
+    ];
     if (backgroundListEl) {
       Promise.all([
         fetch('image/runway/backgrounds/list.json').then(function (res) { return res.ok ? res.json() : []; }).catch(function () { return []; }),
@@ -5997,6 +6042,7 @@ ${soulInfo ? soulInfo : ''}
       ]).then(function (results) {
         var arr = results[0];
         var galleryVideos = results[1] || {};
+        if (!Array.isArray(arr) || arr.length === 0) arr = fallbackBackgroundList;
         if (!Array.isArray(arr) || arr.length === 0) return;
         var base = 'image/runway/';
         var videoBase = 'video/gallery/';

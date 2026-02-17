@@ -1352,6 +1352,39 @@ section {
   color: var(--text-muted);
   pointer-events: none;
 }
+.oneclick-photo-url-wrap {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  align-items: center;
+}
+.oneclick-photo-url-input {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 12px;
+  font-size: 0.875rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+.oneclick-photo-url-input::placeholder {
+  color: var(--text-muted);
+}
+.oneclick-photo-url-btn {
+  flex-shrink: 0;
+  padding: 8px 14px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  background: var(--primary);
+  color: #fff;
+  cursor: pointer;
+}
+.oneclick-photo-url-btn:hover {
+  filter: brightness(1.08);
+}
 .oneclick-photo-preview {
   margin-top: 10px;
   border-radius: 10px;
