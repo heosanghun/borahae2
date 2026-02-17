@@ -30,14 +30,41 @@ Cloudflare Pages 대시보드에서 프로젝트 선택 → **Settings** → **E
 
 배포 시 빌드 단계에서 `config.js`에 주입됩니다.
 
-## 4. 동작 요약
+## 4. Google 로그인 (OAuth)
+
+로그인 모달에 **Google로 로그인** 버튼이 있습니다. 사용하려면 아래 설정이 필요합니다.
+
+### 4.1 Google Cloud 설정
+
+1. [Google Cloud Console](https://console.cloud.google.com)에서 프로젝트 생성 또는 선택.
+2. **API 및 서비스** → **사용자 인증 정보** → **사용자 인증 정보 만들기** → **OAuth 클라이언트 ID**.
+3. 애플리케이션 유형: **웹 애플리케이션**.
+4. **승인된 JavaScript 원본**:  
+   - 로컬: `http://localhost:포트`, `http://127.0.0.1:포트`  
+   - 배포: `https://your-domain.com`
+5. **승인된 리디렉션 URI**: Supabase 대시보드에서 확인  
+   - **Authentication** → **Providers** → **Google** → **Callback URL** 복사 후 여기에 추가.  
+   - 로컬 개발: `http://127.0.0.1:54321/auth/v1/callback` (Supabase 로컬 사용 시)
+6. **클라이언트 ID**와 **클라이언트 보안 비밀**을 복사.
+
+### 4.2 Supabase 대시보드
+
+1. **Authentication** → **Providers** → **Google** 활성화.
+2. Google에서 복사한 **Client ID**, **Client Secret** 입력 후 저장.
+3. **Authentication** → **URL Configuration** → **Redirect URLs**에 다음 추가:
+   - `https://your-domain.com` (실서비스)
+   - `http://localhost:포트` 또는 `http://127.0.0.1:포트` (로컬)
+
+자세한 절차는 [Supabase 문서 - Login with Google](https://supabase.com/docs/guides/auth/social-login/auth-google)을 참고하세요.
+
+## 5. 동작 요약
 
 - **네비게이션**: 비로그인 시 **로그인** 버튼, 로그인 시 **이메일** + **로그아웃** 버튼 표시.
-- **모달**: 로그인 버튼 클릭 시 로그인/회원가입 탭이 있는 모달이 열림.
+- **모달**: 로그인 버튼 클릭 시 로그인/회원가입 탭이 있는 모달이 열림. 이메일·비밀번호 로그인과 **Google로 로그인** 지원.
 - **회원가입**: Supabase 기본 설정이면 이메일 확인 링크 발송 후, 링크 클릭 시 로그인 가능.
 - Supabase URL/키가 없으면 로그인/회원가입 시 "Supabase가 설정되지 않았습니다" 메시지가 표시됩니다.
 
-## 5. Supabase CLI (선택)
+## 6. Supabase CLI (선택)
 
 로컬에서 Supabase를 쓰거나 마이그레이션을 관리하려면 [Supabase CLI](https://supabase.com/docs/reference/cli/introduction)를 사용할 수 있습니다.
 
