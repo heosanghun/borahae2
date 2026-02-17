@@ -280,7 +280,8 @@
   }
 
   /**
-   * 한글 건축 그리드를 캔버스에 그려 PNG 이미지로 반환
+   * 한글 건축 그리드를 캔버스에 그려 PNG 이미지로 반환.
+   * 참고 스타일: image/hangeul/system — 사랑의 인사 1. 한글 그리드. 악보 마디 순서에 맞춰 동일 형식으로 생성.
    * @param {Array} bars - 마디별 데이터 (SALUT_DAMOUR_BARS 형식)
    * @param {Object} options - { lang: 'ko'|'en', title?: string }
    * @returns {string} data URL (image/png)

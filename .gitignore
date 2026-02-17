@@ -37,3 +37,9 @@ build/
 movie/*.mp4
 movie/*.webm
 !movie/soave1.mp4
+
+# BGM 배포용 — music/ 포함 (푸시·빌드 시 dist에 복사됨)
+# music/ 은 제외하지 않음 (추적·배포 대상)
+
+# 한글 system 임시 생성물 (갤러리·ani·information은 푸시 대상)
+image/hangeul/system/temp/

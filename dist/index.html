@@ -301,6 +301,7 @@
             <div class="oneclick-runway-result-header">
               <h4 class="oneclick-runway-result-title">런웨이 결과</h4>
               <button type="button" id="oneclick-runway-save-image-btn" class="btn-secondary oneclick-runway-save-btn oneclick-runway-save-image-btn" style="display: none;">이미지 저장</button>
+              <button type="button" id="oneclick-runway-email-btn" class="btn-secondary oneclick-runway-save-btn" style="display: none;">📧 이메일로 보내기</button>
             </div>
             <div id="oneclick-runway-result-image-wrap" class="oneclick-runway-result-image-wrap" style="display: none;">
               <img id="oneclick-runway-result-image" src="" alt="런웨이 합성" class="oneclick-runway-result-image">
@@ -323,6 +324,12 @@
       <p class="oneclick-notice">아래에서 이름·생일·스타일링을 하나씩 체험해 보실 수도 있어요.</p>
     </div>
   </section>
+
+  <!-- 영상 생성 중 비차단 플로팅 알림 (페이지 이용 가능) -->
+  <div id="video-generating-toast" class="video-generating-toast" role="status" aria-live="polite" aria-label="영상 생성 중">
+    <div class="video-generating-toast-spinner"></div>
+    <p class="video-generating-toast-text">영상 생성 중입니다. 1~2분 소요. 완료되면 알려드려요.</p>
+  </div>
 
   <!-- 갤러리 샘플 영상 재생 모달 -->
   <div id="oneclick-gallery-video-modal" class="oneclick-gallery-video-modal" role="dialog" aria-modal="true" aria-label="갤러리 샘플 영상" style="display: none;">
@@ -423,7 +430,7 @@
             </div>
           </div>
         </div>
-          <!-- 오른쪽: 페르소나 미리보기 목업 -->
+          <!-- 오른쪽: 미리보기 목업 / 결과 시 웹툰 스토리 -->
           <div class="name-episodes-preview" id="name-episodes-preview">
             <div class="preview-mockup">
               <p class="preview-label">이름을 입력하면 깨어나는 페르소나</p>
@@ -446,6 +453,10 @@
               </div>
               <p class="preview-cta">당신의 이름엔 어떤 자아가 숨어 있을까요?</p>
             </div>
+          </div>
+          <div id="name-episodes-story-side" class="name-episodes-story-side" style="display:none;" aria-label="한글 페르소나 웹툰 스토리">
+            <h4 class="name-episodes-story-side-title"></h4>
+            <div class="name-episodes-story-side-panels"></div>
           </div>
         </div>
       </div>
@@ -606,7 +617,7 @@
         <!-- 제목·설명을 row 위로 분리하여, 두 박스가 나란히 정렬되도록 -->
         <div class="magicshop-hero-header">
           <h3 class="name-episodes-title" data-i18n="magicshop.input_title">당신의 최애곡을 들려주세요</h3>
-          <p class="name-episodes-desc" data-i18n="magicshop.input_desc">소리가 머무는 집을 지어드립니다. MIDI·PDF·악보 이미지를 올리거나 샘플을 사용하세요.</p>
+          <p class="name-episodes-desc" data-i18n="magicshop.input_hint">소리가 머무는 집을 지어드립니다. MIDI·PDF·악보·MP3를 올리거나 🎼 샘플을 사용하세요.</p>
         </div>
         <div class="magicshop-row name-episodes-row magicshop-row--aligned">
           <div class="magicshop-left name-episodes-left">
@@ -614,12 +625,15 @@
               <div class="magicshop-input-corner name-episodes-input-corner">
                 <div class="magicshop-dropzone" id="magicshop-dropzone">
                   <p class="magicshop-dropzone-text" data-i18n="magicshop.dropzone">선율의 기록을 여기에 놓거나 선택하세요</p>
-                  <input type="file" id="arch-midi-input" accept=".mid,.midi,audio/midi,.pdf,application/pdf,.png,.jpg,.jpeg,.gif,.webp,image/png,image/jpeg,image/gif,image/webp" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;" aria-label="MIDI PDF 악보 이미지 업로드">
+                  <input type="file" id="arch-midi-input" accept=".mid,.midi,audio/midi,.pdf,application/pdf,.mp3,audio/mpeg,.png,.jpg,.jpeg,.gif,.webp,image/png,image/jpeg,image/gif,image/webp" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;" aria-label="MIDI PDF 악보 MP3 이미지 업로드">
                 </div>
                 <div class="magicshop-build-inputs magicshop-build-inputs--centered">
-                  <button type="button" class="btn-secondary magicshop-example-btn" id="arch-use-sample-btn" data-i18n="arch.use_sample">사랑의 인사 샘플 사용</button>
+                  <div class="magicshop-sample-wrap">
+                    <button type="button" class="magicshop-sample-icon-btn" id="arch-use-sample-btn" aria-label="샘플 악보 적용" title="클릭하면 점선 칸에 샘플악보가 적용됩니다">🎼</button>
+                    <span class="magicshop-sample-label" data-i18n="arch.use_sample_short">샘플악보(사랑의인사)</span>
+                  </div>
                   <span class="magicshop-input-or">또는</span>
-                  <button type="button" class="btn-outline magicshop-upload-btn" id="arch-upload-trigger"><span data-i18n="arch.upload_midi_pdf">MIDI · PDF · 악보 이미지 업로드</span></button>
+                  <button type="button" class="btn-outline magicshop-upload-btn" id="arch-upload-trigger"><span data-i18n="arch.upload_midi_pdf">MIDI · PDF · 악보 · MP3 업로드</span></button>
                 </div>
                 <p class="magicshop-build-status name-episodes-hint" id="arch-input-status" style="margin-top:12px;min-height:1.4em;" aria-live="polite"></p>
                 <button type="button" class="name-episodes-btn magicshop-start-btn" id="arch-generate-btn" disabled data-i18n="magicshop.start_btn">안식처 건축 시작</button>
@@ -630,6 +644,10 @@
             <div id="magicshop-display" class="magicshop-display">
               <div id="magicshop-display-idle" class="magicshop-display-idle">
                 <div class="magicshop-aurora"></div>
+                <div id="magicshop-hangeul-carousel" class="magicshop-hangeul-carousel" aria-hidden="false">
+                  <img id="magicshop-hangeul-carousel-img" class="magicshop-hangeul-carousel-media" src="" alt="" style="display:none;">
+                  <video id="magicshop-hangeul-carousel-video" class="magicshop-hangeul-carousel-media" muted playsinline style="display:none;" preload="metadata"></video>
+                </div>
                 <p class="magicshop-display-idle-text" data-i18n="magicshop.display_idle">텅 빈 우주에 당신의 주파수를 기다리는 오로라가 일렁입니다.</p>
               </div>
               <div id="magicshop-display-loading" class="magicshop-display-loading" style="display:none;">
@@ -644,6 +662,11 @@
               </div>
             </div>
           </div>
+        </div>
+        <!-- 한글 시스템 갤러리 (image/hangeul/system/gallery) -->
+        <div class="magicshop-hangeul-gallery-wrap" style="margin-top:24px;">
+          <h4 class="magicshop-hangeul-gallery-title" style="font-size:1rem;margin-bottom:12px;color:var(--text-primary);">한글 공감각 건축 갤러리</h4>
+          <div class="magicshop-hangeul-gallery" id="magicshop-hangeul-gallery"></div>
         </div>
       </div>
       <!-- 기존 빌드 결과(그리드·컨셉·나노·최종)는 우측 아래 또는 모달로 유지. 여기서는 우측에 메인 결과만 표시하고 상세는 기존 wrap 안에 숨겨두거나 스크롤 영역으로 -->
@@ -700,6 +723,7 @@
               </div>
               <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:center;">
                 <a id="arch-final-download" class="btn-primary btn-sm" download="hangeul-architecture-final.png" data-i18n="arch.download_btn">💾 이미지 저장</a>
+                <button type="button" id="arch-final-video-btn" class="btn-primary btn-sm" data-i18n="arch.video_generate_btn">동영상 생성</button>
               </div>
             </div>
           </div>
@@ -715,7 +739,7 @@
           <p class="genie-arch-caption" style="font-size:1rem;color:var(--text-primary);margin:0 0 8px;font-weight:600;" data-i18n="arch.genie_caption">Create your own worlds</p>
           <p style="font-size:0.9rem;color:var(--text-muted);margin:0 0 16px;line-height:1.5;" data-i18n="arch.genie_desc">한글 건축 체험은 Google의 실험적 프로젝트 지니(Genie)와 함께 무한히 다양한 세계를 만들고 탐험합니다.</p>
           <div class="magicshop-sample-wrap" style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;">
-            <a href="https://deepmind.google/models/genie/" target="_blank" rel="noopener noreferrer" class="btn-outline btn-large" id="open-architecture-btn" aria-label="한글 건축 체험" data-i18n="arch.sample_btn">한글 건축 체험하기</a>
+            <button type="button" class="btn-outline btn-large" id="open-architecture-btn" aria-label="한글 건축 체험" data-i18n="arch.sample_btn">한글 건축 체험하기</button>
           </div>
         </div>
       </div>
@@ -736,6 +760,7 @@
           <p class="arch-modal-score-name" style="text-align:center;font-size:1rem;color:var(--text-secondary);margin:0 0 16px 0;" data-i18n="arch.modal_piece_title">작은것들을 위한 시</p>
           <div class="arch-modal-media-wrap" style="display:flex;justify-content:center;align-items:center;margin-bottom:20px;min-height:280px;">
             <img id="arch-nano-image" alt="당신의 선율로 완성된 안식처" style="max-width:100%;max-height:75vh;width:auto;height:auto;object-fit:contain;border-radius:12px;box-shadow:var(--shadow-lg);">
+            <video id="arch-nano-video" class="arch-modal-video" controls playsinline style="display:none;max-width:100%;max-height:75vh;width:auto;height:auto;object-fit:contain;border-radius:12px;box-shadow:var(--shadow-lg);" preload="metadata"></video>
           </div>
           <p style="font-size:0.85rem;color:var(--text-muted);text-align:center;margin-top:-8px;margin-bottom:12px;" data-i18n="arch.modal_save_hint">닫기 전에 저장 버튼으로 다운로드하세요.</p>
           <div class="arch-modal-actions" style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;align-items:center;margin-bottom:24px;">
@@ -751,18 +776,22 @@
     </div>
   </div>
 
-  <!-- 한글 건축 체험 · 곧 만나요 (지니 스타일 안내 팝업) -->
+  <!-- 한글 건축 체험 · 지니(Genie) 3.0 체험 안내 팝업 -->
   <div class="info-modal genie-coming-soon-modal" id="arch-coming-soon-modal" aria-hidden="true">
-    <div class="info-modal-content genie-coming-soon-content" style="max-width:520px;border-radius:24px;overflow:hidden;box-shadow:0 24px 48px rgba(0,0,0,0.12);">
+    <div class="info-modal-content genie-coming-soon-content" style="max-width:560px;border-radius:24px;overflow:hidden;box-shadow:0 24px 48px rgba(0,0,0,0.12);">
       <button class="info-modal-close" id="arch-coming-soon-close" aria-label="닫기"><svg viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
-      <div class="genie-coming-soon-inner" style="display:flex;flex-wrap:wrap;align-items:center;gap:0;">
-        <div class="genie-coming-soon-visual" style="flex:0 0 200px;min-height:200px;background:linear-gradient(160deg, #1a1f36 0%, #2d3748 100%);display:flex;align-items:center;justify-content:center;padding:24px;">
-          <img src="image/project-genie.png" alt="" style="width:100%;height:auto;max-height:180px;object-fit:contain;border-radius:12px;" loading="lazy">
+      <div class="genie-guide-inner" style="padding:24px 28px 28px;">
+        <h2 id="arch-genie-guide-title" class="genie-coming-soon-title" style="font-size:1.25rem;font-weight:700;color:#1a1f36;margin:0 0 12px;letter-spacing:-0.02em;" data-i18n="arch.genie_guide_title">지니(Genie)로 건축물 내부 탐험하기</h2>
+        <p id="arch-genie-guide-desc" style="font-size:0.9rem;color:#4a5568;line-height:1.55;margin:0 0 16px;" data-i18n="arch.genie_guide_desc">아래 프롬프트를 지니(Genie)에 입력하면, 당신이 만든 최종 건축물 이미지를 기반으로 건축물 안을 자유롭게 돌아다니며 내부 공간을 자세히 볼 수 있습니다.</p>
+        <div id="arch-genie-guide-image-wrap" style="margin-bottom:16px;min-height:120px;border-radius:12px;overflow:hidden;background:linear-gradient(160deg, #1a1f36 0%, #2d3748 100%);display:flex;align-items:center;justify-content:center;">
+          <img id="arch-genie-guide-image" alt="최종 건축물" style="max-width:100%;max-height:200px;object-fit:contain;display:none;">
+          <p id="arch-genie-guide-no-image" style="font-size:0.85rem;color:rgba(255,255,255,0.85);padding:20px;text-align:center;margin:0;" data-i18n="arch.genie_guide_no_image">먼저 매직샵에서 3. 최종 건축 디자인을 생성하면 여기에 이미지가 표시됩니다.</p>
         </div>
-        <div class="genie-coming-soon-text" style="flex:1;min-width:240px;padding:28px 24px;">
-          <h2 class="genie-coming-soon-title" style="font-size:1.35rem;font-weight:700;color:#1a1f36;margin:0 0 12px;letter-spacing:-0.02em;" data-i18n="arch.coming_soon_title">곧 만나요</h2>
-          <p class="genie-coming-soon-desc" style="font-size:0.95rem;color:#4a5568;line-height:1.6;margin:0 0 20px;" data-i18n="arch.coming_soon_desc">한글 건축 체험이 곧 준비되고 있어요. Google의 프로젝트 지니(Genie)와 함께 더 풍부한 세계를 만들 수 있도록 열심히 준비 중입니다. 조금만 기다려 주세요!</p>
-          <button type="button" class="btn-outline genie-coming-soon-btn" id="arch-coming-soon-confirm" style="border-radius:12px;padding:12px 20px;font-weight:600;color:#1a1f36;border-color:#cbd5e0;" data-i18n="arch.coming_soon_confirm">확인</button>
+        <p style="font-size:0.85rem;font-weight:600;color:#1a1f36;margin:0 0 6px;" data-i18n="arch.genie_guide_prompt_label">지니 3.0에 넣을 프롬프트 (복사 후 사용)</p>
+        <textarea id="arch-genie-guide-prompt" readonly style="width:100%;min-height:80px;padding:12px;font-size:0.9rem;border:1px solid var(--border-color);border-radius:10px;resize:vertical;margin-bottom:10px;"></textarea>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
+          <button type="button" id="arch-genie-guide-copy" class="btn-outline" style="border-radius:10px;padding:10px 16px;font-weight:600;" data-i18n="arch.genie_guide_copy">프롬프트 복사</button>
+          <a href="https://deepmind.google/models/genie/" target="_blank" rel="noopener noreferrer" class="btn-primary" id="arch-genie-guide-go" style="border-radius:10px;padding:10px 20px;font-weight:600;text-decoration:none;display:inline-block;" data-i18n="arch.genie_guide_go">지니에서 체험하기</a>
         </div>
       </div>
     </div>
@@ -951,6 +980,7 @@
         <div class="soul-lyrics-modal-actions">
           <button type="button" id="soul-lyrics-save-btn" class="btn-primary soul-lyrics-btn soul-lyrics-btn-save">💾 가사 저장</button>
           <button type="button" id="soul-lyrics-save-song-btn" class="btn-primary soul-lyrics-btn soul-lyrics-btn-song" style="display:none;" title="생성된 음원 파일 저장">🎵 노래 저장</button>
+          <button type="button" id="soul-lyrics-email-btn" class="btn-secondary soul-lyrics-btn">📧 이메일로 보내기</button>
           <button type="button" id="soul-lyrics-copy-btn" class="btn-outline soul-lyrics-btn">📋 복사</button>
         </div>
         <p class="soul-lyrics-share-label">공유하기 · 보라해 링크</p>
@@ -2322,7 +2352,7 @@
                       </div>
                     </section>
                   </div>
-                  <p class="k-beauty-note" id="k-beauty-note">추천 결과는 이 화면에서 확인할 수 있어요. (이메일 발송 기능은 준비 중이에요.)</p>
+                  <p class="k-beauty-note" id="k-beauty-note">추천 결과는 이 화면에서 확인할 수 있어요. 로그인하면 다른 서비스(한글 페르소나, 탄생뮤직 가사 등) 결과를 이메일로 받을 수 있어요.</p>
                   <p class="k-beauty-disclaimer">추천 · 일부 링크는 제휴/광고일 수 있어요</p>
                 </div>
               </div>

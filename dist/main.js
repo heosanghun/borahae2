@@ -10,6 +10,16 @@
   if (typeof window !== 'undefined') window.__hasGeminiApiKey = !!GEMINI_API_KEY;
   const OPENAI_API_KEY = (typeof window !== 'undefined' && window.__SIMS_OPENAI_KEY__) || '';
 
+  // 영상 생성 중 비차단 플로팅 알림 (페이지 이용 가능)
+  function showVideoGeneratingToast() {
+    var el = document.getElementById('video-generating-toast');
+    if (el) el.classList.add('visible');
+  }
+  function hideVideoGeneratingToast() {
+    var el = document.getElementById('video-generating-toast');
+    if (el) el.classList.remove('visible');
+  }
+
   // ========================================
   // Supabase Auth (회원가입 / 로그인)
   // ========================================
@@ -102,6 +112,71 @@
       initSupabaseAuth();
     });
   }
+
+  // ========================================
+  // 이메일로 결과 발송 (로그인 회원 메일 수신)
+  // ========================================
+  /** 현재 로그인한 회원의 이메일. 없으면 null */
+  function getCurrentUserEmail() {
+    var sb = getSupabase();
+    if (!sb) return Promise.resolve(null);
+    return sb.auth.getSession().then(function(res) {
+      var user = res.data.session && res.data.session.user ? res.data.session.user : null;
+      return (user && user.email) ? user.email : null;
+    }).catch(function() { return null; });
+  }
+
+  /**
+   * 서비스 결과를 로그인한 회원 이메일로 발송.
+   * @param {Object} opts - { serviceId: string, serviceName: string, subject: string, htmlBody: string, textBody?: string }
+   * @returns {Promise<{ ok: boolean, error?: string }>}
+   */
+  function sendResultByEmail(opts) {
+    var sb = getSupabase();
+    if (!sb) return Promise.resolve({ ok: false, error: '연결할 수 없습니다.' });
+    return getCurrentUserEmail().then(function(email) {
+      if (!email) return { ok: false, error: 'login_required' };
+      function normalizeEmailError(msg) {
+        if (!msg || typeof msg !== 'string') return '이메일 발송에 실패했어요.';
+        if (/edge function|failed to send a request|fetch failed|network|404|502|503/i.test(msg)) {
+          return '이메일 발송 서버에 연결할 수 없습니다. Edge Function이 배포되지 않았을 수 있어요. 잠시 후 다시 시도해 주세요.';
+        }
+        return msg;
+      }
+      return sb.functions.invoke('send-result-email', {
+        body: {
+          serviceId: opts.serviceId || 'unknown',
+          serviceName: opts.serviceName || '보라해 서비스',
+          subject: opts.subject || '보라해 결과',
+          htmlBody: opts.htmlBody || '',
+          textBody: opts.textBody || ''
+        }
+      }).then(function(res) {
+        if (res.error) return { ok: false, error: normalizeEmailError(res.error.message || res.error) };
+        if (res.data && res.data.error) return { ok: false, error: normalizeEmailError(res.data.error) };
+        if (res.data && res.data.message) return { ok: false, error: normalizeEmailError(res.data.message) };
+        return { ok: true };
+      }).catch(function(err) {
+        var msg = (err && err.message) ? err.message : '발송 실패';
+        return { ok: false, error: normalizeEmailError(msg) };
+      });
+    });
+  }
+
+  /** 로그인 필요 시 모달 열기. callback(email) 또는 로그인 유도 */
+  function ensureLoggedInForEmail(callback) {
+    getCurrentUserEmail().then(function(email) {
+      if (email && typeof callback === 'function') callback(email);
+      else {
+        openAuthModal('login');
+        alert('로그인하면 결과를 이메일로 받을 수 있어요.');
+      }
+    });
+  }
+
+  window.getCurrentUserEmail = getCurrentUserEmail;
+  window.sendResultByEmail = sendResultByEmail;
+  window.ensureLoggedInForEmail = ensureLoggedInForEmail;
 
   document.getElementById('nav-login-btn') && document.getElementById('nav-login-btn').addEventListener('click', function() {
     openAuthModal('login');
@@ -1625,6 +1700,40 @@
         }
       });
     }
+    var emailLyricsBtn = document.getElementById('soul-lyrics-email-btn');
+    if (emailLyricsBtn) {
+      emailLyricsBtn.addEventListener('click', function () {
+        if (!currentLyrics) return;
+        var ensureLoggedIn = window.ensureLoggedInForEmail;
+        var sendResult = window.sendResultByEmail;
+        if (typeof ensureLoggedIn !== 'function') {
+          alert('로그인하면 가사를 이메일로 받을 수 있어요. 먼저 로그인해 주세요.');
+          return;
+        }
+        ensureLoggedIn(function () {
+          if (typeof sendResult !== 'function') return;
+          var htmlBody = '<div style="font-family:sans-serif;max-width:600px;margin:0 auto;">' +
+            '<h2 style="color:#7c3aed;">✨ 내 탄생뮤직 가사</h2>' +
+            '<pre style="white-space:pre-wrap;line-height:1.6;background:#f5f5f5;padding:16px;border-radius:8px;">' +
+            (currentLyrics || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') +
+            '</pre><p style="margin-top:16px;color:#666;font-size:0.9em;">— 보라해 BORAHAE에서 보내드립니다.</p></div>';
+          sendResult({
+            serviceId: 'soul-lyrics',
+            serviceName: '내 탄생뮤직 가사',
+            subject: '내 탄생뮤직 가사 – 보라해',
+            htmlBody: htmlBody,
+            textBody: currentLyrics || ''
+          }).then(function (res) {
+            if (res && res.ok) {
+              alert('등록된 이메일로 가사를 보냈어요. 받은편지함을 확인해 주세요.');
+            } else {
+              var msg = (res && res.error === 'login_required') ? '로그인 후 다시 시도해 주세요.' : (res && res.error) || '발송에 실패했어요.';
+              alert(msg);
+            }
+          });
+        });
+      });
+    }
     if (snsLinks) {
       snsLinks.addEventListener('click', function (e) {
         var a = e.target.closest('a[data-sns]');
@@ -2619,22 +2728,27 @@
   }
 
   var RUNWAY_IMAGE_PATH = 'image/runway/backgrounds/runway.png';
-  var RUNWAY_VIDEO_PROMPT_WOMAN = 'Cinematic 8-second video. One woman in stylish fashion clothes walking on the wet street in front of Gwanghwamun Gate at night. Seoul. Stage lights and pyrotechnics in the background. Photorealistic. No other people in center.';
-  var RUNWAY_VIDEO_PROMPT_MAN = 'Cinematic 8-second video. One man in stylish fashion clothes walking on the wet street in front of Gwanghwamun Gate at night. Seoul. Stage lights and pyrotechnics in the background. Photorealistic. No other people in center.';
+  var RUNWAY_VIDEO_PROMPT_WOMAN = 'Cinematic 8-second video. One woman in stylish fashion clothes, with a warm smile and bright happy expression (미소 짓고 환하게 웃는 표정). She walks gracefully along the runway like a fashion show, showing off her outfit, at Gwanghwamun Plaza (광화문 광장), Seoul. Music video style stage lights and atmosphere in the background. Confident, elegant runway walk. Photorealistic. No other people in center.';
+  var RUNWAY_VIDEO_PROMPT_MAN = 'Cinematic 8-second video. One man in stylish fashion clothes, with a warm smile and bright happy expression (미소 짓고 환하게 웃는 표정). He walks gracefully along the runway like a fashion show, showing off his outfit, at Gwanghwamun Plaza (광화문 광장), Seoul. Music video style stage lights and atmosphere in the background. Confident, elegant runway walk. Photorealistic. No other people in center.';
 
   /**
    * 런웨이 결과 이미지를 분석해, 해당 장면과 일치하는 영상 생성용 영어 프롬프트를 반환.
    * 반드시 이 이미지와 동일한 인물·의상·배경으로 영상이 나오도록 구체적으로 기술.
    */
+  var RUNWAY_VIDEO_PROMPT_SUFFIX = ' The person has a warm smile and bright happy expression (미소 짓고 환하게 웃는 표정). They walk gracefully along the runway like a fashion show at Gwanghwamun Plaza (광화문 광장), music video style background, showing off the outfit. Confident, elegant runway walk. Not walking aggressively toward camera. Photorealistic. One person only.';
+
   async function buildRunwayVideoPromptFromResultImage(runwayResultDataUrl) {
     var prompt = 'This image is the EXACT frame to turn into a video. Your output will be used as the only prompt for AI video generation. ' +
       'Write ONE paragraph in English that describes this scene in detail so the generated video looks like this image in motion. ' +
-      'You MUST include: (1) Person: woman or man, hair, pose, position in frame. (2) Outfit: exact clothing, colors, style. (3) Background: building, gate, street, location, time of day. (4) Lighting and mood. ' +
-      'Rule: Output ONLY the video prompt. Start with "Cinematic 8-second video." then describe the same person walking or moving slightly in this exact setting. Photorealistic. One person only. No extra text before or after.';
+      'You MUST include: (1) Person: woman or man, hair, pose, position in frame. (2) Outfit: exact clothing, colors, style. (3) Background: Gwanghwamun Plaza or music video style stage, building, gate, street, Seoul. (4) Lighting and mood. ' +
+      'IMPORTANT: Describe the person as having a warm smile and bright happy expression. The motion should be a graceful fashion show runway walk (showing off the outfit), NOT walking aggressively or ominously toward the camera. ' +
+      'Rule: Output ONLY the video prompt. Start with "Cinematic 8-second video." then describe the same person walking gracefully along the runway in this exact setting. Photorealistic. One person only. No extra text before or after.';
     var description = await callGeminiImageToText(runwayResultDataUrl, prompt, 512);
     if (description && description.length > 40) {
       description = description.trim();
       if (!/^Cinematic/i.test(description)) description = 'Cinematic 8-second video. ' + description;
+      if (!/smile|happy|bright|미소|환하게/i.test(description)) description = description + RUNWAY_VIDEO_PROMPT_SUFFIX;
+      else if (!/runway|fashion show|광화문|Gwanghwamun|graceful|elegant/i.test(description)) description = description + RUNWAY_VIDEO_PROMPT_SUFFIX;
       return description;
     }
     return null;
@@ -4867,7 +4981,7 @@ ${soulInfo ? soulInfo : ''}
     }
 
     function buildArchitectureVideoPromptFromImage() {
-      return 'Cinematic 8-second video of the EXACT SAME building shown in the attached image. This is the final Hangeul future architecture building—maintain the same building shape, form, color distribution (7 colors: red, orange, yellow, green, blue, indigo, violet), plaza/forecourt layout, and surrounding futuristic context as shown in the image. The camera slowly orbits or pans around the building (360 degrees); other futuristic structures or landscape visible in the background. Photorealistic, natural or dramatic daylight, soft shadows. No text or labels. Serene, innovative atmosphere. Keep the building design consistent with the attached image—this video is part of the same architectural story (concept board → final building → video).';
+      return 'Generate the video by rotating 360 degrees around the final building. 최종 건축물을 중심으로 360도 회전하면서 영상을 생성해 주세요. Cinematic 8-second video of the EXACT SAME building shown in the attached image. This is the final Hangeul future architecture building—maintain the same building shape, form, color distribution (7 colors: red, orange, yellow, green, blue, indigo, violet), plaza/forecourt layout, and surrounding futuristic context as shown in the image. The camera slowly orbits or pans around the building (360 degrees); other futuristic structures or landscape visible in the background. Photorealistic, natural or dramatic daylight, soft shadows. No text or labels. Serene, innovative atmosphere. Keep the building design consistent with the attached image—this video is part of the same architectural story (concept board → final building → video).';
     }
 
     async function runNanoBananaArchitecture() {
@@ -4901,7 +5015,6 @@ ${soulInfo ? soulInfo : ''}
     }
 
     async function runNanoBananaArchitectureVideo() {
-      showArchLoading();
       var loadingText = document.getElementById('arch-modal-loading-text');
       function setLoadingVideo() {
         if (loadingText) {
@@ -4914,48 +5027,95 @@ ${soulInfo ? soulInfo : ''}
           loadingText.textContent = (window.__simsI18n && window.__simsI18n.t) ? window.__simsI18n.t('arch.nano_loading_image_first') : '1단계: 악보 그리드 기준 이미지를 생성하고 있습니다...';
         }
       }
-      if (archModal) {
-        archModal.classList.add('active');
-        archModal.setAttribute('aria-hidden', 'false');
-        document.body.style.overflow = 'hidden';
-      }
 
       if (!GEMINI_API_KEY) {
+        if (archModal) {
+          archModal.classList.add('active');
+          archModal.setAttribute('aria-hidden', 'false');
+          document.body.style.overflow = 'hidden';
+        }
+        showArchLoading();
         showArchError(getArchErrorText('arch.error_no_api_key'), true);
         return;
       }
 
+      var imgSrc = null;
+      var finalImg = document.getElementById('arch-final-image');
+      if (finalImg && finalImg.src && finalImg.src.indexOf('data:image') === 0) imgSrc = finalImg.src;
+      if (!imgSrc && window.__lastArchBuildingImageBase64) {
+        imgSrc = 'data:image/png;base64,' + window.__lastArchBuildingImageBase64;
+      }
+      if (!imgSrc) {
+        if (archModal) {
+          archModal.classList.add('active');
+          archModal.setAttribute('aria-hidden', 'false');
+          document.body.style.overflow = 'hidden';
+        }
+        showArchLoading();
+        showArchError(window.__simsI18n && window.__simsI18n.t ? window.__simsI18n.t('arch.video_need_final_image') : '3. 최종 건축 디자인을 먼저 생성한 뒤 동영상 생성을 눌러 주세요.', true);
+        return;
+      }
+
+      showVideoGeneratingToast();
+
       try {
-        var imageBase64 = null;
-        var finalImg = document.getElementById('arch-final-image');
-        if (finalImg && finalImg.src && finalImg.src.indexOf('data:image') === 0) {
-          var m = finalImg.src.match(/base64,(.+)/);
-          if (m && m[1]) imageBase64 = m[1];
-        }
-        if (!imageBase64) imageBase64 = window.__lastArchBuildingImageBase64 || null;
-        if (!imageBase64) {
-          showArchError(window.__simsI18n && window.__simsI18n.t ? window.__simsI18n.t('arch.video_need_final_image') : '3. 최종 건축 디자인을 먼저 생성한 뒤 영상 보기를 눌러 주세요.', true);
-          return;
-        }
         setLoadingVideo();
         var videoPrompt = buildArchitectureVideoPromptFromImage();
-        var opName = await startVeoVideoGenerationFromImage(videoPrompt, imageBase64);
+        var opName = await startVeoVideoGenerationWithFirstFrameViaFiles(videoPrompt, imgSrc);
         var result = await pollVeoOperation(opName);
         var videoUri = result.response && result.response.generateVideoResponse && result.response.generateVideoResponse.generatedSamples && result.response.generateVideoResponse.generatedSamples[0] && result.response.generateVideoResponse.generatedSamples[0].video && result.response.generateVideoResponse.generatedSamples[0].video.uri;
         if (!videoUri) {
+          hideVideoGeneratingToast();
+          if (archModal) {
+            archModal.classList.add('active');
+            archModal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+          }
+          showArchLoading();
           showArchError('영상 생성 결과를 가져올 수 없습니다.', true);
           return;
         }
         var blob = await fetchVeoVideoBlob(videoUri);
+        hideVideoGeneratingToast();
+        if (archModal) {
+          archModal.classList.add('active');
+          archModal.setAttribute('aria-hidden', 'false');
+          document.body.style.overflow = 'hidden';
+        }
         showArchVideoResult(blob);
       } catch (err) {
+        hideVideoGeneratingToast();
         var msg = (err && err.message) ? String(err.message) : '';
         if (/unregistered callers|API Key|API key|identity|quota|not available|403|404/i.test(msg)) {
           msg = getArchErrorText('arch.error_veo_hint');
         }
+        if (archModal) {
+          archModal.classList.add('active');
+          archModal.setAttribute('aria-hidden', 'false');
+          document.body.style.overflow = 'hidden';
+        }
+        showArchLoading();
         showArchError(msg || '한글 건축 영상 생성 중 오류가 발생했습니다.', true);
         console.error('Architecture video error:', err);
       }
+    }
+
+    var archFinalVideoBtn = document.getElementById('arch-final-video-btn');
+    if (archFinalVideoBtn) {
+      archFinalVideoBtn.addEventListener('click', function () {
+        var finalImg = document.getElementById('arch-final-image');
+        var imgSrc = finalImg && finalImg.src && finalImg.src.indexOf('data:image') === 0 ? finalImg.src : (window.__lastArchBuildingImageBase64 ? 'data:image/png;base64,' + window.__lastArchBuildingImageBase64 : null);
+        if (!imgSrc) {
+          if (archModal) {
+            archModal.classList.add('active');
+            archModal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+          }
+          showArchError(window.__simsI18n && window.__simsI18n.t ? window.__simsI18n.t('arch.video_need_final_image') : '3. 최종 건축 디자인을 먼저 생성한 뒤 동영상 생성을 눌러 주세요.', true);
+          return;
+        }
+        runNanoBananaArchitectureVideo();
+      });
     }
 
     var archComingSoonModal = document.getElementById('arch-coming-soon-modal');
@@ -4963,6 +5123,25 @@ ${soulInfo ? soulInfo : ''}
     var archComingSoonConfirm = document.getElementById('arch-coming-soon-confirm');
     function openArchComingSoonModal() {
       if (archComingSoonModal) {
+        var finalImg = document.getElementById('arch-final-image');
+        var guideImg = document.getElementById('arch-genie-guide-image');
+        var noImgMsg = document.getElementById('arch-genie-guide-no-image');
+        if (guideImg && noImgMsg) {
+          if (finalImg && finalImg.src && finalImg.src.indexOf('data:image') === 0) {
+            guideImg.src = finalImg.src;
+            guideImg.style.display = '';
+            noImgMsg.style.display = 'none';
+          } else {
+            guideImg.style.display = 'none';
+            guideImg.removeAttribute('src');
+            noImgMsg.style.display = '';
+          }
+        }
+        var promptEl = document.getElementById('arch-genie-guide-prompt');
+        if (promptEl) {
+          var promptText = (window.__simsI18n && window.__simsI18n.t) ? window.__simsI18n.t('arch.genie_prompt_text') : 'Use this building image as input. Let me freely explore inside the building and see every corridor, hall, and room in detail in an interactive experience.';
+          promptEl.value = promptText;
+        }
         archComingSoonModal.classList.add('active');
         archComingSoonModal.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
@@ -4978,10 +5157,31 @@ ${soulInfo ? soulInfo : ''}
     if (archComingSoonClose) archComingSoonClose.addEventListener('click', closeArchComingSoonModal);
     if (archComingSoonConfirm) archComingSoonConfirm.addEventListener('click', closeArchComingSoonModal);
     if (archComingSoonModal) archComingSoonModal.addEventListener('click', function(e) { if (e.target === archComingSoonModal) closeArchComingSoonModal(); });
-
-    if (archModal && openArchBtn) {
-      // openArchBtn is now an <a> tag in index.html, no need for click listener here
-      archCloseBtn.addEventListener('click', closeArchitectureModal);
+    var archGenieGuideCopy = document.getElementById('arch-genie-guide-copy');
+    if (archGenieGuideCopy) {
+      archGenieGuideCopy.addEventListener('click', function() {
+        var ta = document.getElementById('arch-genie-guide-prompt');
+        if (!ta || !ta.value) return;
+        ta.select();
+        ta.setSelectionRange(0, 99999);
+        try {
+          navigator.clipboard.writeText(ta.value);
+          var orig = archGenieGuideCopy.textContent;
+          archGenieGuideCopy.textContent = (window.__simsI18n && window.__simsI18n.t) ? window.__simsI18n.t('arch.genie_guide_copied') : 'Copied!';
+          setTimeout(function() { archGenieGuideCopy.textContent = orig; }, 2000);
+        } catch (err) {
+          console.warn('Copy failed', err);
+        }
+      });
+    }
+    if (openArchBtn) {
+      openArchBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        openArchComingSoonModal();
+      });
+    }
+    if (archModal) {
+      if (archCloseBtn) archCloseBtn.addEventListener('click', closeArchitectureModal);
       archModal.addEventListener('click', function(e) { if (e.target === archModal) closeArchitectureModal(); });
     }
 
@@ -5202,6 +5402,19 @@ ${soulInfo ? soulInfo : ''}
         e.preventDefault();
         e.stopPropagation();
         try {
+          // 영상인 경우: blob으로 다운로드
+          if (lastArchNanoVideoBlob) {
+            var url = URL.createObjectURL(lastArchNanoVideoBlob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'hangeul-architecture-nano.mp4';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            return;
+          }
+          // 이미지인 경우
           if (!lastArchNanoBase64) return;
           var bin = atob(lastArchNanoBase64);
           var arr = new Uint8Array(bin.length);
@@ -5222,6 +5435,160 @@ ${soulInfo ? soulInfo : ''}
     if (archRetryBtn) {
       archRetryBtn.addEventListener('click', runNanoBananaArchitecture);
     }
+
+    // 한글 공감각 건축 표준 시스템: 우측 정사각형 공간에서 그림 7장(0~6) → 이어서 ani 영상 순차 재생 후 반복
+    (function initMagicshopHangeulCarousel() {
+      var idleEl = document.getElementById('magicshop-display-idle');
+      var carouselEl = document.getElementById('magicshop-hangeul-carousel');
+      var carouselImg = document.getElementById('magicshop-hangeul-carousel-img');
+      var carouselVideo = document.getElementById('magicshop-hangeul-carousel-video');
+      if (!idleEl || !carouselEl || !carouselImg || !carouselVideo) return;
+
+      var IMAGE_BASE = 'image/hangeul/system/information/';
+      var VIDEO_BASE = 'image/hangeul/system/ani/';
+      var IMAGE_EXTENSIONS = ['png', 'jpg', 'jpeg', 'webp', 'svg'];
+      var NUM_IMAGES = 7;
+      var NUM_VIDEOS = 10;
+      var IMAGE_HOLD_MS = 3800;
+      var FADE_MS = 1200;
+      function tryLoadImage(index, extIndex) {
+        if (extIndex >= IMAGE_EXTENSIONS.length) {
+          var placeholder = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"><rect width="400" height="400" fill="%236b21a8"/><text x="200" y="200" font-family="sans-serif" font-size="24" fill="rgba(255,255,255,0.9)" text-anchor="middle" dy=".35em">한글 공감각 건축</text><text x="200" y="235" font-family="sans-serif" font-size="14" fill="rgba(255,255,255,0.7)" text-anchor="middle">' + (index + 1) + ' / 7</text></svg>');
+          carouselImg.alt = '한글 공감각 건축 표준 시스템 구조 ' + (index + 1);
+          carouselImg.style.display = 'block';
+          carouselImg.onerror = null;
+          carouselImg.onload = function() {
+            carouselImg.onload = null;
+            requestAnimationFrame(function() { carouselImg.classList.add('visible'); });
+            setTimeout(function() {
+              carouselImg.classList.remove('visible');
+              setTimeout(function() { scheduleNext(true, index + 1); }, FADE_MS);
+            }, IMAGE_HOLD_MS);
+          };
+          carouselImg.src = placeholder;
+          return;
+        }
+        var ext = IMAGE_EXTENSIONS[extIndex];
+        var url = IMAGE_BASE + index + '.' + ext;
+        carouselImg.src = url;
+        carouselImg.alt = '한글 공감각 건축 표준 시스템 구조 ' + (index + 1);
+        carouselImg.style.display = 'block';
+        carouselImg.onerror = function() { tryLoadImage(index, extIndex + 1); };
+        carouselImg.onload = function() {
+          carouselImg.onerror = null;
+          carouselImg.onload = null;
+          requestAnimationFrame(function() { carouselImg.classList.add('visible'); });
+          setTimeout(function() {
+            carouselImg.classList.remove('visible');
+            setTimeout(function() { scheduleNext(true, index + 1); }, FADE_MS);
+          }, IMAGE_HOLD_MS);
+        };
+      }
+
+      function showMedia(isImage, index) {
+        carouselImg.classList.remove('visible');
+        carouselVideo.classList.remove('visible');
+        carouselImg.style.display = 'none';
+        carouselVideo.style.display = 'none';
+        carouselVideo.pause();
+        carouselVideo.removeAttribute('src');
+        if (idleEl) idleEl.classList.add('magicshop-display-idle--carousel-active');
+        if (isImage) {
+          tryLoadImage(index, 0);
+        } else {
+          carouselVideo.style.display = 'block';
+          var fileNum = index + 1;
+          var tryMp4 = function() {
+            carouselVideo.src = VIDEO_BASE + fileNum + '.mp4';
+            carouselVideo.onerror = function() {
+              carouselVideo.onerror = null;
+              carouselVideo.src = VIDEO_BASE + fileNum + '.webm';
+              carouselVideo.onerror = function() { scheduleNext(false, index + 1); };
+              carouselVideo.onloadeddata = function() {
+                carouselVideo.onloadeddata = null;
+                requestAnimationFrame(function() { carouselVideo.classList.add('visible'); });
+                carouselVideo.play();
+              };
+            };
+            carouselVideo.onloadeddata = function() {
+              carouselVideo.onerror = null;
+              carouselVideo.onloadeddata = null;
+              requestAnimationFrame(function() { carouselVideo.classList.add('visible'); });
+              carouselVideo.play();
+            };
+          };
+          tryMp4();
+        }
+      }
+
+      function scheduleNext(isImagePhase, nextIndex) {
+        if (isImagePhase) {
+          if (nextIndex < NUM_IMAGES) {
+            showMedia(true, nextIndex);
+          } else {
+            showMedia(false, 0);
+          }
+          return;
+        }
+        carouselVideo.onended = null;
+        if (nextIndex < NUM_VIDEOS) {
+          showMedia(false, nextIndex);
+        } else {
+          setTimeout(function() { showMedia(true, 0); }, 300);
+        }
+      }
+
+      carouselVideo.addEventListener('ended', function onVideoEnded() {
+        var src = carouselVideo.src || '';
+        var match = src.match(/(\d+)\.(mp4|webm)/);
+        var current = match ? parseInt(match[1], 10) : 1;
+        var next = current + 1;
+        if (next > 10) {
+          carouselVideo.classList.remove('visible');
+          setTimeout(function() { showMedia(true, 0); }, 300);
+        } else {
+          carouselVideo.classList.remove('visible');
+          setTimeout(function() { showMedia(false, next - 1); }, 300);
+        }
+      });
+
+      carouselVideo.addEventListener('error', function() {
+        var src = carouselVideo.src || '';
+        var match = src.match(/(\d+)\.(mp4|webm)/);
+        var current = match ? parseInt(match[1], 10) : 1;
+        var next = current + 1;
+        if (next > 10) {
+          setTimeout(function() { showMedia(true, 0); }, 500);
+        } else {
+          setTimeout(function() { showMedia(false, next - 1); }, 500);
+        }
+      });
+
+      setTimeout(function() {
+        var style = window.getComputedStyle(idleEl);
+        if (style.display !== 'none' && style.visibility !== 'hidden') {
+          showMedia(true, 0);
+        }
+      }, 800);
+    })();
+
+    // 한글 시스템 갤러리 (image/hangeul/system/gallery)
+    (function initMagicshopHangeulGallery() {
+      var container = document.getElementById('magicshop-hangeul-gallery');
+      if (!container) return;
+      var GALLERY_BASE = 'image/hangeul/system/gallery/';
+      var GALLERY_FILES = ['1 (1).png', '1 (2).png', '1 (3).png', '1 (4).png', '1 (5).png', '1 (6).png', '1 (7).png', '1 (8).png', '1 (9).png', '1 (10).png', '2 (1).png', '2 (2).png', '2 (3).png', '2 (4).png', '2 (5).png', '2 (6).png', '2 (7).png', '2 (8).png', '2 (9).png', '2 (10).png'];
+      GALLERY_FILES.forEach(function (name, i) {
+        var wrap = document.createElement('div');
+        wrap.className = 'magicshop-hangeul-gallery-item';
+        var img = document.createElement('img');
+        img.src = GALLERY_BASE + encodeURIComponent(name);
+        img.alt = '한글 공감각 건축 갤러리 ' + (i + 1);
+        img.loading = 'lazy';
+        wrap.appendChild(img);
+        container.appendChild(wrap);
+      });
+    })();
 
     // 음악 입력 → 한글 건축물 이미지 생성 (샘플 / MIDI 업로드 → 생성 버튼 → 이미지)
     (function initArchitectureGenerate() {
@@ -5247,10 +5614,10 @@ ${soulInfo ? soulInfo : ''}
         if (statusEl) statusEl.textContent = message;
         generateBtn.disabled = false;
       }
-      function setDropzoneFileLabel(fileName) {
+      function setDropzoneFileLabel(fileName, isSampleApplied) {
         if (!dropzoneTextEl) return;
         if (fileName) {
-          dropzoneTextEl.textContent = (t('arch.file_selected') || '\u2713 \uc120\ud0dd\ub41c \ud30c\uc77c: ') + fileName;
+          dropzoneTextEl.textContent = isSampleApplied ? fileName : ((t('arch.file_selected') || '\u2713 \uc120\ud0dd\ub41c \ud30c\uc77c: ') + fileName);
           dropzoneTextEl.style.fontWeight = '600';
           dropzoneTextEl.style.color = 'var(--primary)';
         } else {
@@ -5266,7 +5633,7 @@ ${soulInfo ? soulInfo : ''}
         if (midiInput) midiInput.value = '';
         archUploadedImageDataUrl = null;
         setInputReady(t('arch.status_sample'));
-        setDropzoneFileLabel(null);
+        setDropzoneFileLabel(t('arch.sample_applied_dropzone'), true);
       });
 
       if (midiInput) {
@@ -5275,6 +5642,7 @@ ${soulInfo ? soulInfo : ''}
           if (file) {
             var isPdf = file.type === 'application/pdf' || (file.name && file.name.toLowerCase().endsWith('.pdf'));
             var isImage = (file.type && file.type.indexOf('image/') === 0) || (file.name && /\.(png|jpe?g|gif|webp)$/i.test(file.name));
+            var isMp3 = file.type === 'audio/mpeg' || (file.name && file.name.toLowerCase().endsWith('.mp3'));
             if (isImage) {
               var fr = new FileReader();
               fr.onload = function() { archUploadedImageDataUrl = fr.result; };
@@ -5282,7 +5650,7 @@ ${soulInfo ? soulInfo : ''}
             } else {
               archUploadedImageDataUrl = null;
             }
-            var msg = isPdf ? t('arch.status_uploaded_pdf') : isImage ? t('arch.status_uploaded_image') : t('arch.status_uploaded');
+            var msg = isPdf ? t('arch.status_uploaded_pdf') : isImage ? t('arch.status_uploaded_image') : isMp3 ? t('arch.status_uploaded_mp3') : t('arch.status_uploaded');
             setInputReady(msg + ' \u300c' + file.name + '\u300d');
             setDropzoneFileLabel(file.name);
           } else {
@@ -6225,6 +6593,7 @@ ${soulInfo ? soulInfo : ''}
           runwayResultVideo.style.visibility = 'hidden';
         }
         if (runwayVideoLoading) runwayVideoLoading.style.display = 'flex';
+        showVideoGeneratingToast();
         if (runwayVideoBlobUrl) {
           try { URL.revokeObjectURL(runwayVideoBlobUrl); } catch (e) {}
           runwayVideoBlobUrl = null;
@@ -6251,6 +6620,7 @@ ${soulInfo ? soulInfo : ''}
             return fetchVeoVideoBlob(videoUri);
           })
           .then(function (blob) {
+            hideVideoGeneratingToast();
             var url = URL.createObjectURL(blob);
             runwayVideoBlobUrl = url;
             if (runwayVideoLoading) runwayVideoLoading.style.display = 'none';
@@ -6269,6 +6639,7 @@ ${soulInfo ? soulInfo : ''}
             if (runwaySaveVideoBtn) runwaySaveVideoBtn.style.display = 'inline-block';
           })
           .catch(function (err) {
+            hideVideoGeneratingToast();
             if (runwayVideoLoading) runwayVideoLoading.style.display = 'none';
             if (runwayResultVideo) runwayResultVideo.style.visibility = '';
             runwayResultStatus.textContent = '영상 생성 실패: ' + (err.message || '');
