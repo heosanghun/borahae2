@@ -59,6 +59,12 @@ copyDir(path.join(root, 'image'), path.join(dist, 'image'));
 // book/ 전체 (전자책 포함)
 copyDir(path.join(root, 'book'), path.join(dist, 'book'));
 
+// video/ (뮤직비디오 갤러리 샘플 등)
+if (fs.existsSync(path.join(root, 'video'))) {
+  copyDir(path.join(root, 'video'), path.join(dist, 'video'));
+  console.log('video/ 복사됨');
+}
+
 // movie/soave1.mp4 (및 README) — 배포에 영상 포함 보장
 mkdirp(path.join(dist, 'movie'));
 const soaveMp4 = path.join(root, 'movie', 'soave1.mp4');

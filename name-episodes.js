@@ -30,6 +30,53 @@
   // 모음별 실제 파일 접미사 (아롱만 944x1120, 나머지는 896x1200)
   var MO_SUFFIX_BY_NAME = { '아롱': '_draphed_01_944x1120.png' };
 
+  /** 역할별 에피소드 한 줄 (주어 제외한 동작). 스토리 풍부화용 */
+  var ROLE_EPISODES = {
+    '시인': ['하늘을 보며 시 한 줄을 읊더니 모두를 감동시켰어요.', '종이에 낙서처럼 시를 써 내려가며 오늘의 이야기를 남겼어요.'],
+    '정원사': ['꽃잎을 하늘에 뿌리며 정원을 꾸몄어요. 사계절 꽃이 피어났죠.', '씨앗을 나눠 주며 "이걸 심으면 네 마음도 자랄 거야"라고 속삭였어요.'],
+    '가수': ['갑자기 노래를 부르기 시작했어요. 숲에 활기가 넘쳤죠.', '무대 위에 선 것처럼 목소리를 높이더니 모두가 따라 흥얼거렸어요.'],
+    '발명가': ['고장 난 오래된 시계를 뚝딱 고쳐서 모두를 놀라게 했어요.', '새로운 장난감을 만들더니 "이건 비밀 발명품이야"라고 말했어요.'],
+    '도우미': ['누군가 힘들어하자 가장 먼저 달려가 손을 내밀었어요.', '모두의 짐을 조금씩 나눠 들며 든든한 버팀목이 되어 주었어요.'],
+    '요리사': ['간을 보더니 "맛있는 건 마음이랑 같이 먹는 거야" 하며 요리를 대접했어요.', '맛있는 걸 만들면 슬픈 마음도 금세 사라진대요.'],
+    '뚝딱이': ['나무와 흙으로 작은 의자를 만들더니 "여기 앉아 봐!" 했어요.', '숲속 다리를 손수 고쳐서 모두가 안전히 건넜어요.'],
+    '천문학자': ['밤하늘 별을 가리키며 "저기 보면 길을 찾을 수 있어" 알려줬어요.', '망원경을 들고 오며 우주의 비밀을 재미있게 풀어줬어요.'],
+    '웃음꽃': ['엉뚱한 농담을 하더니 모두가 배꼽을 잡고 웃었어요.', '우울한 분위기를 한순간에 바꿔 놓으며 즐거움을 선사했어요.'],
+    '상상가': ['잠깐 잠들었다 깨어나더니 "꿈에서 대박 아이디어 났어!" 외쳤어요.', '꿈속 이야기를 하며 모두를 상상의 나라로 이끌었어요.'],
+    '댄서': ['음악이 나오자 몸이 먼저 반응해 춤을 추기 시작했어요.', '리듬에 맞춰 춤을 추더니 친구들에게까지 열정이 전염됐어요.'],
+    '파수꾼': ['키가 커서 멀리 보이다가 "저기 뭔가 온다!" 하고 알려줬어요.', '숲을 지키며 모두가 안심하고 놀 수 있게 해줬어요.'],
+    '달변가': ['어려운 문제가 생기자 지혜롭게 해결책을 제시했어요.', '아는 것을 조리 있게 설명하더니 모두가 고개를 끄덕였어요.'],
+    '탐정': ['작은 단서를 발견하더니 "이거면 진실을 찾을 수 있어!" 했어요.', '궁금한 건 끝까지 파헤치며 미스터리를 풀어냈어요.'],
+    '천하장사': ['무거운 것을 번쩍 들어 옮기며 "나한테 맡겨!" 했어요.', '약한 친구를 지키며 힘으로 든든한 의리가 되어 줬어요.'],
+    '화가': ['붓을 들어 알록달록 그림을 그리더니 밋밋한 벽이 예술이 됐어요.', '색깔로 오늘의 기분을 그려 내며 모두에게 선물했어요.'],
+    '전령사': ['바람처럼 달려가며 "급한 소식이야!" 하고 소식을 전했어요.', '날쌘돌이처럼 심부름을 도맡아 해주었어요.'],
+    '치유사': ['아픈 친구에게 약초를 건네며 마음까지 어루만져 줬어요.', '따뜻하게 치료하더니 상처가 금방 나았어요.'],
+    '마술사': ['엉뚱한 마술을 보여 주더니 모두가 "우와!" 소리를 냈어요.', '상상을 현실로 만드는 마법으로 놀라움과 웃음을 선물했어요.'],
+    '동물 조련사': ['숲속 동물과 대화하더니 사나운 친구도 순해졌어요.', '동물들과 소통하며 모두가 한자리에서 지내게 해줬어요.'],
+    '기록가': ['오늘 일을 한 줄 한 줄 꼼꼼히 기록했어요. 걸어 다니는 백과사전이죠.', '모든 이야기를 책에 남기며 "이건 소중한 기록이야" 했어요.'],
+    '명상가': ['친구들이 싸우자 마음의 중심을 잡아 주며 평정심을 되찾게 했어요.', '흔들리지 않는 평정으로 모두를 편안하게 해줬어요.'],
+    '재단사': ['찢어진 옷을 정교하게 꿰매 주며 "딱 맞는 게 최고지" 했어요.', '예쁜 옷을 지어 주더니 찢어진 마음도 꿰매 준다고 했어요.'],
+    '선생님': ['어려운 걸 친절하게 설명하더니 금방 이해가 됐어요.', '모르는 것을 쉽게 가르쳐 주며 모두가 "아하!" 했어요.'],
+    '사진가': ['"얍!" 하고 셔터를 누르며 특별한 순간을 포착했어요.', '행복한 순간을 놓치지 않고 추억으로 남겼어요.'],
+    '길잡이': ['새로운 길을 안내하며 가장 안전한 길로 이끌어 줬어요.', '지도를 펼쳐 보여 주며 모험의 첫걸음을 도왔어요.'],
+    '연주가': ['노래에 맞춰 환상적인 반주를 들려줬어요.', '여러 악기를 다루며 숲에 음악이 넘치게 했어요.'],
+    '해양 탐험가': ['물속 보물 이야기를 하더니 모두가 신나서 귀를 기울였어요.', '깊은 강 바닥 탐험 이야기로 상상의 나래를 펼쳐 줬어요.']
+  };
+  function hasJong(str) {
+    if (!str || str.length === 0) return false;
+    var last = str.charCodeAt(str.length - 1);
+    if (last < 0xAC00 || last > 0xD7A3) return false;
+    return (last - 0xAC00) % 28 !== 0;
+  }
+  function subject(name) { return name + (hasJong(name) ? '이' : '가'); }
+  function topic(name) { return name + (hasJong(name) ? '은' : '는'); }
+  function roleEpisode(agent, idx) {
+    var role = (agent && agent.role) ? agent.role : '';
+    var arr = ROLE_EPISODES[role];
+    var snippet = (arr && arr.length) ? arr[idx % arr.length] : (agent ? topic(agent.name) + ' ' + (role || '친구') + '답게 함께해 줬어요.' : '');
+    if (!agent) return snippet;
+    return '<strong>' + agent.name + '</strong>' + (hasJong(agent.name) ? '이' : '가') + ' ' + (snippet || (role ? role + '답게 활약했어요.' : '함께했어요.'));
+  }
+
   // 로마자(영어 이름) → 한글 표기 (Revised Romanization 역변환, 긴 패턴 우선)
   var ROMAN_CHO = [
     ['kk','ㄲ'],['gg','ㄲ'],['dd','ㄸ'],['tt','ㄸ'],['bb','ㅃ'],['pp','ㅃ'],['ss','ㅆ'],['jj','ㅉ'],
@@ -283,29 +330,63 @@
     return s;
   }
 
-  /** 서사 스토리 생성 (한글 페르소나 다이어리 톤: 진결·따뜻, 역할 반영) */
+  /** 서사 스토리 생성 (웹툰형: 기승전결 + 우당탕탕, 한글 에이전트 다이어리 톤) */
   function buildEpisodeStory(list, name) {
-    if (!list || list.length === 0) return { title: '', paragraphs: [] };
+    if (!list || list.length === 0) return { title: '', paragraphs: [], panels: [] };
     var names = list.map(function (a) { return a.name; });
     var title = name + '의 한글 페르소나 이야기';
-    if (names.length <= 2) {
-      var nameList = names.length === 2 ? (names[0] + '와 ' + names[1] + '가') : (names[0] + '가');
-      return {
-        title: title,
-        paragraphs: [
-          name + '의 이름 속에는 ' + nameList + ' 당신의 본질을 투영하고 있어요.',
-          list[0].name + '는 ' + list[0].role + '로서 ' + (list.length > 1 ? list[1].name + '는 ' + list[1].role + '로서 ' : '') + name + '님의 여정을 위해 특별한 서사를 깨웠습니다.'
-        ]
-      };
-    }
+    var paragraphs = [];
+    var panels = [];
     var first = list[0];
-    var mid = list.slice(1, -1);
     var last = list[list.length - 1];
+
+    if (list.length <= 2) {
+      var nameList = names.length === 2 ? (names[0] + '와 ' + names[1] + '가') : (names[0] + '가');
+      paragraphs = [
+        name + '님의 이름 속에는 ' + nameList + ' 당신의 본질을 투영하고 있어요.',
+        list[0].name + '는 ' + list[0].role + '로서, ' + (list.length > 1 ? list[1].name + '는 ' + list[1].role + '로서 ' : '') + name + '님의 여정을 위한 특별한 서사를 깨웠어요.'
+      ];
+      panels = [
+        '오늘은 조금 특별한 날. ' + name + '님 이름 속에서 ' + subject(list[0].name) + ' 문을 두드렸어요.',
+        roleEpisode(list[0], 0),
+        list.length > 1 ? roleEpisode(list[1], 1) : (list[0].name + '와 함께한 ' + name + '님만의 작은 이야기가 오늘도 이어졌어요.'),
+        '그렇게 ' + name + '님만의 서사가 조용히 피어났어요. 다음에도 또 만나요.'
+      ];
+      return { title: title, paragraphs: paragraphs, panels: panels };
+    }
+
+    var mid = list.slice(1, -1);
     var midText = mid.map(function (a) { return a.name + '(' + a.role + ')'; }).join(', ');
-    var p1 = name + '님의 이름 속에는 ' + names.join(', ') + '이 깃들어 있습니다. 이들은 오늘 ' + name + '님의 삶을 비추는 고유한 서사를 펼쳐 보입니다.';
-    var p2 = first.name + '는 ' + first.role + '로서 서사의 서막을 열었고, ' + midText + '이 차례로 등장하여 당신의 다채로운 페르소나를 보여 주었습니다.';
-    var p3 = '마지막으로 ' + last.name + '(' + last.role + ')이 여정의 의미를 되새기며, ' + name + '님의 본질은 더욱 깊고 풍성해졌습니다.';
-    return { title: title, paragraphs: [p1, p2, p3] };
+    var displayNames = names.length > 8 ? (names.slice(0, 4).join(', ') + ' 외 ' + (names.length - 4) + '명') : names.join(', ');
+    paragraphs = [
+      name + '님의 이름 속에는 ' + displayNames + '이 깃들어 있어요. 이들은 오늘 ' + name + '님의 삶을 비추는 고유한 서사를 펼쳐 보입니다.',
+      first.name + '는 ' + first.role + '로서 서막을 열었고, ' + (mid.length ? midText + '을 비롯해 ' : '') + last.name + '(' + last.role + ')이 차례로 등장하며 다채로운 페르소나를 보여 주었어요.',
+      '각자의 재능이 터져 나오고, 작은 소동도 있었지만 이름 속 친구들이 웃음으로 풀어 주며 ' + name + '님만의 서사가 완성됐어요.'
+    ];
+
+    var recordLead = mid.length >= 1 ? (mid[mid.length - 1].name + '와 ' + last.name) : last.name;
+    var crowdText = names.length > 6 ? '앞선 페르소나들이' : (mid.length >= 1 ? (mid.map(function (a) { return a.name; }).join(', ') + '이') : (last.name + '가'));
+    panels = [
+      '오늘은 ' + name + '님 이름 속에서 페르소나들이 깨어난 날. 먼저 <strong>' + first.name + '</strong>(' + first.role + ')' + (hasJong(first.name) ? '이' : '가') + ' 등장해 반갑게 인사했어요.',
+      subject(first.name) + ' 서막을 열자, ' + crowdText + ' 차례로 몰려왔어요. 숲속 동화 같은 소동이 벌어지기 시작했죠.',
+      roleEpisode(list[0], 0),
+      list.length > 1 ? roleEpisode(list[1], 1) : '',
+      list.length > 2 ? roleEpisode(list[2], 2) : '',
+      list.length > 3 ? roleEpisode(list[3], 3) : ''
+    ];
+    panels = panels.filter(Boolean);
+    // 우당탕탕: 구체적 소동 한 줄 (역할 활용)
+    var jo = list.find(function (a) { return a.role === '상상가'; });
+    var o = list.find(function (a) { return a.role === '웃음꽃'; });
+    if (jo) panels.push('한참 신나게 놀다 보니 ' + subject(jo.name) + ' 잠들었다가 "꿈에서 대박 아이디어 났어!" 하며 깨어나서 모두를 웃겼어요.');
+    else if (o) panels.push('분위기가 살짝 험해지자 ' + subject(o.name) + ' 엉뚱한 농담을 하더니 모두가 배꼽을 잡고 웃었어요.');
+    else panels.push('서로 맞장구치며 우당탕탕 놀다 보니, 누군가는 뭘 깨뜨렸고 누군가는 웃으며 치웠어요.');
+    var peacemaker = list.find(function (a) { return a.role === '웃음꽃' || a.role === '명상가' || a.role === '도우미'; }) || list[list.length - 1];
+    panels.push('작은 다툼이 있었지만, ' + subject(peacemaker.name) + ' 나서서 웃음과 평정으로 풀어 주었어요. 이름 속 친구들의 우정이에요.');
+    panels.push('어느새 해가 기울자 ' + recordLead + '가 나서서, 오늘의 이야기를 한 줄 한 줄 기록했어요. ' + name + '님만의 서사가 완성되는 순간.');
+    panels.push('그렇게 ' + name + '님의 이름 속 페르소나들이 만든, 특별한 하루가 되었어요. 다음에도 또 만나요.');
+
+    return { title: title, paragraphs: paragraphs, panels: panels };
   }
 
   function renderEpisodeStrip(list, name, romanInput) {
@@ -385,8 +466,9 @@
       stripEl.appendChild(card);
     });
     resultEl.style.display = 'block';
-    // 미리보기 목업 숨기기
+    // 미리보기 목업 숨기고, 오른쪽에 웹툰 스토리 패널 표시
     var previewEl = document.getElementById('name-episodes-preview');
+    var storySideEl = document.getElementById('name-episodes-story-side');
     if (previewEl) previewEl.style.display = 'none';
     var cards = stripEl.querySelectorAll('.name-episode-card');
     cards.forEach(function (card, idx) {
@@ -399,6 +481,22 @@
     });
 
     var story = buildEpisodeStory(list, name);
+    var panelsToShow = (story.panels && story.panels.length > 0) ? story.panels : (story.paragraphs || []);
+    if (storySideEl && panelsToShow.length > 0) {
+      var sideTitle = storySideEl.querySelector('.name-episodes-story-side-title');
+      var sidePanels = storySideEl.querySelector('.name-episodes-story-side-panels');
+      if (sideTitle) sideTitle.textContent = story.title;
+      if (sidePanels) {
+        sidePanels.innerHTML = '';
+        panelsToShow.forEach(function (text) {
+          var panel = document.createElement('div');
+          panel.className = 'name-episodes-story-panel';
+          panel.innerHTML = typeof text === 'string' ? text : '';
+          sidePanels.appendChild(panel);
+        });
+      }
+      storySideEl.style.display = 'block';
+    }
     var episodeBlock = document.getElementById('name-episodes-story');
     if (episodeBlock) {
       episodeBlock.style.display = 'block';
@@ -415,7 +513,10 @@
           bodyEl.appendChild(para);
         });
       }
-      if (cutsContainer) cutsContainer.style.display = 'none';
+    }
+    if (episodeBlock) {
+      var cutsContainer2 = document.getElementById('name-episodes-cuts');
+      if (cutsContainer2) cutsContainer2.style.display = 'none';
       var scenes = NARRATIVE_SCENES;
       var charList = list.map(function (a) { return a.name + '(' + a.role + ')'; }).join(', ');
       var cutDataUrls = [];

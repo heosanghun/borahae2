@@ -103,7 +103,7 @@
     'ai.input_title': { ko: '이름 속에 숨겨진 영혼의 자취', en: 'The Imprint of the Soul in Your Name' },
     'ai.input_desc': { ko: '이름을 자음과 모음의 리듬으로 풀어내어, 당신의 본질을 투영하는 한글 페르소나들의 서사를 펼칩니다.', en: 'Unravel your name into the rhythm of consonants and vowels to unfold a narrative of Hangeul personas reflecting your essence.' },
     'ai.input_label': { ko: '영혼의 주파수를 입력하세요', en: 'Enter your soul\'s frequency' },
-    'ai.input_placeholder': { ko: '당신의 이름 (한글 또는 영어)', en: 'Your name (Hangeul or English)' },
+    'ai.input_placeholder': { ko: '당신의 이름', en: 'Your name' },
     'ai.btn_create': { ko: '서사 일깨우기', en: 'Awaken Narrative' },
     'ai.result_summary': { ko: '✨ 나만의 고유한 자아들', en: '✨ My Unique Selves' },
     'ai.result_story_label': { ko: '📖 영혼의 기록 · 시나리오', en: '📖 Records of the Soul · Scenario' },
@@ -111,7 +111,7 @@
     'ai.share_insta': { ko: '📷 보라빛 세계 공유하기', en: '📷 Share Purple World' },
     'ai.share_desc': { ko: '이 서사를 간직하고, 동반자들과 함께 나누어 보세요.', en: 'Keep this narrative and share it with your companions.' },
     'ai.input_label': { ko: '영혼의 주파수를 입력하세요', en: 'Enter your soul\'s frequency' },
-    'ai.input_placeholder': { ko: '당신의 이름 (한글 또는 영어)', en: 'Your name (Hangeul or English)' },
+    'ai.input_placeholder': { ko: '당신의 이름', en: 'Your name' },
     'ai.btn_create': { ko: '서사 일깨우기', en: 'Awaken Narrative' },
 
     // --- Shop ---
@@ -424,6 +424,8 @@
     'auth.pw_placeholder': { ko: '비밀번호 입력', en: 'Enter password' },
     'auth.pw_min': { ko: '6자 이상', en: 'Min 6 characters' },
     'auth.pw_confirm_placeholder': { ko: '다시 입력', en: 'Re-enter password' },
+    'auth.or': { ko: '또는', en: 'Or' },
+    'auth.login_google': { ko: 'Google로 로그인', en: 'Sign in with Google' },
 
     // --- Partnership ---
     'partnership.title': { ko: '제휴문의', en: 'Partnership Inquiry' },

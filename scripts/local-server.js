@@ -7,6 +7,7 @@ const root = path.resolve(__dirname, '..');
 const envPath = path.join(root, '.env');
 let OPENAI_API_KEY = '';
 let MUREKA_API_KEY = '';
+let SUNO_API_KEY = '';
 
 function stripEnvValue(val) {
   if (typeof val !== 'string') return val;
@@ -29,13 +30,15 @@ if (fs.existsSync(envPath)) {
     if (m) OPENAI_API_KEY = stripEnvValue(m[1]);
     const m2 = line.match(/^(?:MUREKA|Mureka)_API_KEY\s*=\s*(.+)/i);
     if (m2) MUREKA_API_KEY = stripEnvValue(m2[1]);
+    const m3 = line.match(/^SUNO_API_KEY\s*=\s*(.+)/);
+    if (m3) SUNO_API_KEY = stripEnvValue(m3[1]);
   }
 }
 
 const MIME = {
   '.html': 'text/html', '.css': 'text/css', '.js': 'application/javascript',
   '.json': 'application/json', '.png': 'image/png', '.jpg': 'image/jpeg',
-  '.jpeg': 'image/jpeg', '.gif': 'image/gif', '.svg': 'image/svg+xml',
+  '.jpeg': 'image/jpeg', '.jfif': 'image/jpeg', '.gif': 'image/gif', '.svg': 'image/svg+xml',
   '.mp4': 'video/mp4', '.webm': 'video/webm', '.mp3': 'audio/mpeg',
   '.woff2': 'font/woff2', '.woff': 'font/woff', '.pdf': 'application/pdf',
   '.zip': 'application/zip', '.mid': 'audio/midi', '.midi': 'audio/midi'
@@ -43,8 +46,9 @@ const MIME = {
 
 const server = http.createServer(async (req, res) => {
   const parsed = new URL(req.url, 'http://localhost');
+  const pathname = parsed.pathname.replace(/\/+$/, '') || '/';
 
-  if (parsed.pathname === '/api/chat' && req.method === 'POST') {
+  if (pathname === '/api/chat' && req.method === 'POST') {
     let body = '';
     req.on('data', c => body += c);
     req.on('end', async () => {
@@ -92,7 +96,7 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  if (parsed.pathname === '/api/tts' && req.method === 'POST') {
+  if (pathname === '/api/tts' && req.method === 'POST') {
     let body = '';
     req.on('data', c => body += c);
     req.on('end', async () => {
@@ -147,7 +151,7 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  if (parsed.pathname === '/api/image' && req.method === 'POST') {
+  if (pathname === '/api/image' && req.method === 'POST') {
     let body = '';
     req.on('data', c => body += c);
     req.on('end', async () => {
@@ -198,7 +202,7 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  if (parsed.pathname === '/api/music/generate' && req.method === 'POST') {
+  if (pathname === '/api/music/generate' && req.method === 'POST') {
     let body = '';
     req.on('data', c => body += c);
     req.on('end', async () => {
@@ -242,8 +246,124 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  if (parsed.pathname.startsWith('/api/music/query/') && req.method === 'GET') {
-    const taskId = parsed.pathname.replace(/^\/api\/music\/query\//, '').split('/')[0];
+  if (pathname === '/api/suno/generate' && req.method === 'POST') {
+    let body = '';
+    req.on('data', c => body += c);
+    req.on('end', async () => {
+      if (!SUNO_API_KEY) {
+        res.writeHead(500, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+        res.end(JSON.stringify({ error: { message: 'SUNO_API_KEY not set in .env' } }));
+        return;
+      }
+      try {
+        const payload = JSON.parse(body || '{}');
+        const lyrics = (payload.lyrics || payload.prompt || '').trim().slice(0, 5000);
+        const title = (payload.title || '내 탄생뮤직').slice(0, 80);
+        const style = (payload.style || 'K-pop, Ballad, Korean, emotional').slice(0, 200);
+        if (!lyrics) {
+          res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+          res.end(JSON.stringify({ error: { message: 'Missing lyrics or prompt' } }));
+          return;
+        }
+        const https = require('https');
+        const origin = req.headers.origin || 'http://localhost:8000';
+        const callBackUrl = origin.replace(/\/$/, '') + '/api/suno-callback';
+        const data = JSON.stringify({
+          customMode: true,
+          instrumental: false,
+          prompt: lyrics,
+          title: title,
+          style: style,
+          model: payload.model || 'V4_5ALL',
+          callBackUrl: callBackUrl
+        });
+        const options = {
+          hostname: 'api.sunoapi.org', port: 443, path: '/api/v1/generate',
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUNO_API_KEY, 'Content-Length': Buffer.byteLength(data) }
+        };
+        const apiReq = https.request(options, apiRes => {
+          let resBody = '';
+          apiRes.on('data', c => resBody += c);
+          apiRes.on('end', () => {
+            let out;
+            try { out = (resBody && resBody.trim()) ? JSON.parse(resBody) : {}; } catch (e) {
+              res.writeHead(502, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+              res.end(JSON.stringify({
+                error: {
+                  message: apiRes.statusCode === 404
+                    ? '음악 서버를 찾을 수 없습니다 (404). API 키와 Suno(sunoapi.org) 계정을 확인해 주세요.'
+                    : 'Suno API가 JSON이 아닌 응답을 반환했습니다.',
+                  status: apiRes.statusCode,
+                  bodyPreview: (resBody || '').slice(0, 200)
+                }
+              }));
+              return;
+            }
+            if (out.data && out.data.taskId) {
+              res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+              res.end(JSON.stringify({ taskId: out.data.taskId }));
+            } else {
+              res.writeHead(apiRes.statusCode, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+              res.end(resBody);
+            }
+          });
+        });
+        apiReq.on('error', e => {
+          res.writeHead(502, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+          res.end(JSON.stringify({ error: { message: e.message } }));
+        });
+        apiReq.write(data);
+        apiReq.end();
+      } catch (e) {
+        res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+        res.end(JSON.stringify({ error: { message: e.message } }));
+      }
+    });
+    return;
+  }
+
+  if (pathname.startsWith('/api/suno/query/') && req.method === 'GET') {
+    const taskId = pathname.replace(/^\/api\/suno\/query\//, '').split('/')[0];
+    if (!taskId) {
+      res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+      res.end(JSON.stringify({ error: 'Missing taskId' }));
+      return;
+    }
+    if (!SUNO_API_KEY) {
+      res.writeHead(500, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+      res.end(JSON.stringify({ error: { message: 'SUNO_API_KEY not set in .env' } }));
+      return;
+    }
+    try {
+      const https = require('https');
+      const options = {
+        hostname: 'api.sunoapi.org', port: 443, path: '/api/v1/generate/record-info?taskId=' + encodeURIComponent(taskId),
+        method: 'GET',
+        headers: { 'Authorization': 'Bearer ' + SUNO_API_KEY }
+      };
+      const apiReq = https.request(options, apiRes => {
+        let resBody = '';
+        apiRes.on('data', c => resBody += c);
+        apiRes.on('end', () => {
+          res.writeHead(apiRes.statusCode, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+          res.end(resBody);
+        });
+      });
+      apiReq.on('error', e => {
+        res.writeHead(502, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+        res.end(JSON.stringify({ error: { message: e.message } }));
+      });
+      apiReq.end();
+    } catch (e) {
+      res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+      res.end(JSON.stringify({ error: { message: e.message } }));
+    }
+    return;
+  }
+
+  if (pathname.startsWith('/api/music/query/') && req.method === 'GET') {
+    const taskId = pathname.replace(/^\/api\/music\/query\//, '').split('/')[0];
     if (!taskId) {
       res.writeHead(400, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: 'Missing task_id' }));
@@ -281,7 +401,7 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  if (parsed.pathname === '/api/image-proxy' && req.method === 'GET') {
+  if (pathname === '/api/image-proxy' && req.method === 'GET') {
     var imgUrl = parsed.searchParams.get('url');
     if (!imgUrl) {
       res.writeHead(400, { 'Content-Type': 'application/json' });
@@ -330,4 +450,6 @@ server.listen(8000, () => {
     console.warn('[경고] OPENAI_API_KEY 길이가 비정상적입니다. .env에서 따옴표·주석(#)·줄바꿈 없이 한 줄만 넣었는지 확인하세요.');
   }
   console.log('MUREKA_API_KEY:', MUREKA_API_KEY ? 'loaded (' + MUREKA_API_KEY.slice(0, 8) + '...)' : 'NOT SET');
+  console.log('SUNO_API_KEY:', SUNO_API_KEY ? 'loaded (' + SUNO_API_KEY.slice(0, 8) + '...) - 내 탄생뮤직 음원 생성 사용' : 'NOT SET (내 탄생뮤직은 가사만 생성됨)');
+  console.log('내 탄생뮤직 테스트: 이 주소(http://localhost:8000)에서만 API가 동작합니다. 다른 포트나 Live Server 사용 시 음악 생성이 404로 실패합니다.');
 });

@@ -122,7 +122,7 @@
     openAuthModal('signup');
   });
 
-  // 전역 배경음(BGM) – 보라빛 신호 + LOVE ARMY 2곡 무한 루프
+  // 전역 배경음(BGM) – music 폴더 MP3 6곡 무한 루프
   (function() {
     var audio = document.getElementById('global-bgm');
     var btn = document.getElementById('bgm-toggle');
@@ -130,7 +130,7 @@
     if (!audio || !btn) return;
     var BGM_CANDIDATES = (typeof window !== 'undefined' && window.BGM_PLAYLIST && window.BGM_PLAYLIST.length)
       ? window.BGM_PLAYLIST
-      : ['music/보라빛 신호.mp3', 'music/LOVE ARMY.mp3'];
+      : ['music/보라빛 신호.mp3', 'music/LOVE ARMY.mp3', 'music/lovearmy1.mp3', 'music/lovearmy2.mp3', 'music/lovearmy3.mp3', 'music/lovearmy4.mp3'];
     var currentBgmIndex = 0;
     var STORAGE_KEY = 'borahae_bgm_on';
     audio.volume = 0.25;
@@ -178,7 +178,7 @@
       if (next >= BGM_CANDIDATES.length) {
         audio.removeAttribute('src');
         if (typeof window !== 'undefined' && window.alert) {
-          window.alert('BGM 음원을 불러올 수 없습니다.\n\nmusic 폴더에 MP3 파일(보라빛 신호.mp3, LOVE ARMY.mp3)을 넣은 뒤 새로고침해 주세요.');
+          window.alert('BGM 음원을 불러올 수 없습니다.\n\nmusic 폴더에 MP3 파일을 넣은 뒤 새로고침해 주세요.');
         }
         showBgmLyricsAnyway();
         updateBtn();
@@ -359,6 +359,40 @@
     });
   });
 
+  // Google 로그인 (Supabase OAuth)
+  (function() {
+    var btn = document.getElementById('auth-google-btn');
+    var errEl = document.getElementById('auth-login-error');
+    if (!btn) return;
+    btn.addEventListener('click', function() {
+      var sb = getSupabase();
+      if (!sb) {
+        if (errEl) errEl.textContent = '연결 중... 잠시만 기다려 주세요.';
+        waitForSupabase(function(s) {
+          if (errEl) errEl.textContent = '';
+          if (s) doGoogleLogin(s);
+          else if (errEl) errEl.textContent = 'Supabase 연결에 실패했습니다. 페이지를 새로고침해 주세요.';
+        });
+        return;
+      }
+      doGoogleLogin(sb);
+    });
+    function doGoogleLogin(sb) {
+      if (errEl) errEl.textContent = '';
+      var redirectTo = window.location.origin + window.location.pathname + (window.location.search || '') + (window.location.hash || '');
+      sb.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: redirectTo }
+      }).then(function(res) {
+        if (res.error) {
+          if (errEl) errEl.textContent = res.error.message || 'Google 로그인에 실패했습니다.';
+        }
+      }).catch(function(err) {
+        if (errEl) errEl.textContent = err.message || 'Google 로그인에 실패했습니다.';
+      });
+    }
+  })();
+
   // ========================================
   // 7컬러 × 퍼스널컬러 × 음악 추천 (BTS 멤버 미거론, 무드만 사용)
   // ========================================
@@ -371,15 +405,15 @@
     indigo: { name: '남색', mood: '깊고 예술적인', description: '내면적이고 드라마틱한 무드와 잘 맞아요.', directLink: 'https://www.youtube.com/watch?v=0lapF4DQPKQ', searchLink: 'https://www.youtube.com/results?search_query=Black+Swan+official+MV' },
     violet: { name: '보라', mood: '감성적이고 몽환적인', description: '감성과 위로가 담긴 무드와 잘 맞아요.', directLink: 'https://www.youtube.com/watch?v=xEeFrLSkMm8', searchLink: 'https://www.youtube.com/results?search_query=%EB%B4%84%EB%82%A0+Spring+Day+official+MV' }
   };
-  // 7컬러 → 한글 소모오 캐릭터 1명 (성향 기반, 순서 무관)
+  // 7컬러 → 한글 소모오 캐릭터 1명 (image/name/ja = 자음, image/name/mo = 모음 경로 적용)
   const COLOR_TO_HANGUL = {
-    red:    { name: '초롱', nameEn: 'ChoLong', role: '댄서', roleEn: 'Dancer', message: '열정과 리듬이 있는 너에게 어울리는 친구예요. 춤처럼 에너지를 발산해 보세요.', messageEn: 'A friend who matches your passion and rhythm. Let your energy out like dance.' },
-    orange: { name: '오롱', nameEn: 'OhLong', role: '웃음꽃', roleEn: 'Joy', message: '따뜻하고 유쾌한 무드에 잘 맞는 친구예요. 밝은 웃음으로 주변을 환하게 만들어 보세요.', messageEn: 'A friend who fits your warm, cheerful mood. Brighten the day with a smile.' },
-    yellow: { name: '노롱', nameEn: 'NoLong', role: '가수', roleEn: 'Singer', message: '밝고 활기찬 에너지가 넘치는 친구예요. 무대 위에서 빛나듯 표현해 보세요.', messageEn: 'A friend full of bright energy. Shine through expression, like on stage.' },
-    green:  { name: '어롱', nameEn: 'EoLong', role: '정원사', roleEn: 'Gardener', message: '달콤하고 설레는 무드와 잘 맞아요. 꽃처럼 성장하고 꽃피우는 일을 찾아 보세요.', messageEn: 'A friend who matches your sweet, hopeful mood. Find what makes you bloom.' },
-    blue:   { name: '으롱', nameEn: 'EuLong', role: '명상가', roleEn: 'Meditator', message: '시원하고 청량한 마음에 어울리는 친구예요. 평정심을 잃지 않고 중심을 잡아 보세요.', messageEn: 'A friend who fits your cool, calm mind. Keep your center and stay grounded.' },
-    indigo: { name: '소롱', nameEn: 'SoLong', role: '시인', roleEn: 'Poet', message: '깊고 예술적인 감성에 잘 맞는 친구예요. 세상을 시어로 번역해 보세요.', messageEn: 'A friend who fits your deep, artistic soul. Translate the world into your words.' },
-    violet: { name: '예롱', nameEn: 'YehLong', role: '연주가', roleEn: 'Musician', message: '감성과 위로가 담긴 무드에 어울려요. 음악처럼 마음을 나눠 보세요.', messageEn: 'A friend who fits your emotional, comforting mood. Share your heart like music.' }
+    red:    { name: '초롱', nameEn: 'ChoLong', role: '댄서', roleEn: 'Dancer', message: '열정과 리듬이 있는 너에게 어울리는 친구예요. 춤처럼 에너지를 발산해 보세요.', messageEn: 'A friend who matches your passion and rhythm. Let your energy out like dance.', image: 'image/name/ja/cholong.png' },
+    orange: { name: '오롱', nameEn: 'OhLong', role: '웃음꽃', roleEn: 'Joy', message: '따뜻하고 유쾌한 무드에 잘 맞는 친구예요. 밝은 웃음으로 주변을 환하게 만들어 보세요.', messageEn: 'A friend who fits your warm, cheerful mood. Brighten the day with a smile.', image: 'image/name/ja/olong.png' },
+    yellow: { name: '노롱', nameEn: 'NoLong', role: '가수', roleEn: 'Singer', message: '밝고 활기찬 에너지가 넘치는 친구예요. 무대 위에서 빛나듯 표현해 보세요.', messageEn: 'A friend full of bright energy. Shine through expression, like on stage.', image: 'image/name/ja/nolong.png' },
+    green:  { name: '어롱', nameEn: 'EoLong', role: '정원사', roleEn: 'Gardener', message: '달콤하고 설레는 무드와 잘 맞아요. 꽃처럼 성장하고 꽃피우는 일을 찾아 보세요.', messageEn: 'A friend who matches your sweet, hopeful mood. Find what makes you bloom.', image: 'image/name/mo/어롱_draphed_01_896x1200.png' },
+    blue:   { name: '으롱', nameEn: 'EuLong', role: '명상가', roleEn: 'Meditator', message: '시원하고 청량한 마음에 어울리는 친구예요. 평정심을 잃지 않고 중심을 잡아 보세요.', messageEn: 'A friend who fits your cool, calm mind. Keep your center and stay grounded.', image: 'image/name/mo/으롱_draphed_01_896x1200.png' },
+    indigo: { name: '소롱', nameEn: 'SoLong', role: '시인', roleEn: 'Poet', message: '깊고 예술적인 감성에 잘 맞는 친구예요. 세상을 시어로 번역해 보세요.', messageEn: 'A friend who fits your deep, artistic soul. Translate the world into your words.', image: 'image/name/ja/solong.png' },
+    violet: { name: '예롱', nameEn: 'YehLong', role: '연주가', roleEn: 'Musician', message: '감성과 위로가 담긴 무드에 어울려요. 음악처럼 마음을 나눠 보세요.', messageEn: 'A friend who fits your emotional, comforting mood. Share your heart like music.', image: 'image/name/mo/예롱_draphed_01_896x1200.png' }
   };
   const PERSONAL_COLOR_TO_7COLOR = {
     '봄웜': { primary: 'yellow', secondary: 'orange' },
@@ -1066,9 +1100,12 @@
     bmi: null,
     selectedGarment: null,
     selectedGarmentBuyUrl: null,
-    selectedGarmentName: null
+    selectedGarmentName: null,
+    kBeautyConsent: false,
+    kBeautyMakeupResult: null
   };
 
+  var lastStylingAnalysisResult = null;
   let currentStep = 1;
 
   // ========================================
@@ -1231,6 +1268,11 @@
       stepEl.classList.add('active');
     }
 
+    if (step === 4) {
+      var consentCb = document.getElementById('k-beauty-consent-checkbox');
+      if (consentCb) consentCb.checked = !!stylingData.kBeautyConsent;
+    }
+
     if (step === 5) {
       startAIAnalysis();
       if (stylingData.facePhoto) {
@@ -1257,6 +1299,29 @@
   document.getElementById('next-3')?.addEventListener('click', () => goToStep(4));
   document.getElementById('prev-4')?.addEventListener('click', () => goToStep(3));
   document.getElementById('next-4')?.addEventListener('click', () => goToStep(5));
+  var kBeautyConsentCheckbox = document.getElementById('k-beauty-consent-checkbox');
+  if (kBeautyConsentCheckbox) {
+    kBeautyConsentCheckbox.addEventListener('change', function () {
+      stylingData.kBeautyConsent = kBeautyConsentCheckbox.checked;
+    });
+  }
+  var kBeautyConsentBtn = document.getElementById('k-beauty-consent-btn');
+  if (kBeautyConsentBtn) {
+    kBeautyConsentBtn.addEventListener('click', function () {
+      stylingData.kBeautyConsent = true;
+      if (kBeautyConsentCheckbox) kBeautyConsentCheckbox.checked = true;
+      var lead = document.getElementById('k-beauty-lead');
+      var preparing = document.getElementById('k-beauty-preparing');
+      var actions = document.getElementById('k-beauty-consent-actions');
+      if (lead) lead.textContent = '당신의 퍼스널 컬러에 맞는 제품을 추천해요';
+      if (preparing) preparing.textContent = '맞는 제품을 준비 중이에요. 곧 더 많은 제품을 만나보세요.';
+      if (actions) actions.style.display = 'none';
+      // 동의 후 화장 전/후 메이크업 섹션 즉시 표시
+      if (typeof lastStylingAnalysisResult !== 'undefined' && lastStylingAnalysisResult && typeof displayAnalysisResult === 'function') {
+        displayAnalysisResult(lastStylingAnalysisResult);
+      }
+    });
+  }
   document.getElementById('go-to-tryon')?.addEventListener('click', () => goToStep(6));
   document.getElementById('prev-6')?.addEventListener('click', () => goToStep(5));
   document.getElementById('finish-styling')?.addEventListener('click', () => {
@@ -1284,9 +1349,142 @@
     var saveBtn = document.getElementById('soul-lyrics-save-btn');
     var copyBtn = document.getElementById('soul-lyrics-copy-btn');
     var snsLinks = document.getElementById('soul-lyrics-sns-links');
+    var musicArea = document.getElementById('soul-lyrics-music-area');
+    var musicStatus = document.getElementById('soul-lyrics-music-status');
+    var musicAudio = document.getElementById('soul-lyrics-audio');
     if (!btn || !statusEl || !resultEl || !modal || !modalBody) return;
 
     var currentLyrics = '';
+    var currentMusicUrl = '';
+    var sunoPollTimer = null;
+    var saveSongBtn = document.getElementById('soul-lyrics-save-song-btn');
+    var musicProgressWrap = document.getElementById('soul-lyrics-music-status-wrap');
+    var musicProgress = document.getElementById('soul-lyrics-music-progress');
+    var musicElapsed = document.getElementById('soul-lyrics-music-elapsed');
+    var musicMessageIndex = 0;
+    var musicElapsedSeconds = 0;
+    var musicMessageInterval = null;
+    var musicElapsedInterval = null;
+    var MUSIC_LOADING_MESSAGES = [
+      '가사를 Suno에 전달했어요 ✨',
+      '멜로디와 편곡을 만들고 있어요 🎹',
+      '음악 생성 중… (보통 30초~2분) 🎵',
+      '거의 다 됐어요, 조금만 더 기다려 주세요 💜'
+    ];
+
+    function clearMusicLoadingUI() {
+      if (musicMessageInterval) { clearInterval(musicMessageInterval); musicMessageInterval = null; }
+      if (musicElapsedInterval) { clearInterval(musicElapsedInterval); musicElapsedInterval = null; }
+      if (musicProgressWrap) musicProgressWrap.classList.remove('is-loading');
+      if (musicElapsed) musicElapsed.textContent = '';
+    }
+
+    function startSunoGeneration(lyricsText) {
+      if (!musicArea || !musicStatus || !musicAudio) return;
+      musicArea.style.display = 'block';
+      musicArea.classList.add('is-loading');
+      musicStatus.textContent = MUSIC_LOADING_MESSAGES[0];
+      musicStatus.classList.add('is-loading');
+      if (musicProgressWrap) musicProgressWrap.classList.add('is-loading');
+      if (musicElapsed) musicElapsed.textContent = '경과 0:00';
+      musicElapsedSeconds = 0;
+      musicMessageIndex = 0;
+      musicAudio.removeAttribute('src');
+      musicAudio.style.display = 'none';
+      if (sunoPollTimer) { clearInterval(sunoPollTimer); sunoPollTimer = null; }
+      musicMessageInterval = setInterval(function () {
+        musicMessageIndex = (musicMessageIndex + 1) % MUSIC_LOADING_MESSAGES.length;
+        if (musicStatus) musicStatus.textContent = MUSIC_LOADING_MESSAGES[musicMessageIndex];
+      }, 5000);
+      musicElapsedInterval = setInterval(function () {
+        musicElapsedSeconds += 1;
+        var m = Math.floor(musicElapsedSeconds / 60);
+        var s = musicElapsedSeconds % 60;
+        if (musicElapsed) musicElapsed.textContent = '경과 ' + m + ':' + (s < 10 ? '0' : '') + s;
+      }, 1000);
+
+      fetch('/api/suno/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          lyrics: lyricsText,
+          title: '내 탄생뮤직',
+          style: 'K-pop, Ballad, Korean, emotional'
+        })
+      })
+        .then(function (r) { return r.text().then(function (t) { return { status: r.status, text: t }; }); })
+        .then(function (r) {
+          var data;
+          try { data = r.text ? JSON.parse(r.text) : {}; } catch (e) {
+            var msg404 = (typeof window !== 'undefined' && window.location && window.location.hostname === 'localhost')
+              ? '로컬: 터미널에서만 npm run dev 로 실행하고 http://localhost:8000 으로 접속하세요. (다른 포트·Live Server·이미 8000을 쓰는 다른 프로그램이 있으면 API가 없어 404가 납니다. 8000 포트 사용 중이면 해당 프로그램을 종료한 뒤 npm run dev 를 실행하세요.)'
+              : '음악 서버를 찾을 수 없습니다. 배포 환경에서 API 경로와 Worker 설정을 확인해 주세요.';
+            throw new Error(r.status === 404 ? msg404 : '서버 응답 오류 (' + r.status + '). ' + (r.text && r.text.slice(0, 80) || ''));
+          }
+          if (data.error && data.error.message) throw new Error(data.error.message);
+          var taskId = data.taskId;
+          if (!taskId) throw new Error('taskId 없음');
+          var poll = function () {
+            fetch('/api/suno/query/' + encodeURIComponent(taskId))
+              .then(function (q) { return q.text().then(function (t) { return { status: q.status, text: t }; }); })
+              .then(function (q) {
+                var res;
+                try { res = q.text ? JSON.parse(q.text) : {}; } catch (e) { res = { error: { message: '응답 파싱 실패' } }; }
+                return res;
+              })
+              .then(function (res) {
+                var status = (res.data && res.data.status) ? res.data.status : '';
+                if (status === 'SUCCESS') {
+                  if (sunoPollTimer) { clearInterval(sunoPollTimer); sunoPollTimer = null; }
+                  clearMusicLoadingUI();
+                  if (musicArea) musicArea.classList.remove('is-loading');
+                  if (musicStatus) musicStatus.classList.remove('is-loading');
+                  var sunoData = (res.data && res.data.response && res.data.response.sunoData) ? res.data.response.sunoData : [];
+                  var first = sunoData[0];
+                  var url = (first && (first.streamAudioUrl || first.audioUrl || first.stream_audio_url || first.audio_url)) ? (first.streamAudioUrl || first.audioUrl || first.stream_audio_url || first.audio_url) : null;
+                  if (url) {
+                    musicStatus.textContent = '✅ 음악이 준비되었어요!';
+                    musicAudio.src = url;
+                    musicAudio.style.display = 'block';
+                    currentMusicUrl = url;
+                    if (saveSongBtn) { saveSongBtn.style.display = ''; saveSongBtn.disabled = false; }
+                  } else {
+                    musicStatus.textContent = '생성 완료했으나 재생 URL을 가져오지 못했습니다.';
+                  }
+                  return;
+                }
+                if (status === 'GENERATE_AUDIO_FAILED' || status === 'CREATE_TASK_FAILED' || status === 'SENSITIVE_WORD_ERROR') {
+                  if (sunoPollTimer) { clearInterval(sunoPollTimer); sunoPollTimer = null; }
+                  clearMusicLoadingUI();
+                  if (musicArea) musicArea.classList.remove('is-loading');
+                  if (musicStatus) musicStatus.classList.remove('is-loading');
+                  musicStatus.textContent = '음악 생성 실패: ' + (res.data && res.data.errorMessage ? res.data.errorMessage : status);
+                  return;
+                }
+              })
+              .catch(function (err) {
+                if (sunoPollTimer) clearInterval(sunoPollTimer);
+                sunoPollTimer = null;
+                clearMusicLoadingUI();
+                if (musicArea) musicArea.classList.remove('is-loading');
+                if (musicStatus) musicStatus.classList.remove('is-loading');
+                musicStatus.textContent = '확인 중 오류: ' + (err.message || '');
+              });
+          };
+          poll();
+          sunoPollTimer = setInterval(poll, 4000);
+        })
+        .catch(function (err) {
+          clearMusicLoadingUI();
+          if (musicArea) musicArea.classList.remove('is-loading');
+          if (musicStatus) musicStatus.classList.remove('is-loading');
+          musicStatus.textContent = '음악 생성 요청 실패: ' + (err.message || '');
+        });
+    }
+
+    function stopSunoPoll() {
+      if (sunoPollTimer) { clearInterval(sunoPollTimer); sunoPollTimer = null; }
+    }
 
     function setStatus(html, show) {
       statusEl.innerHTML = html;
@@ -1321,31 +1519,48 @@
       modal.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
 
+      if (musicArea) musicArea.style.display = 'none';
+      if (musicAudio) { musicAudio.removeAttribute('src'); musicAudio.style.display = 'none'; }
+      currentMusicUrl = '';
+      if (saveSongBtn) { saveSongBtn.style.display = 'none'; saveSongBtn.disabled = true; }
+      stopSunoPoll();
+      startSunoGeneration(lyricsText);
+
       var pageUrl = typeof window !== 'undefined' && window.location.href ? window.location.href : '';
       var shareUrl = encodeURIComponent(pageUrl);
       var shareText = encodeURIComponent('내 탄생뮤직 가사를 만들었어요 ✨ 보라해 BORAHAE');
 
-      var btsAndShareLinks = {
-        bts: 'https://weverse.io/bts/feed',
-        twitter: 'https://x.com/BTS_twt',
-        facebook: 'https://www.facebook.com/bts.official',
-        instagram: 'https://www.instagram.com/bts.bighitofficial/',
-        youtube: 'https://www.youtube.com/@BTS',
-        kakaostory: 'https://pf.kakao.com/_xgcUxfxb',
+      var shareLinks = {
+        borahae: 'https://weverse.io/bts/feed',
+        twitter: 'https://twitter.com/intent/tweet?url=' + shareUrl + '&text=' + shareText,
+        facebook: 'https://www.facebook.com/sharer/sharer.php?u=' + shareUrl,
+        instagram: 'https://www.instagram.com/',
+        youtube: 'https://www.youtube.com/',
+        kakaostory: 'https://story.kakao.com/share?url=' + shareUrl,
         band: 'https://band.us/plugin/share?url=' + shareUrl,
         naver: 'https://share.naver.com/web/shareView?url=' + shareUrl + '&title=' + shareText,
         line: 'https://social-plugins.line.me/lineit/share?url=' + shareUrl,
-        url: '#'
+        url: pageUrl || '#'
       };
       if (snsLinks) {
         snsLinks.querySelectorAll('a[data-sns]').forEach(function (a) {
           var sns = a.getAttribute('data-sns');
-          if (btsAndShareLinks.hasOwnProperty(sns)) a.href = btsAndShareLinks[sns];
+          if (shareLinks.hasOwnProperty(sns)) a.href = shareLinks[sns];
         });
       }
     }
 
     function closeLyricsModal() {
+      stopSunoPoll();
+      clearMusicLoadingUI();
+      if (musicArea) musicArea.classList.remove('is-loading');
+      if (musicStatus) musicStatus.classList.remove('is-loading');
+      if (musicAudio) {
+        musicAudio.pause();
+        musicAudio.currentTime = 0;
+        musicAudio.removeAttribute('src');
+        musicAudio.load();
+      }
       modal.classList.remove('active');
       modal.setAttribute('aria-hidden', 'true');
       document.body.style.overflow = '';
@@ -1368,6 +1583,26 @@
         a.download = 'borahae-birth-music-lyrics-' + Date.now() + '.txt';
         a.click();
         URL.revokeObjectURL(a.href);
+      });
+    }
+    if (saveSongBtn) {
+      saveSongBtn.addEventListener('click', function () {
+        if (!currentMusicUrl) return;
+        var filename = 'borahae-birth-music-' + Date.now() + '.mp3';
+        fetch(currentMusicUrl, { mode: 'cors' }).then(function (r) { return r.blob(); }).then(function (blob) {
+          var a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = filename;
+          a.click();
+          URL.revokeObjectURL(a.href);
+        }).catch(function () {
+          var a = document.createElement('a');
+          a.href = currentMusicUrl;
+          a.download = filename;
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+          a.click();
+        });
       });
     }
     if (copyBtn) {
@@ -1521,6 +1756,7 @@
         if (previewImage) previewImage.src = event.target.result;
         if (uploadPlaceholder) uploadPlaceholder.style.display = 'none';
         if (photoPreview) photoPreview.style.display = 'block';
+        document.querySelectorAll('.face-sample-item').forEach(function (el) { el.classList.remove('selected'); });
       };
       reader.readAsDataURL(file);
     }
@@ -1534,7 +1770,59 @@
     if (previewImage) previewImage.src = '';
     if (uploadPlaceholder) uploadPlaceholder.style.display = 'flex';
     if (photoPreview) photoPreview.style.display = 'none';
+    document.querySelectorAll('.face-sample-item').forEach(function (el) { el.classList.remove('selected'); });
   });
+
+  // 얼굴 샘플: image/human/face 경로 이미지 목록 로드 후 선택
+  (function () {
+    var container = document.getElementById('face-sample-container');
+    if (!container) return;
+    var basePath = 'image/human/face/';
+    var defaultList = ['face1.jpg', 'face2.jpg'];
+
+    function setFaceFromUrl(url) {
+      fetch(url).then(function (res) { return res.ok ? res.blob() : Promise.reject(res); })
+        .then(function (blob) {
+          var reader = new FileReader();
+          reader.onload = function (e) {
+            stylingData.facePhoto = e.target.result;
+            if (previewImage) previewImage.src = e.target.result;
+            if (uploadPlaceholder) uploadPlaceholder.style.display = 'none';
+            if (photoPreview) photoPreview.style.display = 'block';
+            if (facePhotoInput) facePhotoInput.value = '';
+            document.querySelectorAll('.face-sample-item').forEach(function (el) { el.classList.remove('selected'); });
+            var selected = container.querySelector('[data-sample-src="' + url + '"]');
+            if (selected) selected.classList.add('selected');
+          };
+          reader.readAsDataURL(blob);
+        })
+        .catch(function () {});
+    }
+
+    function renderSamples(list) {
+      container.innerHTML = '';
+      list.forEach(function (filename) {
+        var src = basePath + encodeURIComponent(filename);
+        var wrap = document.createElement('button');
+        wrap.type = 'button';
+        wrap.className = 'face-sample-item';
+        wrap.setAttribute('data-sample-src', src);
+        wrap.setAttribute('aria-label', '샘플: ' + filename);
+        var img = document.createElement('img');
+        img.src = src;
+        img.alt = filename;
+        img.onerror = function () { wrap.style.display = 'none'; };
+        wrap.appendChild(img);
+        wrap.addEventListener('click', function () { setFaceFromUrl(src); });
+        container.appendChild(wrap);
+      });
+    }
+
+    fetch(basePath + 'list.json')
+      .then(function (res) { return res.ok ? res.json() : Promise.reject(); })
+      .then(function (arr) { renderSamples(Array.isArray(arr) && arr.length ? arr : defaultList); })
+      .catch(function () { renderSamples(defaultList); });
+  })();
 
   // BMI Calculation
   function calculateBMI() {
@@ -1602,7 +1890,21 @@
     outerwear: [
       { id: 'o1', name: '트렌치코트', image: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=300&q=80', buyUrl: SHOP_SEARCH_BASE + encodeURIComponent('트렌치코트') },
       { id: 'o2', name: '레더 자켓', image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=300&q=80', buyUrl: SHOP_SEARCH_BASE + encodeURIComponent('레더 자켓') },
-      { id: 'o3', name: '패딩 점퍼', image: 'https://images.unsplash.com/photo-1544923246-77307dd628b1?w=300&q=80', buyUrl: SHOP_SEARCH_BASE + encodeURIComponent('패딩 점퍼') }
+      { id: 'o3', name: '패딩 점퍼', image: 'https://images.unsplash.com/photo-1544022613-e87ca75a784a?w=300&q=80', buyUrl: SHOP_SEARCH_BASE + encodeURIComponent('패딩 점퍼') }
+    ],
+    fashion: [
+      { id: 'f1', name: '패션 1', image: 'image/fashion/1.jpg', buyUrl: SHOP_SEARCH_BASE + encodeURIComponent('패션 의류') },
+      { id: 'f2', name: '패션 2', image: 'image/fashion/2.jpg', buyUrl: SHOP_SEARCH_BASE + encodeURIComponent('패션 의류') },
+      { id: 'f3', name: '패션 3', image: 'image/fashion/3.jpg', buyUrl: SHOP_SEARCH_BASE + encodeURIComponent('패션 의류') },
+      { id: 'f4', name: '패션 4', image: 'image/fashion/4.jpg', buyUrl: SHOP_SEARCH_BASE + encodeURIComponent('패션 의류') },
+      { id: 'f5', name: '패션 5', image: 'image/fashion/5.jpg', buyUrl: SHOP_SEARCH_BASE + encodeURIComponent('패션 의류') },
+      { id: 'f6', name: '패션 6', image: 'image/fashion/6.jpg', buyUrl: SHOP_SEARCH_BASE + encodeURIComponent('패션 의류') },
+      { id: 'f7', name: '패션 7', image: 'image/fashion/7.jpg', buyUrl: SHOP_SEARCH_BASE + encodeURIComponent('패션 의류') },
+      { id: 'f8', name: '패션 8', image: 'image/fashion/8.jpg', buyUrl: SHOP_SEARCH_BASE + encodeURIComponent('패션 의류') },
+      { id: 'f9', name: '패션 9', image: 'image/fashion/9.jpg', buyUrl: SHOP_SEARCH_BASE + encodeURIComponent('패션 의류') },
+      { id: 'f10', name: '패션 10', image: 'image/fashion/10.jpg', buyUrl: SHOP_SEARCH_BASE + encodeURIComponent('패션 의류') },
+      { id: 'f11', name: '패션 11', image: 'image/fashion/11.jpg', buyUrl: SHOP_SEARCH_BASE + encodeURIComponent('패션 의류') },
+      { id: 'f12', name: '패션 12', image: 'image/fashion/12.jpg', buyUrl: SHOP_SEARCH_BASE + encodeURIComponent('패션 의류') }
     ]
   };
 
@@ -1760,7 +2062,7 @@
     }
   }
 
-  var FASHION_PROMPT_FIXED = 'CRITICAL STYLE RULES (always follow): Photorealistic only. Do NOT draw cartoon, illustration, anime, comic, or manhwa style. Output must look like a real photograph taken by a professional fashion photographer. Style inspiration: Korean K-pop idol fashion, trendy Korean street style. Purple/lavender/violet color accents are preferred when possible. As if a professional K-pop fashion coordinator styled and dressed the person for a real photoshoot: natural skin texture, real fabric and lighting, soft shadows, consistent quality. Maintain real-photo image quality and style in every generation.';
+  var FASHION_PROMPT_FIXED = 'CRITICAL STYLE RULES (always follow): Photorealistic only. Do NOT draw cartoon, illustration, anime, comic, or manhwa style. Output must look like a real photograph taken by a professional fashion photographer. Style inspiration: Korean K-pop idol fashion, trendy Korean street style. Outfit colors and silhouettes must suit the person\'s skin tone, face, height and body type—do NOT force purple; recommend colors that flatter them. As if a professional fashion coordinator styled and dressed the person for a real photoshoot: natural skin texture, real fabric and lighting, soft shadows, consistent quality. Maintain real-photo image quality and style in every generation.';
 
   function buildFashionPrompt(useFaceAndBody, textOnly) {
     const genderMap = { female: '여성', male: '남성', neutral: '젠더리스' };
@@ -1889,14 +2191,82 @@
   }
 
   /**
-   * 이미지를 Gemini Files API로 업로드하고 file.uri 반환 (Veo 이미지 참조용)
+   * Veo 3.1 이미지→영상 생성 (첫 프레임으로 이미지 전달). Gemini API 문서 기준 REST 형식.
+   * @param {string} prompt - 영상용 텍스트 프롬프트
+   * @param {string} imageDataUrl - data:image/png;base64,... 또는 data:image/jpeg;base64,...
+   * @returns {Promise<string>} operation name
    */
-  async function uploadImageToGeminiFiles(imageBase64) {
+  async function startVeoVideoGenerationWithFirstFrame(prompt, imageDataUrl) {
+    var parsed = imageDataUrl && imageDataUrl.match(/^data:(image\/(png|jpeg|jpg));base64,(.+)$/i);
+    if (!parsed || !parsed[3]) throw new Error('유효한 이미지 data URL이 필요합니다.');
+    var mimeType = parsed[1].toLowerCase();
+    if (mimeType === 'image/jpg') mimeType = 'image/jpeg';
+    var base64Data = parsed[3];
+    var url = 'https://generativelanguage.googleapis.com/v1beta/models/veo-3.1-generate-preview:predictLongRunning?key=' + encodeURIComponent(GEMINI_API_KEY);
+    var body = {
+      instances: [{
+        prompt: prompt,
+        image: { inlineData: { mimeType: mimeType, data: base64Data } }
+      }],
+      parameters: { aspectRatio: '16:9' }
+    };
+    var res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    var data = await res.json();
+    if (data.error) throw new Error(data.error.message || 'Veo API error');
+    if (!res.ok) throw new Error(data.message || 'Veo request failed');
+    if (!data.name) throw new Error('No operation name in Veo response');
+    return data.name;
+  }
+
+  /**
+   * Veo 3.1 이미지→영상: Vertex AI 문서 기준 image 스키마(bytesBase64Encoded + mimeType)로 첫 프레임 전달.
+   * inlineData/fileData 미지원이므로 동일 스키마 시도.
+   * @param {string} prompt - 영상용 텍스트 프롬프트
+   * @param {string} imageDataUrl - data:image/png;base64,... 또는 data:image/jpeg;base64,...
+   * @returns {Promise<string>} operation name
+   */
+  async function startVeoVideoGenerationWithFirstFrameViaFiles(prompt, imageDataUrl) {
+    var parsed = imageDataUrl && imageDataUrl.match(/^data:(image\/(png|jpeg|jpg));base64,(.+)$/i);
+    if (!parsed || !parsed[3]) throw new Error('유효한 이미지 data URL이 필요합니다.');
+    var mimeType = parsed[1].toLowerCase();
+    if (mimeType === 'image/jpg') mimeType = 'image/jpeg';
+    var base64Data = parsed[3];
+    var url = 'https://generativelanguage.googleapis.com/v1beta/models/veo-3.1-generate-preview:predictLongRunning?key=' + encodeURIComponent(GEMINI_API_KEY);
+    var body = {
+      instances: [{
+        prompt: prompt,
+        image: { bytesBase64Encoded: base64Data, mimeType: mimeType }
+      }],
+      parameters: { aspectRatio: '16:9' }
+    };
+    var res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    var data = await res.json();
+    if (data.error) throw new Error(data.error.message || 'Veo API error');
+    if (!res.ok) throw new Error(data.message || 'Veo request failed');
+    if (!data.name) throw new Error('No operation name in Veo response');
+    return data.name;
+  }
+
+  /**
+   * 이미지를 Gemini Files API로 업로드하고 file.uri 반환 (Veo 이미지 참조용)
+   * @param {string} imageBase64 - base64 인코딩된 이미지
+   * @param {{ mimeType?: string, displayName?: string }} opts - mimeType 기본 'image/png', displayName 기본 'frame.png'
+   */
+  async function uploadImageToGeminiFiles(imageBase64, opts) {
     var binary = atob(imageBase64);
     var bytes = new Uint8Array(binary.length);
     for (var i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
     var numBytes = bytes.length;
-    var mimeType = 'image/png';
+    var mimeType = (opts && opts.mimeType) ? opts.mimeType : 'image/png';
+    var displayName = (opts && opts.displayName) ? opts.displayName : 'frame.png';
 
     var startUrl = 'https://generativelanguage.googleapis.com/upload/v1beta/files?key=' + encodeURIComponent(GEMINI_API_KEY);
     var startRes = await fetch(startUrl, {
@@ -1908,7 +2278,7 @@
         'X-Goog-Upload-Header-Content-Length': String(numBytes),
         'X-Goog-Upload-Header-Content-Type': mimeType
       },
-      body: JSON.stringify({ file: { display_name: 'hangeul-architecture-frame.png' } })
+      body: JSON.stringify({ file: { display_name: displayName } })
     });
     if (!startRes.ok) throw new Error('Files API start failed: ' + startRes.status);
     var uploadUrl = startRes.headers.get('x-goog-upload-url');
@@ -1984,7 +2354,7 @@
   /**
    * 악보 이미지에서 곡 제목·아티스트 추출 (Gemini 텍스트 응답)
    */
-  async function callGeminiImageToText(imageDataUrl, prompt) {
+  async function callGeminiImageToText(imageDataUrl, prompt, maxTokens) {
     var parsed = parseDataUrl(imageDataUrl);
     if (!parsed) throw new Error('Invalid image data');
     var parts = [
@@ -1997,7 +2367,7 @@
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         contents: [{ parts: parts }],
-        generationConfig: { maxOutputTokens: 200, temperature: 0.2 }
+        generationConfig: { maxOutputTokens: maxTokens != null ? maxTokens : 200, temperature: 0.2 }
       })
     });
     var data = await res.json();
@@ -2248,6 +2618,166 @@
     throw new Error('No image in response');
   }
 
+  var RUNWAY_IMAGE_PATH = 'image/runway/backgrounds/runway.png';
+  var RUNWAY_VIDEO_PROMPT_WOMAN = 'Cinematic 8-second video. One woman in stylish fashion clothes walking on the wet street in front of Gwanghwamun Gate at night. Seoul. Stage lights and pyrotechnics in the background. Photorealistic. No other people in center.';
+  var RUNWAY_VIDEO_PROMPT_MAN = 'Cinematic 8-second video. One man in stylish fashion clothes walking on the wet street in front of Gwanghwamun Gate at night. Seoul. Stage lights and pyrotechnics in the background. Photorealistic. No other people in center.';
+
+  /**
+   * 런웨이 결과 이미지를 분석해, 해당 장면과 일치하는 영상 생성용 영어 프롬프트를 반환.
+   * 반드시 이 이미지와 동일한 인물·의상·배경으로 영상이 나오도록 구체적으로 기술.
+   */
+  async function buildRunwayVideoPromptFromResultImage(runwayResultDataUrl) {
+    var prompt = 'This image is the EXACT frame to turn into a video. Your output will be used as the only prompt for AI video generation. ' +
+      'Write ONE paragraph in English that describes this scene in detail so the generated video looks like this image in motion. ' +
+      'You MUST include: (1) Person: woman or man, hair, pose, position in frame. (2) Outfit: exact clothing, colors, style. (3) Background: building, gate, street, location, time of day. (4) Lighting and mood. ' +
+      'Rule: Output ONLY the video prompt. Start with "Cinematic 8-second video." then describe the same person walking or moving slightly in this exact setting. Photorealistic. One person only. No extra text before or after.';
+    var description = await callGeminiImageToText(runwayResultDataUrl, prompt, 512);
+    if (description && description.length > 40) {
+      description = description.trim();
+      if (!/^Cinematic/i.test(description)) description = 'Cinematic 8-second video. ' + description;
+      return description;
+    }
+    return null;
+  }
+
+  async function generateRunwayComposite(runwayImagePath, faceDataUrl) {
+    var runwayParts = await urlOrDataUrlToImageParts(runwayImagePath);
+    var faceResized = await compressFacePhoto(faceDataUrl, 768);
+    var faceParts = parseDataUrl(faceResized);
+    if (!runwayParts || !runwayParts.data) throw new Error('런웨이 배경 이미지를 불러올 수 없습니다.');
+    if (!faceParts || !faceParts.data) throw new Error('얼굴 이미지를 사용할 수 없습니다.');
+    var prompt = 'CRITICAL: Photorealistic only. No cartoon, no illustration.\n' +
+      'Image 1 is an EMPTY background only (no people, no figures). Use it exactly as-is for the scene.\n' +
+      'Image 2: One person\'s face.\n' +
+      'Generate ONE photorealistic image: The SAME person as Image 2, full body (head to toe), wearing stylish fashion clothes, standing or walking in the center of the background from Image 1. Same lighting and atmosphere as Image 1. The output must contain ONLY this one person in the center. Do NOT add any other people, figures, or performers. One person only. Seamless blend. One image only.';
+    var parts = [
+      { inlineData: { mimeType: runwayParts.mimeType, data: runwayParts.data } },
+      { inlineData: { mimeType: faceParts.mimeType, data: faceParts.data } },
+      { text: prompt }
+    ];
+    var response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=' + encodeURIComponent(GEMINI_API_KEY), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: parts }],
+        generationConfig: { responseModalities: ['image', 'text'], responseMimeType: 'text/plain' }
+      })
+    });
+    var data = await response.json();
+    if (data.error) throw new Error(data.error.message || 'API 오류');
+    if (!response.ok) throw new Error(data.message || 'API 오류');
+    if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
+      for (var i = 0; i < data.candidates[0].content.parts.length; i++) {
+        var part = data.candidates[0].content.parts[i];
+        if (part.inlineData && part.inlineData.mimeType && part.inlineData.mimeType.indexOf('image/') === 0) {
+          return 'data:image/png;base64,' + part.inlineData.data;
+        }
+      }
+    }
+    throw new Error('No image in response');
+  }
+
+  async function callGeminiMakeup(faceDataUrl, season, palette) {
+    var faceResized = await compressFacePhoto(faceDataUrl, 768);
+    var faceParts = parseDataUrl(faceResized);
+    if (!faceParts || !faceParts.data) throw new Error('얼굴 이미지를 사용할 수 없습니다.');
+    var paletteStr = (palette && palette.length) ? palette.slice(0, 5).join(', ') : '';
+    var prompt = 'CRITICAL RULES — follow exactly:\n' +
+      '1. Input is ONE face photo (before makeup). Output must be ONE single image only.\n' +
+      '2. Output image: the SAME person, SAME pose, SAME face — but with makeup applied on the ENTIRE face. The whole face must show the "after makeup" look. Do NOT create a split image, half-and-half, before/after side-by-side, or any overlay that shows two versions in one frame. One face, one result, fully made up.\n' +
+      '3. Makeup is REQUIRED and must be visible: apply lip color, blush on cheeks, and subtle eyeshadow/eyeliner so the result is clearly "after makeup" compared to the input. At least light lip, blush, and eye makeup must be visible on the whole face.\n' +
+      '4. Makeup must suit ' + (season || 'their') + ' personal color: use tones that match this season (warm/cool as appropriate).\n' +
+      (paletteStr ? '5. Preferred color tones for lip and cheek: ' + paletteStr + '.\n' : '') +
+      '6. Photorealistic only. No cartoon, no illustration. Same lighting and skin as input. Output = single photorealistic "after makeup" face image only.';
+    var parts = [
+      { inlineData: { mimeType: faceParts.mimeType, data: faceParts.data } },
+      { text: prompt }
+    ];
+    var response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=' + encodeURIComponent(GEMINI_API_KEY), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: parts }],
+        generationConfig: { responseModalities: ['image', 'text'], responseMimeType: 'text/plain' }
+      })
+    });
+    var data = await response.json();
+    if (data.error) {
+      var msg = data.error.message || (typeof data.error === 'string' ? data.error : JSON.stringify(data.error));
+      throw new Error(msg);
+    }
+    if (!response.ok) throw new Error(data.message || 'API 오류 (' + response.status + ')');
+    if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
+      for (var i = 0; i < data.candidates[0].content.parts.length; i++) {
+        var part = data.candidates[0].content.parts[i];
+        if (part.inlineData && part.inlineData.mimeType && part.inlineData.mimeType.indexOf('image/') === 0) {
+          return 'data:image/png;base64,' + part.inlineData.data;
+        }
+      }
+    }
+    throw new Error('No image in response');
+  }
+
+  function getMakeupTipsBySeason(season) {
+    var tips = {
+      '봄웜': '· 베이스: 쿠션·파운데이션은 웜톤 아이보리·골드 베이스로 통일하고, 피부 결을 자연스럽게 덮어줍니다.\n· 립: 코랄, 피치, 오렌지 레드 등 따뜻한 톤의 립으로 생기를 더합니다.\n· 블러셔: 피치·코랄 블러셔를 광대뼈 위에서 살짝 대비시켜 건강한 윤기를 연출합니다.\n· 아이: 브라운·골드·피치 계열 아이섀도로 부드럽게 링클하고, 아이라인은 갈색으로 자연스럽게 마무리합니다.',
+      '여름쿨': '· 베이스: 핑크·쿨 베이스 파운데이션으로 맑고 시원한 피부 톤을 유지합니다.\n· 립: 로즈, 멜론 핑크, 라벤더 톤 립으로 쿨한 인상을 더합니다.\n· 블러셔: 로즈·라벤더 블러셔를 살짝만 톤업해 청량한 느낌을 줍니다.\n· 아이: 그레이·실버·로즈 계열 아이섀도와 갈색 아이라인으로 시원한 눈매를 강조합니다.',
+      '가을웜': '· 베이스: 골드·베이지 베이스로 깊이 있는 웜톤을 살립니다.\n· 립: 브릭, 테라코타, 머드 로즈 등 어스톤 립으로 고급스러움을 더합니다.\n· 블러셔: 테라코타·브릭 블러셔로 광대를 자연스럽게 강조합니다.\n· 아이: 브라운·버건디·골드 아이섀도와 소프트 아이라인으로 깊이감을 연출합니다.',
+      '겨울쿨': '· 베이스: 쿨 베이스·핑크 톤업으로 맑고 선명한 피부를 표현합니다.\n· 립: 레드, 베리, 딥 로즈 등 시원한 레드 톤 립을 포인트로 줍니다.\n· 블러셔: 쿨 핑크·플럼 블러셔로 얼굴 윤곽을 살립니다.\n· 아이: 그레이·네이비·실버 아이섀도와 선명한 아이라인으로 시크한 눈매를 완성합니다.'
+    };
+    if (season && tips[season]) return tips[season];
+    return '· 베이스: 자신의 피부 톤(웜/쿨)에 맞는 파운데이션으로 균일한 밝기를 만듭니다.\n· 립·블러셔: 퍼스널 컬러에 맞는 톤으로 입술과 광대를 포인트 줍니다.\n· 아이: 톤에 맞는 아이섀도와 자연스러운 아이라인으로 눈매를 정돈합니다.';
+  }
+
+  function updateMakeupTips(season) {
+    var el = document.getElementById('k-beauty-makeup-tips-desc');
+    if (el) el.textContent = getMakeupTipsBySeason(season);
+  }
+
+  function applyMakeupPhotoAsOriginal() {
+    if (!stylingData.kBeautyMakeupResult) return;
+    stylingData.facePhoto = stylingData.kBeautyMakeupResult;
+    var makeupBefore = document.getElementById('k-beauty-makeup-before');
+    if (makeupBefore) {
+      makeupBefore.innerHTML = '';
+      var img = document.createElement('img');
+      img.src = stylingData.facePhoto;
+      img.alt = '화장 전';
+      img.setAttribute('loading', 'lazy');
+      makeupBefore.appendChild(img);
+    }
+    if (typeof loadUserPhotoForTryOn === 'function') loadUserPhotoForTryOn();
+    showTasteToast('화장 후 사진이 원본으로 적용되었어요. Try-On·코디 생성에서 사용됩니다.');
+  }
+
+  async function runKBeautyMakeupGenerate() {
+    var btn = document.getElementById('k-beauty-makeup-generate-btn');
+    var afterInner = document.getElementById('k-beauty-makeup-after-inner');
+    if (!btn || !afterInner || !stylingData.facePhoto || !lastStylingAnalysisResult || !lastStylingAnalysisResult.personalColor) return;
+    btn.disabled = true;
+    btn.textContent = '생성 중...';
+    try {
+      var result = await callGeminiMakeup(
+        stylingData.facePhoto,
+        lastStylingAnalysisResult.personalColor.season,
+        lastStylingAnalysisResult.personalColor.palette
+      );
+      stylingData.kBeautyMakeupResult = result;
+      afterInner.innerHTML = '<img src="' + result + '" alt="화장 후" loading="lazy">';
+      var saveWrap = document.getElementById('k-beauty-makeup-save-wrap');
+      if (saveWrap) saveWrap.style.display = 'block';
+      var saveBtn = document.getElementById('k-beauty-makeup-save-btn');
+      if (saveBtn) saveBtn.onclick = function () { downloadImage(result, 'makeup-after.png'); };
+      var applyBtn = document.getElementById('k-beauty-makeup-apply-btn');
+      if (applyBtn) applyBtn.onclick = function () { applyMakeupPhotoAsOriginal(); };
+      updateMakeupTips(lastStylingAnalysisResult && lastStylingAnalysisResult.personalColor ? lastStylingAnalysisResult.personalColor.season : null);
+    } catch (err) {
+      console.error('K-beauty makeup error:', err);
+      afterInner.innerHTML = '<button type="button" class="k-beauty-makeup-btn" id="k-beauty-makeup-generate-btn">다시 시도</button><p class="k-beauty-makeup-hint">생성에 실패했어요. 다시 눌러주세요.</p>';
+      document.getElementById('k-beauty-makeup-generate-btn')?.addEventListener('click', runKBeautyMakeupGenerate);
+    }
+  }
+
   async function callIDMVTON(personBlob, garmentBlob) {
     // Legacy HuggingFace path; Try-On now uses Gemini in generateVirtualTryOn
     console.log('Virtual Try-On: IDM-VTON fallback not used');
@@ -2325,6 +2855,7 @@
   }
 
   async function getAIStylingRecommendation() {
+    // 추천·팁 텍스트: 필요 시 제미나이(Jeminai) 또는 OpenAI API로 교체 가능 (이미지 생성은 제미나이 우선)
     // 소울 컬러 데이터 가져오기
     var soulInfo = '';
     var soulResult = document.getElementById('soul-color-result');
@@ -2339,31 +2870,44 @@
 - [지시] 위 '소울 컬러'와 '소재'를 반드시 스타일링 추천에 메인 테마나 포인트로 강력하게 반영하세요.`;
     }
 
-    var prompt = `당신은 K-pop 감성 전문 패션 스타일리스트입니다. 다음 사용자 정보를 바탕으로 K-pop 콘서트, 팬미팅, 일상에 어울리는 맞춤형 스타일링 분석 결과를 JSON 형식으로만 제공해주세요. 보라색/퍼플 계열 컬러를 팔레트에 반드시 포함하세요. 다른 설명 없이 JSON만 출력하세요.
+    var heightWeight = '';
+    if (stylingData.height || stylingData.weight) {
+      heightWeight = `
+- 키: ${stylingData.height || '미입력'} cm
+- 몸무게: ${stylingData.weight || '미입력'} kg
+- BMI: ${stylingData.bmi != null ? stylingData.bmi : '미계산'}`;
+    }
+
+    var prompt = `당신은 전 세계 최고 수준의 AI 패션 전문 스타일리스트입니다. 아래 사용자의 모든 정보(성별, 연령, 체형, 키·몸무게, 피부톤, 톤, 선호 스타일 등)를 반영하여, 고객 메일로 발송할 프리미엄 스타일 프로필을 작성합니다. 샘플처럼 짧게 쓰지 마세요. 각 항목은 실제 돈을 내고 구독하는 고객이 읽고 이해할 수 있도록 전문가 수준으로 구체적이고 풍부하게 작성해주세요. 중요: 옷·코디·팔레트는 반드시 해당 사용자의 얼굴 톤, 키, 몸무게, 피부톤에 맞는 색과 실루엣으로만 추천하세요. 보라색은 브랜드 정체성용이므로 추천에 강제하지 마세요. 다른 설명 없이 JSON만 출력하세요.
 ${soulInfo ? soulInfo : ''}
 
-사용자 정보:
+[사용자 정보 - 반드시 추천에 반영]
 - 성별: ${stylingData.gender || '미선택'}
 - 연령대: ${stylingData.age || '미선택'}
 - 체형: ${stylingData.body || '미선택'}
 - 선호 스타일: ${stylingData.styles.join(', ') || '미선택'}
 - 피부톤: ${stylingData.skinTone || '미선택'}
-- 언더톤: ${stylingData.undertone || '미선택'}
+- 언더톤: ${stylingData.undertone || '미선택'}${heightWeight}
 
-다음 JSON 형식으로 정확히 응답해주세요:
+[JSON 형식 - 정확히 준수]
+- personalColor.description: 퍼스널 컬러에 대한 2~3문장 설명 (이 사용자 톤에 맞는 이유 포함).
+- recommendedStyle.description: 스타일 설명을 2~3문장으로 구체적으로.
+- outfitRecommendations: 배열 3~5개. 각 항목은 사용자 톤·체형·키·몸무게에 맞는 색과 실루엣으로 "한 벌의 코디"를 풀세트 서술 (상의·하의·신발·액세서리 포함). 보라색 강제 금지. 고객 톤에 맞는 컬러로만 추천.
+- stylingTips: 배열 3~5개. 각 항목은 구체적인 스타일링 조언 한 문장 이상 (컬러 활용, 디테일, 액세서리, 톤 강조 등).
+
 {
   "personalColor": {
     "season": "봄웜/여름쿨/가을웜/겨울쿨 중 하나",
-    "description": "퍼스널 컬러에 대한 설명",
+    "description": "2~3문장의 구체적 설명",
     "palette": ["#색상코드1", "#색상코드2", "#색상코드3", "#색상코드4", "#색상코드5"]
   },
   "recommendedStyle": {
-    "mainStyle": "메인 추천 스타일",
+    "mainStyle": "메인 추천 스타일명",
     "subStyles": ["서브 스타일1", "서브 스타일2"],
-    "description": "스타일 설명"
+    "description": "2~3문장의 구체적 스타일 설명"
   },
-  "outfitRecommendations": ["코디 추천 1", "코디 추천 2", "코디 추천 3"],
-  "stylingTips": ["스타일링 팁 1", "스타일링 팁 2", "스타일링 팁 3"]
+  "outfitRecommendations": ["풀세트 코디 추천 1 (상의·하의·신발·액세서리 포함)", "풀세트 코디 추천 2", "풀세트 코디 추천 3"],
+  "stylingTips": ["구체적 스타일링 팁 1", "구체적 스타일링 팁 2", "구체적 스타일링 팁 3"]
 }`;
 
     var url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + encodeURIComponent(GEMINI_API_KEY);
@@ -2372,7 +2916,7 @@ ${soulInfo ? soulInfo : ''}
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { maxOutputTokens: 1000, temperature: 0.7 }
+        generationConfig: { maxOutputTokens: 2800, temperature: 0.7 }
       })
     });
     var data = await res.json().catch(function() { return {}; });
@@ -2416,6 +2960,7 @@ ${soulInfo ? soulInfo : ''}
   }
 
   function displayAnalysisResult(result) {
+    lastStylingAnalysisResult = result;
     const loadingEl = document.getElementById('analysis-loading');
     const resultEl = document.getElementById('analysis-result');
 
@@ -2446,12 +2991,17 @@ ${soulInfo ? soulInfo : ''}
             <div class="palette-color" style="background: ${color}" title="${color}"></div>
           `).join('')}
         </div>
-        <div class="personal-color-hangul">
-          <span class="personal-color-hangul-label">${isEn ? 'Your Hangul friend' : '나만의 컬러에 어울리는 한글 친구'}</span>
-          <div class="personal-color-hangul-card">
-            <span class="personal-color-hangul-name">${hangulName}</span>
-            <span class="personal-color-hangul-role">${hangulRole}</span>
-            <p class="personal-color-hangul-message">${hangulMessage}</p>
+        <div class="personal-color-hangul-wrap">
+          <div class="personal-color-hangul">
+            <span class="personal-color-hangul-label">${isEn ? 'Your Hangul friend' : '나만의 컬러에 어울리는 한글 친구'}</span>
+            <div class="personal-color-hangul-card">
+              <span class="personal-color-hangul-name">${hangulName}</span>
+              <span class="personal-color-hangul-role">${hangulRole}</span>
+              <p class="personal-color-hangul-message">${hangulMessage}</p>
+            </div>
+          </div>
+          <div class="personal-color-hangul-character" aria-hidden="true">
+            <img src="${hangul.image || 'image/name/ja/nolong.png'}" alt="${hangulName}" class="hangul-character-img" loading="lazy" onerror="this.style.display='none'">
           </div>
         </div>
       `;
@@ -2493,6 +3043,67 @@ ${soulInfo ? soulInfo : ''}
         </div>
         <p class="style-description" style="margin-top: 12px;">${result.recommendedStyle.description}</p>
       `;
+    }
+
+    var kBeautyLead = document.getElementById('k-beauty-lead');
+    var kBeautyPreparing = document.getElementById('k-beauty-preparing');
+    var kBeautyConsentActions = document.getElementById('k-beauty-consent-actions');
+    if (stylingData.kBeautyConsent) {
+      if (kBeautyLead) kBeautyLead.textContent = '당신의 퍼스널 컬러에 맞는 제품을 추천해요';
+      if (kBeautyPreparing) kBeautyPreparing.textContent = '맞는 제품을 준비 중이에요. 곧 더 많은 제품을 만나보세요.';
+      if (kBeautyConsentActions) kBeautyConsentActions.style.display = 'none';
+    } else {
+      if (kBeautyLead) kBeautyLead.textContent = '맞춤 추천을 받으시려면 아래에서 동의해 주세요.';
+      if (kBeautyPreparing) kBeautyPreparing.textContent = '동의하시면 화장 전/후 메이크업 미리보기와 맞춤 제품을 이 화면에서 볼 수 있어요.';
+      if (kBeautyConsentActions) kBeautyConsentActions.style.display = 'flex';
+    }
+
+    var makeupSection = document.getElementById('k-beauty-makeup');
+    var makeupBefore = document.getElementById('k-beauty-makeup-before');
+    var makeupAfterInner = document.getElementById('k-beauty-makeup-after-inner');
+    var makeupDesc = document.getElementById('k-beauty-makeup-desc');
+    if (makeupSection) {
+      makeupSection.style.display = 'block';
+      if (makeupDesc && result.personalColor && result.personalColor.season) {
+        makeupDesc.textContent = '이 톤(' + result.personalColor.season + ')의 립·블러셔·아이메이크업으로 표현했어요';
+      }
+      if (makeupBefore) {
+        makeupBefore.innerHTML = '';
+        if (stylingData.facePhoto) {
+          var beforeImg = document.createElement('img');
+          beforeImg.src = stylingData.facePhoto;
+          beforeImg.alt = '화장 전';
+          beforeImg.setAttribute('loading', 'lazy');
+          makeupBefore.appendChild(beforeImg);
+        } else {
+          var beforePlaceholder = document.createElement('span');
+          beforePlaceholder.className = 'k-beauty-makeup-placeholder';
+          beforePlaceholder.textContent = 'Step 4에서 얼굴 사진을 올려주세요';
+          makeupBefore.appendChild(beforePlaceholder);
+        }
+      }
+      if (makeupAfterInner) {
+        if (!stylingData.facePhoto) {
+          makeupAfterInner.innerHTML = '<p class="k-beauty-makeup-hint">얼굴 사진을 올리시면 메이크업 적용을 해볼 수 있어요</p>';
+          var saveWrap = document.getElementById('k-beauty-makeup-save-wrap');
+          if (saveWrap) saveWrap.style.display = 'none';
+          } else if (stylingData.kBeautyMakeupResult) {
+            makeupAfterInner.innerHTML = '<img src="' + stylingData.kBeautyMakeupResult + '" alt="화장 후" loading="lazy">';
+            var saveWrap = document.getElementById('k-beauty-makeup-save-wrap');
+            if (saveWrap) saveWrap.style.display = 'block';
+            var saveBtn = document.getElementById('k-beauty-makeup-save-btn');
+            if (saveBtn) saveBtn.onclick = function () { downloadImage(stylingData.kBeautyMakeupResult, 'makeup-after.png'); };
+            var applyBtn = document.getElementById('k-beauty-makeup-apply-btn');
+            if (applyBtn) applyBtn.onclick = function () { applyMakeupPhotoAsOriginal(); };
+          } else {
+          makeupAfterInner.innerHTML = '<button type="button" class="k-beauty-makeup-btn" id="k-beauty-makeup-generate-btn">메이크업 적용해 보기</button><p class="k-beauty-makeup-hint">AI가 당신의 톤에 맞는 색상으로 적용해요</p>';
+          var genBtn = document.getElementById('k-beauty-makeup-generate-btn');
+          if (genBtn) genBtn.addEventListener('click', runKBeautyMakeupGenerate);
+          var saveWrap = document.getElementById('k-beauty-makeup-save-wrap');
+          if (saveWrap) saveWrap.style.display = 'none';
+        }
+      }
+      updateMakeupTips(result.personalColor && result.personalColor.season ? result.personalColor.season : null);
     }
 
     const recommendationEl = document.getElementById('recommendation-result');
@@ -3589,14 +4200,14 @@ ${soulInfo ? soulInfo : ''}
   }
 
   var FASHION_PROMPTS = {
-    casual: 'A stylish K-pop inspired casual outfit on a faceless white mannequin, purple oversized hoodie with I PURPLE YOU text, wide-leg jeans, white sneakers, purple tote bag, soft pastel studio background, fashion photography style, no face, no human features',
-    formal: 'An elegant K-pop inspired formal outfit flat lay on white background, lavender silk blouse, tailored purple blazer, black slim pants, pearl accessories, fashion magazine editorial style, no face, no human',
-    concert: 'A dazzling K-pop concert outfit on a faceless mannequin, sparkly purple sequin crop top, black leather mini skirt, platform boots, purple lightstick accessories, dramatic stage lighting, fashion editorial, no face, no human',
-    street: 'A trendy K-pop street fashion outfit on a faceless mannequin, oversized purple bomber jacket, graphic tee, cargo pants, chunky sneakers, bucket hat, urban city background, street style photography, no face, no human',
-    cute: 'An adorable K-pop cute style outfit on a faceless mannequin, pastel purple cardigan, pleated mini skirt, mary jane shoes, ribbon accessories, soft pink and lavender color palette, dreamy studio background, fashion photography, no face, no human',
-    sporty: 'A sporty K-pop athleisure outfit on a faceless mannequin, purple cropped hoodie, black leggings, white running shoes, cap, gym bag, clean white studio background, fitness fashion photography, no face, no human',
-    vintage: 'A vintage retro K-pop inspired outfit on a faceless mannequin, purple corduroy jacket, high-waist flare pants, platform shoes, retro sunglasses, warm film-grain aesthetic background, fashion editorial, no face, no human',
-    romantic: 'A romantic K-pop date outfit on a faceless mannequin, flowing lavender dress with lace details, delicate jewelry, strappy heels, small clutch purse, soft bokeh garden background, fashion photography, no face, no human'
+    casual: 'A stylish K-pop inspired casual outfit on a faceless white mannequin, oversized hoodie, wide-leg jeans, white sneakers, tote bag, soft pastel studio background, fashion photography style, no face, no human features',
+    formal: 'An elegant K-pop inspired formal outfit flat lay on white background, silk blouse, tailored blazer, slim pants, pearl accessories, fashion magazine editorial style, no face, no human',
+    concert: 'A dazzling K-pop concert outfit on a faceless mannequin, sparkly sequin crop top, leather mini skirt, platform boots, lightstick-style accessories, dramatic stage lighting, fashion editorial, no face, no human',
+    street: 'A trendy K-pop street fashion outfit on a faceless mannequin, oversized bomber jacket, graphic tee, cargo pants, chunky sneakers, bucket hat, urban city background, street style photography, no face, no human',
+    cute: 'An adorable K-pop cute style outfit on a faceless mannequin, pastel cardigan, pleated mini skirt, mary jane shoes, ribbon accessories, soft pastel color palette, dreamy studio background, fashion photography, no face, no human',
+    sporty: 'A sporty K-pop athleisure outfit on a faceless mannequin, cropped hoodie, leggings, white running shoes, cap, gym bag, clean white studio background, fitness fashion photography, no face, no human',
+    vintage: 'A vintage retro K-pop inspired outfit on a faceless mannequin, corduroy jacket, high-waist flare pants, platform shoes, retro sunglasses, warm film-grain aesthetic background, fashion editorial, no face, no human',
+    romantic: 'A romantic K-pop date outfit on a faceless mannequin, flowing dress with lace details, delicate jewelry, strappy heels, small clutch purse, soft bokeh garden background, fashion photography, no face, no human'
   };
 
   function detectFashionStyle(msg) {
@@ -5280,6 +5891,487 @@ ${soulInfo ? soulInfo : ''}
     }
 
     loadVideoAt(0);
+  })();
+
+  // ========================================
+  // 원클릭 런웨이: 샘플 얼굴(여자/남자) + 배경 선택 → 런웨이
+  // ========================================
+  (function () {
+    var runwayBtn = document.getElementById('oneclick-runway-btn');
+    var backgroundListEl = document.getElementById('oneclick-background-list');
+    var selectedBackground = null;
+    var selectedFaceDataUrl = null;
+    var placeholderDataUri = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="240" height="140" viewBox="0 0 240 140"><rect width="240" height="140" fill="#e9ecef"/><text x="120" y="82" text-anchor="middle" fill="#6c757d" font-family="sans-serif" font-size="14">background</text></svg>');
+
+    var faceFemale = document.getElementById('oneclick-face-female');
+    var faceMale = document.getElementById('oneclick-face-male');
+    var photoInput = document.getElementById('oneclick-photo');
+    var photoHint = document.getElementById('oneclick-photo-hint');
+    var photoPreviewWrap = document.getElementById('oneclick-photo-preview');
+    var photoPreviewImg = document.getElementById('oneclick-preview-img');
+    var faceBase = 'image/human/';
+    var faceFiles = { female: 'soave.jpg', male: 'ian.jpg' };
+    var femaleFallback = 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&facepad=2';
+    var maleFallback = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&facepad=2';
+
+    function clearUploadState() {
+      if (photoInput) photoInput.value = '';
+      if (photoHint) photoHint.textContent = '사진을 선택하세요';
+      if (photoPreviewWrap) photoPreviewWrap.style.display = 'none';
+      if (photoPreviewImg) photoPreviewImg.src = '';
+    }
+    function setFaceSelection(face) {
+      clearUploadState();
+      if (faceFemale) { faceFemale.setAttribute('aria-pressed', face === 'female' ? 'true' : 'false'); }
+      if (faceMale) { faceMale.setAttribute('aria-pressed', face === 'male' ? 'true' : 'false'); }
+      var path = faceBase + (faceFiles[face] || faceFiles.female);
+      var pathPng = path.replace(/\.jpe?g$/i, '.png');
+      var fallback = face === 'male' ? maleFallback : femaleFallback;
+      function loadBlobAsDataUrl(url) {
+        return fetch(url).then(function (r) { return r.ok ? r.blob() : Promise.reject(); }).then(function (blob) {
+          return new Promise(function (resolve, reject) {
+            var reader = new FileReader();
+            reader.onload = function () { resolve(reader.result); };
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+          });
+        });
+      }
+      loadBlobAsDataUrl(path).catch(function () { return loadBlobAsDataUrl(pathPng); }).then(function (dataUrl) {
+        selectedFaceDataUrl = dataUrl;
+        if (typeof window !== 'undefined') window.__oneclickRunwayFaceDataUrl = selectedFaceDataUrl;
+      }).catch(function () {
+        fetch(fallback).then(function (r) { return r.ok ? r.blob() : Promise.reject(); }).then(function (blob) {
+          var reader = new FileReader();
+          reader.onload = function () {
+            selectedFaceDataUrl = reader.result;
+            if (typeof window !== 'undefined') window.__oneclickRunwayFaceDataUrl = selectedFaceDataUrl;
+          };
+          reader.readAsDataURL(blob);
+        }).catch(function () {
+          var img = document.querySelector('#oneclick-face-' + face + ' img');
+          if (img && img.src && img.src.indexOf('data:') === 0) {
+            selectedFaceDataUrl = img.src;
+          } else {
+            selectedFaceDataUrl = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120"><rect width="120" height="120" fill="#f3e8ff"/><text x="60" y="68" text-anchor="middle" fill="#6b21a8" font-size="12">' + (face === 'female' ? '여자' : '남자') + '</text></svg>');
+          }
+          if (typeof window !== 'undefined') window.__oneclickRunwayFaceDataUrl = selectedFaceDataUrl;
+        });
+      });
+    }
+    if (faceFemale) {
+      faceFemale.addEventListener('click', function () {
+        setFaceSelection('female');
+      });
+    }
+    if (faceMale) {
+      faceMale.addEventListener('click', function () {
+        setFaceSelection('male');
+      });
+    }
+    if (photoInput && photoHint) {
+      photoInput.addEventListener('change', function () {
+        var file = photoInput.files && photoInput.files[0];
+        if (file) {
+          photoHint.textContent = '선택됨: ' + file.name;
+          /* 업로드 시에도 기존 성별 선택(여자/남자) 유지 → 영상 생성 시 올바른 프롬프트 사용 */
+          var reader = new FileReader();
+          reader.onload = function (e) {
+            selectedFaceDataUrl = e.target.result;
+            if (typeof window !== 'undefined') window.__oneclickRunwayFaceDataUrl = selectedFaceDataUrl;
+            if (photoPreviewImg) photoPreviewImg.src = selectedFaceDataUrl;
+            if (photoPreviewWrap) photoPreviewWrap.style.display = 'block';
+          };
+          reader.readAsDataURL(file);
+        } else {
+          clearUploadState();
+        }
+      });
+    }
+    (function () {
+      var urlInput = document.getElementById('oneclick-photo-url');
+      var urlBtn = document.getElementById('oneclick-photo-url-btn');
+      if (!urlInput || !urlBtn || !photoHint || !photoPreviewImg || !photoPreviewWrap) return;
+      function setPreviewFromDataUrl(dataUrl) {
+        selectedFaceDataUrl = dataUrl;
+        if (typeof window !== 'undefined') window.__oneclickRunwayFaceDataUrl = selectedFaceDataUrl;
+        photoPreviewImg.src = dataUrl;
+        photoPreviewWrap.style.display = 'block';
+        if (photoHint) photoHint.textContent = 'URL에서 불러옴';
+      }
+      urlBtn.addEventListener('click', function () {
+        var raw = (urlInput.value || '').trim();
+        if (!raw) {
+          if (photoHint) photoHint.textContent = '이미지 주소를 입력해 주세요.';
+          return;
+        }
+        if (photoHint) photoHint.textContent = '불러오는 중...';
+        var proxyUrl = '/api/image-proxy?url=' + encodeURIComponent(raw);
+        fetch(proxyUrl)
+          .then(function (r) {
+            if (r.ok) return r.blob();
+            return fetch(raw, { mode: 'cors' }).then(function (r2) { return r2.ok ? r2.blob() : Promise.reject(new Error('이미지를 불러올 수 없습니다.')); });
+          })
+          .then(function (blob) {
+            var reader = new FileReader();
+            reader.onload = function () { setPreviewFromDataUrl(reader.result); };
+            reader.onerror = function () {
+              if (photoHint) photoHint.textContent = '이미지 변환에 실패했습니다.';
+            };
+            reader.readAsDataURL(blob);
+          })
+          .catch(function (err) {
+            if (photoHint) photoHint.textContent = err.message || '인터넷 이미지를 불러오지 못했습니다. URL을 확인하거나 파일로 올려 주세요.';
+          });
+      });
+    })();
+    setFaceSelection('female');
+
+    var fallbackBackgroundList = [
+      { id: 'gwanghwamun1', name: '광화문 공연장소 1', desc: '', image: 'runwayuse/a.jpeg' },
+      { id: 'gwanghwamun2', name: '광화문 공연장소 2', desc: '', image: 'runwayuse/b.jpeg' },
+      { id: 'gwanghwamun3', name: '광화문 공연장소 3', desc: '', image: 'runwayuse/c.jpeg' },
+      { id: 'mv1', name: '1 뮤직비디오 장소', desc: '', image: 'runwayuse/1.jpeg' },
+      { id: 'mv2', name: '2 뮤직비디오 장소', desc: '', image: 'runwayuse/2.jpeg' },
+      { id: 'mv3', name: '3 뮤직비디오 장소', desc: '', image: 'runwayuse/3.jpeg' }
+    ];
+    if (backgroundListEl) {
+      Promise.all([
+        fetch('image/runway/backgrounds/list.json').then(function (res) { return res.ok ? res.json() : []; }).catch(function () { return []; }),
+        fetch('video/gallery/gallery-videos.json').then(function (res) { return res.ok ? res.json() : {}; }).catch(function () { return {}; })
+      ]).then(function (results) {
+        var arr = results[0];
+        var galleryVideos = results[1] || {};
+        if (!Array.isArray(arr) || arr.length === 0) arr = fallbackBackgroundList;
+        if (!Array.isArray(arr) || arr.length === 0) return;
+        var base = 'image/runway/';
+        var videoBase = 'video/gallery/';
+        arr.forEach(function (item) {
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'oneclick-background-option';
+          btn.setAttribute('data-background-id', item.id || '');
+          btn.setAttribute('aria-pressed', 'false');
+          btn.setAttribute('aria-label', (item.name || '') + (item.desc ? ' - ' + item.desc : ''));
+          var imgWrap = document.createElement('div');
+          imgWrap.className = 'oneclick-background-img-wrap';
+          var img = document.createElement('img');
+          img.alt = item.name || '';
+          img.src = placeholderDataUri;
+          var imgPath = item.image || '';
+          var realSrc = base + imgPath;
+          var fallbackSvg = imgPath ? base + imgPath.replace(/\.(jpe?g|png)$/i, '.svg') : '';
+          var loader = new Image();
+          var dataUriFallback = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="320" height="200" viewBox="0 0 320 200"><rect width="320" height="200" fill="#e9ecef"/><text x="160" y="105" text-anchor="middle" fill="#6c757d" font-family="sans-serif" font-size="14">' + (item.name || 'background') + '</text></svg>');
+          img.onerror = function () { this.onerror = null; this.src = dataUriFallback; };
+          if (imgPath.indexOf('runwayuse/') === 0) {
+            img.src = dataUriFallback;
+            loader.onload = function () { img.src = realSrc; };
+            loader.onerror = function () {
+              var loader2 = new Image();
+              loader2.onload = function () { img.src = fallbackSvg; };
+              loader2.onerror = function () { };
+              loader2.src = fallbackSvg || '';
+            };
+            loader.src = realSrc;
+          } else if (fallbackSvg) {
+            img.src = realSrc;
+            loader.onload = function () { img.src = realSrc; };
+            loader.onerror = function () {
+              var loader2 = new Image();
+              loader2.onload = function () { img.src = fallbackSvg; };
+              loader2.onerror = function () { img.src = dataUriFallback; };
+              loader2.src = fallbackSvg;
+            };
+            loader.src = realSrc;
+          } else {
+            img.src = realSrc;
+          }
+          imgWrap.appendChild(img);
+          if (galleryVideos[item.id]) {
+            var playOverlay = document.createElement('span');
+            playOverlay.className = 'oneclick-gallery-play-overlay';
+            playOverlay.setAttribute('aria-label', '샘플 영상 보기');
+            playOverlay.title = '샘플 영상 보기';
+            playOverlay.dataset.videoSrc = videoBase + galleryVideos[item.id];
+            playOverlay.dataset.caption = item.name || '';
+            playOverlay.innerHTML = '&#9654;';
+            imgWrap.appendChild(playOverlay);
+          }
+          btn.appendChild(imgWrap);
+          var cap = document.createElement('div');
+          cap.className = 'oneclick-background-caption';
+          cap.textContent = item.name || '';
+          btn.appendChild(cap);
+          if (item.desc && String(item.desc).trim()) {
+            var desc = document.createElement('div');
+            desc.className = 'oneclick-background-desc';
+            desc.textContent = item.desc;
+            btn.appendChild(desc);
+          }
+          btn.addEventListener('click', function (e) {
+            if (e.target.classList.contains('oneclick-gallery-play-overlay')) {
+              e.preventDefault();
+              e.stopPropagation();
+              var modal = document.getElementById('oneclick-gallery-video-modal');
+              var player = document.getElementById('oneclick-gallery-video');
+              var captionEl = document.getElementById('oneclick-gallery-video-caption');
+              if (modal && player && captionEl) {
+                player.src = e.target.dataset.videoSrc || '';
+                captionEl.textContent = e.target.dataset.caption || '';
+                modal.style.display = 'flex';
+                modal.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+                player.play().catch(function () {});
+              }
+              return;
+            }
+            document.querySelectorAll('.oneclick-background-option').forEach(function (el) {
+              el.classList.remove('selected');
+              el.setAttribute('aria-pressed', 'false');
+            });
+            btn.classList.add('selected');
+            btn.setAttribute('aria-pressed', 'true');
+            selectedBackground = item;
+          });
+          backgroundListEl.appendChild(btn);
+        });
+        var modal = document.getElementById('oneclick-gallery-video-modal');
+        var player = document.getElementById('oneclick-gallery-video');
+        var closeBtn = modal && modal.querySelector('.oneclick-gallery-video-close');
+        var backdrop = modal && modal.querySelector('.oneclick-gallery-video-modal-backdrop');
+        function closeGalleryVideoModal() {
+          if (modal) modal.style.display = 'none';
+          if (modal) modal.setAttribute('aria-hidden', 'true');
+          document.body.style.overflow = '';
+          if (player) { player.pause(); player.removeAttribute('src'); }
+        }
+        if (closeBtn) closeBtn.addEventListener('click', closeGalleryVideoModal);
+        if (backdrop) backdrop.addEventListener('click', closeGalleryVideoModal);
+      }).catch(function () {});
+    }
+
+    var runwayResult = document.getElementById('oneclick-runway-result');
+    var runwayResultImageWrap = document.getElementById('oneclick-runway-result-image-wrap');
+    var runwayResultImage = document.getElementById('oneclick-runway-result-image');
+    var runwayResultVideoWrap = document.getElementById('oneclick-runway-result-video-wrap');
+    var runwayResultVideo = document.getElementById('oneclick-runway-result-video');
+    var runwayVideoLoading = document.getElementById('oneclick-runway-video-loading');
+    var runwayResultStatus = document.getElementById('oneclick-runway-result-status');
+    var runwayVideoBtn = document.getElementById('oneclick-runway-video-btn');
+    var runwaySaveImageBtn = document.getElementById('oneclick-runway-save-image-btn');
+    var runwaySaveVideoBtn = document.getElementById('oneclick-runway-save-video-btn');
+    var runwayVideoBlobUrl = null;
+
+    if (runwayBtn) {
+      runwayBtn.addEventListener('click', function () {
+        if (!selectedFaceDataUrl) {
+          alert('샘플 얼굴(여자 또는 남자) 또는 내 사진을 선택해 주세요.');
+          return;
+        }
+        if (!selectedBackground) {
+          alert('아래 갤러리에서 원하는 장소(배경)를 선택한 뒤 다시 시도해 주세요.');
+          return;
+        }
+        if (typeof window !== 'undefined') {
+          window.__oneclickRunwayData = {
+            facePhoto: selectedFaceDataUrl,
+            background: selectedBackground || null
+          };
+        }
+        runwayBtn.disabled = true;
+        runwayBtn.textContent = '런웨이 생성 중...';
+        var placeName = (selectedBackground && selectedBackground.name) ? selectedBackground.name : '배경';
+        if (runwayResultStatus) runwayResultStatus.textContent = placeName + '에 인물 합성 중...';
+        if (runwayResult) runwayResult.style.display = 'block';
+        if (runwayResultImageWrap) runwayResultImageWrap.style.display = 'none';
+        if (runwayResultVideoWrap) runwayResultVideoWrap.style.display = 'none';
+        if (runwayVideoBtn) runwayVideoBtn.style.display = 'none';
+        if (runwaySaveImageBtn) runwaySaveImageBtn.style.display = 'none';
+        if (runwaySaveVideoBtn) runwaySaveVideoBtn.style.display = 'none';
+
+        var backgroundPath = (selectedBackground && selectedBackground.image)
+          ? ('image/runway/' + selectedBackground.image)
+          : RUNWAY_IMAGE_PATH;
+        generateRunwayComposite(backgroundPath, selectedFaceDataUrl)
+          .then(function (dataUrl) {
+            if (runwayResultImage) runwayResultImage.src = dataUrl;
+            if (runwayResultImageWrap) runwayResultImageWrap.style.display = 'block';
+            if (runwayResultStatus) runwayResultStatus.textContent = '합성 이미지가 준비되었어요. 아래에서 영상으로 만들 수 있어요.';
+            if (runwayVideoBtn) runwayVideoBtn.style.display = 'inline-block';
+            if (runwaySaveImageBtn) runwaySaveImageBtn.style.display = 'inline-block';
+            runwayBtn.disabled = false;
+            runwayBtn.textContent = '런웨이 한 편 만들기';
+            if (runwayResult) runwayResult.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          })
+          .catch(function (err) {
+            if (runwayResultStatus) runwayResultStatus.textContent = '오류: ' + (err.message || '생성 실패');
+            runwayBtn.disabled = false;
+            runwayBtn.textContent = '런웨이 한 편 만들기';
+          });
+      });
+    }
+
+    if (runwayVideoBtn && runwayResultStatus) {
+      runwayVideoBtn.addEventListener('click', async function () {
+        var imgSrc = runwayResultImage && runwayResultImage.src;
+        if (!imgSrc || imgSrc.indexOf('data:image') !== 0) {
+          alert('먼저 런웨이 결과 이미지를 생성한 뒤, 영상으로 만들기를 눌러 주세요.');
+          return;
+        }
+        runwayVideoBtn.disabled = true;
+        if (runwayResultVideoWrap) {
+          runwayResultVideoWrap.style.display = 'block';
+          runwayResultVideo.style.visibility = 'hidden';
+        }
+        if (runwayVideoLoading) runwayVideoLoading.style.display = 'flex';
+        if (runwayVideoBlobUrl) {
+          try { URL.revokeObjectURL(runwayVideoBlobUrl); } catch (e) {}
+          runwayVideoBlobUrl = null;
+        }
+        var prompt;
+        try {
+          runwayResultStatus.textContent = '런웨이 결과 이미지를 분석해 영상 프롬프트를 만들고 있어요...';
+          prompt = await buildRunwayVideoPromptFromResultImage(imgSrc);
+        } catch (e) {
+          prompt = null;
+        }
+        if (!prompt || prompt.length < 20) {
+          var isFemale = faceFemale && faceFemale.getAttribute('aria-pressed') === 'true';
+          prompt = isFemale ? RUNWAY_VIDEO_PROMPT_WOMAN : RUNWAY_VIDEO_PROMPT_MAN;
+          if (runwayResultStatus) runwayResultStatus.textContent = '결과 이미지 분석을 사용할 수 없어 기본 프롬프트로 영상 생성 중입니다. 1~2분 걸릴 수 있어요.';
+        } else {
+          if (runwayResultStatus) runwayResultStatus.textContent = '런웨이 결과 이미지를 첫 프레임으로 영상 생성 중입니다. 1~2분 정도 걸릴 수 있어요.';
+        }
+        startVeoVideoGenerationWithFirstFrameViaFiles(prompt, imgSrc)
+          .then(function (opName) { return pollVeoOperation(opName); })
+          .then(function (result) {
+            var videoUri = result.response && result.response.generateVideoResponse && result.response.generateVideoResponse.generatedSamples && result.response.generateVideoResponse.generatedSamples[0] && result.response.generateVideoResponse.generatedSamples[0].video && result.response.generateVideoResponse.generatedSamples[0].video.uri;
+            if (!videoUri) throw new Error('영상 URI 없음');
+            return fetchVeoVideoBlob(videoUri);
+          })
+          .then(function (blob) {
+            var url = URL.createObjectURL(blob);
+            runwayVideoBlobUrl = url;
+            if (runwayVideoLoading) runwayVideoLoading.style.display = 'none';
+            if (runwayResultVideo) {
+              runwayResultVideo.src = url;
+              runwayResultVideo.style.visibility = '';
+              runwayResultVideo.oncanplay = function () {
+                runwayResultVideo.oncanplay = null;
+                runwayResultVideo.play().catch(function () {});
+              };
+            }
+            if (runwayResultVideoWrap) runwayResultVideoWrap.style.display = 'block';
+            runwayResultStatus.textContent = '영상이 준비되었어요. 재생 버튼을 눌러 보세요.';
+            runwayVideoBtn.disabled = false;
+            runwayVideoBtn.textContent = '다시 만들기';
+            if (runwaySaveVideoBtn) runwaySaveVideoBtn.style.display = 'inline-block';
+          })
+          .catch(function (err) {
+            if (runwayVideoLoading) runwayVideoLoading.style.display = 'none';
+            if (runwayResultVideo) runwayResultVideo.style.visibility = '';
+            runwayResultStatus.textContent = '영상 생성 실패: ' + (err.message || '');
+            runwayVideoBtn.disabled = false;
+          });
+      });
+    }
+
+    if (runwaySaveImageBtn && runwayResultImage) {
+      runwaySaveImageBtn.addEventListener('click', function () {
+        var src = runwayResultImage.src;
+        if (!src || src.indexOf('data:') !== 0) return;
+        var ext = src.indexOf('image/png') !== -1 ? 'png' : 'jpg';
+        var a = document.createElement('a');
+        a.href = src;
+        a.download = 'runway-image.' + ext;
+        a.rel = 'noopener';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      });
+    }
+
+    if (runwaySaveVideoBtn) {
+      runwaySaveVideoBtn.addEventListener('click', function () {
+        if (!runwayVideoBlobUrl) return;
+        var a = document.createElement('a');
+        a.href = runwayVideoBlobUrl;
+        a.download = 'runway-video.mp4';
+        a.rel = 'noopener';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      });
+    }
+  })();
+
+  // ========================================
+  // 샘플 테스트: image/human/sample.txt 에서 이름·생년월일 로드 후 폼에 적용
+  // ========================================
+  (function () {
+    var samplePath = 'image/human/sample.txt';
+
+    function applySampleToForm(data) {
+      if (!data || (data.name === undefined && data.birth === undefined)) return;
+      var oneclickBirth = document.getElementById('oneclick-birth');
+      var soulDate = document.getElementById('soul-color-date');
+      // 이름 입력란은 테스트/샘플 값으로 채우지 않고 placeholder '당신의 이름'만 유지
+      if (data.birth != null && data.birth !== '') {
+        var birthVal = data.birth.trim();
+        if (birthVal.length === 10 && birthVal.indexOf('/') !== -1) {
+          var parts = birthVal.split('/');
+          if (parts.length === 3) birthVal = parts[2] + '-' + parts[0].padStart(2, '0') + '-' + parts[1].padStart(2, '0');
+        }
+        if (oneclickBirth) oneclickBirth.value = birthVal;
+        if (soulDate) soulDate.value = birthVal;
+      }
+    }
+
+    function parseSampleText(text) {
+      var data = {};
+      var lines = (text || '').split(/\r?\n/);
+      for (var i = 0; i < lines.length; i++) {
+        var line = lines[i].trim();
+        if (!line) continue;
+        var val = '';
+        if (line.indexOf('이름') === 0) {
+          val = line.replace(/^이름\s*[:\s]+/i, '').trim();
+          if (val) data.name = val;
+        } else if (line.indexOf('생년월일') === 0) {
+          val = line.replace(/^생년월일\s*[:\s]+/i, '').trim();
+          if (val) data.birth = parseBirth(val);
+        } else if (line.indexOf('=') !== -1) {
+          var idx = line.indexOf('=');
+          var key = line.slice(0, idx).trim().toLowerCase();
+          val = line.slice(idx + 1).trim();
+          if (key === 'name') data.name = val;
+          else if (key === 'birth') data.birth = parseBirth(val);
+        }
+      }
+      return data;
+    }
+
+    function parseBirth(s) {
+      if (!s) return '';
+      s = s.trim();
+      var m = s.match(/(\d{4})\s*년\s*(\d{1,2})\s*월\s*(\d{1,2})\s*일/);
+      if (m) return m[1] + '-' + m[2].padStart(2, '0') + '-' + m[3].padStart(2, '0');
+      if (s.length === 10 && s.indexOf('/') !== -1) {
+        var parts = s.split('/');
+        if (parts.length === 3) return parts[2] + '-' + parts[0].padStart(2, '0') + '-' + parts[1].padStart(2, '0');
+      }
+      if (s.length === 10 && s.indexOf('-') !== -1) return s;
+      return s;
+    }
+
+    fetch(samplePath)
+      .then(function (res) { return res.ok ? res.text() : Promise.reject(); })
+      .then(function (text) {
+        var data = parseSampleText(text);
+        if (data.name || data.birth) applySampleToForm(data);
+      })
+      .catch(function () {});
   })();
 
   console.log('BORAHAE loaded successfully!');

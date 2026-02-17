@@ -27,6 +27,19 @@ export default {
       return handleMusicQuery(taskId, env);
     }
 
+    if (url.pathname === '/api/suno/generate' && request.method === 'POST') {
+      return handleSunoGenerate(request, env);
+    }
+
+    if (url.pathname.startsWith('/api/suno/query/') && request.method === 'GET') {
+      var taskId = url.pathname.replace(/^\/api\/suno\/query\//, '').split('/')[0];
+      return handleSunoQuery(taskId, env);
+    }
+
+    if (url.pathname === '/api/suno-callback' && request.method === 'POST') {
+      return new Response(JSON.stringify({ ok: true }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+    }
+
     return env.ASSETS.fetch(request);
   }
 };
@@ -220,7 +233,7 @@ async function handleImageProxy(url) {
 }
 
 async function handleMusicGenerate(request, env) {
-  var apiKey = env.MUREKA_API_KEY || env.Mureka_API_KEY || env['MUREKA_API_KEY'] || '';
+  var apiKey = env.Mureka_API_KEY || env['Mureka_API_KEY'] || env.MUREKA_API_KEY || env['MUREKA_API_KEY'] || '';
   if (!apiKey) {
     return new Response(JSON.stringify({ error: { message: 'MUREKA_API_KEY not configured' } }), {
       status: 500,
@@ -265,7 +278,7 @@ async function handleMusicQuery(taskId, env) {
       headers: { 'Content-Type': 'application/json' }
     });
   }
-  var apiKey = env.MUREKA_API_KEY || env.Mureka_API_KEY || env['MUREKA_API_KEY'] || '';
+  var apiKey = env.Mureka_API_KEY || env['Mureka_API_KEY'] || env.MUREKA_API_KEY || env['MUREKA_API_KEY'] || '';
   if (!apiKey) {
     return new Response(JSON.stringify({ error: { message: 'MUREKA_API_KEY not configured' } }), {
       status: 500,
@@ -286,6 +299,126 @@ async function handleMusicQuery(taskId, env) {
     return new Response(JSON.stringify({ error: { message: err.message || 'Music query failed' } }), {
       status: 502,
       headers: { 'Content-Type': 'application/json' }
+    });
+  }
+}
+
+// Suno API (sunoapi.org) – 가사 → 음악 생성
+var SUNO_API_BASE = 'https://api.sunoapi.org';
+
+async function handleSunoGenerate(request, env) {
+  var apiKey = (env.SUNO_API_KEY || env['SUNO_API_KEY'] || '').toString().trim();
+  if (!apiKey) {
+    return new Response(JSON.stringify({ error: { message: 'SUNO_API_KEY (또는 suno_api) not configured. Add it in Cloudflare Pages env or .env for local.' } }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  }
+  var body;
+  try { body = await request.json(); } catch (e) {
+    return new Response(JSON.stringify({ error: { message: 'Invalid JSON body' } }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  }
+  var lyrics = (body.lyrics || body.prompt || '').trim().slice(0, 5000);
+  var title = (body.title || '내 탄생뮤직').slice(0, 80);
+  var style = (body.style || 'K-pop, Ballad, Korean, emotional').slice(0, 200);
+  if (!lyrics) {
+    return new Response(JSON.stringify({ error: { message: 'Missing "lyrics" or "prompt"' } }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  }
+  var origin = request.headers.get('Origin') || request.headers.get('Referer') || 'https://example.com';
+  var baseUrl = origin.replace(/\/$/, '');
+  var callBackUrl = baseUrl + '/api/suno-callback';
+  var payload = {
+    customMode: true,
+    instrumental: false,
+    prompt: lyrics,
+    title: title,
+    style: style,
+    model: body.model || 'V4_5ALL',
+    callBackUrl: callBackUrl
+  };
+  try {
+    var res = await fetch(SUNO_API_BASE + '/api/v1/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+      body: JSON.stringify(payload)
+    });
+    var text = await res.text();
+    var data;
+    try { data = text ? JSON.parse(text) : {}; } catch (e) {
+      var msg = (res.status === 404)
+        ? '음악 서버를 찾을 수 없습니다 (404). API 키와 Suno(sunoapi.org) 계정·엔드포인트를 확인해 주세요.'
+        : 'Suno API가 JSON이 아닌 응답을 반환했습니다. (상태: ' + res.status + ')';
+      return new Response(JSON.stringify({ error: { message: msg, status: res.status, bodyPreview: text.slice(0, 200) } }), {
+        status: res.ok ? 502 : res.status,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+      });
+    }
+    if (!res.ok) {
+      return new Response(JSON.stringify(data), {
+        status: res.status,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+      });
+    }
+    var taskId = (data && data.data && data.data.taskId) ? data.data.taskId : null;
+    if (!taskId) {
+      return new Response(JSON.stringify({ error: { message: 'Suno did not return taskId', raw: data } }), {
+        status: 502,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+      });
+    }
+    return new Response(JSON.stringify({ taskId: taskId }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  } catch (err) {
+    return new Response(JSON.stringify({ error: { message: err.message || 'Suno generate failed' } }), {
+      status: 502,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  }
+}
+
+async function handleSunoQuery(taskId, env) {
+  if (!taskId) {
+    return new Response(JSON.stringify({ error: 'Missing taskId' }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  }
+  var apiKey = (env.SUNO_API_KEY || env['SUNO_API_KEY'] || '').toString().trim();
+  if (!apiKey) {
+    return new Response(JSON.stringify({ error: { message: 'SUNO_API_KEY (또는 suno_api) not configured' } }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  }
+  try {
+    var res = await fetch(SUNO_API_BASE + '/api/v1/generate/record-info?taskId=' + encodeURIComponent(taskId), {
+      method: 'GET',
+      headers: { 'Authorization': 'Bearer ' + apiKey }
+    });
+    var text = await res.text();
+    var data;
+    try { data = text ? JSON.parse(text) : {}; } catch (e) {
+      return new Response(JSON.stringify({ error: { message: 'Suno API 응답 오류 (비-JSON). 상태: ' + res.status, status: res.status, bodyPreview: text.slice(0, 200) } }), {
+        status: res.ok ? 502 : res.status,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+      });
+    }
+    return new Response(JSON.stringify(data), {
+      status: res.status,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  } catch (err) {
+    return new Response(JSON.stringify({ error: { message: err.message || 'Suno query failed' } }), {
+      status: 502,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
     });
   }
 }
