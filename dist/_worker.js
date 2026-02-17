@@ -18,6 +18,15 @@ export default {
       return handleImageProxy(url);
     }
 
+    if (url.pathname === '/api/music/generate' && request.method === 'POST') {
+      return handleMusicGenerate(request, env);
+    }
+
+    if (url.pathname.startsWith('/api/music/query/') && request.method === 'GET') {
+      var taskId = url.pathname.replace(/^\/api\/music\/query\//, '').split('/')[0];
+      return handleMusicQuery(taskId, env);
+    }
+
     return env.ASSETS.fetch(request);
   }
 };
@@ -204,6 +213,77 @@ async function handleImageProxy(url) {
     });
   } catch (e) {
     return new Response(JSON.stringify({ error: e.message }), {
+      status: 502,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+}
+
+async function handleMusicGenerate(request, env) {
+  var apiKey = env.MUREKA_API_KEY || env.Mureka_API_KEY || env['MUREKA_API_KEY'] || '';
+  if (!apiKey) {
+    return new Response(JSON.stringify({ error: { message: 'MUREKA_API_KEY not configured' } }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  }
+  var body;
+  try { body = await request.json(); } catch (e) {
+    return new Response(JSON.stringify({ error: { message: 'Invalid JSON body' } }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+  var payload = {
+    prompt: body.prompt || 'ambient, peaceful, purple vibe',
+    lyrics: body.lyrics || '',
+    model: body.model || 'auto'
+  };
+  try {
+    var res = await fetch('https://api.mureka.ai/v1/song/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+      body: JSON.stringify(payload)
+    });
+    var data = await res.json();
+    return new Response(JSON.stringify(data), {
+      status: res.status,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  } catch (err) {
+    return new Response(JSON.stringify({ error: { message: err.message || 'Music generate failed' } }), {
+      status: 502,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+}
+
+async function handleMusicQuery(taskId, env) {
+  if (!taskId) {
+    return new Response(JSON.stringify({ error: 'Missing task_id' }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+  var apiKey = env.MUREKA_API_KEY || env.Mureka_API_KEY || env['MUREKA_API_KEY'] || '';
+  if (!apiKey) {
+    return new Response(JSON.stringify({ error: { message: 'MUREKA_API_KEY not configured' } }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  }
+  try {
+    var res = await fetch('https://api.mureka.ai/v1/song/query/' + encodeURIComponent(taskId), {
+      method: 'GET',
+      headers: { 'Authorization': 'Bearer ' + apiKey }
+    });
+    var data = await res.json();
+    return new Response(JSON.stringify(data), {
+      status: res.status,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    });
+  } catch (err) {
+    return new Response(JSON.stringify({ error: { message: err.message || 'Music query failed' } }), {
       status: 502,
       headers: { 'Content-Type': 'application/json' }
     });

@@ -1,9 +1,1 @@
-{
-  "name": "sims-fashion-ai",
-  "private": true,
-  "scripts": {
-    "build": "node scripts/build-pages.js",
-    "build:config": "node scripts/build-config.js"
-  },
-  "description": "SIMS Fashion AI - 배포 시 config.js 생성 및 dist 출력 (Cloudflare Pages: Build output directory = dist)"
-}
+{"name":"sims-fashion-ai","private":true,"scripts":{"build":"node scripts/build-pages.js","build:config":"node scripts/build-config.js","dev":"node scripts/local-server.js","start":"node scripts/local-server.js"},"description":"SIMS Fashion AI - 배포 시 config.js 생성 및 dist 출력 (Cloudflare Pages: Build output directory = dist)"}

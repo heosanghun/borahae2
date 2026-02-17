@@ -35,13 +35,23 @@ K-pop을 사랑하는 팬들의 라이프스타일 플랫폼. AI 스타일링, �
    cd borahae-fan
    ```
 
-2. **웹 서버 실행**
-   - Python: `python -m http.server 8000`
-   - Node: `npx serve .`
-   - 또는 Live Server 등 사용
+2. **웹 서버 실행** (소아베 채팅 사용 시 아래 Node 서버 필수)
+   - **권장 (채팅·TTS 동작):** `npm run dev` 또는 `node scripts/local-server.js`  
+     → `.env`의 `OPENAI_API_KEY`를 읽어 `/api/chat`, `/api/tts`를 프록시합니다. **포트 8000**
+   - 정적만 필요할 때: `python -m http.server 8000` 또는 `npx serve .`  
+     → 채팅은 동작하지 않습니다 (API 프록시 없음).
 
 3. **브라우저에서 열기**
-   - `http://localhost:8000` (또는 사용한 포트)
+   - `http://localhost:8000`
+
+**채팅은 로컬에서도 사용할 수 있습니다.**  
+단, 채팅(소아베 대화)은 `/api/chat` 프록시가 필요하므로 **반드시 Node 서버(`npm run dev`)로 실행**해야 합니다.  
+`python -m http.server`나 `npx serve`로만 띄우면 채팅 요청이 처리되지 않아 오류가 납니다.  
+배포(Cloudflare Pages 등)에서는 Workers가 `/api/chat`를 제공하므로 인터넷에서 접속 시 채팅이 정상 동작합니다.
+
+**채팅이 "API 키가 올바르지 않거나 만료되었을 수 있어요"로 계속 안 될 때**
+- **로컬:** (1) 꼭 `npm run dev`로만 실행했는지 확인 (2) `.env`의 `OPENAI_API_KEY=` 뒤에 **따옴표 없이** 한 줄로 입력했는지 확인 (3) 터미널에 `OPENAI_API_KEY: loaded (sk-proj-...)` 로 나오는지 확인.
+- **배포(Cloudflare):** (1) 설정 → 변수 및 암호에 `OPENAI_API_KEY` 저장 후 **반드시 재배포** (이 변경 내용은 다음 배포에 적용됨) (2) 키 복사 시 앞뒤 공백/줄바꿈이 들어가지 않았는지 확인.
 
 ### API 키 설정 (AI 채팅·스타일링)
 

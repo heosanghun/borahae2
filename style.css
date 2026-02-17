@@ -266,6 +266,90 @@ button {
   transform: rotate(0deg);
 }
 
+/* 전역 배경음(BGM) – 맨 상단 네비 텍스트 버튼 (스피커 아이콘/빨간선 없음) */
+.bgm-toggle-nav {
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--primary) 35%, transparent);
+  background: color-mix(in srgb, var(--primary) 8%, var(--bg-primary));
+  color: var(--primary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  white-space: nowrap;
+}
+.bgm-toggle-nav:hover {
+  background: color-mix(in srgb, var(--primary) 18%, var(--bg-primary));
+  transform: translateY(-1px);
+}
+.bgm-lyrics-link-nav {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: var(--primary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+.bgm-lyrics-link-nav:hover {
+  text-decoration: underline;
+  opacity: 0.9;
+}
+
+/* BGM 가사 모달 – 음악과 함께 가사가 자연스럽게 올라가는 스크롤 */
+.bgm-lyrics-modal-content {
+  max-height: 85vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.bgm-lyrics-modal-inner {
+  padding: 44px 24px 24px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.bgm-lyrics-modal-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin: 0 0 12px;
+  text-align: center;
+}
+.bgm-lyrics-scroll-wrap {
+  max-height: 320px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--primary) 6%, var(--bg-secondary));
+  border: 1px solid color-mix(in srgb, var(--primary) 12%, transparent);
+  scroll-behavior: auto;
+}
+.bgm-lyrics-text {
+  margin: 0;
+  padding: 20px;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--text-primary);
+  white-space: pre-wrap;
+  word-break: keep-all;
+  font-family: inherit;
+}
+.bgm-lyrics-scroll-wrap.bgm-lyrics-scroll--on {
+  scroll-behavior: auto;
+}
+.bgm-lyrics-modal-note {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin: 12px 0 0;
+  text-align: center;
+}
+
 /* Buttons */
 .btn-primary {
   background: var(--gradient-primary);
@@ -712,6 +796,28 @@ button {
   box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* 소아베 쇼케이스 래퍼 (mood 반응) */
+.soave-showcase-wrap {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  transition: filter 0.4s ease, box-shadow 0.4s ease;
+}
+.soave-showcase-wrap[data-soave-mood="happy"] {
+  filter: saturate(1.15) brightness(1.02);
+  box-shadow: 0 0 20px rgba(236, 72, 153, 0.2);
+}
+.soave-showcase-wrap[data-soave-mood="thinking"] {
+  filter: saturate(0.92) contrast(1.05);
+}
+.soave-showcase-wrap[data-soave-mood="sad"] {
+  filter: saturate(0.85) brightness(0.96);
+}
+.soave-showcase-wrap[data-soave-mood="excited"] {
+  filter: saturate(1.2) brightness(1.05);
+  box-shadow: 0 0 24px rgba(124, 58, 237, 0.25);
+}
+
 /* 소아베 히어로 비디오 */
 .soave-video-showcase {
   display: flex;
@@ -874,17 +980,32 @@ button {
 .ai-suggestion {
   background: var(--gradient-primary);
   color: white;
-  border-radius: 14px;
-  padding: 10px 14px;
+  border-radius: 12px;
+  padding: 6px 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  flex-shrink: 0;
+  line-height: 1.35;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 0 12px rgba(124, 58, 237, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.ai-suggestion-default {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-top: 8px;
-  font-size: 0.75rem;
-  font-weight: 500;
-  flex-shrink: 0;
-  line-height: 1.4;
-  line-height: 1.4;
+  gap: 8px;
+  width: 100%;
+  min-width: 0; /* flex 자식이 좁은 컨테이너에서 잘리지 않도록 */
+}
+
+.ai-suggestion-text {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
 }
 
 .ai-suggestion strong {
@@ -892,17 +1013,99 @@ button {
 }
 
 .ai-icon {
-  width: 30px;
-  height: 30px;
-  min-width: 30px;
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
   background: rgba(0, 0, 0, 0.75);
-  border-radius: 8px;
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   color: #fff;
+}
+
+.ai-icon-right {
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
+}
+
+/* 폰 목업이 좁을 때(모바일/태블릿) CTA 오른쪽 화살표가 잘리지 않도록 여유 확보 */
+@media (max-width: 768px) {
+  .phone-screen .ai-suggestion {
+    padding: 6px 10px;
+    font-size: 0.65rem;
+  }
+  .phone-screen .ai-suggestion-default {
+    gap: 4px;
+  }
+  .phone-screen .ai-icon,
+  .phone-screen .ai-icon-right {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+  }
+  .phone-screen .ai-icon svg,
+  .phone-screen .ai-icon-right svg {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+/* 히어로 CTA 대화 미리보기 */
+.soave-chat-preview {
+  width: 100%;
+  padding: 8px 12px;
+  text-align: left;
+}
+.soave-chat-preview-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.soave-chat-preview-user {
+  font-size: 0.7rem;
+  opacity: 0.9;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.soave-chat-preview-assistant {
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.soave-chat-preview-hint {
+  display: block;
+  font-size: 0.65rem;
+  opacity: 0.85;
+  margin-top: 6px;
+}
+
+/* 소아베 음성 대화 모드 힌트 (모바일) */
+.soave-voice-hint {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: rgba(124, 58, 237, 0.2);
+  border: 1px solid rgba(124, 58, 237, 0.4);
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-primary, #1a1a1a);
+  text-align: center;
+  animation: soave-voice-pulse 1.5s ease-in-out infinite;
+}
+@keyframes soave-voice-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
 }
 
 /* ========================================
@@ -1904,6 +2107,185 @@ section {
   color: var(--text-muted);
   margin: 0;
 }
+
+/* 소울 컬러 – 내 탄생뮤직 만들기 */
+.soul-color-music-block {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid color-mix(in srgb, var(--primary) 18%, transparent);
+}
+.soul-color-music-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1.1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #7c3aed, #6d28d9);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.soul-color-music-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(124, 58, 237, 0.4);
+}
+.soul-color-music-btn:disabled {
+  opacity: 0.8;
+  cursor: not-allowed;
+}
+.soul-color-music-status {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+}
+.soul-music-loading {
+  color: var(--text-muted);
+}
+.soul-music-error {
+  color: var(--error, #dc2626);
+}
+.soul-music-player audio {
+  width: 100%;
+  max-width: 320px;
+  margin-bottom: 0.5rem;
+  border-radius: 8px;
+}
+.soul-music-download {
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+.soul-music-download:hover {
+  text-decoration: underline;
+}
+
+/* 소울 컬러 – OpenAI 가사 영역 */
+.soul-music-lyrics {
+  margin-top: 0.25rem;
+  padding: 1rem;
+  background: color-mix(in srgb, var(--primary) 6%, var(--bg-secondary));
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--primary) 12%, transparent);
+}
+.soul-music-lyrics-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin: 0 0 0.75rem;
+}
+.soul-music-lyrics-body {
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: var(--text-primary);
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: keep-all;
+  font-family: inherit;
+}
+.soul-music-lyrics-note {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin: 0.75rem 0 0;
+}
+
+/* 내 탄생뮤직 가사 팝업 (저장 · SNS 공유) */
+.soul-lyrics-modal-content {
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.soul-lyrics-modal-inner {
+  padding: 44px 28px 28px;
+  overflow-y: auto;
+  max-height: calc(90vh - 60px);
+}
+.soul-lyrics-modal-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin: 0 0 12px;
+  text-align: center;
+}
+.soul-lyrics-modal-body {
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: var(--text-primary);
+  margin: 0 0 12px;
+  padding: 14px;
+  background: color-mix(in srgb, var(--primary) 6%, var(--bg-secondary));
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--primary) 12%, transparent);
+  white-space: pre-wrap;
+  word-break: keep-all;
+  font-family: inherit;
+  max-height: 240px;
+  overflow-y: auto;
+}
+.soul-lyrics-modal-note {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin: 0 0 16px;
+}
+.soul-lyrics-modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.soul-lyrics-btn {
+  flex: 1;
+  min-width: 120px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.soul-lyrics-share-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin: 0 0 10px;
+}
+.soul-lyrics-sns-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.soul-lyrics-sns-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  border: 1px solid color-mix(in srgb, var(--primary) 20%, transparent);
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+.soul-lyrics-sns-btn:hover {
+  background: color-mix(in srgb, var(--primary) 14%, var(--bg-secondary));
+  color: var(--primary);
+  transform: scale(1.08);
+}
+.soul-lyrics-sns-btn[data-sns="twitter"] { background: #000; color: #fff; }
+.soul-lyrics-sns-btn[data-sns="facebook"] { background: #1877f2; color: #fff; }
+.soul-lyrics-sns-btn[data-sns="kakaostory"] { background: #fee500; color: #000; }
+.soul-lyrics-sns-btn[data-sns="band"] { background: #00c73c; color: #fff; }
+.soul-lyrics-sns-btn[data-sns="linkedin"] { background: #0a66c2; color: #fff; }
+.soul-lyrics-sns-btn[data-sns="naver"] { background: #03c75a; color: #fff; }
+.soul-lyrics-sns-btn[data-sns="line"] { background: #00b900; color: #fff; }
+.soul-lyrics-sns-btn[data-sns="instagram"] { background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: #fff; font-size: 0.7rem; }
+.soul-lyrics-sns-btn[data-sns="youtube"] { background: #ff0000; color: #fff; font-size: 0.7rem; }
+.soul-lyrics-sns-btn[data-sns="bts"],
+.soul-lyrics-sns-btn.soul-lyrics-sns-bts { background: linear-gradient(135deg, #7c3aed, #a855f7); color: #fff; font-size: 0.65rem; font-weight: 800; }
 
 /* 소울 컬러 반응형 */
 @media (max-width: 768px) {
