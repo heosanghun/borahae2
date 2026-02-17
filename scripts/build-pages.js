@@ -75,5 +75,10 @@ if (fs.existsSync(movieReadme)) copyFile(movieReadme, path.join(dist, 'movie', '
 const { execSync } = require('child_process');
 execSync(`node "${path.join(__dirname, 'build-config.js')}" dist`, { cwd: root, stdio: 'inherit' });
 
-console.log('빌드 완료:', dist);
-console.log('Cloudflare Pages에서 Build output directory를 "dist"로 설정하세요.');
+// 배포 가능 여부 검사 (Cloudflare에서 빌드 출력 디렉터리 찾기 실패 방지)
+if (!fs.existsSync(path.join(dist, 'index.html'))) {
+  console.error('오류: dist/index.html 이 생성되지 않았습니다.');
+  process.exit(1);
+}
+console.log('빌드 완료:', path.resolve(dist));
+console.log('Cloudflare Pages: Build output directory = dist');
