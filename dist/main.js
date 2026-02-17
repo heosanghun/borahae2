@@ -122,6 +122,156 @@
     openAuthModal('signup');
   });
 
+  // 전역 배경음(BGM) – 보라빛 신호 + LOVE ARMY 2곡 무한 루프
+  (function() {
+    var audio = document.getElementById('global-bgm');
+    var btn = document.getElementById('bgm-toggle');
+    var lyricsBtn = document.getElementById('bgm-lyrics-btn');
+    if (!audio || !btn) return;
+    var BGM_CANDIDATES = (typeof window !== 'undefined' && window.BGM_PLAYLIST && window.BGM_PLAYLIST.length)
+      ? window.BGM_PLAYLIST
+      : ['music/보라빛 신호.mp3', 'music/LOVE ARMY.mp3'];
+    var currentBgmIndex = 0;
+    var STORAGE_KEY = 'borahae_bgm_on';
+    audio.volume = 0.25;
+
+    var BGM_LYRICS = '[인트로]\n(Verse 1)\n거울 속 달라진 내 모습 (My Style)\nAI가 찾아준 나만의 빛깔 (Color)\n수많은 별들 중 가장 빛나는\n너와 나 연결될 시간이야\n(Pre-Chorus)\n화면 너머 전해지는 떨림\n우리가 만든 이 공간 (This Fan Life)\n서로의 맘을 입고, 꿈을 공유해\n(Oh, shining bright)\n(Chorus)\nBorahae, I Purple You\n무지개 마지막 색깔처럼\n끝까지 함께할 믿음의 약속\n이 보라빛 세상 속에서 (In this world)\n우린 서로의 우주가 돼\nTrust you, love you, forevermore\nBorahae.\n(Bridge)\n어떤 모습이라도 괜찮아\n여기선 우린 하나니까\n빛나는 응원봉 물결처럼\n영원히 널 비출게 Our Purple Signal...\n(I trust you, I love you)\n보라해.';
+
+    function showBgmLyricsAnyway() {
+      var modal = document.getElementById('bgm-lyrics-modal');
+      var textEl = document.getElementById('bgm-lyrics-text');
+      if (modal && textEl) {
+        textEl.textContent = BGM_LYRICS;
+        modal.classList.add('active');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function updateBtn() {
+      var on = !audio.paused;
+      btn.textContent = on ? 'BGM 끄기' : 'BGM 듣기';
+      btn.setAttribute('aria-label', on ? '배경음 끄기' : '배경음 듣기');
+      btn.title = on ? '배경음 끄기' : '배경음 듣기';
+      try { localStorage.setItem(STORAGE_KEY, on ? '1' : '0'); } catch (e) {}
+    }
+
+    function playTrackAtIndex(idx) {
+      if (idx < 0 || idx >= BGM_CANDIDATES.length) return;
+      currentBgmIndex = idx;
+      var src = BGM_CANDIDATES[idx];
+      audio.src = src;
+      audio.load();
+      audio.play().then(function() { updateBtn(); }).catch(function() {
+        updateBtn();
+        tryNextOnError();
+      });
+    }
+
+    function playNextInPlaylist() {
+      var next = (currentBgmIndex + 1) % BGM_CANDIDATES.length;
+      playTrackAtIndex(next);
+    }
+
+    function tryNextOnError() {
+      var next = currentBgmIndex + 1;
+      if (next >= BGM_CANDIDATES.length) {
+        audio.removeAttribute('src');
+        if (typeof window !== 'undefined' && window.alert) {
+          window.alert('BGM 음원을 불러올 수 없습니다.\n\nmusic 폴더에 MP3 파일(보라빛 신호.mp3, LOVE ARMY.mp3)을 넣은 뒤 새로고침해 주세요.');
+        }
+        showBgmLyricsAnyway();
+        updateBtn();
+        return;
+      }
+      playTrackAtIndex(next);
+    }
+
+    audio.addEventListener('ended', function() {
+      playNextInPlaylist();
+    });
+
+    audio.addEventListener('error', function() {
+      updateBtn();
+      tryNextOnError();
+    });
+
+    btn.addEventListener('click', function() {
+      if (audio.paused) {
+        if (!audio.src || audio.src === window.location.href) {
+          playTrackAtIndex(0);
+        } else {
+          audio.play().then(function() { updateBtn(); }).catch(function() { updateBtn(); });
+        }
+      } else {
+        audio.pause();
+        updateBtn();
+      }
+    });
+    audio.addEventListener('play', updateBtn);
+    audio.addEventListener('pause', updateBtn);
+    try {
+      // BGM 자동 재생 제거: 새로고침 시 음원 없을 때 알림이 뜨지 않도록 함
+    } catch (e) {}
+    updateBtn();
+
+    var bgmLyricsModal = document.getElementById('bgm-lyrics-modal');
+    var bgmLyricsClose = document.getElementById('bgm-lyrics-modal-close');
+    var bgmLyricsText = document.getElementById('bgm-lyrics-text');
+    var bgmLyricsScrollWrap = document.getElementById('bgm-lyrics-scroll-wrap');
+    var bgmScrollInterval = null;
+    function startBgmLyricsScroll() {
+      if (!bgmLyricsScrollWrap || !bgmLyricsModal.classList.contains('active') || audio.paused) return;
+      bgmLyricsScrollWrap.classList.add('bgm-lyrics-scroll--on');
+      if (bgmScrollInterval) return;
+      bgmScrollInterval = setInterval(function() {
+        if (audio.paused || !bgmLyricsModal.classList.contains('active')) {
+          clearInterval(bgmScrollInterval);
+          bgmScrollInterval = null;
+          if (bgmLyricsScrollWrap) bgmLyricsScrollWrap.classList.remove('bgm-lyrics-scroll--on');
+          return;
+        }
+        var wrap = bgmLyricsScrollWrap;
+        var max = wrap.scrollHeight - wrap.clientHeight;
+        if (max <= 0) return;
+        wrap.scrollTop += 0.6;
+        if (wrap.scrollTop >= max - 2) wrap.scrollTop = 0;
+      }, 80);
+    }
+    function stopBgmLyricsScroll() {
+      if (bgmScrollInterval) {
+        clearInterval(bgmScrollInterval);
+        bgmScrollInterval = null;
+      }
+      if (bgmLyricsScrollWrap) bgmLyricsScrollWrap.classList.remove('bgm-lyrics-scroll--on');
+    }
+    function closeBgmLyrics() {
+      bgmLyricsModal.classList.remove('active');
+      bgmLyricsModal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      stopBgmLyricsScroll();
+    }
+    if (lyricsBtn && bgmLyricsModal && bgmLyricsText) {
+      if (bgmLyricsText) bgmLyricsText.textContent = BGM_LYRICS;
+      lyricsBtn.addEventListener('click', function() {
+        bgmLyricsModal.classList.add('active');
+        bgmLyricsModal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        if (bgmLyricsScrollWrap) bgmLyricsScrollWrap.scrollTop = 0;
+        startBgmLyricsScroll();
+      });
+      if (bgmLyricsClose) bgmLyricsClose.addEventListener('click', closeBgmLyrics);
+      bgmLyricsModal.addEventListener('click', function(e) { if (e.target === bgmLyricsModal) closeBgmLyrics(); });
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && bgmLyricsModal.classList.contains('active')) closeBgmLyrics();
+      });
+      audio.addEventListener('play', function() {
+        if (bgmLyricsModal.classList.contains('active')) startBgmLyricsScroll();
+      });
+      audio.addEventListener('pause', stopBgmLyricsScroll);
+    }
+  })();
+
   function doLogin(sb) {
     var emailEl = document.getElementById('auth-login-email');
     var pwEl = document.getElementById('auth-login-password');
@@ -1122,6 +1272,181 @@
     if (resultEl) resultEl.style.display = 'none';
     startAIAnalysis();
   });
+
+  // Soul color – 내 탄생뮤직 만들기 (OpenAI 가사 → 별도 팝업, 저장·SNS 공유)
+  (function () {
+    var btn = document.getElementById('soul-color-music-btn');
+    var statusEl = document.getElementById('soul-color-music-status');
+    var resultEl = document.getElementById('soul-color-result');
+    var modal = document.getElementById('soul-lyrics-modal');
+    var modalBody = document.getElementById('soul-lyrics-modal-body');
+    var modalClose = document.getElementById('soul-lyrics-modal-close');
+    var saveBtn = document.getElementById('soul-lyrics-save-btn');
+    var copyBtn = document.getElementById('soul-lyrics-copy-btn');
+    var snsLinks = document.getElementById('soul-lyrics-sns-links');
+    if (!btn || !statusEl || !resultEl || !modal || !modalBody) return;
+
+    var currentLyrics = '';
+
+    function setStatus(html, show) {
+      statusEl.innerHTML = html;
+      if (show) {
+        statusEl.removeAttribute('hidden');
+        statusEl.style.display = '';
+      } else {
+        statusEl.hidden = true;
+      }
+    }
+
+    function getLyricsPrompt() {
+      var keyword = resultEl.getAttribute('data-soul-keyword') || '';
+      var styleName = resultEl.getAttribute('data-soul-style-name') || '';
+      var type = resultEl.getAttribute('data-soul-type') || '';
+      var personalityEl = document.getElementById('soul-color-personality');
+      var personality = personalityEl ? personalityEl.textContent.trim() : '';
+      var parts = [];
+      if (keyword) parts.push('키워드: ' + keyword);
+      if (styleName) parts.push('스타일: ' + styleName);
+      if (type) parts.push('타입: ' + type);
+      if (personality) parts.push('감성: ' + personality);
+      var context = parts.length ? parts.join(', ') : '보라해(BORAHAE) 감성';
+      return '당신은 K-pop 작사가입니다. 아래 소울 컬러 정보에 맞는 한국어 노래 가사를 작성해 주세요.\n\n' +
+        context + '\n\n요청: 1절과 2절 분량의 가사만 작성해 주세요. 후렴구 포함 가능. 다른 설명 없이 가사만 출력해 주세요.';
+    }
+
+    function openLyricsModal(lyricsText) {
+      currentLyrics = lyricsText;
+      modalBody.textContent = lyricsText;
+      modal.classList.add('active');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+
+      var pageUrl = typeof window !== 'undefined' && window.location.href ? window.location.href : '';
+      var shareUrl = encodeURIComponent(pageUrl);
+      var shareText = encodeURIComponent('내 탄생뮤직 가사를 만들었어요 ✨ 보라해 BORAHAE');
+
+      var btsAndShareLinks = {
+        bts: 'https://weverse.io/bts/feed',
+        twitter: 'https://x.com/BTS_twt',
+        facebook: 'https://www.facebook.com/bts.official',
+        instagram: 'https://www.instagram.com/bts.bighitofficial/',
+        youtube: 'https://www.youtube.com/@BTS',
+        kakaostory: 'https://pf.kakao.com/_xgcUxfxb',
+        band: 'https://band.us/plugin/share?url=' + shareUrl,
+        naver: 'https://share.naver.com/web/shareView?url=' + shareUrl + '&title=' + shareText,
+        line: 'https://social-plugins.line.me/lineit/share?url=' + shareUrl,
+        url: '#'
+      };
+      if (snsLinks) {
+        snsLinks.querySelectorAll('a[data-sns]').forEach(function (a) {
+          var sns = a.getAttribute('data-sns');
+          if (btsAndShareLinks.hasOwnProperty(sns)) a.href = btsAndShareLinks[sns];
+        });
+      }
+    }
+
+    function closeLyricsModal() {
+      modal.classList.remove('active');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    if (modalClose) modalClose.addEventListener('click', closeLyricsModal);
+    modal.addEventListener('click', function (e) {
+      if (e.target === modal) closeLyricsModal();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && modal.classList.contains('active')) closeLyricsModal();
+    });
+
+    if (saveBtn) {
+      saveBtn.addEventListener('click', function () {
+        if (!currentLyrics) return;
+        var blob = new Blob([currentLyrics], { type: 'text/plain;charset=utf-8' });
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'borahae-birth-music-lyrics-' + Date.now() + '.txt';
+        a.click();
+        URL.revokeObjectURL(a.href);
+      });
+    }
+    if (copyBtn) {
+      copyBtn.addEventListener('click', function () {
+        if (!currentLyrics) return;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(currentLyrics).then(function () {
+            copyBtn.textContent = '✓ 복사됨';
+            setTimeout(function () { copyBtn.textContent = '📋 복사'; }, 2000);
+          });
+        } else {
+          var ta = document.createElement('textarea');
+          ta.value = currentLyrics;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+          copyBtn.textContent = '✓ 복사됨';
+          setTimeout(function () { copyBtn.textContent = '📋 복사'; }, 2000);
+        }
+      });
+    }
+    if (snsLinks) {
+      snsLinks.addEventListener('click', function (e) {
+        var a = e.target.closest('a[data-sns]');
+        if (!a) return;
+        var sns = a.getAttribute('data-sns');
+        var url = typeof window !== 'undefined' && window.location.href ? window.location.href : '';
+        if (sns === 'url') {
+          e.preventDefault();
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(url).then(function () {
+              a.title = '링크 복사됨';
+              setTimeout(function () { a.title = '이 페이지 링크 복사'; }, 2000);
+            });
+          }
+        }
+      });
+    }
+
+    btn.addEventListener('click', function () {
+      if (btn.disabled) return;
+      setStatus('<span class="soul-music-loading">🎵 가사 생성 중…</span>', true);
+      btn.disabled = true;
+
+      fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'gpt-4o-mini',
+          messages: [{ role: 'user', content: getLyricsPrompt() }],
+          max_tokens: 800,
+          temperature: 0.8
+        })
+      })
+        .then(function (res) {
+          return res.text().then(function (text) {
+            var data;
+            try { data = text ? JSON.parse(text) : {}; } catch (e) { data = {}; }
+            if (!res.ok) {
+              var msg = (data.error && (data.error.message || data.error)) || ('HTTP ' + res.status);
+              throw new Error(msg);
+            }
+            return data;
+          });
+        })
+        .then(function (data) {
+          var content = (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) || '';
+          if (!content.trim()) throw new Error('가사를 생성하지 못했습니다.');
+          setStatus('', false);
+          btn.disabled = false;
+          openLyricsModal(content.trim());
+        })
+        .catch(function (err) {
+          setStatus('<span class="soul-music-error">' + escapeHtml(err.message || '가사 생성 실패') + '</span>', true);
+          btn.disabled = false;
+        });
+    });
+  })();
 
   // Save result button: save profile + download generated image to device (PC/mobile)
   document.getElementById('save-result')?.addEventListener('click', function () {
@@ -2411,6 +2736,34 @@ ${soulInfo ? soulInfo : ''}
 ### 10. TEROS 이야기: \`[ACTION:teros-story]\`
 - "테로스 이야기 보여줘", "TEROS 스토리", "AI 이야기"
 
+### 11. 소아베 영상 표정/행동 연동 (매우 중요): \`[ACTION:play-soave-video:카테고리]\`
+사용자의 말·감정·맥락에 맞춰 왼쪽 소아베 영상을 해당 카테고리로 재생합니다. 대화할 때마다 사용자 감정과 상황을 유추하여 **반드시** 적절한 카테고리 액션을 응답 끝에 붙이세요. 소아베가 살아 움직이는 것처럼 반응해야 합니다.
+
+**카테고리 매핑 (대소문자 구분 없음):**
+- 인사/안녕/하이/헬로 → greeting
+- 기쁨/행복/좋아/신나/춤/춤춰/웃어/웃음 → happy 또는 dance 또는 laugh (긍정 감정)
+- 실망/짜증/한심/우울/슬퍼 → disappointed, annoyed, pitiful, gloomy (해당 감정에 맞게)
+- 놀람/놀라/깜짝 → surprise
+- 한글 캐릭터/호롱/고롱/페르소나 → horong, horong_strong, horong_flower, gorong, gorong_inventor (질문 맥락에 맞게)
+- 응원/화이팅 → cheer
+- 조심/배려/걷기/뛰기/점프/하트/웨이브 → careful, care, walk, run, jump, heart, wave
+
+**규칙:**
+- 사용자가 인사하면 → [ACTION:play-soave-video:greeting]
+- 기분 좋은 대화·칭찬·기쁜 소식 → [ACTION:play-soave-video:happy] 또는 dance, laugh 중 하나
+- 사용자가 실망/짜증/한심/우울을 표현하면 → 해당 카테고리 영상 [ACTION:play-soave-video:disappointed] 등
+- 놀라운 이야기·깜짝 질문 → [ACTION:play-soave-video:surprise]
+- 한글·호롱·고롱 이야기 시 → [ACTION:play-soave-video:horong] 또는 gorong, horong_flower, horong_strong, gorong_inventor 중 적절히
+- 응원·격려 시 → [ACTION:play-soave-video:cheer]
+- 일반 대화에서도 맥락에 맞는 표정(행복/웃음/인사 등)을 골라 한 번씩 액션을 넣어 주세요.
+
+**예시:**
+- "안녕 소아베" → "안녕! 오늘도 반가워 💜 [ACTION:play-soave-video:greeting]"
+- "기분 좋아" → "나도 기쁘다! 같이 신나자~ [ACTION:play-soave-video:happy]"
+- "춤 춰줘" → "와 신난다! 같이 분위기 올려볼까? 💜 [ACTION:play-soave-video:dance]"
+- "호롱이 누구야?" → "호롱은 한글 캐릭터 중 하나야! [ACTION:play-soave-video:horong]"
+- "실망이야" → "많이 속상하겠다. 같이 있어줄게. [ACTION:play-soave-video:disappointed]"
+
 ### 액션 태그 규칙:
 - 액션 태그는 반드시 응답 텍스트의 **맨 마지막 줄**에 작성
 - 하나의 응답에 액션 태그는 **하나만** 사용
@@ -2446,7 +2799,7 @@ ${soulInfo ? soulInfo : ''}
 
 ## 패션 이미지 생성 기능 (DALL-E 3)
 
-### 11. 패션 이미지 생성: \`[ACTION:generate-fashion:영어 프롬프트]\`
+### 12. 패션 이미지 생성: \`[ACTION:generate-fashion:영어 프롬프트]\`
 사용자가 패션/옷/코디 이미지를 만들어달라고 하면, 영어로 된 DALL-E 3 프롬프트를 작성하여 태그로 전달하세요.
 
 **프롬프트 작성 규칙:**
@@ -2557,6 +2910,7 @@ ${soulInfo ? soulInfo : ''}
     chatToggle.addEventListener('click', () => {
       chatWidget.classList.toggle('active');
       if (chatWidget.classList.contains('active')) {
+        syncHeroSoaveFromChatHistory();
         if (chatInput) {
           chatInput.focus();
         }
@@ -2566,6 +2920,32 @@ ${soulInfo ? soulInfo : ''}
             chatMessages.scrollTop = 0;
           }
         }, 100);
+      }
+    });
+  }
+
+  var heroSoaveCta = document.getElementById('hero-soave-cta');
+  function isMobileSoaveVoice() {
+    return typeof window.matchMedia !== 'undefined' && window.matchMedia('(max-width: 768px)').matches;
+  }
+  if (heroSoaveCta && chatWidget) {
+    heroSoaveCta.addEventListener('click', function() {
+      if (isMobileSoaveVoice() && SpeechRecognition && recognition) {
+        soaveVoiceSession = true;
+        showSoaveVoiceHint();
+        startRecording(true);
+      } else {
+        chatWidget.classList.add('active');
+        syncHeroSoaveFromChatHistory();
+        if (chatInput) {
+          setTimeout(function() { chatInput.focus(); }, 100);
+        }
+      }
+    });
+    heroSoaveCta.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        heroSoaveCta.click();
       }
     });
   }
@@ -2803,6 +3183,7 @@ ${soulInfo ? soulInfo : ''}
     chatInput.style.height = 'auto';
 
     chatHistory.push({ role: 'user', content: attachedImage ? message + ' [사진 첨부됨]' : message });
+    updateHeroSoaveFromChat(attachedImage ? message + ' [사진 첨부됨]' : message, '', 'neutral');
 
     // 채팅은 서버 프록시(/api/chat)를 사용하므로 클라이언트 키 불필요
 
@@ -2825,6 +3206,7 @@ ${soulInfo ? soulInfo : ''}
       var parsed = parseActionFromResponse(response);
       addMessage('assistant', parsed.text);
       chatHistory.push({ role: 'assistant', content: parsed.text });
+      updateHeroSoaveFromChat(message, parsed.text, getSoaveMoodFromText(parsed.text));
       if (ttsEnabled) { playSoaveTTS(parsed.text); }
       if (parsed.action) {
         executeAction(parsed.action);
@@ -2841,11 +3223,15 @@ ${soulInfo ? soulInfo : ''}
       hideTypingIndicator();
       var errMsg = (error && error.message) ? error.message : String(error);
       var isQuotaError = errMsg === 'QUOTA_LIMIT' || /429|RESOURCE_EXHAUSTED|quota|rate limit/i.test(errMsg);
+      var isApiKeyError = /incorrect api key|invalid api key|api key.*provided|OPENAI_API_KEY/i.test(errMsg);
       if (isQuotaError) {
         setChatQuota(CHAT_DAILY_LIMIT);
         addMessage('assistant', '오늘의 채팅 한도(' + CHAT_DAILY_LIMIT + '회)에 도달했습니다. 내일 다시 이용해 주세요. ☀️');
         if (chatSend) chatSend.disabled = true;
+      } else if (isApiKeyError) {
+        addMessage('assistant', '죄송합니다. 오류가 발생했습니다. 🙏<br><br><small>OpenAI API 키가 올바르지 않거나 만료되었을 수 있어요. 서버의 .env에서 OPENAI_API_KEY를 확인하고, 로컬에서는 <code>node scripts/local-server.js</code>로 실행해 주세요.</small>');
       } else {
+        errMsg = errMsg.replace(/\bsk-[a-zA-Z0-9_-]{20,}/g, 'API key(숨김)').replace(/\bsk-proj-[^\s]+/g, 'API key(숨김)');
         if (errMsg.length > 200) errMsg = errMsg.slice(0, 200) + '…';
         addMessage('assistant', '죄송합니다. 오류가 발생했습니다. 🙏<br><br><small>원인: ' + escapeHtml(errMsg) + '</small>');
       }
@@ -2939,6 +3325,27 @@ ${soulInfo ? soulInfo : ''}
     return text;
   }
 
+  var SOAVE_VOICE_SYSTEM = '당신은 소아베(Soave)입니다. 사용자가 말한 것에 짧게 한두 문장으로 친근하게 대답하세요. 액션 태그나 긴 설명 없이 대화만 하세요.';
+  async function callSoaveVoiceReply(userMessage) {
+    var res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [
+          { role: 'system', content: SOAVE_VOICE_SYSTEM },
+          { role: 'user', content: userMessage }
+        ],
+        max_tokens: 150,
+        temperature: 0.8
+      })
+    });
+    var data = await res.json().catch(function() { return {}; });
+    if (!res.ok) return '';
+    var text = data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
+    return (text && parseActionFromResponse(text).text) ? parseActionFromResponse(text).text : (text || '');
+  }
+
   // ========================================
   // Voice: STT (Speech Recognition) + TTS (OpenAI)
   // ========================================
@@ -2948,6 +3355,16 @@ ${soulInfo ? soulInfo : ''}
   var ttsToggle = document.getElementById('chat-tts-toggle');
   var recognition = null;
   var isRecording = false;
+  var soaveVoiceSession = false;
+
+  function showSoaveVoiceHint() {
+    var el = document.getElementById('soave-voice-hint');
+    if (el) el.style.display = 'block';
+  }
+  function hideSoaveVoiceHint() {
+    var el = document.getElementById('soave-voice-hint');
+    if (el) el.style.display = 'none';
+  }
 
   var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (SpeechRecognition) {
@@ -2958,9 +3375,26 @@ ${soulInfo ? soulInfo : ''}
     recognition.continuous = false;
 
     recognition.onresult = function(event) {
-      var transcript = event.results[0][0].transcript;
-      if (chatInput && transcript.trim()) {
-        chatInput.value = transcript.trim();
+      var transcript = (event.results[0][0].transcript || '').trim();
+      if (soaveVoiceSession) {
+        soaveVoiceSession = false;
+        stopRecording();
+        hideSoaveVoiceHint();
+        if (!transcript) return;
+        var wrap = document.getElementById('soave-showcase-wrap');
+        if (wrap) wrap.setAttribute('data-soave-mood', getSoaveMoodFromText(transcript));
+        try {
+          window.dispatchEvent(new CustomEvent('soave-react'));
+        } catch (e) {}
+        callSoaveVoiceReply(transcript).then(function(reply) {
+          if (reply && wrap) wrap.setAttribute('data-soave-mood', getSoaveMoodFromText(reply));
+          try { window.dispatchEvent(new CustomEvent('soave-react')); } catch (e2) {}
+          if (reply) playSoaveTTS(reply);
+        }).catch(function() {});
+        return;
+      }
+      if (chatInput && transcript) {
+        chatInput.value = transcript;
         sendMessage();
       }
       stopRecording();
@@ -2968,22 +3402,31 @@ ${soulInfo ? soulInfo : ''}
 
     recognition.onerror = function(event) {
       console.error('Speech recognition error:', event.error);
+      var wasSoave = soaveVoiceSession;
+      if (soaveVoiceSession) {
+        soaveVoiceSession = false;
+        hideSoaveVoiceHint();
+      }
       stopRecording();
-      if (event.error === 'not-allowed') {
+      if (event.error === 'not-allowed' && !wasSoave) {
         addMessage('assistant', '마이크 사용 권한이 필요합니다. 브라우저 설정에서 마이크를 허용해 주세요. 🎤');
       }
     };
 
     recognition.onend = function() {
+      if (soaveVoiceSession) {
+        soaveVoiceSession = false;
+        hideSoaveVoiceHint();
+      }
       stopRecording();
     };
   }
 
-  function startRecording() {
+  function startRecording(forSoaveVoice) {
     if (!recognition) return;
     if (currentAudio) { currentAudio.pause(); currentAudio = null; }
     isRecording = true;
-    if (micBtn) {
+    if (micBtn && !forSoaveVoice) {
       micBtn.classList.add('recording');
       micBtn.querySelector('.icon-mic').style.display = 'none';
       micBtn.querySelector('.icon-mic-recording').style.display = '';
@@ -3209,6 +3652,13 @@ ${soulInfo ? soulInfo : ''}
           break;
         case 'generate-fashion':
           generateChatFashionImage(action.value);
+          break;
+        case 'play-soave-video':
+          if (action.value) {
+            try {
+              window.dispatchEvent(new CustomEvent('play-soave-video', { detail: { category: action.value } }));
+            } catch (e) {}
+          }
           break;
       }
     }, 1500);
@@ -3495,6 +3945,51 @@ ${soulInfo ? soulInfo : ''}
   }
 
   var SOAVE_AVATAR_URL = 'image/soave/soave-avatar-face.png';
+
+  function getSoaveMoodFromText(text) {
+    if (!text || typeof text !== 'string') return 'neutral';
+    var t = text.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
+    if (/기쁘|웃|고마|땡큐|감사|좋아|사랑|최고|응원|파이팅|💜|❤|😊|🎉|✨/.test(t)) return 'happy';
+    if (/생각|음\.|그렇|흠|고민|궁금|알겠|확인/.test(t)) return 'thinking';
+    if (/미안|죄송|아쉽|슬프|힘들/.test(t)) return 'sad';
+    if (/와!|대단|신나|와우|멋지|놀라/.test(t)) return 'excited';
+    return 'neutral';
+  }
+
+  function updateHeroSoaveFromChat(lastUserMsg, lastAssistantMsg, mood) {
+    var wrap = document.getElementById('soave-showcase-wrap');
+    var defaultCta = document.getElementById('hero-soave-cta-default');
+    var preview = document.getElementById('hero-soave-chat-preview');
+    var previewUser = document.getElementById('hero-soave-preview-user');
+    var previewAssistant = document.getElementById('hero-soave-preview-assistant');
+    if (!wrap || !defaultCta || !preview) return;
+    var hasChat = !!(lastUserMsg || lastAssistantMsg);
+    if (hasChat) {
+      defaultCta.style.display = 'none';
+      preview.style.display = 'block';
+      if (previewUser) previewUser.textContent = lastUserMsg ? (lastUserMsg.length > 40 ? lastUserMsg.slice(0, 40) + '…' : lastUserMsg) : '';
+      if (previewAssistant) {
+        var plain = (lastAssistantMsg || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+        previewAssistant.textContent = plain.length > 60 ? plain.slice(0, 60) + '…' : plain;
+      }
+      wrap.setAttribute('data-soave-mood', mood || 'neutral');
+    } else {
+      defaultCta.style.display = '';
+      preview.style.display = 'none';
+      wrap.setAttribute('data-soave-mood', 'neutral');
+    }
+  }
+
+  function syncHeroSoaveFromChatHistory() {
+    var lastUser = '';
+    var lastAssistant = '';
+    for (var i = 0; i < chatHistory.length; i++) {
+      if (chatHistory[i].role === 'user') lastUser = chatHistory[i].content;
+      if (chatHistory[i].role === 'assistant') lastAssistant = chatHistory[i].content;
+    }
+    updateHeroSoaveFromChat(lastUser, lastAssistant, getSoaveMoodFromText(lastAssistant));
+  }
+
   function addMessage(role, content) {
     if (!chatMessages) return;
 
@@ -4609,7 +5104,7 @@ ${soulInfo ? soulInfo : ''}
     });
   })();
 
-  // 소아베 히어로 비디오 — 순차 자동재생 + 좌우 네비게이션 (ani_soave 65개 + ani_han 5개)
+  // 소아베 히어로 비디오 — 카테고리 JSON 기반 재생 + 순차/랜덤 (채팅 연동)
   (function() {
     var video = document.getElementById('soave-hero-video');
     var overlay = document.getElementById('soave-video-overlay');
@@ -4620,12 +5115,22 @@ ${soulInfo ? soulInfo : ''}
     if (!video) return;
 
     var videoPool = [];
+    var categoryToPaths = {};
     var i;
     for (i = 1; i <= 65; i++) videoPool.push('image/soave/ani/ani_soave/ (' + i + ').mp4');
     for (i = 1; i <= 4; i++) videoPool.push('image/soave/ani/ani_han/2 (' + i + ').mp4');
     var totalVideos = videoPool.length;
 
-    // 셔플된 재생 순서 생성
+    fetch('image/soave/ani/soave-video-categories.json').then(function(r) { return r.json(); }).then(function(data) {
+      if (data.videos && Array.isArray(data.videos)) {
+        data.videos.forEach(function(v) {
+          var cat = v.category || 'general';
+          if (!categoryToPaths[cat]) categoryToPaths[cat] = [];
+          categoryToPaths[cat].push(v.path);
+        });
+      }
+    }).catch(function() {});
+
     var playOrder = [];
     function shuffleOrder() {
       playOrder = [];
@@ -4650,6 +5155,17 @@ ${soulInfo ? soulInfo : ''}
       video.load();
     }
 
+    function playCategory(category) {
+      var paths = categoryToPaths[category] || categoryToPaths['general'] || videoPool;
+      if (paths.length === 0) paths = videoPool;
+      var chosen = paths[Math.floor(Math.random() * paths.length)];
+      video.style.opacity = '0';
+      if (overlay) overlay.style.opacity = '1';
+      video.src = chosen;
+      if (counter) counter.textContent = category;
+      video.load();
+    }
+
     function nextVideo() { loadVideoAt(playPos + 1); }
     function prevVideo() { loadVideoAt(playPos - 1); }
 
@@ -4671,6 +5187,15 @@ ${soulInfo ? soulInfo : ''}
 
     if (prevBtn) prevBtn.addEventListener('click', function() { prevVideo(); });
     if (nextBtn) nextBtn.addEventListener('click', function() { nextVideo(); });
+
+    window.addEventListener('soave-react', function() {
+      nextVideo();
+    });
+
+    window.addEventListener('play-soave-video', function(e) {
+      var cat = e.detail && e.detail.category;
+      if (cat) playCategory(cat);
+    });
 
     if (muteBtn) {
       muteBtn.addEventListener('click', function() {

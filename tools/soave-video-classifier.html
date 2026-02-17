@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>소아베 영상 카테고리 분류 도구</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Malgun Gothic', sans-serif; padding: 16px; max-width: 900px; margin: 0 auto; }
+    h1 { font-size: 1.25rem; margin-bottom: 8px; }
+    .help { color: #666; font-size: 0.9rem; margin-bottom: 16px; }
+    .player-wrap { background: #1a1a2e; border-radius: 12px; overflow: hidden; margin-bottom: 16px; position: relative; }
+    .player-wrap video { width: 100%; display: block; }
+    .nav-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+    .nav-row span { font-weight: bold; min-width: 80px; }
+    .nav-row button { padding: 8px 14px; border-radius: 8px; border: 1px solid #7c3aed; background: #fff; color: #7c3aed; cursor: pointer; }
+    .nav-row button:hover { background: #7c3aed; color: #fff; }
+    .cats { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+    .cats button { padding: 10px 16px; border-radius: 8px; border: 2px solid #ddd; background: #fff; cursor: pointer; }
+    .cats button:hover { border-color: #7c3aed; color: #7c3aed; }
+    .cats button.selected { border-color: #7c3aed; background: #ede9fe; color: #7c3aed; }
+    .export-wrap { margin-top: 20px; }
+    .export-wrap textarea { width: 100%; height: 200px; font-size: 11px; font-family: monospace; padding: 8px; }
+    .export-wrap button { margin-top: 8px; padding: 10px 20px; background: #7c3aed; color: #fff; border: none; border-radius: 8px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>소아베 영상 카테고리 분류 도구</h1>
+  <p class="help">영상을 보면서 아래 버튼으로 카테고리를 지정하세요. 끝나면 「JSON 내보내기」로 저장한 뒤, <code>image/soave/ani/soave-video-categories.json</code> 파일을 덮어쓰세요.</p>
+
+  <div class="player-wrap">
+    <video id="vid" controls muted playsinline></video>
+  </div>
+  <div class="nav-row">
+    <span id="counter">0 / 0</span>
+    <button type="button" id="btnPrev">◀ 이전</button>
+    <button type="button" id="btnNext">다음 ▶</button>
+  </div>
+  <div class="cats" id="catButtons"></div>
+  <div class="export-wrap">
+    <button type="button" id="btnExport">JSON 내보내기 (복사용)</button>
+    <textarea id="exportArea" readonly placeholder="내보내기 후 여기 붙여넣어 저장할 수 있습니다."></textarea>
+  </div>
+
+  <script>
+    (function() {
+      var categories = { dance: '춤', walk: '걷기', run: '뛰기', jump: '점프', greeting: '인사', wave: '웨이브', heart: '하트', surprise: '놀람', annoyed: '짜증', disappointed: '실망', pitiful: '한심', gloomy: '우울', happy: '행복', laugh: '웃음', cry: '우는 표정', cheer: '응원 화이팅', careful: '조심', care: '배려', hangeul: '한글 캐릭터', horong: '호롱', horong_strong: '호롱 천하장사', horong_flower: '호롱 꽃', gorong: '고롱', gorong_inventor: '고롱 발명가', neutral: '기본', general: '미분류' };
+      var data = { categories: {}, videos: [] };
+      var index = 0;
+      var video = document.getElementById('vid');
+      var counterEl = document.getElementById('counter');
+      var catContainer = document.getElementById('catButtons');
+      var exportArea = document.getElementById('exportArea');
+
+      function loadJson() {
+        return fetch('/image/soave/ani/soave-video-categories.json')
+          .then(function(r) { return r.json(); })
+          .catch(function() {
+            return { videos: [] };
+          });
+      }
+
+      function renderCats() {
+        catContainer.innerHTML = '';
+        Object.keys(categories).forEach(function(key) {
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.textContent = categories[key];
+          btn.dataset.cat = key;
+          btn.addEventListener('click', function() {
+            if (!data.videos[index]) return;
+            data.videos[index].category = key;
+            document.querySelectorAll('.cats button').forEach(function(b) { b.classList.remove('selected'); });
+            btn.classList.add('selected');
+          });
+          catContainer.appendChild(btn);
+        });
+      }
+
+      function updateUI() {
+        if (!data.videos.length) return;
+        var v = data.videos[index];
+        video.src = '/' + v.path;
+        video.load();
+        counterEl.textContent = (index + 1) + ' / ' + data.videos.length;
+        document.querySelectorAll('.cats button').forEach(function(b) {
+          b.classList.toggle('selected', b.dataset.cat === v.category);
+        });
+      }
+
+      document.getElementById('btnPrev').addEventListener('click', function() {
+        if (index <= 0) return;
+        index--;
+        updateUI();
+      });
+      document.getElementById('btnNext').addEventListener('click', function() {
+        if (index >= data.videos.length - 1) return;
+        index++;
+        updateUI();
+      });
+
+      document.getElementById('btnExport').addEventListener('click', function() {
+        var out = { description: data.description || '', categories: data.categories || {}, videos: data.videos };
+        exportArea.value = JSON.stringify(out, null, 2);
+        exportArea.select();
+        document.execCommand('copy');
+        alert('JSON이 클립보드에 복사되었습니다. image/soave/ani/soave-video-categories.json 내용을 이 JSON으로 교체하세요.');
+      });
+
+      loadJson().then(function(json) {
+        data = json;
+        if (!data.videos || !data.videos.length) {
+          counterEl.textContent = '영상 목록 없음';
+          return;
+        }
+        renderCats();
+        updateUI();
+      });
+    })();
+  </script>
+</body>
+</html>
