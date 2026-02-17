@@ -2737,14 +2737,16 @@ ${soulInfo ? soulInfo : ''}
 - "테로스 이야기 보여줘", "TEROS 스토리", "AI 이야기"
 
 ### 11. 소아베 영상 표정/행동 연동 (매우 중요): \`[ACTION:play-soave-video:카테고리]\`
-사용자의 말·감정·맥락에 맞춰 왼쪽 소아베 영상을 해당 카테고리로 재생합니다. 대화할 때마다 사용자 감정과 상황을 유추하여 **반드시** 적절한 카테고리 액션을 응답 끝에 붙이세요. 소아베가 살아 움직이는 것처럼 반응해야 합니다.
+사용자의 말·감정·맥락에 맞춰 왼쪽 소아베 영상을 해당 카테고리로 재생합니다. 대화할 때마다 사용자 감정과 상황을 유추하여 **반드시** 적절한 카테고리 액션을 응답 끝에 붙이세요. 소아베가 살아 움직이는 것처럼 반응해야 합니다. **대화가 길어져도** "하트 날려줘", "춤춰줘", "인사해줘" 같은 반응 요청에는 항상 [ACTION:play-soave-video:해당카테고리]를 응답 맨 끝에 포함하세요.
 
 **카테고리 매핑 (대소문자 구분 없음):**
 - 인사/안녕/하이/헬로 → greeting
 - 기쁨/행복/좋아/신나/춤/춤춰/웃어/웃음 → happy 또는 dance 또는 laugh (긍정 감정)
-- 실망/짜증/한심/우울/슬퍼 → disappointed, annoyed, pitiful, gloomy (해당 감정에 맞게)
+- **우는 표정 (매우 중요)**: 슬퍼, 눈물, 울고싶어, 울어, 울어줘 → **반드시 cry**. "우는 표정" 문구 없이도 이 단어들이 나오면 즉시 [ACTION:play-soave-video:cry]
+- 실망/짜증/한심/우울 → disappointed, annoyed, pitiful, gloomy (해당 감정에 맞게)
 - 놀람/놀라/깜짝 → surprise
-- 한글 캐릭터/호롱/고롱/페르소나 → horong, horong_strong, horong_flower, gorong, gorong_inventor (질문 맥락에 맞게)
+- **호롱**: "호롱"만 말하면 → [ACTION:play-soave-video:horong,horong_flower,horong_strong] (쉼표로 3종 연속). "호롱 꽃" → horong_flower, "호롱 천하장사" → horong_strong
+- **고롱**: "고롱" 또는 "고롱 발명가" → [ACTION:play-soave-video:gorong_inventor]
 - 응원/화이팅 → cheer
 - 조심/배려/걷기/뛰기/점프/하트/웨이브 → careful, care, walk, run, jump, heart, wave
 
@@ -2753,7 +2755,8 @@ ${soulInfo ? soulInfo : ''}
 - 기분 좋은 대화·칭찬·기쁜 소식 → [ACTION:play-soave-video:happy] 또는 dance, laugh 중 하나
 - 사용자가 실망/짜증/한심/우울을 표현하면 → 해당 카테고리 영상 [ACTION:play-soave-video:disappointed] 등
 - 놀라운 이야기·깜짝 질문 → [ACTION:play-soave-video:surprise]
-- 한글·호롱·고롱 이야기 시 → [ACTION:play-soave-video:horong] 또는 gorong, horong_flower, horong_strong, gorong_inventor 중 적절히
+- "호롱" 요청 시 → [ACTION:play-soave-video:horong,horong_flower,horong_strong] (3종 연속). "호롱 꽃" → horong_flower, "호롱 천하장사" → horong_strong. "고롱" 또는 "고롱 발명가" → [ACTION:play-soave-video:gorong_inventor]
+- 슬퍼/눈물/울어/울고싶어/울어줘 → [ACTION:play-soave-video:cry] (우는 표정, 즉시)
 - 응원·격려 시 → [ACTION:play-soave-video:cheer]
 - 일반 대화에서도 맥락에 맞는 표정(행복/웃음/인사 등)을 골라 한 번씩 액션을 넣어 주세요.
 
@@ -2761,14 +2764,17 @@ ${soulInfo ? soulInfo : ''}
 - "안녕 소아베" → "안녕! 오늘도 반가워 💜 [ACTION:play-soave-video:greeting]"
 - "기분 좋아" → "나도 기쁘다! 같이 신나자~ [ACTION:play-soave-video:happy]"
 - "춤 춰줘" → "와 신난다! 같이 분위기 올려볼까? 💜 [ACTION:play-soave-video:dance]"
-- "호롱이 누구야?" → "호롱은 한글 캐릭터 중 하나야! [ACTION:play-soave-video:horong]"
+- "호롱이 누구야?" / "호롱 보여줘" → "호롱 세 가지를 보여줄게! 💜 [ACTION:play-soave-video:horong,horong_flower,horong_strong]"
+- "호롱 꽃" → "호롱 꽃이야! [ACTION:play-soave-video:horong_flower]"
+- "고롱" / "고롱 발명가" → "고롱 발명가를 보여줄게! [ACTION:play-soave-video:gorong_inventor]"
+- "울어줘" / "눈물" / "슬퍼" → "많이 슬프겠다. [ACTION:play-soave-video:cry]"
 - "실망이야" → "많이 속상하겠다. 같이 있어줄게. [ACTION:play-soave-video:disappointed]"
 
 ### 액션 태그 규칙:
 - 액션 태그는 반드시 응답 텍스트의 **맨 마지막 줄**에 작성
 - 하나의 응답에 액션 태그는 **하나만** 사용
 - 태그 앞에 자연스러운 안내 멘트를 반드시 포함
-- 사용자가 명확히 이동/실행을 요청한 경우에만 태그 사용 (일반 대화에서는 사용하지 마세요)
+- navigate/click/scroll 등 페이지 조작은 사용자가 명확히 요청한 경우에만 사용. **단, play-soave-video는 예외**: 표정/반응 요청(하트, 춤, 인사, 웨이브 등)에는 대화 길이와 관계없이 항상 붙이세요.
 
 ### 예시:
 - "플레이로 가줘" → "한글 페르소나 페이지로 안내할게! 💜 [ACTION:navigate:styling]"
@@ -3215,8 +3221,13 @@ ${soulInfo ? soulInfo : ''}
         if (fallback) {
           executeAction(fallback);
         } else {
-          var fashionFromResponse = detectFashionFromAIResponse(parsed.text, message, !!attachedImage);
-          if (fashionFromResponse) executeAction(fashionFromResponse);
+          var soaveFallback = detectSoaveVideoFromUserMessage(message);
+          if (soaveFallback) {
+            executeAction(soaveFallback);
+          } else {
+            var fashionFromResponse = detectFashionFromAIResponse(parsed.text, message, !!attachedImage);
+            if (fashionFromResponse) executeAction(fashionFromResponse);
+          }
         }
       }
     } catch (error) {
@@ -3306,7 +3317,7 @@ ${soulInfo ? soulInfo : ''}
       body: JSON.stringify({
         model: useModel,
         messages: messages,
-        max_tokens: 500,
+        max_tokens: 600,
         temperature: 0.8
       })
     });
@@ -3552,6 +3563,31 @@ ${soulInfo ? soulInfo : ''}
     return null;
   }
 
+  /** 컨텍스트가 길어져 AI가 액션 태그를 빼도, 사용자 말만으로 소아베 영상 카테고리 추론 (하트/춤/인사/호롱/고롱/우는표정 등) */
+  function detectSoaveVideoFromUserMessage(message) {
+    var msg = message.trim().replace(/\s+/g, ' ').toLowerCase();
+    if (/하트\s*날려|하트\s*보내|하트\s*해줘|하트\s*줘|하트\s*날려줘|💜|❤|하트/i.test(msg)) return { type: 'play-soave-video', value: 'heart' };
+    if (/웨이브|손\s*흔들|손흔들|wave/i.test(msg)) return { type: 'play-soave-video', value: 'wave' };
+    if (/춤\s*춰|춤춰|춤\s*춰줘|춤\s*추어|dance/i.test(msg)) return { type: 'play-soave-video', value: 'dance' };
+    if (/웃어|웃어줘|웃음|웃겨|laugh|미소/i.test(msg)) return { type: 'play-soave-video', value: 'laugh' };
+    if (/인사|안녕|하이|헬로|hello|hi\b/i.test(msg)) return { type: 'play-soave-video', value: 'greeting' };
+    if (/기쁘|좋아|신나|행복|happy|기분\s*좋/i.test(msg)) return { type: 'play-soave-video', value: 'happy' };
+    if (/응원|화이팅|격려|cheer|파이팅/i.test(msg)) return { type: 'play-soave-video', value: 'cheer' };
+    if (/놀라|깜짝|surprise/i.test(msg)) return { type: 'play-soave-video', value: 'surprise' };
+    if (/슬퍼|눈물|울고\s*싶|울어|우는\s*표정|울어줘|눈물\s*나|cry|슬픔/i.test(msg)) return { type: 'play-soave-video', value: 'cry' };
+    if (/호롱\s*꽃|호롱꽃/i.test(msg)) return { type: 'play-soave-video', value: 'horong_flower' };
+    if (/호롱\s*천하장사|호롱\s*장사|천하장사/i.test(msg)) return { type: 'play-soave-video', value: 'horong_strong' };
+    if (/고롱\s*발명가|고롱\s*발명|고롱/i.test(msg)) return { type: 'play-soave-video', value: 'gorong_inventor' };
+    if (/호롱|한글\s*캐릭터|horong/i.test(msg)) return { type: 'play-soave-video', value: ['horong', 'horong_flower', 'horong_strong'] };
+    if (/실망|짜증|한심|우울|disappointed|annoyed|gloomy/i.test(msg)) return { type: 'play-soave-video', value: 'disappointed' };
+    if (/조심|careful/i.test(msg)) return { type: 'play-soave-video', value: 'careful' };
+    if (/걷기|걷어|walk/i.test(msg)) return { type: 'play-soave-video', value: 'walk' };
+    if (/뛰기|뛰어|run/i.test(msg)) return { type: 'play-soave-video', value: 'run' };
+    if (/점프|jump/i.test(msg)) return { type: 'play-soave-video', value: 'jump' };
+    if (/배려|care/i.test(msg)) return { type: 'play-soave-video', value: 'care' };
+    return null;
+  }
+
   var FASHION_PROMPTS = {
     casual: 'A stylish K-pop inspired casual outfit on a faceless white mannequin, purple oversized hoodie with I PURPLE YOU text, wide-leg jeans, white sneakers, purple tote bag, soft pastel studio background, fashion photography style, no face, no human features',
     formal: 'An elegant K-pop inspired formal outfit flat lay on white background, lavender silk blouse, tailored purple blazer, black slim pants, pearl accessories, fashion magazine editorial style, no face, no human',
@@ -3605,7 +3641,17 @@ ${soulInfo ? soulInfo : ''}
   function parseActionFromResponse(response) {
     var actionRegex = /\[ACTION:([\w-]+)(?::([^\]]*))?\]\s*$/;
     var match = response.match(actionRegex);
-    if (!match) return { text: response, action: null };
+    if (!match) {
+      // 컨텍스트가 길어져 응답이 잘리면 태그가 끝에 없을 수 있음 → 응답 전체에서 play-soave-video만 추가로 탐색
+      var soaveRegex = /\[ACTION:play-soave-video:([\w-]+)\]/g;
+      var lastSoave = null, m;
+      while ((m = soaveRegex.exec(response)) !== null) lastSoave = m;
+      if (lastSoave) {
+        var text = response.replace(/\s*\[ACTION:play-soave-video:[\w-]+\]\s*/g, '').trim();
+        return { text: text, action: { type: 'play-soave-video', value: lastSoave[1] } };
+      }
+      return { text: response, action: null };
+    }
     var text = response.replace(actionRegex, '').trim();
     return {
       text: text,
@@ -3614,6 +3660,24 @@ ${soulInfo ? soulInfo : ''}
   }
 
   function executeAction(action) {
+    // 소아베 영상은 채팅과 맞추기 위해 지연 없이 즉시 재생 (다른 요청 시 해당 카테고리로 바로 전환)
+    if (action.type === 'play-soave-video') {
+      if (action.value) {
+        try {
+          var val = action.value;
+          var detail;
+          if (Array.isArray(val)) {
+            detail = { categories: val };
+          } else if (typeof val === 'string' && val.indexOf(',') !== -1) {
+            detail = { categories: val.split(',').map(function(s) { return s.trim(); }).filter(Boolean) };
+          } else {
+            detail = { category: val };
+          }
+          window.dispatchEvent(new CustomEvent('play-soave-video', { detail: detail }));
+        } catch (e) {}
+      }
+      return;
+    }
     setTimeout(function() {
       switch (action.type) {
         case 'navigate':
@@ -3652,13 +3716,6 @@ ${soulInfo ? soulInfo : ''}
           break;
         case 'generate-fashion':
           generateChatFashionImage(action.value);
-          break;
-        case 'play-soave-video':
-          if (action.value) {
-            try {
-              window.dispatchEvent(new CustomEvent('play-soave-video', { detail: { category: action.value } }));
-            } catch (e) {}
-          }
           break;
       }
     }, 1500);
@@ -5166,6 +5223,13 @@ ${soulInfo ? soulInfo : ''}
       video.load();
     }
 
+    var sequenceQueue = [];
+    function playCategorySequence(categories) {
+      if (!categories || categories.length === 0) return;
+      sequenceQueue = categories.slice();
+      playCategory(sequenceQueue.shift());
+    }
+
     function nextVideo() { loadVideoAt(playPos + 1); }
     function prevVideo() { loadVideoAt(playPos - 1); }
 
@@ -5178,7 +5242,11 @@ ${soulInfo ? soulInfo : ''}
     });
 
     video.addEventListener('ended', function() {
-      nextVideo();
+      if (sequenceQueue.length > 0) {
+        playCategory(sequenceQueue.shift());
+      } else {
+        nextVideo();
+      }
     });
 
     video.addEventListener('error', function() {
@@ -5193,8 +5261,14 @@ ${soulInfo ? soulInfo : ''}
     });
 
     window.addEventListener('play-soave-video', function(e) {
-      var cat = e.detail && e.detail.category;
-      if (cat) playCategory(cat);
+      var d = e.detail;
+      if (!d) return;
+      if (Array.isArray(d.categories) && d.categories.length > 0) {
+        playCategorySequence(d.categories);
+      } else if (d.category) {
+        sequenceQueue = [];
+        playCategory(d.category);
+      }
     });
 
     if (muteBtn) {
