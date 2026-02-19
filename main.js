@@ -613,7 +613,9 @@
   // ========================================
   document.querySelectorAll('.membership-checkout-btn').forEach(function (btn) {
     btn.addEventListener('click', function () {
-      var productId = btn.getAttribute('data-product-id') || 'ab0e92a7-a0bf-4572-9373-514707f58439';
+      var productId = (btn.getAttribute('data-plan') === 'vip' && typeof window.__POLAR_VIP_PRODUCT_ID__ === 'string' && window.__POLAR_VIP_PRODUCT_ID__)
+        ? window.__POLAR_VIP_PRODUCT_ID__
+        : (btn.getAttribute('data-product-id') || 'ab0e92a7-a0bf-4572-9373-514707f58439');
       btn.disabled = true;
       btn.textContent = (typeof __t === 'function' ? __t('membership.checkout_loading') : null) || '결제 페이지로 이동 중...';
       var payload = { productId: productId, successUrl: window.location.origin + '/#membership?checkout=success' };

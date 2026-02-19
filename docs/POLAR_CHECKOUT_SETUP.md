@@ -48,7 +48,8 @@ Cloudflare Workers/Pages에 환경 변수 설정:
 
 Purple / VIP 각각 다른 Product ID를 쓰려면:
 
-1. `index.html`의 `data-product-id` 값을 해당 상품 ID로 변경
+1. **Purple**: `index.html`의 Purple 버튼 `data-product-id` (기본: ab0e92a7-a0bf-4572-9373-514707f58439)
+2. **VIP**: Polar에서 VIP 상품(₩19,900/월) 생성 후 `.env`에 `POLAR_VIP_PRODUCT_ID=생성된ID` 추가. Cloudflare 배포 시 환경 변수에도 동일 설정.
 2. Polar 대시보드에서 상품별 Product ID 확인 후 적용
 
 ## 7. 결제 테스트 (Sandbox)

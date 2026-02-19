@@ -51,6 +51,7 @@ const SUPABASE_URL_DEFAULT = 'https://ydzqwveyovdfqgehkpui.supabase.co';
 const SUPABASE_ANON_KEY_DEFAULT = 'sb_publishable_xQm-sn6cc_UT7r9Y-Q3qgA_y-1_tPPl';
 const supabaseUrl = process.env.SUPABASE_URL || env.SUPABASE_URL || SUPABASE_URL_DEFAULT;
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || env.SUPABASE_ANON_KEY || SUPABASE_ANON_KEY_DEFAULT;
+const polarVipProductId = process.env.POLAR_VIP_PRODUCT_ID || env.POLAR_VIP_PRODUCT_ID || '';
 
 const configContent = `// SIMS Fashion AI - API 설정 (자동 생성, Git 제외)
 // scripts/build-config.js 로 .env 에서 생성됩니다.
@@ -59,6 +60,7 @@ const configContent = `// SIMS Fashion AI - API 설정 (자동 생성, Git 제�
   window.__SIMS_GEMINI_KEY__ = ${JSON.stringify(geminiKey)};
   window.__SIMS_SUPABASE_URL__ = ${JSON.stringify(supabaseUrl)};
   window.__SIMS_SUPABASE_ANON_KEY__ = ${JSON.stringify(supabaseAnonKey)};
+  window.__POLAR_VIP_PRODUCT_ID__ = ${JSON.stringify(polarVipProductId)};
 })();
 `;
 
