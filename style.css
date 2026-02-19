@@ -3934,11 +3934,441 @@ section {
 .shop-cat-block .shop-cat-header .section-description { text-align: center; }
 
 /* ========================================
-   Lookbook Section
+   Lookbook Section (연예인 룩 + 유사 검색)
    ======================================== */
 .lookbook {
   background: var(--bg-secondary);
 }
+
+/* 연예인 룩 업로드·결과 블록 (보라해 컨셉) */
+.celeblook-block {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: var(--bg-primary);
+  border-radius: 20px;
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  position: relative;
+  box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.06);
+}
+.celeblook-block::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  border-radius: 4px 0 0 4px;
+  background: var(--gradient-primary);
+}
+.celeblook-mood-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+.celeblook-mood-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 1rem;
+}
+.celeblook-mood-chip {
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  background: transparent;
+  border: 1px solid rgba(124, 58, 237, 0.4);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.celeblook-mood-chip:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: rgba(124, 58, 237, 0.06);
+}
+.celeblook-mood-chip.active {
+  background: rgba(124, 58, 237, 0.15);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+.celeblook-dropzone {
+  border: 2px dashed rgba(124, 58, 237, 0.4);
+  border-radius: 16px;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition);
+  background: rgba(124, 58, 237, 0.04);
+}
+.celeblook-dropzone:hover,
+.celeblook-dropzone.dragover {
+  border-color: var(--primary);
+  background: rgba(124, 58, 237, 0.08);
+  box-shadow: 0 0 20px rgba(124, 58, 237, 0.08);
+}
+.celeblook-icon { font-size: 2.5rem; display: block; margin-bottom: 8px; }
+.celeblook-upload-text { font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+.celeblook-upload-hint { font-size: 0.9rem; color: var(--text-muted); }
+.celeblook-loading { text-align: center; padding: 2rem; }
+.celeblook-loading .loading-spinner {
+  margin: 0 auto 12px;
+  border-color: rgba(124, 58, 237, 0.2);
+  border-top-color: var(--primary);
+}
+.celeblook-loading p { color: var(--text-muted); }
+.celeblook-result { padding-top: 12px; }
+.celeblook-result-preview { margin-bottom: 1rem; text-align: center; }
+.celeblook-result-preview img { max-width: 100%; max-height: 200px; border-radius: 12px; object-fit: contain; }
+/* 분석 요약 */
+.celeblook-summary-wrap {
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid transparent;
+  border-image: linear-gradient(90deg, transparent, var(--primary), transparent) 1;
+}
+.celeblook-summary-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 6px;
+  font-family: var(--font-sans);
+}
+.celeblook-summary-text {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+/* 스타일 태그 칩 */
+.celeblook-style-tags-wrap { margin-bottom: 1rem; }
+.celeblook-style-tags-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+.celeblook-style-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.celeblook-tag-chip {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  background: rgba(124, 58, 237, 0.12);
+  color: var(--primary);
+  border: 1px solid rgba(124, 58, 237, 0.35);
+}
+/* 전체 복사 */
+.celeblook-copy-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 1rem;
+}
+.btn-celeblook-copy {
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: transparent;
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.btn-celeblook-copy:hover {
+  background: rgba(124, 58, 237, 0.1);
+}
+.celeblook-copy-toast {
+  font-size: 0.85rem;
+  color: var(--primary);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.celeblook-copy-toast.visible { opacity: 1; }
+/* 카테고리별 추천 아이템 카드 */
+.celeblook-item-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+.celeblook-item-card {
+  padding: 1.25rem;
+  background: var(--bg-secondary);
+  border-radius: 16px;
+  border: 1px solid rgba(124, 58, 237, 0.15);
+}
+.celeblook-card-header {
+  margin-bottom: 0.75rem;
+}
+.celeblook-card-category {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 4px;
+}
+.celeblook-card-item-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.celeblook-keywords-section {
+  margin-bottom: 1rem;
+}
+.celeblook-keywords-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+.celeblook-search-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.celeblook-search-tag {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  background: rgba(124, 58, 237, 0.12);
+  color: var(--primary);
+  border: 1px solid rgba(124, 58, 237, 0.35);
+  text-decoration: none;
+  transition: var(--transition);
+}
+.celeblook-search-tag:hover {
+  background: rgba(124, 58, 237, 0.2);
+}
+.btn-celeblook-copy-inline {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.btn-celeblook-copy-inline:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+.celeblook-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 1rem;
+}
+.btn-celeblook-primary {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: var(--gradient-primary);
+  color: white;
+  text-decoration: none;
+  transition: var(--transition);
+}
+.btn-celeblook-primary:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+.btn-celeblook-secondary {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: var(--transition);
+}
+.btn-celeblook-secondary:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+.celeblook-detail-section {
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+.celeblook-detail-section summary {
+  cursor: pointer;
+  color: var(--text-secondary);
+  padding: 6px 0;
+}
+.celeblook-detail-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px 0;
+  border-top: 1px solid var(--border-color);
+}
+.celeblook-detail-text {
+  flex: 1;
+  min-width: 200px;
+  color: var(--text-primary);
+}
+.btn-celeblook-research {
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: var(--primary);
+  color: white;
+  text-decoration: none;
+  transition: var(--transition);
+}
+.btn-celeblook-research:hover {
+  filter: brightness(1.1);
+}
+.celeblook-recommended-section {
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-color);
+}
+.celeblook-recommended-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+.celeblook-recommended-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+.celeblook-recommended-count {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+.celeblook-product-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+.celeblook-product-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  background: var(--bg-primary);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  text-decoration: none;
+  color: inherit;
+  transition: var(--transition);
+}
+.celeblook-product-card:hover {
+  border-color: var(--primary);
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.1);
+}
+.celeblook-product-thumb-wrap {
+  width: 64px;
+  height: 64px;
+  min-width: 64px;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+.celeblook-product-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.celeblook-product-thumb-fallback {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.15) 0%, rgba(236, 72, 153, 0.1) 100%);
+}
+.celeblook-product-info {
+  flex: 1;
+  min-width: 0;
+}
+.celeblook-product-name {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.celeblook-product-price {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--primary);
+  margin-top: 4px;
+}
+.celeblook-product-store {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+.btn-celeblook-goto-link {
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: var(--primary);
+  color: white;
+  white-space: nowrap;
+}
+.btn-celeblook-goto {
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: var(--primary);
+  color: white;
+  text-decoration: none;
+  transition: var(--transition);
+}
+.btn-celeblook-goto:hover {
+  filter: brightness(1.1);
+}
+.btn-celeblook-search {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 10px 18px; border-radius: 12px; font-weight: 600; font-size: 0.9rem;
+  background: var(--gradient-primary); color: white; text-decoration: none;
+  transition: var(--transition);
+  border: none;
+}
+.btn-celeblook-search:hover { filter: brightness(1.1); transform: translateY(-1px); }
+.celeblook-disclaimer {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin: 4px 0 0 0;
+}
+.btn-celeblook-retry {
+  padding: 8px 16px; border-radius: 10px; font-size: 0.85rem;
+  background: transparent; border: 1px solid var(--border-color); color: var(--text-muted);
+  cursor: pointer; transition: var(--transition);
+  margin-top: 12px;
+}
+.btn-celeblook-retry:hover { border-color: var(--primary); color: var(--primary); }
+.celeblook-privacy { font-size: 0.8rem; color: var(--text-muted); margin-top: 12px; }
+.lookbook-divider { text-align: center; font-size: 0.9rem; color: var(--text-muted); margin: 1rem 0; }
 
 .lookbook-grid {
   display: grid;

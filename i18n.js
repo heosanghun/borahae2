@@ -346,10 +346,41 @@
     'footer.shop_link': { ko: '보라해 굿즈샵', en: 'Borahae Shop' },
     'footer.membership_link': { ko: '멤버십', en: 'Membership' },
 
-    // --- Lookbook ---
+    // --- Lookbook (연예인 룩 + 유사 검색) ---
     'lookbook.badge': { ko: 'Lookbook', en: 'Lookbook' },
-    'lookbook.title': { ko: "Borahae Signature Lookbook", en: "Borahae Signature Lookbook" },
-    'lookbook.desc': { ko: '보라해 AI가 제안하는 오늘의 시그니처 코디', en: "Today's signature outfits recommended by Borahae AI" },
+    'lookbook.title': { ko: '연예인 룩', en: 'Celebrity Look' },
+    'lookbook.desc': { ko: '연예인·아이돌 룩 사진을 올리면 AI가 비슷한 옷 검색어로 정리해드려요', en: 'Upload a celebrity or idol look — AI suggests similar item search keywords' },
+    'lookbook.celeblook_upload': { ko: '연예인 룩 사진을 올려주세요', en: 'Upload a celebrity look photo' },
+    'lookbook.celeblook_hint': { ko: '무대·직캠·공항룩 캡처도 OK', en: 'Stage, fancam, or airport look screenshots OK' },
+    'lookbook.celeblook_mood_label': { ko: '이 룩의 무드 (선택)', en: 'Mood of this look (optional)' },
+    'lookbook.mood_concert': { ko: '콘서트 무대', en: 'Concert stage' },
+    'lookbook.mood_airport': { ko: '공항·여행', en: 'Airport · travel' },
+    'lookbook.mood_daily': { ko: '일상·데일리', en: 'Daily · casual' },
+    'lookbook.mood_fanmeeting': { ko: '팬미팅', en: 'Fan meeting' },
+    'lookbook.mood_studio': { ko: '스튜디오·촬영', en: 'Studio · shoot' },
+    'lookbook.celeblook_summary_title': { ko: '분석 결과 요약', en: 'Analysis summary' },
+    'lookbook.celeblook_style_tags': { ko: '스타일 태그', en: 'Style tags' },
+    'lookbook.celeblook_copy_all': { ko: '전체 복사', en: 'Copy all' },
+    'lookbook.celeblook_copy_toast': { ko: '복사됐어요 💜', en: 'Copied 💜' },
+    'lookbook.celeblook_disclaimer1': { ko: '링크는 검색 결과로 이동해요. 동일 제품이 아닐 수 있어요.', en: 'Links go to search results. Items may not be identical.' },
+    'lookbook.celeblook_disclaimer2': { ko: '브랜드/정확한 모델명은 확실한 경우에만 표시해요. 일부 정보는 추정입니다.', en: 'Brand/exact model names shown only when confirmed. Some info is estimated.' },
+    'lookbook.celeblook_analyzing': { ko: '룩을 분석하고 있어요...', en: 'Analyzing the look...' },
+    'lookbook.celeblook_retry': { ko: '다른 사진으로 다시', en: 'Try another photo' },
+    'lookbook.celeblook_privacy': { ko: '이미지는 저장하지 않아요. 결과(검색어)만 표시돼요.', en: 'We do not store images. Only search keywords are shown.' },
+    'lookbook.search_naver': { ko: '네이버 쇼핑', en: 'Naver Shopping' },
+    'lookbook.search_naver_btn': { ko: '네이버쇼핑으로 검색', en: 'Search on Naver Shopping' },
+    'lookbook.search_musinsa': { ko: '무신사', en: 'Musinsa' },
+    'lookbook.search_musinsa_prep': { ko: '무신사 (서비스 준비중)', en: 'Musinsa (Coming soon)' },
+    'lookbook.search_coupang': { ko: '쿠팡', en: 'Coupang' },
+    'lookbook.search_keywords': { ko: '검색어', en: 'Search keywords' },
+    'lookbook.detail_view': { ko: '상세 보기', en: 'View details' },
+    'lookbook.re_search': { ko: '재검색', en: 'Re-search' },
+    'lookbook.recommended_products': { ko: '추천 상품', en: 'Recommended products' },
+    'lookbook.no_products': { ko: '추천 상품이 없어요', en: 'No recommended products' },
+    'lookbook.go_to_search': { ko: '검색 결과 보기', en: 'View search results' },
+    'lookbook.go_to_link': { ko: '바로가기', en: 'Go to' },
+    'lookbook.products_count': { ko: '개', en: ' items' },
+    'lookbook.signature_label': { ko: '참고용 시그니처 룩', en: 'Signature looks (reference)' },
     'lookbook.concert': { ko: '보라빛 콘서트 룩', en: 'Purple Concert Look' },
     'lookbook.concert_desc': { ko: '무대 위 조명 아래 가장 나답게 빛나는 보라빛 스타일', en: 'A purple style that shines brightest on you under stage lights' },
     'lookbook.fanmeeting': { ko: '매직샵 팬미팅 스타일', en: 'Magic Shop Fan Meeting' },
@@ -586,5 +617,6 @@
     setLang: setLang,
     getLang: function() { return currentLang; }
   };
+  window.__t = t;
 
 })();

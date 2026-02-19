@@ -13,7 +13,10 @@ const outDir = process.argv[2] || ''; // e.g. 'dist' → config.js를 dist/confi
 const outPath = outDir
   ? path.join(root, outDir, 'config.js')
   : path.join(root, 'config.js');
-const envPath = path.join(root, '.env');
+// .env 위치: 프로젝트 루트 우선, 없으면 image/.env 확인
+const envPath = fs.existsSync(path.join(root, '.env'))
+  ? path.join(root, '.env')
+  : path.join(root, 'image', '.env');
 
 function parseEnv(content) {
   const env = {};

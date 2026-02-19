@@ -1324,14 +1324,62 @@
     </div>
   </section>
 
-  <!-- Lookbook Section -->
-  <section class="lookbook">
+  <!-- Lookbook Section: 연예인 룩 + 유사 옷 검색 (참고: kpop.fit) -->
+  <section class="lookbook" id="lookbook-section">
     <div class="container">
       <div class="section-header">
         <span class="section-badge" data-i18n="lookbook.badge">Lookbook</span>
-        <h2 class="section-title" data-i18n="lookbook.title">K-pop 감성 Today's Pick</h2>
-        <p class="section-description" data-i18n="lookbook.desc">보라해 AI가 추천하는 오늘의 K-pop 코디</p>
+        <h2 class="section-title" data-i18n="lookbook.title">연예인 룩</h2>
+        <p class="section-description" data-i18n="lookbook.desc">연예인·아이돌 룩 사진을 올리면 AI가 비슷한 옷 검색어로 정리해드려요</p>
       </div>
+
+      <!-- 연예인 룩 업로드 + 유사 검색 (상단 블록, 보라해 컨셉) -->
+      <div class="celeblook-block">
+        <div class="celeblook-upload-wrap" id="celeblook-upload-wrap">
+          <p class="celeblook-mood-label" data-i18n="lookbook.celeblook_mood_label">이 룩의 무드 (선택)</p>
+          <div class="celeblook-mood-chips" id="celeblook-mood-chips" role="group" aria-label="룩 무드 선택">
+            <button type="button" class="celeblook-mood-chip" data-mood="concert" data-i18n="lookbook.mood_concert">콘서트 무대</button>
+            <button type="button" class="celeblook-mood-chip" data-mood="airport" data-i18n="lookbook.mood_airport">공항·여행</button>
+            <button type="button" class="celeblook-mood-chip" data-mood="daily" data-i18n="lookbook.mood_daily">일상·데일리</button>
+            <button type="button" class="celeblook-mood-chip" data-mood="fanmeeting" data-i18n="lookbook.mood_fanmeeting">팬미팅</button>
+            <button type="button" class="celeblook-mood-chip" data-mood="studio" data-i18n="lookbook.mood_studio">스튜디오·촬영</button>
+          </div>
+          <input type="file" id="celeblook-input" accept="image/*" hidden aria-label="연예인 룩 사진 선택">
+          <div class="celeblook-dropzone" id="celeblook-dropzone">
+            <div class="celeblook-dropzone-inner">
+              <span class="celeblook-icon">📷</span>
+              <p class="celeblook-upload-text" data-i18n="lookbook.celeblook_upload">연예인 룩 사진을 올려주세요</p>
+              <p class="celeblook-upload-hint" data-i18n="lookbook.celeblook_hint">무대·직캠·공항룩 캡처도 OK</p>
+            </div>
+          </div>
+        </div>
+        <div class="celeblook-loading" id="celeblook-loading" style="display:none;">
+          <div class="loading-spinner"></div>
+          <p data-i18n="lookbook.celeblook_analyzing">룩을 분석하고 있어요...</p>
+        </div>
+        <div class="celeblook-result" id="celeblook-result" style="display:none;">
+          <div class="celeblook-result-preview" id="celeblook-result-preview"></div>
+          <div class="celeblook-summary-wrap">
+            <h4 class="celeblook-summary-title" data-i18n="lookbook.celeblook_summary_title">분석 결과 요약</h4>
+            <p class="celeblook-summary-text" id="celeblook-summary-text"></p>
+          </div>
+          <div class="celeblook-style-tags-wrap">
+            <span class="celeblook-style-tags-label" data-i18n="lookbook.celeblook_style_tags">스타일 태그</span>
+            <div class="celeblook-style-tags" id="celeblook-style-tags"></div>
+          </div>
+          <div class="celeblook-copy-row">
+            <button type="button" class="btn-celeblook-copy" id="celeblook-copy-all" data-i18n="lookbook.celeblook_copy_all">전체 복사</button>
+            <span class="celeblook-copy-toast" id="celeblook-copy-toast" aria-live="polite" data-i18n="lookbook.celeblook_copy_toast">복사됐어요 💜</span>
+          </div>
+          <div class="celeblook-item-cards" id="celeblook-item-cards"></div>
+          <p class="celeblook-disclaimer" data-i18n="lookbook.celeblook_disclaimer1">링크는 검색 결과로 이동해요. 동일 제품이 아닐 수 있어요.</p>
+          <p class="celeblook-disclaimer" data-i18n="lookbook.celeblook_disclaimer2">브랜드/정확한 모델명은 확실한 경우에만 표시해요. 일부 정보는 추정입니다.</p>
+          <button type="button" class="btn-celeblook-retry" id="celeblook-retry" data-i18n="lookbook.celeblook_retry">다른 사진으로 다시</button>
+        </div>
+        <p class="celeblook-privacy" data-i18n="lookbook.celeblook_privacy">이미지는 저장하지 않아요. 결과(검색어)만 표시돼요.</p>
+      </div>
+
+      <p class="lookbook-divider" data-i18n="lookbook.signature_label">참고용 시그니처 룩</p>
       <div class="lookbook-grid">
         <div class="look-card look-large">
           <div class="look-image look-1">

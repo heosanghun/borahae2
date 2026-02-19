@@ -944,6 +944,362 @@
   });
 
   // ========================================
+  // 연예인 룩 → 유사 옷 검색 (Lookbook 상단, 참고: kpop.fit)
+  // ========================================
+  function initCeleblook() {
+    var celeblookInput = document.getElementById('celeblook-input');
+    var celeblookMoodChips = document.getElementById('celeblook-mood-chips');
+    var celeblookDropzone = document.getElementById('celeblook-dropzone');
+    var celeblookUploadWrap = document.getElementById('celeblook-upload-wrap');
+    var celeblookLoading = document.getElementById('celeblook-loading');
+    var celeblookResult = document.getElementById('celeblook-result');
+    var celeblookResultPreview = document.getElementById('celeblook-result-preview');
+    var celeblookSummaryText = document.getElementById('celeblook-summary-text');
+    var celeblookStyleTags = document.getElementById('celeblook-style-tags');
+    var celeblookItemCards = document.getElementById('celeblook-item-cards');
+    var celeblookCopyAll = document.getElementById('celeblook-copy-all');
+    var celeblookRetry = document.getElementById('celeblook-retry');
+    if (!celeblookDropzone && !celeblookInput) return;
+
+    var OUTFIT_PROMPT_BASE = '이 사진에 나온 옷차림(룩)을 분석해주세요. '
+      + '1) 한 문장 요약(summary), 2) 스타일 태그 2~4개(styleTags), 3) 쇼핑 검색용 **한국어** 키워드(형태·소재·디테일 중심, 브랜드/모델명 제외)를 추출해주세요. '
+      + '아래 JSON 형식으로만 답하고 다른 설명은 하지 마세요. 보이지 않는 항목은 빈 문자열 "" 또는 빈 배열 []로 두세요.\n'
+      + '{"summary":"한 문장 요약","styleTags":["캐주얼","스트릿"],"상의":"키워드","하의":"키워드","신발":"키워드","가방":"키워드","액세서리":"키워드"}';
+
+    function showCeleblookState(which) {
+      if (celeblookUploadWrap) celeblookUploadWrap.style.display = which === 'upload' ? 'block' : 'none';
+      if (celeblookLoading) celeblookLoading.style.display = which === 'loading' ? 'block' : 'none';
+      if (celeblookResult) celeblookResult.style.display = which === 'result' ? 'block' : 'none';
+    }
+
+    function parseOutfitJson(text) {
+      var keys = ['상의', '하의', '신발', '가방', '액세서리'];
+      var result = { summary: '', styleTags: [] };
+      keys.forEach(function (k) { result[k] = ''; });
+
+      try {
+        var jsonStr = text.replace(/```json?\s*|\s*```/g, '').trim();
+        var parsed = JSON.parse(jsonStr);
+        if (parsed.summary != null) result.summary = typeof parsed.summary === 'string' ? parsed.summary.trim() : '';
+        if (Array.isArray(parsed.styleTags)) result.styleTags = parsed.styleTags.filter(function (t) { return t && String(t).trim(); }).map(function (t) { return String(t).trim(); });
+        keys.forEach(function (k) { result[k] = (parsed[k] && String(parsed[k]).trim()) ? String(parsed[k]).trim() : ''; });
+        return result;
+      } catch (e) {
+        keys.forEach(function (key) {
+          var re = new RegExp('"' + key + '"\\s*:\\s*"([^"]*)"');
+          var m = text.match(re);
+          result[key] = (m && m[1]) ? m[1].trim() : '';
+        });
+        var summaryMatch = text.match(/"summary"\s*:\s*"([^"]*)"/);
+        if (summaryMatch) result.summary = summaryMatch[1].trim();
+        var tagsMatch = text.match(/"styleTags"\s*:\s*\[([^\]]*)\]/);
+        if (tagsMatch) result.styleTags = (tagsMatch[1].match(/"([^"]+)"/g) || []).map(function (s) { return s.replace(/^"|"$/g, ''); });
+        return result;
+      }
+    }
+
+    function buildSearchQuery(obj) {
+      var parts = [];
+      ['상의', '하의', '신발', '가방', '액세서리'].forEach(function (k) {
+        if (obj[k] && obj[k].trim()) parts.push(obj[k].trim());
+      });
+      return parts.join(' ').trim() || '패션 코디';
+    }
+
+    function allKeywordText(obj) {
+      var parts = [];
+      ['상의', '하의', '신발', '가방', '액세서리'].forEach(function (k) {
+        if (obj[k] && obj[k].trim()) parts.push(obj[k].trim());
+      });
+      return parts.join(' ');
+    }
+
+    var lastCeleblookParsed = null;
+
+    function renderSummary(summary) {
+      if (celeblookSummaryText) celeblookSummaryText.textContent = summary || '';
+    }
+
+    function renderStyleTags(tags) {
+      if (!celeblookStyleTags) return;
+      celeblookStyleTags.innerHTML = (Array.isArray(tags) && tags.length) ? tags.map(function (t) { return '<span class="celeblook-tag-chip">' + t + '</span>'; }).join('') : '';
+    }
+
+    function parseKeywords(str) {
+      if (!str || !str.trim()) return [];
+      return str.split(/[,，\s]+/).map(function (s) { return s.trim(); }).filter(Boolean);
+    }
+
+    function getNaverSearchUrl(query) {
+      return 'https://search.shopping.naver.com/search/all?query=' + encodeURIComponent(query);
+    }
+    function getMusinsaSearchUrl(query) {
+      return 'https://www.musinsa.com/search/musinsa/integration?q=' + encodeURIComponent(query);
+    }
+    function getCoupangSearchUrl(query) {
+      return 'https://www.coupang.com/np/search?q=' + encodeURIComponent(query);
+    }
+
+    /* 카테고리별 5개씩 다른 이미지 (원래 방식). 단, 민소매/데님 2곳만 제목에 맞게 교체 */
+    var CATEGORY_IMAGES = {
+      '상의': [
+        'https://images.unsplash.com/photo-1562157873-818bc0726f68?w=80&h=80&fit=crop',
+        'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=80&h=80&fit=crop',
+        'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=80&h=80&fit=crop',
+        'https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=80&h=80&fit=crop',
+        'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=80&h=80&fit=crop'
+      ],
+      '하의': [
+        'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=80&h=80&fit=crop',
+        'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=80&h=80&fit=crop',
+        'https://images.unsplash.com/photo-1552902865-b72c031ac5ea?w=80&h=80&fit=crop',
+        'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=80&h=80&fit=crop',
+        'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=80&h=80&fit=crop'
+      ],
+      '신발': [
+        'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=80&h=80&fit=crop',
+        'https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?w=80&h=80&fit=crop',
+        'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=80&h=80&fit=crop',
+        'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=80&h=80&fit=crop',
+        'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=80&h=80&fit=crop'
+      ],
+      '가방': [
+        'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=80&h=80&fit=crop',
+        'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=80&h=80&fit=crop',
+        'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=80&h=80&fit=crop',
+        'https://images.unsplash.com/photo-1591561954557-26941169b49e?w=80&h=80&fit=crop',
+        'https://images.unsplash.com/photo-1544816155-12df9643f363?w=80&h=80&fit=crop'
+      ],
+      '액세서리': [
+        'https://images.unsplash.com/photo-1592286927505-d9f4c8a2b4c0?w=80&h=80&fit=crop',
+        'https://images.unsplash.com/photo-1611652022419-a9419f74343a?w=80&h=80&fit=crop',
+        'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=80&h=80&fit=crop',
+        'https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=80&h=80&fit=crop',
+        'https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=80&h=80&fit=crop'
+      ]
+    };
+    var FIX_민소매 = 'https://images.unsplash.com/photo-1562157873-818bc0726f68?w=80&h=80&fit=crop';
+    var FIX_데님 = 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=80&h=80&fit=crop';
+
+    function buildProductPreviewCards(keywords, naverUrl, t, esc, category) {
+      var samples = [
+        { name: keywords + ' 여성 데일리 캐주얼', price: '20,000원~', store: '네이버' },
+        { name: keywords + ' 통넓은 실루엣 여름', price: '35,000원~', store: '스마트스토어' },
+        { name: keywords + ' 루즈핏 편안한', price: '25,000원~', store: '네이버' },
+        { name: keywords + ' 베이직 데일리룩', price: '29,000원~', store: '스마트스토어' },
+        { name: keywords + ' 시즌 추천 아이템', price: '19,000원~', store: '네이버' }
+      ];
+      var imgs = CATEGORY_IMAGES[category] || CATEGORY_IMAGES['상의'];
+      return samples.map(function (s, i) {
+        var imgSrc = imgs[i % imgs.length] || imgs[0];
+        if (category === '상의' && /민소매|나시|탱크/i.test(keywords) && i === 1) imgSrc = FIX_민소매;
+        else if (category === '하의' && /데님|청바지|진/i.test(keywords) && i === 0) imgSrc = FIX_데님;
+        return '<a href="' + esc(naverUrl) + '" target="_blank" rel="noopener noreferrer" class="celeblook-product-card">' +
+          '<div class="celeblook-product-thumb-wrap">' +
+            '<img src="' + esc(imgSrc) + '" alt="" class="celeblook-product-thumb-img" loading="lazy" onerror="this.onerror=null;this.style.display=\'none\';var f=this.nextElementSibling;if(f)f.style.display=\'block\';">' +
+            '<div class="celeblook-product-thumb celeblook-product-thumb-fallback" style="display:none;"></div>' +
+          '</div>' +
+          '<div class="celeblook-product-info">' +
+            '<div class="celeblook-product-name">' + esc(s.name) + '</div>' +
+            '<div class="celeblook-product-price">' + esc(s.price) + '</div>' +
+            '<div class="celeblook-product-store">' + esc(s.store) + '</div>' +
+          '</div>' +
+          '<span class="btn-celeblook-goto-link">' + t('lookbook.go_to_link') + '</span>' +
+        '</a>';
+      }).join('');
+    }
+
+    function renderItemCards(obj) {
+      if (!celeblookItemCards) return;
+      var labels = { '상의': '상의', '하의': '하의', '신발': '신발', '가방': '가방', '액세서리': '액세서리' };
+      var t = function (k) {
+        var fn = (window.__simsI18n && window.__simsI18n.t) || (typeof __t === 'function' ? __t : null);
+        return fn ? fn(k) : k;
+      };
+      var cards = [];
+      ['상의', '하의', '신발', '가방', '액세서리'].forEach(function (key) {
+        var val = (obj[key] && obj[key].trim()) ? obj[key].trim() : '';
+        if (!val) return;
+        var tags = parseKeywords(val);
+        var itemName = tags[0] || val;
+        var naverUrl = getNaverSearchUrl(val);
+        var musinsaUrl = getMusinsaSearchUrl(val);
+        var coupangUrl = getCoupangSearchUrl(val);
+        var cardId = 'celeblook-card-' + key.replace(/\s/g, '-');
+        var esc = function (s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); };
+        var tagsHtml = tags.slice(0, 6).map(function (tag) {
+          return '<a href="' + esc(getNaverSearchUrl(tag)) + '" target="_blank" rel="noopener noreferrer" class="celeblook-search-tag">' + esc(tag) + '</a>';
+        }).join('');
+        cards.push(
+          '<div class="celeblook-item-card" id="' + cardId + '">' +
+            '<div class="celeblook-card-header">' +
+              '<span class="celeblook-card-category">' + (labels[key] || key) + '</span>' +
+              '<h4 class="celeblook-card-item-name">' + esc(itemName) + '</h4>' +
+            '</div>' +
+            '<div class="celeblook-keywords-section">' +
+              '<span class="celeblook-keywords-label">' + t('lookbook.search_keywords') + '</span>' +
+              '<div class="celeblook-search-tags">' + tagsHtml + '</div>' +
+              '<button type="button" class="btn-celeblook-copy-inline" data-category="' + key + '">' + t('lookbook.celeblook_copy_all') + '</button>' +
+            '</div>' +
+            '<div class="celeblook-card-actions">' +
+              '<a href="' + naverUrl + '" target="_blank" rel="noopener noreferrer" class="btn-celeblook-primary">' + t('lookbook.search_naver_btn') + '</a>' +
+              '<a href="' + musinsaUrl + '" target="_blank" rel="noopener noreferrer" class="btn-celeblook-secondary">' + t('lookbook.search_musinsa') + '</a>' +
+              '<a href="' + coupangUrl + '" target="_blank" rel="noopener noreferrer" class="btn-celeblook-secondary">' + t('lookbook.search_coupang') + '</a>' +
+            '</div>' +
+            '<details class="celeblook-detail-section">' +
+              '<summary>' + t('lookbook.detail_view') + '</summary>' +
+              '<div class="celeblook-detail-content">' +
+                '<span class="celeblook-detail-text">' + esc(val) + '</span>' +
+                '<a href="' + naverUrl + '" target="_blank" rel="noopener noreferrer" class="btn-celeblook-research">' + t('lookbook.re_search') + '</a>' +
+              '</div>' +
+            '</details>' +
+            '<div class="celeblook-recommended-section">' +
+              '<div class="celeblook-recommended-header">' +
+                '<span class="celeblook-recommended-title">' + t('lookbook.recommended_products') + '</span>' +
+                '<span class="celeblook-recommended-count">5' + t('lookbook.products_count') + '</span>' +
+              '</div>' +
+              '<div class="celeblook-product-preview">' +
+                buildProductPreviewCards(val, naverUrl, t, esc, key) +
+              '</div>' +
+              '<a href="' + naverUrl + '" target="_blank" rel="noopener noreferrer" class="btn-celeblook-goto">' + t('lookbook.go_to_search') + '</a>' +
+            '</div>' +
+          '</div>'
+        );
+      });
+      celeblookItemCards.innerHTML = cards.join('');
+      celeblookItemCards.querySelectorAll('.btn-celeblook-copy-inline').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var cat = btn.getAttribute('data-category') || '';
+          var text = (lastCeleblookParsed && lastCeleblookParsed[cat]) ? lastCeleblookParsed[cat].trim() : '';
+          if (!text) return;
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(function () { showCeleblookToast(); }).catch(function () { fallbackCopy(text); });
+          } else { fallbackCopy(text); }
+        });
+      });
+    }
+
+    var MOOD_HINTS = {
+      concert: '콘서트 무대, 무대 위 글램/스테이지 룩',
+      airport: '공항 패션, 여행/출국 룩',
+      daily: '일상 캐주얼, 데일리 룩',
+      fanmeeting: '팬미팅, 매직샵 스타일',
+      studio: '스튜디오 촬영, 화보/스타일링 룩'
+    };
+
+    function getSelectedMoodHint() {
+      if (!celeblookMoodChips) return '';
+      var sel = celeblookMoodChips.querySelector('.celeblook-mood-chip.active');
+      return sel && sel.dataset.mood ? (MOOD_HINTS[sel.dataset.mood] || '') : '';
+    }
+
+    function runCeleblookAnalysis(imageDataUrl) {
+      if (!imageDataUrl) return;
+      if (!GEMINI_API_KEY) {
+        showCeleblookState('upload');
+        alert('Gemini API 키가 없으면 분석할 수 없어요. 설정에서 API 키를 확인해주세요.');
+        return;
+      }
+      var hint = getSelectedMoodHint();
+      var prompt = OUTFIT_PROMPT_BASE;
+      if (hint) prompt = '참고 무드(상황): ' + hint + '\n\n' + prompt;
+
+      showCeleblookState('loading');
+      if (celeblookResultPreview) celeblookResultPreview.innerHTML = '<img src="' + imageDataUrl + '" alt="업로드한 룩">';
+
+      callGeminiImageToText(imageDataUrl, prompt, 1024).then(function (text) {
+        var obj = parseOutfitJson(text);
+        lastCeleblookParsed = obj;
+        renderSummary(obj.summary);
+        renderStyleTags(obj.styleTags);
+        renderItemCards(obj);
+        showCeleblookState('result');
+      }).catch(function (err) {
+        console.error('Celeblook analysis error:', err);
+        showCeleblookState('upload');
+        alert(typeof __t === 'function' ? __t('lookbook.celeblook_retry') : '분석에 실패했어요. 다시 시도해주세요.');
+      });
+    }
+
+    function onCeleblookFile(file) {
+      if (!file) return;
+      var isImage = file.type && file.type.startsWith('image/');
+      if (!isImage) {
+        alert('이미지 파일만 올려주세요. (JPG, PNG, WEBP 등)');
+        return;
+      }
+      showCeleblookState('loading');
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        runCeleblookAnalysis(e.target.result);
+      };
+      reader.onerror = function () {
+        showCeleblookState('upload');
+        alert('파일을 읽는 중 오류가 났어요. 다시 시도해주세요.');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    if (celeblookMoodChips) {
+      celeblookMoodChips.querySelectorAll('.celeblook-mood-chip').forEach(function (chip) {
+        chip.addEventListener('click', function () {
+          var wasActive = chip.classList.contains('active');
+          celeblookMoodChips.querySelectorAll('.celeblook-mood-chip').forEach(function (c) { c.classList.remove('active'); });
+          if (!wasActive) chip.classList.add('active');
+        });
+      });
+    }
+    if (celeblookDropzone) {
+      celeblookDropzone.addEventListener('click', function () { celeblookInput && celeblookInput.click(); });
+      celeblookDropzone.addEventListener('dragover', function (e) { e.preventDefault(); e.stopPropagation(); celeblookDropzone.classList.add('dragover'); });
+      celeblookDropzone.addEventListener('dragleave', function () { celeblookDropzone.classList.remove('dragover'); });
+      celeblookDropzone.addEventListener('drop', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        celeblookDropzone.classList.remove('dragover');
+        var f = e.dataTransfer && e.dataTransfer.files[0];
+        onCeleblookFile(f);
+      });
+    }
+    if (celeblookCopyAll) {
+      celeblookCopyAll.addEventListener('click', function () {
+        var text = lastCeleblookParsed ? allKeywordText(lastCeleblookParsed) : '';
+        if (!text) return;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function () { showCeleblookToast(); }).catch(function () { fallbackCopy(text); });
+        } else { fallbackCopy(text); }
+      });
+    }
+    function showCeleblookToast() {
+      var toast = document.getElementById('celeblook-copy-toast');
+      if (toast) {
+        toast.classList.add('visible');
+        setTimeout(function () { toast.classList.remove('visible'); }, 2000);
+      } else {
+        var msg = typeof __t === 'function' ? __t('lookbook.celeblook_copy_toast') : '복사됐어요 💜';
+        alert(msg);
+      }
+    }
+    function fallbackCopy(text) {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); showCeleblookToast(); } catch (e) {}
+      document.body.removeChild(ta);
+    }
+    if (celeblookInput) celeblookInput.addEventListener('change', function (e) { var f = e.target.files[0]; onCeleblookFile(f); e.target.value = ''; });
+    if (celeblookRetry) celeblookRetry.addEventListener('click', function () { showCeleblookState('upload'); });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCeleblook);
+  } else {
+    initCeleblook();
+  }
+
+  // ========================================
   // Info Modal (Footer Links)
   // ========================================
   const infoModalData = {
