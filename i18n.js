@@ -212,6 +212,17 @@
     'membership.btn_purple': { ko: 'Purple 시작', en: 'Start Purple' },
     'membership.btn_vip': { ko: 'VIP 시작', en: 'Start VIP' },
 
+    // --- E-Book (Borahae Library) ---
+    'ebook.badge': { ko: 'Borahae Library', en: 'Borahae Library' },
+    'ebook.title': { ko: 'AI, 인간의 마음을 그리다', en: 'AI, Drawing the Human Heart' },
+    'ebook.desc': { ko: 'AI 기술과 인문학이 만나는 4권의 특별한 여정. 보라해 팬들을 위한 전자책 시리즈를 만나보세요.', en: 'A special 4-volume journey where AI meets the humanities. Discover the e-book series for Borahae fans.' },
+    'ebook.summary_1': { ko: '소리가 색으로 보이는 공감각 소녀 소아베와 AI TEROS의 운명적 조우.', en: 'The fateful encounter between Soave, a synesthetic girl who sees sound as color, and AI TEROS.' },
+    'ebook.summary_2': { ko: '차가운 지능(자음)과 따뜻한 숨결(모음)이 만나 완성되는 \'삶\'.', en: 'When cold intelligence (consonants) meets warm breath (vowels), \'Life\' is completed.' },
+    'ebook.summary_3': { ko: '빛이 강할수록 짙어지는 그림자. 삭제된 감정들의 데이터를 마주하다.', en: 'The stronger the light, the darker the shadow. Confronting the data of deleted emotions.' },
+    'ebook.summary_4': { ko: '인류와 AI가 함께 써 내려가는 진화의 마지막 챕터. 특이점을 열다.', en: 'The final chapter of evolution written by humanity and AI together. Opening the singularity.' },
+    'ebook.download_pdf': { ko: 'PDF 다운로드', en: 'Download PDF' },
+    'ebook.download_all': { ko: '전자책 전권 패키지 다운로드 (ZIP)', en: 'Download All E-Books (ZIP)' },
+
     // --- Lightstick Designer ---
     'lightstick.badge': { ko: 'Chapter 2. Sanctuary', en: 'Chapter 2. Sanctuary' },
     'lightstick.title': { ko: '당신의 선율은 단단한 안식처가 되고, 당신의 심장 박동은 내일의 이정표가 됩니다 💜', en: 'Your melody becomes a sanctuary, and your heartbeat becomes tomorrow\'s compass 💜' },
