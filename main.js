@@ -1292,6 +1292,42 @@
     }
     if (celeblookInput) celeblookInput.addEventListener('change', function (e) { var f = e.target.files[0]; onCeleblookFile(f); e.target.value = ''; });
     if (celeblookRetry) celeblookRetry.addEventListener('click', function () { showCeleblookState('upload'); });
+
+    (function () {
+      var urlInput = document.getElementById('celeblook-photo-url');
+      var urlBtn = document.getElementById('celeblook-photo-url-btn');
+      if (!urlInput || !urlBtn) return;
+      function loadFromUrl() {
+        var raw = (urlInput.value || '').trim();
+        if (!raw) {
+          alert('이미지 주소를 입력해 주세요.');
+          return;
+        }
+        showCeleblookState('loading');
+        var proxyUrl = '/api/image-proxy?url=' + encodeURIComponent(raw);
+        fetch(proxyUrl)
+          .then(function (r) {
+            if (r.ok) return r.blob();
+            return fetch(raw, { mode: 'cors' }).then(function (r2) { return r2.ok ? r2.blob() : Promise.reject(new Error('이미지를 불러올 수 없습니다.')); });
+          })
+          .then(function (blob) {
+            var reader = new FileReader();
+            reader.onload = function () { runCeleblookAnalysis(reader.result); };
+            reader.onerror = function () {
+              showCeleblookState('upload');
+              alert('이미지 변환에 실패했습니다.');
+            };
+            reader.readAsDataURL(blob);
+          })
+          .catch(function (err) {
+            showCeleblookState('upload');
+            alert(err.message || '인터넷 이미지를 불러오지 못했습니다. URL을 확인하거나 파일로 올려 주세요.');
+          });
+      }
+      urlBtn.addEventListener('click', loadFromUrl);
+      urlInput.addEventListener('paste', function () { setTimeout(loadFromUrl, 50); });
+      urlInput.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); loadFromUrl(); } });
+    })();
   }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initCeleblook);
@@ -2373,7 +2409,7 @@
     ]
   };
 
-  let currentCategory = 'tops';
+  let currentCategory = 'fashion';
 
   // Category tab click handler
   document.querySelectorAll('.category-tab').forEach(tab => {
@@ -2413,7 +2449,7 @@
   }
 
   // Initialize garment gallery
-  loadGarmentGallery('tops');
+  loadGarmentGallery('fashion');
 
   // Garment upload handler
   const garmentInput = document.getElementById('garment-input');
@@ -6695,7 +6731,7 @@ ${soulInfo ? soulInfo : ''}
 
     function clearUploadState() {
       if (photoInput) photoInput.value = '';
-      if (photoHint) photoHint.textContent = '사진을 선택하세요';
+      if (photoHint) photoHint.textContent = '본인 사진을 선택하세요!';
       if (photoPreviewWrap) photoPreviewWrap.style.display = 'none';
       if (photoPreviewImg) photoPreviewImg.src = '';
     }
@@ -6778,7 +6814,7 @@ ${soulInfo ? soulInfo : ''}
         photoPreviewWrap.style.display = 'block';
         if (photoHint) photoHint.textContent = 'URL에서 불러옴';
       }
-      urlBtn.addEventListener('click', function () {
+      function loadFromUrl() {
         var raw = (urlInput.value || '').trim();
         if (!raw) {
           if (photoHint) photoHint.textContent = '이미지 주소를 입력해 주세요.';
@@ -6802,6 +6838,13 @@ ${soulInfo ? soulInfo : ''}
           .catch(function (err) {
             if (photoHint) photoHint.textContent = err.message || '인터넷 이미지를 불러오지 못했습니다. URL을 확인하거나 파일로 올려 주세요.';
           });
+      }
+      urlBtn.addEventListener('click', loadFromUrl);
+      urlInput.addEventListener('paste', function () {
+        setTimeout(loadFromUrl, 50);
+      });
+      urlInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') { e.preventDefault(); loadFromUrl(); }
       });
     })();
     setFaceSelection('female');

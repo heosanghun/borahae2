@@ -1339,6 +1339,11 @@ section {
   background: color-mix(in srgb, var(--primary) 6%, var(--bg-secondary));
   text-align: center;
 }
+.oneclick-dropzone {
+  position: relative;
+  min-height: 36px;
+  cursor: pointer;
+}
 .oneclick-file {
   position: absolute;
   inset: 0;
@@ -1355,8 +1360,10 @@ section {
 .oneclick-photo-url-wrap {
   display: flex;
   gap: 8px;
-  margin-top: 10px;
+  margin-top: 12px;
   align-items: center;
+  position: relative;
+  z-index: 1;
 }
 .oneclick-photo-url-input {
   flex: 1;
@@ -4011,6 +4018,39 @@ section {
 .celeblook-icon { font-size: 2.5rem; display: block; margin-bottom: 8px; }
 .celeblook-upload-text { font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
 .celeblook-upload-hint { font-size: 0.9rem; color: var(--text-muted); }
+.celeblook-url-wrap {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  align-items: center;
+}
+.celeblook-photo-url-input {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 12px;
+  font-size: 0.875rem;
+  border: 1px solid rgba(124, 58, 237, 0.35);
+  border-radius: 8px;
+  background: rgba(124, 58, 237, 0.04);
+  color: var(--text-primary);
+}
+.celeblook-photo-url-input::placeholder {
+  color: var(--text-muted);
+}
+.celeblook-photo-url-btn {
+  flex-shrink: 0;
+  padding: 8px 14px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  background: var(--primary);
+  color: #fff;
+  cursor: pointer;
+}
+.celeblook-photo-url-btn:hover {
+  filter: brightness(1.08);
+}
 .celeblook-loading { text-align: center; padding: 2rem; }
 .celeblook-loading .loading-spinner {
   margin: 0 auto 12px;

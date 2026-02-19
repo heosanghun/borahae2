@@ -281,8 +281,10 @@
           <label for="oneclick-photo" class="oneclick-label">내 사진 업로드</label>
           <p class="oneclick-face-hint">직접 올리면 샘플 대신 내 사진으로 런웨이를 만들 수 있어요. 인터넷 이미지 주소(URL)로도 불러올 수 있어요.</p>
           <div class="oneclick-photo-area">
-            <input type="file" id="oneclick-photo" class="oneclick-file" accept="image/*" aria-label="사진 업로드">
-            <span class="oneclick-photo-hint" id="oneclick-photo-hint">사진을 선택하세요</span>
+            <div class="oneclick-dropzone">
+              <input type="file" id="oneclick-photo" class="oneclick-file" accept="image/*" aria-label="사진 업로드">
+              <span class="oneclick-photo-hint" id="oneclick-photo-hint">본인 사진을 선택하세요!</span>
+            </div>
             <div class="oneclick-photo-url-wrap">
               <input type="url" id="oneclick-photo-url" class="oneclick-photo-url-input" placeholder="이미지 주소(URL) 붙여넣기" aria-label="이미지 URL">
               <button type="button" id="oneclick-photo-url-btn" class="oneclick-photo-url-btn">불러오기</button>
@@ -1351,6 +1353,10 @@
               <p class="celeblook-upload-text" data-i18n="lookbook.celeblook_upload">연예인 룩 사진을 올려주세요</p>
               <p class="celeblook-upload-hint" data-i18n="lookbook.celeblook_hint">무대·직캠·공항룩 캡처도 OK</p>
             </div>
+          </div>
+          <div class="celeblook-url-wrap">
+            <input type="url" id="celeblook-photo-url" class="celeblook-photo-url-input" placeholder="이미지 주소(URL) 붙여넣기" aria-label="이미지 URL">
+            <button type="button" id="celeblook-photo-url-btn" class="celeblook-photo-url-btn">불러오기</button>
           </div>
         </div>
         <div class="celeblook-loading" id="celeblook-loading" style="display:none;">
@@ -2518,11 +2524,11 @@
         <div class="step-content">
           <!-- Category Tabs -->
           <div class="category-tabs">
-            <button type="button" class="category-tab active" data-category="tops">상의</button>
+            <button type="button" class="category-tab active" data-category="fashion">패션</button>
+            <button type="button" class="category-tab" data-category="tops">상의</button>
             <button type="button" class="category-tab" data-category="bottoms">하의</button>
             <button type="button" class="category-tab" data-category="dresses">원피스</button>
             <button type="button" class="category-tab" data-category="outerwear">아우터</button>
-            <button type="button" class="category-tab" data-category="fashion">패션</button>
           </div>
 
           <!-- Garment Gallery -->
