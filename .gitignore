@@ -25,8 +25,8 @@ config.js
 # Dependencies
 node_modules/
 
-# Build outputs (npm run build → dist/)
-# dist/
+# Build outputs (npm run build → dist/) — 배포 시 Cloudflare가 빌드로 생성
+dist/
 build/
 
 # Temporary files

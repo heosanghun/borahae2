@@ -1,5 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="320" height="180" viewBox="0 0 320 180">
-  <defs><linearGradient id="g3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#0f3460"/><stop offset="100%" style="stop-color:#1a1a2e"/></linearGradient></defs>
-  <rect width="320" height="180" fill="url(#g3)"/>
-  <text x="160" y="95" text-anchor="middle" fill="#e94560" font-family="sans-serif" font-size="14" font-weight="bold">광화문 공연장소 3</text>
-</svg>

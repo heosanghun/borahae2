@@ -1,0 +1,12 @@
+﻿# Cursor 인덱싱/미리보기 제외 — 리오픈·메모리 부담 감소 (로딩 속도 무영향)
+dist/
+**/*.mp4
+**/*.webm
+**/*.zip
+**/book/*.pdf
+**/image/**/*.jpeg
+**/image/**/*.jpg
+**/image/**/*.jfif
+**/image/**/*.png
+**/movie/*.mp4
+node_modules/
