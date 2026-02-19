@@ -116,6 +116,16 @@
   // ========================================
   // 이메일로 결과 발송 (로그인 회원 메일 수신)
   // ========================================
+  /** 현재 로그인한 회원의 ID (멤버십 체크용). 없으면 null */
+  function getCurrentUserId() {
+    var sb = getSupabase();
+    if (!sb) return Promise.resolve(null);
+    return sb.auth.getSession().then(function (res) {
+      var user = res.data.session && res.data.session.user ? res.data.session.user : null;
+      return (user && user.id) ? user.id : null;
+    }).catch(function () { return null; });
+  }
+
   /** 현재 로그인한 회원의 이메일. 없으면 null */
   function getCurrentUserEmail() {
     var sb = getSupabase();
@@ -596,6 +606,63 @@
         navLinks.classList.remove('mobile-open');
       });
     });
+  }
+
+  // ========================================
+  // Polar 결제: 멤버십 Purple/VIP 버튼 → Checkout
+  // ========================================
+  document.querySelectorAll('.membership-checkout-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var productId = btn.getAttribute('data-product-id') || 'ab0e92a7-a0bf-4572-9373-514707f58439';
+      btn.disabled = true;
+      btn.textContent = (typeof __t === 'function' ? __t('membership.checkout_loading') : null) || '결제 페이지로 이동 중...';
+      var payload = { productId: productId, successUrl: window.location.origin + '/#membership?checkout=success' };
+      var sb = getSupabase();
+      if (sb) {
+        sb.auth.getSession().then(function (res) {
+          var user = res.data.session && res.data.session.user ? res.data.session.user : null;
+          if (user && user.id) payload.externalCustomerId = user.id;
+          doPolarCheckout(btn, payload);
+        }).catch(function () { doPolarCheckout(btn, payload); });
+      } else {
+        doPolarCheckout(btn, payload);
+      }
+    });
+  });
+  function doPolarCheckout(btn, payload) {
+    fetch('/api/polar-checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+      .then(function (r) {
+        return r.text().then(function (text) {
+          if (r.status === 404) {
+            throw new Error('결제 API를 찾을 수 없습니다. npm run dev 로 로컬 서버를 실행해 주세요.');
+          }
+          try {
+            return JSON.parse(text);
+          } catch (e) {
+            throw new Error(text || '서버 응답을 처리할 수 없습니다.');
+          }
+        });
+      })
+      .then(function (data) {
+        if (data.url) {
+          window.location.href = data.url;
+        } else {
+          alert(data.error && data.error.message ? data.error.message : '결제 세션을 만들 수 없습니다.');
+          btn.disabled = false;
+          var k = btn.getAttribute('data-i18n');
+          btn.textContent = (window.__simsI18n && window.__simsI18n.t && k) ? window.__simsI18n.t(k) : (k === 'membership.btn_vip' ? 'VIP 시작' : 'Purple 시작');
+        }
+      })
+      .catch(function (err) {
+        alert(err.message || '결제 연결에 실패했습니다. POLAR_ACCESS_TOKEN 설정을 확인해 주세요.');
+        btn.disabled = false;
+        var k = btn.getAttribute('data-i18n');
+        btn.textContent = (window.__simsI18n && window.__simsI18n.t && k) ? window.__simsI18n.t(k) : (k === 'membership.btn_vip' ? 'VIP 시작' : 'Purple 시작');
+      });
   }
 
   // ========================================
@@ -2513,6 +2580,20 @@
       return;
     }
 
+    var userId = await getCurrentUserId();
+    if (userId) {
+      try {
+        var statusRes = await fetch('/api/membership-status?userId=' + encodeURIComponent(userId));
+        if (statusRes.ok) {
+          var status = await statusRes.json();
+          if (status.allowed && !status.allowed.style) {
+            alert('AI 스타일링 사용 한도가 초과되었습니다. 멤버십을 업그레이드해 주세요.');
+            return;
+          }
+        }
+      } catch (e) {}
+    }
+
     if (placeholder) {
       placeholder.innerHTML = `
         <div class="loading-spinner"></div>
@@ -2536,6 +2617,9 @@
         generatedImage.src = `data:image/png;base64,${imageBase64}`;
         if (placeholder) placeholder.style.display = 'none';
         if (resultContainer) resultContainer.style.display = 'block';
+        if (userId) {
+          try { await fetch('/api/usage-increment', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId: userId, type: 'style' }) }); } catch (e) {}
+        }
       }
     } catch (error) {
       console.error('Fashion image generation error:', error);
@@ -4875,6 +4959,7 @@ ${soulInfo ? soulInfo : ''}
 
   async function generateChatFashionImage(prompt) {
     if (!prompt) return;
+    var userId = await getCurrentUserId();
     var msgDiv = document.createElement('div');
     msgDiv.className = 'message assistant';
     var time = new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
@@ -4882,17 +4967,26 @@ ${soulInfo ? soulInfo : ''}
     var chatMessages = document.getElementById('chat-messages');
     if (chatMessages) { chatMessages.appendChild(msgDiv); chatMessages.scrollTop = chatMessages.scrollHeight; }
     try {
+      var body = { prompt: prompt, size: '1024x1024', quality: 'standard' };
+      if (userId) body.userId = userId;
       var res = await fetch('/api/image', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: prompt, size: '1024x1024', quality: 'standard' })
+        body: JSON.stringify(body)
       });
       if (!res.ok) {
         var errText = await res.text();
         console.error('DALL-E API error:', res.status, errText);
-        try { var errJson = JSON.parse(errText); errText = (errJson.error && errJson.error.message) || errText; } catch(e) {}
+        var errMsg = errText;
+        try {
+          var errJson = JSON.parse(errText);
+          errMsg = (errJson.error && errJson.error.message) || errText;
+          if (errJson.error && errJson.error.code === 'MEMBERSHIP_LIMIT') {
+            errMsg = 'AI 스타일링 사용 한도가 초과되었습니다. 멤버십을 업그레이드해 주세요.';
+          }
+        } catch (e) {}
         var bubble = msgDiv.querySelector('.message-bubble');
-        bubble.innerHTML = '<p>😢 이미지 생성 실패: ' + errText.slice(0, 200) + '</p>';
+        bubble.innerHTML = '<p>😢 ' + errMsg.slice(0, 200) + '</p>';
         return;
       }
       var data = await res.json();
@@ -6356,6 +6450,20 @@ ${soulInfo ? soulInfo : ''}
 
     // Step 3: Generate
     document.getElementById('ls-generate-btn').addEventListener('click', async function() {
+      var userId = await getCurrentUserId();
+      if (userId) {
+        try {
+          var lsStatusRes = await fetch('/api/membership-status?userId=' + encodeURIComponent(userId));
+          if (lsStatusRes.ok) {
+            var lsStatus = await lsStatusRes.json();
+            if (lsStatus.allowed && !lsStatus.allowed.lightstick) {
+              alert(_t('membership.limit_lightstick', '응원봉 생성 한도가 초과되었습니다. 멤버십을 업그레이드해 주세요.'));
+              return;
+            }
+          }
+        } catch (e) {}
+      }
+
       showLsStep(4);
       document.getElementById('ls-loading').style.display = 'block';
       document.getElementById('ls-result-image-wrap').style.display = 'none';
@@ -6366,6 +6474,9 @@ ${soulInfo ? soulInfo : ''}
       try {
         var imageData = await callGeminiLightstick(designPrompt);
         if (imageData) {
+          if (userId) {
+            try { await fetch('/api/usage-increment', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId: userId, type: 'lightstick' }) }); } catch (e) {}
+          }
           var img = document.getElementById('ls-result-image');
           img.src = 'data:image/png;base64,' + imageData;
           img.style.display = 'block';
@@ -6712,6 +6823,7 @@ ${soulInfo ? soulInfo : ''}
   // 원클릭 런웨이: 샘플 얼굴(여자/남자) + 배경 선택 → 런웨이
   // ========================================
   (function () {
+    var _t = (window.__simsI18n && window.__simsI18n.t) ? window.__simsI18n.t : function (k, d) { return d || k; };
     var runwayBtn = document.getElementById('oneclick-runway-btn');
     var backgroundListEl = document.getElementById('oneclick-background-list');
     var selectedBackground = null;
@@ -6731,7 +6843,7 @@ ${soulInfo ? soulInfo : ''}
 
     function clearUploadState() {
       if (photoInput) photoInput.value = '';
-      if (photoHint) photoHint.textContent = '본인 사진을 선택하세요!';
+      if (photoHint) photoHint.textContent = _t('oneclick.photo_placeholder');
       if (photoPreviewWrap) photoPreviewWrap.style.display = 'none';
       if (photoPreviewImg) photoPreviewImg.src = '';
     }
@@ -6788,7 +6900,7 @@ ${soulInfo ? soulInfo : ''}
       photoInput.addEventListener('change', function () {
         var file = photoInput.files && photoInput.files[0];
         if (file) {
-          photoHint.textContent = '선택됨: ' + file.name;
+          photoHint.textContent = _t('oneclick.photo_selected') + file.name;
           /* 업로드 시에도 기존 성별 선택(여자/남자) 유지 → 영상 생성 시 올바른 프롬프트 사용 */
           var reader = new FileReader();
           reader.onload = function (e) {
@@ -6812,15 +6924,15 @@ ${soulInfo ? soulInfo : ''}
         if (typeof window !== 'undefined') window.__oneclickRunwayFaceDataUrl = selectedFaceDataUrl;
         photoPreviewImg.src = dataUrl;
         photoPreviewWrap.style.display = 'block';
-        if (photoHint) photoHint.textContent = 'URL에서 불러옴';
+        if (photoHint) photoHint.textContent = _t('oneclick.photo_from_url');
       }
       function loadFromUrl() {
         var raw = (urlInput.value || '').trim();
         if (!raw) {
-          if (photoHint) photoHint.textContent = '이미지 주소를 입력해 주세요.';
+          if (photoHint) photoHint.textContent = _t('oneclick.url_required');
           return;
         }
-        if (photoHint) photoHint.textContent = '불러오는 중...';
+        if (photoHint) photoHint.textContent = _t('oneclick.loading');
         var proxyUrl = '/api/image-proxy?url=' + encodeURIComponent(raw);
         fetch(proxyUrl)
           .then(function (r) {
@@ -6831,12 +6943,12 @@ ${soulInfo ? soulInfo : ''}
             var reader = new FileReader();
             reader.onload = function () { setPreviewFromDataUrl(reader.result); };
             reader.onerror = function () {
-              if (photoHint) photoHint.textContent = '이미지 변환에 실패했습니다.';
+              if (photoHint) photoHint.textContent = _t('oneclick.convert_failed');
             };
             reader.readAsDataURL(blob);
           })
           .catch(function (err) {
-            if (photoHint) photoHint.textContent = err.message || '인터넷 이미지를 불러오지 못했습니다. URL을 확인하거나 파일로 올려 주세요.';
+            if (photoHint) photoHint.textContent = err.message || _t('oneclick.url_load_failed');
           });
       }
       urlBtn.addEventListener('click', loadFromUrl);
@@ -6988,11 +7100,11 @@ ${soulInfo ? soulInfo : ''}
     if (runwayBtn) {
       runwayBtn.addEventListener('click', function () {
         if (!selectedFaceDataUrl) {
-          alert('샘플 얼굴(여자 또는 남자) 또는 내 사진을 선택해 주세요.');
+          alert(_t('oneclick.face_required'));
           return;
         }
         if (!selectedBackground) {
-          alert('아래 갤러리에서 원하는 장소(배경)를 선택한 뒤 다시 시도해 주세요.');
+          alert(_t('oneclick.background_required'));
           return;
         }
         if (typeof window !== 'undefined') {
@@ -7002,9 +7114,9 @@ ${soulInfo ? soulInfo : ''}
           };
         }
         runwayBtn.disabled = true;
-        runwayBtn.textContent = '런웨이 생성 중...';
+        runwayBtn.textContent = _t('oneclick.runway_generating');
         var placeName = (selectedBackground && selectedBackground.name) ? selectedBackground.name : '배경';
-        if (runwayResultStatus) runwayResultStatus.textContent = placeName + '에 인물 합성 중...';
+        if (runwayResultStatus) runwayResultStatus.textContent = placeName + _t('oneclick.synthesizing');
         if (runwayResult) runwayResult.style.display = 'block';
         if (runwayResultImageWrap) runwayResultImageWrap.style.display = 'none';
         if (runwayResultVideoWrap) runwayResultVideoWrap.style.display = 'none';
@@ -7019,17 +7131,17 @@ ${soulInfo ? soulInfo : ''}
           .then(function (dataUrl) {
             if (runwayResultImage) runwayResultImage.src = dataUrl;
             if (runwayResultImageWrap) runwayResultImageWrap.style.display = 'block';
-            if (runwayResultStatus) runwayResultStatus.textContent = '합성 이미지가 준비되었어요. 아래에서 영상으로 만들 수 있어요.';
+            if (runwayResultStatus) runwayResultStatus.textContent = _t('oneclick.image_ready');
             if (runwayVideoBtn) runwayVideoBtn.style.display = 'inline-block';
             if (runwaySaveImageBtn) runwaySaveImageBtn.style.display = 'inline-block';
             runwayBtn.disabled = false;
-            runwayBtn.textContent = '런웨이 한 편 만들기';
+            runwayBtn.textContent = _t('oneclick.runway_btn');
             if (runwayResult) runwayResult.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
           })
           .catch(function (err) {
-            if (runwayResultStatus) runwayResultStatus.textContent = '오류: ' + (err.message || '생성 실패');
+            if (runwayResultStatus) runwayResultStatus.textContent = _t('oneclick.error') + (err.message || '생성 실패');
             runwayBtn.disabled = false;
-            runwayBtn.textContent = '런웨이 한 편 만들기';
+            runwayBtn.textContent = _t('oneclick.runway_btn');
           });
       });
     }
@@ -7038,7 +7150,7 @@ ${soulInfo ? soulInfo : ''}
       runwayVideoBtn.addEventListener('click', async function () {
         var imgSrc = runwayResultImage && runwayResultImage.src;
         if (!imgSrc || imgSrc.indexOf('data:image') !== 0) {
-          alert('먼저 런웨이 결과 이미지를 생성한 뒤, 영상으로 만들기를 눌러 주세요.');
+          alert(_t('oneclick.video_need_image'));
           return;
         }
         runwayVideoBtn.disabled = true;
@@ -7054,7 +7166,7 @@ ${soulInfo ? soulInfo : ''}
         }
         var prompt;
         try {
-          runwayResultStatus.textContent = '런웨이 결과 이미지를 분석해 영상 프롬프트를 만들고 있어요...';
+          runwayResultStatus.textContent = _t('oneclick.analyzing');
           prompt = await buildRunwayVideoPromptFromResultImage(imgSrc);
         } catch (e) {
           prompt = null;
@@ -7062,9 +7174,9 @@ ${soulInfo ? soulInfo : ''}
         if (!prompt || prompt.length < 20) {
           var isFemale = faceFemale && faceFemale.getAttribute('aria-pressed') === 'true';
           prompt = isFemale ? RUNWAY_VIDEO_PROMPT_WOMAN : RUNWAY_VIDEO_PROMPT_MAN;
-          if (runwayResultStatus) runwayResultStatus.textContent = '결과 이미지 분석을 사용할 수 없어 기본 프롬프트로 영상 생성 중입니다. 1~2분 걸릴 수 있어요.';
+          if (runwayResultStatus) runwayResultStatus.textContent = _t('oneclick.fallback_prompt');
         } else {
-          if (runwayResultStatus) runwayResultStatus.textContent = '런웨이 결과 이미지를 첫 프레임으로 영상 생성 중입니다. 1~2분 정도 걸릴 수 있어요.';
+          if (runwayResultStatus) runwayResultStatus.textContent = _t('oneclick.video_generating');
         }
         startVeoVideoGenerationWithFirstFrameViaFiles(prompt, imgSrc)
           .then(function (opName) { return pollVeoOperation(opName); })
@@ -7087,16 +7199,16 @@ ${soulInfo ? soulInfo : ''}
               };
             }
             if (runwayResultVideoWrap) runwayResultVideoWrap.style.display = 'block';
-            runwayResultStatus.textContent = '영상이 준비되었어요. 재생 버튼을 눌러 보세요.';
+            runwayResultStatus.textContent = _t('oneclick.video_ready');
             runwayVideoBtn.disabled = false;
-            runwayVideoBtn.textContent = '다시 만들기';
+            runwayVideoBtn.textContent = _t('oneclick.video_remake');
             if (runwaySaveVideoBtn) runwaySaveVideoBtn.style.display = 'inline-block';
           })
           .catch(function (err) {
             hideVideoGeneratingToast();
             if (runwayVideoLoading) runwayVideoLoading.style.display = 'none';
             if (runwayResultVideo) runwayResultVideo.style.visibility = '';
-            runwayResultStatus.textContent = '영상 생성 실패: ' + (err.message || '');
+            runwayResultStatus.textContent = _t('oneclick.video_failed') + (err.message || '');
             runwayVideoBtn.disabled = false;
           });
       });

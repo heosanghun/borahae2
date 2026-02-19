@@ -114,6 +114,21 @@
     'ai.input_placeholder': { ko: '당신의 이름', en: 'Your name' },
     'ai.btn_create': { ko: '서사 일깨우기', en: 'Awaken Narrative' },
 
+    // --- Soul Color ---
+    'soulcolor.connector': { ko: '생년월일로 찾는 나만의 탄생 컬러 · 바이브', en: 'Your birth color & vibe from your birthday' },
+    'soulcolor.title': { ko: '당신의 소울 컬러는?', en: 'What\'s your Soul Color?' },
+    'soulcolor.desc': { ko: '생년월일을 입력하면, 당신의 고유한 탄생 컬러와 바이브를 찾아드립니다.', en: 'Enter your birthday to discover your unique birth color and vibe.' },
+    'soulcolor.date_label': { ko: '생년월일', en: 'Birthday' },
+    'soulcolor.date_aria': { ko: '생년월일 선택', en: 'Select birthday' },
+    'soulcolor.btn_analyze': { ko: '분석하기', en: 'Analyze' },
+    'soulcolor.privacy_hint': { ko: '🔒 입력하신 정보는 결과 생성 즉시 폐기되며, 서버에 저장되지 않습니다.', en: '🔒 Your input is discarded immediately after use and is not stored on any server.' },
+    'soulcolor.preview_label': { ko: '생일을 입력하면 찾아지는 소울 컬러', en: 'Soul color found from your birthday' },
+    'soulcolor.preview_cta': { ko: '당신의 탄생 컬러는 어떤 빛일까요?', en: 'What light is your birth color?' },
+    'soulcolor.music_btn': { ko: '🎵 내 탄생뮤직 만들기', en: '🎵 Create My Birth Music' },
+    'soulcolor.music_aria': { ko: '내 탄생뮤직 만들기', en: 'Create my birth music' },
+    'flow.step1_done': { ko: 'STEP 1 완료! 다음 단계로 이어집니다 ⬇️', en: 'STEP 1 done! Continue to the next ⬇️' },
+    'flow.step2_done': { ko: 'STEP 2 완료! 이제 스타일을 완성할 시간 ⬇️', en: 'STEP 2 done! Time to complete your style ⬇️' },
+
     // --- Shop ---
     'shop.badge': { ko: 'STORE · 보라 굿즈', en: 'STORE · Bora Goods' },
     'shop.title': { ko: '발견한 자아와 일궈낸 안식처를, 일상의 빛으로 소장', en: 'Keep your discovered self and built sanctuary as daily light' },
@@ -211,6 +226,7 @@
     'membership.btn_free': { ko: '무료로 시작', en: 'Start Free' },
     'membership.btn_purple': { ko: 'Purple 시작', en: 'Start Purple' },
     'membership.btn_vip': { ko: 'VIP 시작', en: 'Start VIP' },
+    'membership.checkout_loading': { ko: '결제 페이지로 이동 중...', en: 'Redirecting to checkout...' },
 
     // --- E-Book (Borahae Library) ---
     'ebook.badge': { ko: 'Borahae Library', en: 'Borahae Library' },
@@ -222,6 +238,75 @@
     'ebook.summary_4': { ko: '인류와 AI가 함께 써 내려가는 진화의 마지막 챕터. 특이점을 열다.', en: 'The final chapter of evolution written by humanity and AI together. Opening the singularity.' },
     'ebook.download_pdf': { ko: 'PDF 다운로드', en: 'Download PDF' },
     'ebook.download_all': { ko: '전자책 전권 패키지 다운로드 (ZIP)', en: 'Download All E-Books (ZIP)' },
+
+    // --- Oneclick Runway ---
+    'oneclick.badge': { ko: '원클릭', en: 'One-Click' },
+    'oneclick.title': { ko: '당신만의 런웨이 한 편', en: 'Your Own Runway Video' },
+    'oneclick.desc': { ko: '샘플 얼굴과 배경을 선택하면 — 나만의 건축 배경 위를 걸어가는 런웨이를 만나볼 수 있어요.', en: 'Choose a sample face and background — walk your own runway on your custom backdrop.' },
+    'oneclick.face_label': { ko: '샘플 얼굴 선택', en: 'Choose Sample Face' },
+    'oneclick.face_hint': { ko: '런웨이에 쓸 얼굴을 골라 주세요.', en: 'Pick a face for your runway.' },
+    'oneclick.face_female': { ko: '여자', en: 'Female' },
+    'oneclick.face_male': { ko: '남자', en: 'Male' },
+    'oneclick.photo_label': { ko: '내 사진 업로드', en: 'Upload My Photo' },
+    'oneclick.photo_hint': { ko: '직접 올리면 샘플 대신 내 사진으로 런웨이를 만들 수 있어요. 인터넷 이미지 주소(URL)로도 불러올 수 있어요.', en: 'Upload your own photo for the runway, or paste an image URL.' },
+    'oneclick.photo_placeholder': { ko: '본인 사진을 선택하세요!', en: 'Select your photo!' },
+    'oneclick.photo_url_placeholder': { ko: '이미지 주소(URL) 붙여넣기', en: 'Paste image URL' },
+    'oneclick.photo_url_btn': { ko: '불러오기', en: 'Load' },
+    'oneclick.gallery_label': { ko: '뮤직비디오 대표 갤러리', en: 'Music Video Gallery' },
+    'oneclick.background_desc': { ko: '배경을 선택하면 해당 배경 위의 런웨이 샘플을 만나볼 수 있어요.', en: 'Select a background to see a runway sample on it.' },
+    'oneclick.runway_btn': { ko: '런웨이 한 편 만들기', en: 'Create Runway Video' },
+    'oneclick.result_title': { ko: '런웨이 결과', en: 'Runway Result' },
+    'oneclick.save_image_btn': { ko: '이미지 저장', en: 'Save Image' },
+    'oneclick.email_btn': { ko: '📧 이메일로 보내기', en: '📧 Send by Email' },
+    'oneclick.video_loading': { ko: '영상 생성 중입니다. 1~2분 정도 걸릴 수 있어요...', en: 'Generating video. May take 1–2 minutes...' },
+    'oneclick.video_btn': { ko: '영상으로 만들기', en: 'Make Video' },
+    'oneclick.save_video_btn': { ko: '영상 저장', en: 'Save Video' },
+    'oneclick.notice': { ko: '아래에서 이름·생일·스타일링을 하나씩 체험해 보실 수도 있어요.', en: 'You can also try name, birthday, and styling step by step below.' },
+    'oneclick.photo_from_url': { ko: 'URL에서 불러옴', en: 'Loaded from URL' },
+    'oneclick.photo_selected': { ko: '선택됨: ', en: 'Selected: ' },
+    'oneclick.url_required': { ko: '이미지 주소를 입력해 주세요.', en: 'Please enter an image URL.' },
+    'oneclick.loading': { ko: '불러오는 중...', en: 'Loading...' },
+    'oneclick.convert_failed': { ko: '이미지 변환에 실패했습니다.', en: 'Failed to convert image.' },
+    'oneclick.url_load_failed': { ko: '인터넷 이미지를 불러오지 못했습니다. URL을 확인하거나 파일로 올려 주세요.', en: 'Could not load image from URL. Check the URL or upload a file.' },
+    'oneclick.face_required': { ko: '샘플 얼굴(여자 또는 남자) 또는 내 사진을 선택해 주세요.', en: 'Please select a sample face (female or male) or upload your photo.' },
+    'oneclick.background_required': { ko: '아래 갤러리에서 원하는 장소(배경)를 선택한 뒤 다시 시도해 주세요.', en: 'Please select a background from the gallery below and try again.' },
+    'oneclick.runway_generating': { ko: '런웨이 생성 중...', en: 'Creating runway...' },
+    'oneclick.synthesizing': { ko: '에 인물 합성 중...', en: ' — synthesizing...' },
+    'oneclick.image_ready': { ko: '합성 이미지가 준비되었어요. 아래에서 영상으로 만들 수 있어요.', en: 'Composite image is ready. You can make a video below.' },
+    'oneclick.error': { ko: '오류: ', en: 'Error: ' },
+    'oneclick.video_need_image': { ko: '먼저 런웨이 결과 이미지를 생성한 뒤, 영상으로 만들기를 눌러 주세요.', en: 'Generate a runway result image first, then click Make Video.' },
+    'oneclick.analyzing': { ko: '런웨이 결과 이미지를 분석해 영상 프롬프트를 만들고 있어요...', en: 'Analyzing runway image to create video prompt...' },
+    'oneclick.fallback_prompt': { ko: '결과 이미지 분석을 사용할 수 없어 기본 프롬프트로 영상 생성 중입니다. 1~2분 걸릴 수 있어요.', en: 'Using default prompt for video. May take 1–2 minutes.' },
+    'oneclick.video_generating': { ko: '런웨이 결과 이미지를 첫 프레임으로 영상 생성 중입니다...', en: 'Generating video from runway image...' },
+    'oneclick.video_ready': { ko: '영상이 준비되었어요. 재생 버튼을 눌러 보세요.', en: 'Video is ready. Press play to watch.' },
+    'oneclick.video_remake': { ko: '다시 만들기', en: 'Try Again' },
+    'oneclick.video_failed': { ko: '영상 생성 실패: ', en: 'Video generation failed: ' },
+
+    // --- Virtual Try-On (Step 6) ---
+    'tryon.title': { ko: 'Virtual Try-On', en: 'Virtual Try-On' },
+    'tryon.desc': { ko: '원하는 의류를 선택하여 가상으로 착용해보세요', en: 'Select clothing and try it on virtually' },
+    'tryon.cat_fashion': { ko: '패션', en: 'Fashion' },
+    'tryon.cat_tops': { ko: '상의', en: 'Tops' },
+    'tryon.cat_bottoms': { ko: '하의', en: 'Bottoms' },
+    'tryon.cat_dresses': { ko: '원피스', en: 'Dresses' },
+    'tryon.cat_outerwear': { ko: '아우터', en: 'Outerwear' },
+    'tryon.upload_btn': { ko: '내 의류 업로드', en: 'Upload My Clothes' },
+    'tryon.original': { ko: '원본 사진', en: 'Original Photo' },
+    'tryon.original_placeholder': { ko: '사진이 표시됩니다', en: 'Photo will appear' },
+    'tryon.result': { ko: 'Try-On 결과', en: 'Try-On Result' },
+    'tryon.select_garment': { ko: '의류를 선택하세요', en: 'Select clothing' },
+    'tryon.generate_btn': { ko: 'Try-On 생성', en: 'Generate Try-On' },
+    'tryon.download_btn': { ko: '다운로드', en: 'Download' },
+    'tryon.prev': { ko: '이전', en: 'Back' },
+    'tryon.finish': { ko: '완료', en: 'Done' },
+
+    // --- Video Toast ---
+    'video_toast.aria': { ko: '영상 생성 중', en: 'Generating video' },
+    'video_toast.text': { ko: '영상 생성 중입니다. 1~2분 소요. 완료되면 알려드려요.', en: 'Generating video. 1–2 min. We\'ll notify you when done.' },
+
+    // --- Detail Corners Intro ---
+    'detail_corners.intro_html': { ko: '하나씩 만들어 가는 재미를 위해 <strong>아래에 구체적인 코너</strong>가 있습니다.', en: 'For step-by-step fun, <strong>specific corners</strong> are below.' },
+    'detail_corners.intro_link': { ko: '아래 코너로 이동 ↓', en: 'Go to corners below ↓' },
 
     // --- Lightstick Designer ---
     'lightstick.badge': { ko: 'Chapter 2. Sanctuary', en: 'Chapter 2. Sanctuary' },
@@ -577,6 +662,13 @@
       var pkey = phEls[k].getAttribute('data-i18n-placeholder');
       var pval = t(pkey);
       if (pval) phEls[k].placeholder = pval;
+    }
+    // data-i18n-aria: set aria-label
+    var ariaEls = document.querySelectorAll('[data-i18n-aria]');
+    for (var a = 0; a < ariaEls.length; a++) {
+      var akey = ariaEls[a].getAttribute('data-i18n-aria');
+      var aval = t(akey);
+      if (aval) ariaEls[a].setAttribute('aria-label', aval);
     }
     // Update page title
     document.title = currentLang === 'en'
