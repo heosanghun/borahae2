@@ -5929,12 +5929,12 @@ ${soulInfo ? soulInfo : ''}
       }, 800);
     })();
 
-    // 한글 시스템 갤러리 (image/hangeul/system/gallery)
+    // 한글 시스템 갤러리 (image/hangeul/system/gallery) — 폴더 내 전체 이미지 적용
     (function initMagicshopHangeulGallery() {
       var container = document.getElementById('magicshop-hangeul-gallery');
       if (!container) return;
       var GALLERY_BASE = 'image/hangeul/system/gallery/';
-      var GALLERY_FILES = ['1 (1).png', '1 (2).png', '1 (3).png', '1 (4).png', '1 (5).png', '1 (6).png', '1 (7).png', '1 (8).png', '1 (9).png', '1 (10).png', '2 (1).png', '2 (2).png', '2 (3).png', '2 (4).png', '2 (5).png', '2 (6).png', '2 (7).png', '2 (8).png', '2 (9).png', '2 (10).png'];
+      var GALLERY_FILES = ['1 (1).webp', '1 (2).webp', '1 (3).webp', '1 (4).webp', '1 (5).webp', '1 (6).webp', '1 (7).webp', '1 (9).webp', '1 (10).webp', '1 (11).webp', '2 (1).webp', '2 (2).webp', '2 (3).webp', '2 (4).webp', '2 (9).webp', '2 (11).webp', '2 (12).webp', '2 (13).webp', '2 (14).webp', '2 (15).webp', '2 (16).webp'];
       GALLERY_FILES.forEach(function (name, i) {
         var wrap = document.createElement('div');
         wrap.className = 'magicshop-hangeul-gallery-item';
