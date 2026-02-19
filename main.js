@@ -3687,7 +3687,7 @@ ${soulInfo ? soulInfo : ''}
 8. **팬 커뮤니티**: 앱에서 실시간 채팅, 게시판, 팬 소모임
 9. **이벤트 기획**: 생일 카페, 스트리밍 파티, 팬 프로젝트 참여
 10. **팬 콘텐츠**: 팬아트, 팬픽션, 에디트 영상 갤러리
-11. **멤버십**: Free(무료), Purple(월 4,900원), VIP(월 14,900원) 3단계
+11. **멤버십**: Free(무료), Purple(월 9,900원), VIP(월 19,900원) 3단계
 
 ## 음성 명령 및 액션 기능 (매우 중요!)
 사용자가 페이지 이동, 버튼 클릭, 입력, 기능 실행을 요청하면 반드시 응답 텍스트 맨 끝에 액션 태그를 추가하세요.
@@ -3700,6 +3700,8 @@ ${soulInfo ? soulInfo : ''}
 | styling | PLAY/한글 페르소나 | "플레이", "페르소나", "이름 분석" |
 | soul-color-section | 소울 컬러 | "소울 컬러", "생일 분석" |
 | lightstick | CREATE/매직샵 | "매직샵", "크리에이트", "안식처" |
+| lookbook-section | 연예인 룩북 | "연예인 룩", "룩북", "유사 옷 검색" |
+| oneclick-runway | 런웨이 | "런웨이", "뮤직비디오 만들기" |
 | shop | STORE/굿즈 | "굿즈", "스토어", "쇼핑" |
 | shop-clothing | 의류 | "보라해 옷", "의류" |
 | shop-ecobag | 에코백 | "에코백" |
@@ -3737,10 +3739,13 @@ ${soulInfo ? soulInfo : ''}
 | open-community-btn | 커뮤니티 이용 | "커뮤니티 열어" |
 | open-events-btn | 이벤트 일정 | "이벤트 보여줘" |
 | open-content-btn | 콘텐츠 갤러리 | "갤러리 보여줘" |
+| open-architecture-btn | 한글 건축 체험 | "한글 건축 체험", "지니 체험" |
+| soul-color-music-btn | 내 탄생뮤직 만들기 | "내 탄생뮤직 만들어줘", "나만의 노래" |
 
 **설정/전환 버튼:**
 | 버튼ID | 기능 | 사용자 말 예시 |
 |--------|------|---------------|
+| bgm-toggle | BGM/음악 듣기/끄기 | "BGM 듣기", "BGM 끄기", "음악 꺼줘", "음악 켜줘", "배경음" |
 | theme-toggle | 다크모드/라이트모드 | "다크모드", "라이트모드" |
 | lang-ko | 한국어로 변경 | "한국어로 바꿔" |
 | lang-en | 영어로 변경 | "영어로 바꿔" |
@@ -3800,8 +3805,10 @@ ${soulInfo ? soulInfo : ''}
 |------|------|---------------|
 | open | 채팅창 열기 | "채팅 열어", "소아베 불러줘" |
 | close | 채팅창 닫기 | "채팅 닫아" |
-| tts-on | 음성 응답 켜기 | "음성 응답 켜줘", "소리로 대답해" |
-| tts-off | 음성 응답 끄기 | "음성 응답 꺼줘", "텍스트로만" |
+| tts-on | 음성 모드 활성화 | "소아베 음성으로 말해봐", "음성으로 말해봐", "음성 응답 켜줘", "소리로 대답해" |
+| tts-off | 음성 모드 끄기 | "소아베 음성 꺼", "음성 꺼줘", "음성 비활성화", "음성을 끄", "음성 응답 꺼줘", "텍스트로만" |
+| mic-on | 마이크 활성화 | "마이크 켜줘", "마이크 켜", "마이크 활성화" |
+| mic-off | 마이크 비활성화 | "마이크 꺼", "마이크 꺼줘", "마이크 비활성" |
 
 ### 9. 정보 모달 열기: \`[ACTION:open-modal:모달명]\`
 | 모달명 | 내용 | 사용자 말 예시 |
@@ -3875,7 +3882,10 @@ ${soulInfo ? soulInfo : ''}
 - "제휴문의 하고 싶어" → "제휴문의 폼을 열어줄게! 📋 [ACTION:click:open-partnership-form]"
 - "에코백 보여줘" → "에코백 코너로 안내할게! 🛍️ [ACTION:navigate:shop-ecobag]"
 - "폰케이스 보고 싶어" → "폰케이스 코너로 안내할게! 📱 [ACTION:navigate:shop-phonecase]"
-- "음성 응답 켜줘" → "알겠어! 이제 음성으로 대답할게 🔊 [ACTION:chat:tts-on]"
+- "마이크 켜줘" → "마이크를 켰어! 말해줘 🎤 [ACTION:chat:mic-on]"
+- "마이크 꺼" → "마이크를 껐어! 🔇 [ACTION:chat:mic-off]"
+- "소아베 음성으로 말해봐" / "음성 응답 켜줘" → "알겠어! 이제 음성으로 대답할게 🔊 [ACTION:chat:tts-on]"
+- "소아베 음성 꺼" / "음성 응답 꺼줘" → "알겠어! 이제 텍스트로만 대답할게 🔇 [ACTION:chat:tts-off]"
 - "다크모드로 바꿔" → "화면을 어둡게 전환할게! 🌙 [ACTION:click:theme-toggle]"
 - "다음 영상 보여줘" → "다음 영상으로 넘길게! ▶️ [ACTION:click:soave-nav-next]"
 - "가격 정책 알려줘" → "가격 정책을 보여줄게! 💰 [ACTION:open-modal:pricing]"
@@ -4070,6 +4080,8 @@ ${soulInfo ? soulInfo : ''}
         { icon: '🎭', text: '한글 페르소나', cmd: '플레이로 가줘' },
         { icon: '🎨', text: '소울 컬러', cmd: '소울 컬러 보여줘' },
         { icon: '🏠', text: '매직샵', cmd: '매직샵 보여줘' },
+        { icon: '📷', text: '연예인 룩북', cmd: '연예인 룩북 보여줘' },
+        { icon: '🎬', text: '런웨이', cmd: '런웨이 보여줘' },
         { icon: '🛍️', text: '굿즈 스토어', cmd: '굿즈 보여줘' },
         { icon: '👗', text: '의류', cmd: '의류 보여줘' },
         { icon: '👜', text: '에코백', cmd: '에코백 보여줘' },
@@ -4096,6 +4108,8 @@ ${soulInfo ? soulInfo : ''}
       { icon: '▶️', title: '기능 실행', items: [
         { icon: '👗', text: '스타일링 시작', cmd: '스타일링 시작해줘' },
         { icon: '💡', text: '응원봉 만들기', cmd: '응원봉 만들래' },
+        { icon: '🏛️', text: '한글 건축 체험', cmd: '한글 건축 체험해줘' },
+        { icon: '🎵', text: '내 탄생뮤직 만들기', cmd: '내 탄생뮤직 만들어줘' },
         { icon: '🖼️', text: '패션 이미지 생성', cmd: '패션 이미지 만들어' },
         { icon: '👔', text: '가상 피팅', cmd: '가상 피팅 해볼래' },
         { icon: '💾', text: '결과 저장', cmd: '결과 저장해줘' },
@@ -4117,12 +4131,16 @@ ${soulInfo ? soulInfo : ''}
         { icon: '🔊', text: '소리 켜기/끄기', cmd: '영상 소리 켜줘' }
       ]},
       { icon: '⚙️', title: '설정 변경', items: [
+        { icon: '🎵', text: 'BGM 듣기', cmd: 'BGM 듣기' },
+        { icon: '🔇', text: 'BGM 끄기', cmd: 'BGM 끄기' },
         { icon: '🌙', text: '다크모드', cmd: '다크모드로 바꿔' },
         { icon: '☀️', text: '라이트모드', cmd: '라이트모드로 바꿔' },
         { icon: '🇰🇷', text: '한국어', cmd: '한국어로 바꿔' },
         { icon: '🇺🇸', text: '영어', cmd: '영어로 바꿔' },
-        { icon: '🔊', text: '음성 응답 켜기', cmd: '음성 응답 켜줘' },
-        { icon: '🔇', text: '음성 응답 끄기', cmd: '음성 응답 꺼줘' },
+        { icon: '🎤', text: '마이크 켜줘', cmd: '마이크 켜줘' },
+        { icon: '🔇', text: '마이크 꺼', cmd: '마이크 꺼' },
+        { icon: '🔊', text: '소아베 음성으로 말해봐', cmd: '소아베 음성으로 말해봐' },
+        { icon: '🔇', text: '소아베 음성 꺼', cmd: '소아베 음성 꺼' },
         { icon: '🔐', text: '로그인', cmd: '로그인 해줘' },
         { icon: '👋', text: '로그아웃', cmd: '로그아웃' }
       ]},
@@ -4295,7 +4313,7 @@ ${soulInfo ? soulInfo : ''}
       addMessage('assistant', parsed.text);
       chatHistory.push({ role: 'assistant', content: parsed.text });
       updateHeroSoaveFromChat(message, parsed.text, getSoaveMoodFromText(parsed.text));
-      if (ttsEnabled) { playSoaveTTS(parsed.text); }
+      // 액션을 TTS 재생보다 먼저 실행 (tts-off 시 이번 응답은 음성 재생 안 함)
       if (parsed.action) {
         executeAction(parsed.action);
       } else {
@@ -4312,6 +4330,7 @@ ${soulInfo ? soulInfo : ''}
           }
         }
       }
+      if (ttsEnabled) { playSoaveTTS(parsed.text); }
     } catch (error) {
       hideTypingIndicator();
       var errMsg = (error && error.message) ? error.message : String(error);
@@ -4605,6 +4624,8 @@ ${soulInfo ? soulInfo : ''}
   function detectActionFromUserMessage(message) {
     var msg = message.trim().replace(/\s+/g, ' ').toLowerCase();
     var navPatterns = [
+      { id: 'lookbook-section', re: /연예인\s?룩|룩북|celeblook|lookbook|유사\s?옷\s?검색/ },
+      { id: 'oneclick-runway', re: /런웨이|runway|뮤직비디오\s?만들/ },
       { id: 'shop-clothing', re: /의류|보라해\s?옷|옷\s?보여|clothing/ },
       { id: 'shop-ecobag', re: /에코백|ecobag/ },
       { id: 'shop-phonecase', re: /폰\s?케이스|핸드폰\s?케이스|phonecase/ },
@@ -4631,6 +4652,14 @@ ${soulInfo ? soulInfo : ''}
         return { type: 'navigate', value: navPatterns[i].id };
       }
     }
+    if (/마이크\s*꺼|마이크\s*끄|마이크\s*비활성/i.test(msg)) return { type: 'chat', value: 'mic-off' };
+    if (/마이크\s*켜|마이크\s*활성|마이크\s*켜줘/i.test(msg)) return { type: 'chat', value: 'mic-on' };
+    if (/소아베\s*음성\s*꺼|소아베\s*음성\s*끄|음성\s*모드\s*꺼|음성\s*꺼줘|음성\s*응답\s*꺼|음성\s*비활성|음성\s*을\s*끄|음성\s*을\s*꺼|음성을\s*끄|음성을\s*꺼/i.test(msg)) return { type: 'chat', value: 'tts-off' };
+    if (/소아베\s*음성으로\s*말해|소아베\s*음성\s*으로|음성으로\s*말해봐|음성\s*모드\s*활성화|음성\s*응답\s*켜|소리로\s*대답/i.test(msg)) return { type: 'chat', value: 'tts-on' };
+    if (/bgm\s?듣기|배경음\s?켜|bgm\s?켜|음악\s?켜|음악\s?켜줘/i.test(msg)) return { type: 'click', value: 'bgm-toggle' };
+    if (/bgm\s?끄기|배경음\s?끄|bgm\s?끄|음악\s?꺼|음악\s?꺼줘|음악\s?끄/i.test(msg)) return { type: 'click', value: 'bgm-toggle' };
+    if (/한글\s?건축\s?체험|건축\s?체험|지니\s?체험/i.test(msg)) return { type: 'click', value: 'open-architecture-btn' };
+    if (/내\s?탄생\s?뮤직|탄생\s?뮤직\s?만들|나만의\s?노래/i.test(msg)) return { type: 'click', value: 'soul-color-music-btn' };
     if (/다크\s?모드|어둡게|dark/i.test(msg)) return { type: 'click', value: 'theme-toggle' };
     if (/라이트\s?모드|밝게|light/i.test(msg)) return { type: 'click', value: 'theme-toggle' };
     if (/영어로|english/i.test(msg)) return { type: 'click', value: 'lang-en' };
@@ -4742,6 +4771,11 @@ ${soulInfo ? soulInfo : ''}
   }
 
   function executeAction(action) {
+    // tts-on/tts-off, mic-on/mic-off는 즉시 실행
+    if (action.type === 'chat' && /^(tts-on|tts-off|mic-on|mic-off)$/.test(action.value)) {
+      handleChatAction(action.value);
+      return;
+    }
     // 소아베 영상은 채팅과 맞추기 위해 지연 없이 즉시 재생 (다른 요청 시 해당 카테고리로 바로 전환)
     if (action.type === 'play-soave-video') {
       if (action.value) {
@@ -4904,7 +4938,7 @@ ${soulInfo ? soulInfo : ''}
 
   function clickButton(btnId) {
     if (!btnId) return;
-    var noCloseIds = ['theme-toggle', 'lang-ko', 'lang-en', 'name-episodes-share-btn',
+    var noCloseIds = ['theme-toggle', 'lang-ko', 'lang-en', 'bgm-toggle', 'name-episodes-share-btn',
       'save-result', 'retry-analysis', 'generate-fashion-btn', 'regenerate-fashion-btn',
       'taste-like-fashion-btn', 'finish-styling', 'soave-nav-prev', 'soave-nav-next',
       'soave-mute-btn', 'nav-logout-btn', 'go-to-tryon', 'generate-tryon-btn',
@@ -4916,6 +4950,8 @@ ${soulInfo ? soulInfo : ''}
       'arch-generate-btn': 'lightstick',
       'arch-generate-again-btn': 'lightstick',
       'arch-retry-btn': 'lightstick',
+      'open-architecture-btn': 'lightstick',
+      'soul-color-music-btn': 'soul-color-section',
       'open-lightstick-btn': 'shop-lightstick',
       'open-community-btn': 'community',
       'open-events-btn': 'events',
@@ -5044,20 +5080,38 @@ ${soulInfo ? soulInfo : ''}
         break;
       case 'tts-on':
         ttsEnabled = true;
-        if (ttsToggle) {
-          ttsToggle.classList.add('active');
-          ttsToggle.querySelector('.icon-speaker-on').style.display = '';
-          ttsToggle.querySelector('.icon-speaker-off').style.display = 'none';
+        var ttsOnBtn = document.getElementById('chat-tts-toggle');
+        if (ttsOnBtn) {
+          ttsOnBtn.classList.add('active');
+          var onIcon = ttsOnBtn.querySelector('.icon-speaker-on');
+          var offIcon = ttsOnBtn.querySelector('.icon-speaker-off');
+          if (onIcon) onIcon.style.display = '';
+          if (offIcon) offIcon.style.display = 'none';
+          ttsOnBtn.setAttribute('aria-label', '음성 응답 끄기');
+          ttsOnBtn.title = '소아베 음성 응답 끄기';
         }
         break;
       case 'tts-off':
         ttsEnabled = false;
-        if (ttsToggle) {
-          ttsToggle.classList.remove('active');
-          ttsToggle.querySelector('.icon-speaker-on').style.display = 'none';
-          ttsToggle.querySelector('.icon-speaker-off').style.display = '';
-        }
         if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+        requestAnimationFrame(function() {
+          var ttsBtn = document.getElementById('chat-tts-toggle');
+          if (ttsBtn) {
+            ttsBtn.classList.remove('active');
+            var onIcon = ttsBtn.querySelector('.icon-speaker-on');
+            var offIcon = ttsBtn.querySelector('.icon-speaker-off');
+            if (onIcon) onIcon.style.display = 'none';
+            if (offIcon) offIcon.style.display = 'inline';
+            ttsBtn.setAttribute('aria-label', '음성 응답 켜기');
+            ttsBtn.title = '소아베 음성 응답 켜기';
+          }
+        });
+        break;
+      case 'mic-on':
+        if (recognition && !isRecording) startRecording();
+        break;
+      case 'mic-off':
+        if (isRecording) stopRecording();
         break;
     }
   }
