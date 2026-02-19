@@ -4,7 +4,9 @@ const path = require('path');
 const { URL } = require('url');
 
 const root = path.resolve(__dirname, '..');
-const envPath = path.join(root, '.env');
+const envPath = fs.existsSync(path.join(root, '.env'))
+  ? path.join(root, '.env')
+  : path.join(root, 'image', '.env');
 let OPENAI_API_KEY = '';
 let MUREKA_API_KEY = '';
 let SUNO_API_KEY = '';
@@ -442,8 +444,9 @@ const server = http.createServer(async (req, res) => {
   fs.createReadStream(filePath).pipe(res);
 });
 
-server.listen(8000, () => {
-  console.log('Local server with OpenAI proxy: http://localhost:8000');
+const PORT = parseInt(process.env.PORT, 10) || 9321;
+server.listen(PORT, () => {
+  console.log('Local server with OpenAI proxy: http://localhost:' + PORT);
   const keyLen = OPENAI_API_KEY ? OPENAI_API_KEY.length : 0;
   console.log('OPENAI_API_KEY:', OPENAI_API_KEY ? 'loaded (' + OPENAI_API_KEY.slice(0, 10) + '..., length=' + keyLen + ')' : 'NOT SET');
   if (OPENAI_API_KEY && (keyLen < 40 || keyLen > 300)) {
@@ -451,5 +454,5 @@ server.listen(8000, () => {
   }
   console.log('MUREKA_API_KEY:', MUREKA_API_KEY ? 'loaded (' + MUREKA_API_KEY.slice(0, 8) + '...)' : 'NOT SET');
   console.log('SUNO_API_KEY:', SUNO_API_KEY ? 'loaded (' + SUNO_API_KEY.slice(0, 8) + '...) - 내 탄생뮤직 음원 생성 사용' : 'NOT SET (내 탄생뮤직은 가사만 생성됨)');
-  console.log('내 탄생뮤직 테스트: 이 주소(http://localhost:8000)에서만 API가 동작합니다. 다른 포트나 Live Server 사용 시 음악 생성이 404로 실패합니다.');
+  console.log('내 탄생뮤직 테스트: 이 주소(http://localhost:' + PORT + ')에서만 API가 동작합니다. 다른 포트나 Live Server 사용 시 음악 생성이 404로 실패합니다.');
 });

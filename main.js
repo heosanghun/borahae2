@@ -1071,8 +1071,8 @@
         'https://images.unsplash.com/photo-1544816155-12df9643f363?w=80&h=80&fit=crop'
       ],
       '액세서리': [
-        'https://images.unsplash.com/photo-1592286927505-d9f4c8a2b4c0?w=80&h=80&fit=crop',
-        'https://images.unsplash.com/photo-1611652022419-a9419f74343a?w=80&h=80&fit=crop',
+        'https://images.unsplash.com/photo-1535632066927-ab7c9ab60608?w=80&h=80&fit=crop',
+        'https://images.unsplash.com/photo-1573408301185-9146fe634ad0?w=80&h=80&fit=crop',
         'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=80&h=80&fit=crop',
         'https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=80&h=80&fit=crop',
         'https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=80&h=80&fit=crop'
