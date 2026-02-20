@@ -642,6 +642,7 @@
     'arch.status_uploaded_image': { ko: '악보의 형상이 인식되었습니다.', en: 'Sheet music image recognized.' },
     'arch.status_uploaded_mp3': { ko: '음원이 전달되었습니다.', en: 'Audio file delivered.' },
     'arch.file_selected': { ko: '✓ 인식된 기록: ', en: '✓ Recognized record: ' },
+    'arch.hangeul_gallery_title': { ko: '한글 공감각 건축 갤러리', en: 'Hangeul Synesthetic Architecture Gallery' },
 
     // --- Footer extra ---
     'footer.ai_styling_link': { ko: 'AI 스타일링', en: 'AI Styling' },

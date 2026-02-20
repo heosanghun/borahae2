@@ -6969,7 +6969,7 @@ ${soulInfo ? soulInfo : ''}
         wrap.className = 'magicshop-hangeul-gallery-item';
         var img = document.createElement('img');
         img.src = GALLERY_BASE + encodeURIComponent(name);
-        img.alt = '한글 공감각 건축 갤러리 ' + (i + 1);
+        img.alt = ((window.__simsI18n && window.__simsI18n.t) ? window.__simsI18n.t('arch.hangeul_gallery_title') : '한글 공감각 건축 갤러리') + ' ' + (i + 1);
         img.loading = 'lazy';
         wrap.appendChild(img);
         container.appendChild(wrap);
@@ -7839,7 +7839,7 @@ ${soulInfo ? soulInfo : ''}
           img.src = placeholderDataUri;
           var imgPath = item.image || '';
           var realSrc = base + imgPath;
-          var fallbackSvg = imgPath ? base + imgPath.replace(/\.(jpe?g|png)$/i, '.svg') : '';
+          var fallbackSvg = imgPath ? base + imgPath.replace(/\.(jpe?g|jfif|png)$/i, '.svg') : '';
           var loader = new Image();
           var dataUriFallback = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="320" height="200" viewBox="0 0 320 200"><rect width="320" height="200" fill="#e9ecef"/><text x="160" y="105" text-anchor="middle" fill="#6c757d" font-family="sans-serif" font-size="14">' + (item.name || 'background') + '</text></svg>');
           img.onerror = function () { this.onerror = null; this.src = dataUriFallback; };
