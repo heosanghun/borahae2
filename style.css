@@ -6240,6 +6240,49 @@ section {
   border-left: 3px solid #dc2626;
 }
 
+.auth-success {
+  font-size: 0.8125rem;
+  color: #16a34a;
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  background: rgba(22, 163, 74, 0.08);
+  border-radius: 12px;
+  border-left: 3px solid #16a34a;
+}
+
+.auth-forgot-wrap {
+  margin: -4px 0 12px;
+  text-align: right;
+}
+
+.auth-link-btn {
+  background: none;
+  border: none;
+  color: var(--primary, #7c3aed);
+  font-size: 0.8125rem;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.auth-link-btn:hover {
+  color: var(--primary-hover, #6d28d9);
+}
+
+.auth-back-btn {
+  display: block;
+  width: 100%;
+  text-align: center;
+  margin-top: 16px;
+}
+
+.auth-forgot-desc {
+  font-size: 0.875rem;
+  color: var(--text-muted, #64748b);
+  margin: 0 0 20px;
+  line-height: 1.5;
+}
+
 /* 제출 버튼 */
 .auth-submit {
   width: 100%;

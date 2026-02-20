@@ -773,6 +773,13 @@
     'auth.pw_confirm_placeholder': { ko: '다시 입력', en: 'Re-enter password' },
     'auth.or': { ko: '또는', en: 'Or' },
     'auth.login_google': { ko: 'Google로 로그인', en: 'Sign in with Google' },
+    'auth.forgot_password': { ko: '비밀번호 찾기', en: 'Forgot Password' },
+    'auth.forgot_desc': { ko: '가입한 이메일 주소를 입력하시면 비밀번호 재설정 링크를 보내드립니다.', en: 'Enter your email address and we\'ll send you a link to reset your password.' },
+    'auth.forgot_send': { ko: '재설정 링크 보내기', en: 'Send Reset Link' },
+    'auth.back_login': { ko: '← 로그인으로 돌아가기', en: '← Back to Login' },
+    'auth.new_password': { ko: '새 비밀번호', en: 'New Password' },
+    'auth.reset_desc': { ko: '새 비밀번호를 입력해 주세요.', en: 'Enter your new password.' },
+    'auth.reset_btn': { ko: '비밀번호 변경', en: 'Change Password' },
 
     // --- 마이페이지 ---
     'nav.mypage': { ko: '마이페이지', en: 'My Page' },

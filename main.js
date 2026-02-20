@@ -65,23 +65,45 @@
     document.body.style.overflow = 'hidden';
     var loginPanel = document.getElementById('auth-form-login');
     var signupPanel = document.getElementById('auth-form-signup');
+    var forgotPanel = document.getElementById('auth-form-forgot');
+    var resetPanel = document.getElementById('auth-form-reset');
     var tabLogin = document.getElementById('auth-tab-login');
     var tabSignup = document.getElementById('auth-tab-signup');
+    var authTabs = document.querySelector('.auth-tabs');
+    function showPanel(panel) {
+      [loginPanel, signupPanel, forgotPanel, resetPanel].forEach(function(p) {
+        if (p) p.classList.remove('active');
+      });
+      if (panel) panel.classList.add('active');
+      if (authTabs) authTabs.style.display = (panel === forgotPanel || panel === resetPanel) ? 'none' : '';
+    }
     if (tab === 'signup') {
-      if (loginPanel) loginPanel.classList.remove('active');
-      if (signupPanel) signupPanel.classList.add('active');
+      showPanel(signupPanel);
       if (tabLogin) tabLogin.classList.remove('active');
       if (tabSignup) tabSignup.classList.add('active');
+    } else if (tab === 'forgot') {
+      showPanel(forgotPanel);
+      if (tabLogin) tabLogin.classList.remove('active');
+      if (tabSignup) tabSignup.classList.remove('active');
+    } else if (tab === 'reset') {
+      showPanel(resetPanel);
+      if (tabLogin) tabLogin.classList.remove('active');
+      if (tabSignup) tabSignup.classList.remove('active');
     } else {
-      if (loginPanel) loginPanel.classList.add('active');
-      if (signupPanel) signupPanel.classList.remove('active');
+      showPanel(loginPanel);
       if (tabLogin) tabLogin.classList.add('active');
       if (tabSignup) tabSignup.classList.remove('active');
     }
     var loginErr = document.getElementById('auth-login-error');
     var signupErr = document.getElementById('auth-signup-error');
+    var forgotErr = document.getElementById('auth-forgot-error');
+    var forgotSuccess = document.getElementById('auth-forgot-success');
+    var resetErr = document.getElementById('auth-reset-error');
     if (loginErr) loginErr.textContent = '';
     if (signupErr) signupErr.textContent = '';
+    if (forgotErr) forgotErr.textContent = '';
+    if (forgotSuccess) { forgotSuccess.style.display = 'none'; forgotSuccess.textContent = ''; }
+    if (resetErr) resetErr.textContent = '';
   }
 
   function closeAuthModal() {
@@ -149,6 +171,9 @@
     if (!sb) return;
     sb.auth.onAuthStateChange(function(event, session) {
       updateAuthNav(session && session.user ? session.user : null);
+      if (event === 'PASSWORD_RECOVERY') {
+        openAuthModal('reset');
+      }
     });
     sb.auth.getSession().then(function(res) {
       updateAuthNav(res.data.session && res.data.session.user ? res.data.session.user : null);
@@ -176,6 +201,17 @@
       var user = res.data.session && res.data.session.user ? res.data.session.user : null;
       return (user && user.id) ? user.id : null;
     }).catch(function () { return null; });
+  }
+
+  /** 로그인 시에만 서비스 실행. 비로그인 시 로그인 모달 열고 실행 안 함. callback은 로그인됐을 때만 호출 */
+  function whenLoggedIn(callback) {
+    return function () {
+      var args = arguments;
+      getCurrentUserId().then(function (id) {
+        if (id && typeof callback === 'function') callback.apply(this, args);
+        else openAuthModal('login');
+      });
+    };
   }
 
   /** 현재 로그인한 회원의 이메일. 없으면 null */
@@ -271,6 +307,173 @@
   document.getElementById('auth-tab-signup') && document.getElementById('auth-tab-signup').addEventListener('click', function() {
     openAuthModal('signup');
   });
+  document.getElementById('auth-forgot-link') && document.getElementById('auth-forgot-link').addEventListener('click', function() {
+    openAuthModal('forgot');
+  });
+  document.getElementById('auth-forgot-back') && document.getElementById('auth-forgot-back').addEventListener('click', function() {
+    openAuthModal('login');
+  });
+
+  function doForgotPassword(sb) {
+    var emailEl = document.getElementById('auth-forgot-email');
+    var errEl = document.getElementById('auth-forgot-error');
+    var successEl = document.getElementById('auth-forgot-success');
+    var email = emailEl && emailEl.value ? emailEl.value.trim() : '';
+    if (!email) {
+      if (errEl) errEl.textContent = '이메일을 입력해 주세요.';
+      return;
+    }
+    if (errEl) errEl.textContent = '';
+    if (successEl) successEl.style.display = 'none';
+    var redirectTo = window.location.origin + window.location.pathname + (window.location.search || '');
+    sb.auth.resetPasswordForEmail(email, { redirectTo: redirectTo })
+      .then(function(res) {
+        if (res.error) {
+          if (errEl) errEl.textContent = res.error.message || '재설정 링크 발송에 실패했습니다.';
+          return;
+        }
+        if (successEl) {
+          successEl.textContent = '이메일로 비밀번호 재설정 링크를 보냈습니다. 메일함을 확인해 주세요.';
+          successEl.style.display = 'block';
+        }
+      })
+      .catch(function(err) {
+        if (errEl) errEl.textContent = err.message || '재설정 링크 발송에 실패했습니다.';
+      });
+  }
+
+  function doResetPassword(sb) {
+    var pwEl = document.getElementById('auth-reset-password');
+    var pwConfirmEl = document.getElementById('auth-reset-password-confirm');
+    var errEl = document.getElementById('auth-reset-error');
+    var password = pwEl ? pwEl.value : '';
+    var passwordConfirm = pwConfirmEl ? pwConfirmEl.value : '';
+    if (!password || password.length < 6) {
+      if (errEl) errEl.textContent = '비밀번호는 6자 이상이어야 합니다.';
+      return;
+    }
+    if (password !== passwordConfirm) {
+      if (errEl) errEl.textContent = '비밀번호가 일치하지 않습니다.';
+      return;
+    }
+    if (errEl) errEl.textContent = '';
+    sb.auth.updateUser({ password: password })
+      .then(function(res) {
+        if (res.error) {
+          if (errEl) errEl.textContent = res.error.message || '비밀번호 변경에 실패했습니다.';
+          return;
+        }
+        alert('비밀번호가 변경되었습니다. 새 비밀번호로 로그인해 주세요.');
+        if (pwEl) pwEl.value = '';
+        if (pwConfirmEl) pwConfirmEl.value = '';
+        closeAuthModal();
+        if (window.history && window.history.replaceState) {
+          window.history.replaceState(null, '', window.location.pathname + (window.location.search || ''));
+        }
+      })
+      .catch(function(err) {
+        if (errEl) errEl.textContent = err.message || '비밀번호 변경에 실패했습니다.';
+      });
+  }
+
+  document.getElementById('auth-forgot-form') && document.getElementById('auth-forgot-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var sb = getSupabase();
+    if (sb) { doForgotPassword(sb); return; }
+    waitForSupabase(function(s) {
+      if (s) doForgotPassword(s);
+      else {
+        var errEl = document.getElementById('auth-forgot-error');
+        if (errEl) errEl.textContent = 'Supabase 연결에 실패했습니다. 페이지를 새로고침해 주세요.';
+      }
+    });
+  });
+
+  document.getElementById('auth-reset-form') && document.getElementById('auth-reset-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var sb = getSupabase();
+    if (sb) { doResetPassword(sb); return; }
+    waitForSupabase(function(s) {
+      if (s) doResetPassword(s);
+      else {
+        var errEl = document.getElementById('auth-reset-error');
+        if (errEl) errEl.textContent = 'Supabase 연결에 실패했습니다. 페이지를 새로고침해 주세요.';
+      }
+    });
+  });
+
+  // ========================================
+  // data-login-required: 로그인 시에만 동작 허용
+  // ========================================
+  var isLoginGuardReplay = false;
+  document.addEventListener('click', function(e) {
+    if (isLoginGuardReplay) return;
+    var el = e.target.closest('[data-login-required]');
+    if (!el) return;
+    e.preventDefault();
+    e.stopPropagation();
+    getCurrentUserId().then(function(userId) {
+      if (!userId) {
+        openAuthModal('login');
+        return;
+      }
+      isLoginGuardReplay = true;
+      try {
+        if (el.tagName === 'A' && el.href) {
+          window.location.href = el.href;
+        } else {
+          el.click();
+        }
+      } finally {
+        setTimeout(function() { isLoginGuardReplay = false; }, 0);
+      }
+    });
+  }, true);
+
+  document.addEventListener('change', function(e) {
+    if (e._loginGuardAllowed) return;
+    var target = e.target;
+    var el = target.closest ? target.closest('[data-login-required]') : null;
+    if (!el) return;
+    e.preventDefault();
+    e.stopPropagation();
+    getCurrentUserId().then(function(userId) {
+      if (!userId) {
+        openAuthModal('login');
+        if (target.value) target.value = '';
+        return;
+      }
+      var ev = new Event('change', { bubbles: true });
+      ev._loginGuardAllowed = true;
+      target.dispatchEvent(ev);
+    });
+  }, true);
+
+  document.addEventListener('drop', function(e) {
+    var el = e.target.closest('[data-login-required]');
+    if (!el) return;
+    e.preventDefault();
+    e.stopPropagation();
+    getCurrentUserId().then(function(userId) {
+      if (!userId) {
+        openAuthModal('login');
+        if (el.classList && el.classList.contains('dragover')) el.classList.remove('dragover');
+        return;
+      }
+      var files = e.dataTransfer && e.dataTransfer.files;
+      if (!files || !files.length) return;
+      var fileInput = el.querySelector ? el.querySelector('input[type="file"]') : null;
+      if (!fileInput && el.id === 'celeblook-dropzone') fileInput = document.getElementById('celeblook-input');
+      if (fileInput) {
+        var dt = new DataTransfer();
+        dt.items.add(files[0]);
+        fileInput.files = dt.files;
+        var ev = new Event('change', { bubbles: true });
+        ev._loginGuardAllowed = true;
+        fileInput.dispatchEvent(ev);
+      }
+    });
+  }, true);
 
   // 전역 배경음(BGM) – music 폴더 MP3 6곡 무한 루프
   (function() {
@@ -2156,14 +2359,17 @@
     }
   }
 
-  // Open modal buttons (서사 일깨우기 버튼은 제외)
+  // Open modal buttons (서사 일깨우기 버튼은 제외) — 로그인 시에만 스타일링 모달 열기
   document.querySelectorAll('.btn-primary').forEach(btn => {
     if (btn.id === 'name-episodes-btn') return;
     const text = btn.textContent || btn.innerText;
     if (text.includes('시작') || text.includes('스타일링')) {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
-        openStylingModal();
+        getCurrentUserId().then(function(userId) {
+          if (userId) openStylingModal();
+          else openAuthModal('login');
+        });
       });
     }
   });
