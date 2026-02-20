@@ -514,12 +514,12 @@
 
   function getPrimary7Color(seasonString) {
     if (!seasonString || typeof seasonString !== 'string') return 'blue';
-    var s = seasonString.trim();
-    if (PERSONAL_COLOR_TO_7COLOR[s]) return PERSONAL_COLOR_TO_7COLOR[s].primary;
-    if (s.indexOf('봄') !== -1) return 'yellow';
-    if (s.indexOf('여름') !== -1) return 'blue';
-    if (s.indexOf('가을') !== -1) return 'red';
-    if (s.indexOf('겨울') !== -1) return 'violet';
+    var s = seasonString.trim().toLowerCase();
+    if (PERSONAL_COLOR_TO_7COLOR[seasonString.trim()]) return PERSONAL_COLOR_TO_7COLOR[seasonString.trim()].primary;
+    if (s.indexOf('봄') !== -1 || s.indexOf('spring') !== -1) return 'yellow';
+    if (s.indexOf('여름') !== -1 || s.indexOf('summer') !== -1) return 'blue';
+    if (s.indexOf('가을') !== -1 || s.indexOf('autumn') !== -1 || s.indexOf('fall') !== -1) return 'red';
+    if (s.indexOf('겨울') !== -1 || s.indexOf('winter') !== -1) return 'violet';
     return 'blue';
   }
 
@@ -1399,9 +1399,233 @@
     })();
   }
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initCeleblook);
+    document.addEventListener('DOMContentLoaded', function () { initCeleblook(); initStep6Outfit(); });
   } else {
     initCeleblook();
+    initStep6Outfit();
+  }
+
+  // ========================================
+  // Step 6 연예인 착장 → 유사 옷 검색 (접이식 블록)
+  // ========================================
+  function initStep6Outfit() {
+    var trigger = document.getElementById('step6-outfit-trigger');
+    var content = document.getElementById('step6-outfit-content');
+    var input = document.getElementById('step6-outfit-input');
+    var dropzone = document.getElementById('step6-outfit-dropzone');
+    var uploadWrap = content ? content.querySelector('.step6-outfit-desc') : null;
+    var loading = document.getElementById('step6-outfit-loading');
+    var result = document.getElementById('step6-outfit-result');
+    var preview = document.getElementById('step6-outfit-preview');
+    var summary = document.getElementById('step6-outfit-summary');
+    var cards = document.getElementById('step6-outfit-cards');
+    var retry = document.getElementById('step6-outfit-retry');
+    if (!trigger || !content || !dropzone || !input) return;
+
+    var OUTFIT_PROMPT = '이 사진에 나온 옷차림(룩)을 분석해주세요. '
+      + '1) 한 문장 요약(summary), 2) 스타일 태그 2~4개(styleTags), 3) 쇼핑 검색용 **한국어** 키워드(형태·소재·디테일 중심, 브랜드/모델명 제외)를 추출해주세요. '
+      + '아래 JSON 형식으로만 답하고 다른 설명은 하지 마세요. 보이지 않는 항목은 빈 문자열 "" 또는 빈 배열 []로 두세요.\n'
+      + '{"summary":"한 문장 요약","styleTags":["캐주얼","스트릿"],"상의":"키워드","하의":"키워드","신발":"키워드","가방":"키워드","액세서리":"키워드"}';
+
+    var MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+
+    function parseOutfitJson(text) {
+      var keys = ['상의', '하의', '신발', '가방', '액세서리'];
+      var result = { summary: '', styleTags: [] };
+      keys.forEach(function (k) { result[k] = ''; });
+      try {
+        var jsonStr = text.replace(/```json?\s*|\s*```/g, '').trim();
+        var parsed = JSON.parse(jsonStr);
+        if (parsed.summary != null) result.summary = typeof parsed.summary === 'string' ? parsed.summary.trim() : '';
+        if (Array.isArray(parsed.styleTags)) result.styleTags = parsed.styleTags.filter(function (t) { return t && String(t).trim(); }).map(function (t) { return String(t).trim(); });
+        keys.forEach(function (k) { result[k] = (parsed[k] && String(parsed[k]).trim()) ? String(parsed[k]).trim() : ''; });
+        return result;
+      } catch (e) {
+        keys.forEach(function (key) {
+          var re = new RegExp('"' + key + '"\\s*:\\s*"([^"]*)"');
+          var m = text.match(re);
+          result[key] = (m && m[1]) ? m[1].trim() : '';
+        });
+        var summaryMatch = text.match(/"summary"\s*:\s*"([^"]*)"/);
+        if (summaryMatch) result.summary = summaryMatch[1].trim();
+        return result;
+      }
+    }
+
+    function getNaverSearchUrl(q) { return 'https://search.shopping.naver.com/search/all?query=' + encodeURIComponent(q); }
+    function getMusinsaSearchUrl(q) { return 'https://www.musinsa.com/search/musinsa/integration?q=' + encodeURIComponent(q); }
+    function getCoupangSearchUrl(q) { return 'https://www.coupang.com/np/search?q=' + encodeURIComponent(q); }
+
+    function showState(which) {
+      if (content) {
+        var desc = content.querySelector('.step6-outfit-desc');
+        var urlWrap = content.querySelector('.step6-outfit-url-wrap');
+        var dz = content.querySelector('.step6-outfit-dropzone');
+        if (desc) desc.style.display = (which === 'upload') ? 'block' : 'none';
+        if (urlWrap) urlWrap.style.display = (which === 'upload') ? 'flex' : 'none';
+        if (dz) dz.style.display = (which === 'upload') ? 'block' : 'none';
+      }
+      if (loading) loading.style.display = (which === 'loading') ? 'flex' : 'none';
+      if (result) result.style.display = (which === 'result') ? 'block' : 'none';
+    }
+
+    function renderCards(obj) {
+      if (!cards) return;
+      var t = function (k) {
+        var fn = (window.__simsI18n && window.__simsI18n.t) || (typeof __t === 'function' ? __t : null);
+        return fn ? fn(k) : k;
+      };
+      var labels = { '상의': '상의', '하의': '하의', '신발': '신발', '가방': '가방', '액세서리': '액세서리' };
+      var html = [];
+      ['상의', '하의', '신발', '가방', '액세서리'].forEach(function (key) {
+        var val = (obj[key] && obj[key].trim()) ? obj[key].trim() : '';
+        if (!val) return;
+        var naverUrl = getNaverSearchUrl(val);
+        var musinsaUrl = getMusinsaSearchUrl(val);
+        var coupangUrl = getCoupangSearchUrl(val);
+        var esc = function (s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); };
+        html.push(
+          '<div class="step6-outfit-card">' +
+            '<h5>' + esc(labels[key] || key) + ': ' + esc(val) + '</h5>' +
+            '<div class="step6-outfit-links">' +
+              '<a href="' + esc(naverUrl) + '" target="_blank" rel="noopener noreferrer">' + t('lookbook.search_naver_btn') + '</a>' +
+              '<a href="' + esc(musinsaUrl) + '" target="_blank" rel="noopener noreferrer">' + t('lookbook.search_musinsa') + '</a>' +
+              '<a href="' + esc(coupangUrl) + '" target="_blank" rel="noopener noreferrer">' + t('lookbook.search_coupang') + '</a>' +
+            '</div>' +
+          '</div>'
+        );
+      });
+      cards.innerHTML = html.join('');
+    }
+
+    function runAnalysis(imageDataUrl) {
+      if (!imageDataUrl) return;
+      if (!GEMINI_API_KEY) {
+        showState('upload');
+        alert('Gemini API 키가 없으면 분석할 수 없어요. 설정에서 API 키를 확인해주세요.');
+        return;
+      }
+      showState('loading');
+      if (preview) preview.innerHTML = '<img src="' + imageDataUrl + '" alt="업로드한 룩">';
+      if (typeof callGeminiImageToText !== 'function') {
+        showState('upload');
+        alert('분석 기능을 사용할 수 없어요.');
+        return;
+      }
+      callGeminiImageToText(imageDataUrl, OUTFIT_PROMPT, 1024).then(function (text) {
+        var obj = parseOutfitJson(text);
+        if (summary) summary.textContent = obj.summary || '';
+        renderCards(obj);
+        showState('result');
+        // 연예인 착장 이미지를 Try-On에 연결
+        stylingData.selectedGarment = imageDataUrl;
+        stylingData.selectedGarmentBuyUrl = null;
+        stylingData.selectedGarmentName = '착장 분석 이미지';
+        if (stylingData.facePhoto) {
+          // Step 2에서 업로드한 사진이 있으면: 착장을 의류로 사용 (나에게 이 옷 입혀보기)
+          stylingData.tryonPersonPhoto = null;
+        } else {
+          // 얼굴 사진이 없으면: 착장 이미지의 인물을 원본 사진으로 사용 (이 인물에게 다른 옷 입혀보기)
+          stylingData.tryonPersonPhoto = imageDataUrl;
+        }
+        if (typeof loadUserPhotoForTryOn === 'function') loadUserPhotoForTryOn();
+        // 갤러리에 업로드된 의류 표시 및 Try-On 버튼 활성화
+        var gallery = document.getElementById('garment-gallery');
+        var generateBtn = document.getElementById('generate-tryon-btn');
+        if (gallery) {
+          var existingUpload = gallery.querySelector('.uploaded-garment');
+          if (existingUpload) existingUpload.remove();
+          var uploadedItem = document.createElement('div');
+          uploadedItem.className = 'garment-item uploaded-garment selected';
+          uploadedItem.innerHTML = '<img src="' + imageDataUrl + '" alt="착장 이미지"><span>착장 분석</span>';
+          gallery.prepend(uploadedItem);
+          document.querySelectorAll('.garment-item').forEach(function (i) { if (i !== uploadedItem) i.classList.remove('selected'); });
+        }
+        if (generateBtn) generateBtn.removeAttribute('disabled');
+      }).catch(function (err) {
+        console.error('Step6 outfit analysis error:', err);
+        showState('upload');
+        alert(typeof __t === 'function' ? __t('lookbook.celeblook_retry') : '분석에 실패했어요. 다시 시도해주세요.');
+      });
+    }
+
+    function onFile(file) {
+      if (!file) return;
+      if (!file.type || !file.type.startsWith('image/')) {
+        alert('이미지 파일만 올려주세요. (JPG, PNG, WEBP)');
+        return;
+      }
+      if (file.size > MAX_FILE_SIZE) {
+        alert('파일 크기는 5MB 이하여야 해요.');
+        return;
+      }
+      var reader = new FileReader();
+      reader.onload = function (e) { runAnalysis(e.target.result); };
+      reader.onerror = function () {
+        showState('upload');
+        alert('파일을 읽는 중 오류가 났어요.');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    trigger.addEventListener('click', function () {
+      var expanded = trigger.getAttribute('aria-expanded') === 'true';
+      trigger.setAttribute('aria-expanded', !expanded);
+      content.hidden = expanded;
+      content.setAttribute('aria-hidden', expanded);
+    });
+
+    dropzone.addEventListener('click', function () { input.click(); });
+    dropzone.addEventListener('dragover', function (e) { e.preventDefault(); e.stopPropagation(); dropzone.classList.add('dragover'); });
+    dropzone.addEventListener('dragleave', function () { dropzone.classList.remove('dragover'); });
+    dropzone.addEventListener('drop', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      dropzone.classList.remove('dragover');
+      var f = e.dataTransfer && e.dataTransfer.files[0];
+      onFile(f);
+    });
+    input.addEventListener('change', function (e) {
+      var f = e.target.files[0];
+      onFile(f);
+      e.target.value = '';
+    });
+    if (retry) retry.addEventListener('click', function () { showState('upload'); });
+
+    (function () {
+      var urlInput = document.getElementById('step6-outfit-photo-url');
+      var urlBtn = document.getElementById('step6-outfit-photo-url-btn');
+      if (!urlInput || !urlBtn) return;
+      function loadFromUrl() {
+        var raw = (urlInput.value || '').trim();
+        if (!raw) {
+          alert('이미지 URL을 입력해 주세요.');
+          return;
+        }
+        showState('loading');
+        var proxyUrl = '/api/image-proxy?url=' + encodeURIComponent(raw);
+        fetch(proxyUrl)
+          .then(function (r) {
+            if (r.ok) return r.blob();
+            return fetch(raw, { mode: 'cors' }).then(function (r2) { return r2.ok ? r2.blob() : Promise.reject(new Error('이미지를 불러올 수 없습니다.')); });
+          })
+          .then(function (blob) {
+            var reader = new FileReader();
+            reader.onload = function () { runAnalysis(reader.result); };
+            reader.onerror = function () {
+              showState('upload');
+              alert('이미지 변환에 실패했습니다.');
+            };
+            reader.readAsDataURL(blob);
+          })
+          .catch(function (err) {
+            showState('upload');
+            alert(err.message || '이미지를 불러오지 못했습니다. URL을 확인하거나 파일로 올려 주세요.');
+          });
+      }
+      urlBtn.addEventListener('click', loadFromUrl);
+      urlInput.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); loadFromUrl(); } });
+    })();
   }
 
   // ========================================
@@ -1628,6 +1852,7 @@
     age: null,
     body: null,
     styles: [],
+    styleFingerprint: null,
     skinTone: null,
     undertone: null,
     facePhoto: null,
@@ -1637,6 +1862,7 @@
     selectedGarment: null,
     selectedGarmentBuyUrl: null,
     selectedGarmentName: null,
+    tryonPersonPhoto: null, // 연예인 착장 블록 URL/업로드 이미지 → Try-On 원본 사진으로 사용
     kBeautyConsent: false,
     kBeautyMakeupResult: null
   };
@@ -1648,6 +1874,65 @@
   // 취향 학습 (Taste Learning)
   // ========================================
   var TASTE_STORAGE_KEY = 'sims_taste_preferences';
+  var PROFILE_STORAGE_KEY = 'sims_user_profile';
+  var STYLING_PROFILE_KEY = 'sims_styling_profile';
+
+  function saveUserProfileToLocal() {
+    try {
+      var nameEl = document.getElementById('name-episodes-input');
+      var dateEl = document.getElementById('soul-color-date');
+      var soulResult = document.getElementById('soul-color-result');
+      var profile = {
+        name: (nameEl && nameEl.value) ? nameEl.value.trim() : null,
+        birthDate: (dateEl && dateEl.value) ? dateEl.value.trim() : null,
+        soulColor: (soulResult && !soulResult.hidden && soulResult.getAttribute('data-soul-color')) ? soulResult.getAttribute('data-soul-color') : null,
+        soulType: (soulResult && soulResult.getAttribute('data-soul-type')) ? soulResult.getAttribute('data-soul-type') : null,
+        soulKeyword: (soulResult && soulResult.getAttribute('data-soul-keyword')) ? soulResult.getAttribute('data-soul-keyword') : null,
+        soulStyleName: (soulResult && soulResult.getAttribute('data-soul-style-name')) ? soulResult.getAttribute('data-soul-style-name') : null,
+        soulMaterial: (soulResult && soulResult.getAttribute('data-soul-material')) ? soulResult.getAttribute('data-soul-material') : null,
+        updatedAt: new Date().toISOString()
+      };
+      if (profile.name || profile.birthDate || profile.soulColor) {
+        localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profile));
+      }
+    } catch (e) {}
+  }
+  if (typeof window !== 'undefined') window.saveUserProfileToLocal = saveUserProfileToLocal;
+
+  function saveStylingProfileToLocal() {
+    try {
+      var data = {
+        gender: stylingData.gender || null,
+        age: stylingData.age || null,
+        body: stylingData.body || null,
+        styles: (stylingData.styles && stylingData.styles.length) ? stylingData.styles.slice() : [],
+        skinTone: stylingData.skinTone || null,
+        undertone: stylingData.undertone || null,
+        height: stylingData.height || null,
+        weight: stylingData.weight || null,
+        bmi: stylingData.bmi || null,
+        goal: stylingData.styleFingerprintGoal || null,
+        updatedAt: new Date().toISOString()
+      };
+      if (lastStylingAnalysisResult) {
+        data.personalColor = lastStylingAnalysisResult.personalColor ? {
+          season: lastStylingAnalysisResult.personalColor.season,
+          description: lastStylingAnalysisResult.personalColor.description
+        } : null;
+        data.recommendedStyle = lastStylingAnalysisResult.recommendedStyle ? {
+          mainStyle: lastStylingAnalysisResult.recommendedStyle.mainStyle,
+          subStyles: lastStylingAnalysisResult.recommendedStyle.subStyles,
+          description: lastStylingAnalysisResult.recommendedStyle.description
+        } : null;
+        data.outfitRecommendations = lastStylingAnalysisResult.outfitRecommendations || [];
+        data.stylingTips = lastStylingAnalysisResult.stylingTips || [];
+      }
+      var hasAny = data.gender || data.age || data.body || (data.styles && data.styles.length) || data.skinTone || data.personalColor || data.recommendedStyle;
+      if (hasAny) {
+        localStorage.setItem(STYLING_PROFILE_KEY, JSON.stringify(data));
+      }
+    } catch (e) {}
+  }
 
   function getTastePreferences() {
     try {
@@ -1744,18 +2029,179 @@
     });
   });
 
-  // Style card selection (multiple)
-  document.querySelectorAll('.style-card[data-style]').forEach(card => {
-    card.addEventListener('click', () => {
-      card.classList.toggle('selected');
+  // 60초 보라해 스타일 DNA: 델타 테이블 (Card Delta Table)
+  var STYLE_DNA_DELTA = {
+    'C1-A': { formality: 5, silhouette: 35, contrast: 0, texture: 0, detail: 0, colorTemp: 0, comfort: 5, risk: -5 },
+    'C1-B': { formality: -5, silhouette: -35, contrast: 0, texture: 0, detail: 0, colorTemp: 0, comfort: -5, risk: 5 },
+    'C2-A': { formality: 35, silhouette: 5, contrast: -5, texture: -5, detail: 0, colorTemp: 0, comfort: 10, risk: -10 },
+    'C2-B': { formality: -35, silhouette: -5, contrast: 5, texture: 5, detail: 0, colorTemp: 0, comfort: -10, risk: 10 },
+    'C3-A': { formality: 5, silhouette: 0, contrast: -35, texture: 0, detail: -5, colorTemp: 0, comfort: 0, risk: -5 },
+    'C3-B': { formality: -5, silhouette: 0, contrast: 35, texture: 0, detail: 5, colorTemp: 0, comfort: 0, risk: 5 },
+    'C4-A': { formality: 5, silhouette: 0, contrast: 0, texture: -35, detail: -5, colorTemp: 0, comfort: 5, risk: -5 },
+    'C4-B': { formality: -5, silhouette: 0, contrast: 0, texture: 35, detail: 5, colorTemp: 0, comfort: -5, risk: 5 },
+    'C5-A': { formality: 5, silhouette: 0, contrast: -5, texture: 0, detail: -35, colorTemp: 0, comfort: 5, risk: -10 },
+    'C5-B': { formality: -5, silhouette: 0, contrast: 5, texture: 0, detail: 20, colorTemp: 0, comfort: -5, risk: 10 },
+    'C6-A': { formality: 5, silhouette: 0, contrast: 0, texture: -5, detail: 0, colorTemp: -35, comfort: 0, risk: -5 },
+    'C6-B': { formality: -5, silhouette: 0, contrast: 0, texture: 5, detail: 0, colorTemp: 35, comfort: 0, risk: 5 }
+  };
+  var STYLE_DNA_GOAL_PRIOR = {
+    concert: { formality: 15, silhouette: 0, contrast: 0, texture: 0, detail: 10, colorTemp: 0, comfort: 0, risk: 0 },
+    fanmeeting: { formality: 5, silhouette: 0, contrast: 0, texture: 0, detail: 0, colorTemp: 0, comfort: 5, risk: 0 },
+    daily: { formality: -10, silhouette: 0, contrast: 0, texture: 0, detail: 0, colorTemp: 0, comfort: 10, risk: 0 },
+    airport: { formality: 0, silhouette: 5, contrast: 0, texture: 0, detail: 0, colorTemp: 0, comfort: 0, risk: 5 },
+    date: { formality: 10, silhouette: 0, contrast: 0, texture: 0, detail: 5, colorTemp: 0, comfort: 0, risk: 0 },
+    trend: { formality: 0, silhouette: 0, contrast: 0, texture: 0, detail: 5, colorTemp: 0, comfort: 0, risk: 15 }
+  };
+  var STYLE_DNA_AXES = ['formality', 'silhouette', 'contrast', 'texture', 'detail', 'colorTemp', 'comfort', 'risk'];
 
-      const style = card.dataset.style;
-      if (card.classList.contains('selected')) {
-        if (!stylingData.styles.includes(style)) {
-          stylingData.styles.push(style);
-        }
+  /** 소울 컬러(7분할) → 8D 스타일 지문 매핑. styleName, material 기반 추정. */
+  var SOUL_TO_8D = {
+    rm: { formality: -15, silhouette: -10, contrast: -15, texture: 0, detail: -25, colorTemp: -15, comfort: 20, risk: -10 },
+    jin: { formality: 25, silhouette: 15, contrast: -10, texture: 20, detail: 5, colorTemp: -25, comfort: 0, risk: -15 },
+    suga: { formality: -15, silhouette: 0, contrast: 35, texture: 25, detail: 15, colorTemp: -30, comfort: -10, risk: 20 },
+    jhope: { formality: -25, silhouette: -15, contrast: 30, texture: 20, detail: 25, colorTemp: 25, comfort: 10, risk: 25 },
+    jimin: { formality: 15, silhouette: 5, contrast: -15, texture: 30, detail: 30, colorTemp: 35, comfort: 15, risk: 5 },
+    v: { formality: 20, silhouette: 15, contrast: 25, texture: 35, detail: 20, colorTemp: -10, comfort: 0, risk: 15 },
+    jk: { formality: 20, silhouette: 5, contrast: 15, texture: 25, detail: 25, colorTemp: 30, comfort: 15, risk: 5 }
+  };
+
+  /** 28 한글 캐릭터 역할 → 8D 매핑 (docs/28한글캐릭터_역할_8D매핑.md) */
+  var ROLE_TO_8D = {
+    '발명가': { formality: -20, silhouette: 0, contrast: 15, texture: 25, detail: 30, colorTemp: 0, comfort: 10, risk: 25 },
+    '가수': { formality: 25, silhouette: 15, contrast: 30, texture: 15, detail: 25, colorTemp: 10, comfort: -10, risk: 20 },
+    '도우미': { formality: -25, silhouette: -15, contrast: -15, texture: 0, detail: -15, colorTemp: 5, comfort: 30, risk: -20 },
+    '요리사': { formality: -20, silhouette: -10, contrast: -10, texture: 25, detail: 10, colorTemp: 15, comfort: 25, risk: -10 },
+    '뚝딱이': { formality: -25, silhouette: -10, contrast: -20, texture: 15, detail: -25, colorTemp: 0, comfort: 25, risk: -15 },
+    '천문학자': { formality: 15, silhouette: 10, contrast: -25, texture: -15, detail: -20, colorTemp: -20, comfort: 0, risk: -15 },
+    '시인': { formality: 0, silhouette: -5, contrast: -20, texture: -10, detail: -25, colorTemp: -5, comfort: 15, risk: -5 },
+    '웃음꽃': { formality: -30, silhouette: -20, contrast: 10, texture: 5, detail: 5, colorTemp: 15, comfort: 30, risk: 10 },
+    '상상가': { formality: -15, silhouette: -10, contrast: 25, texture: 20, detail: 30, colorTemp: 20, comfort: 5, risk: 30 },
+    '댄서': { formality: 20, silhouette: 25, contrast: 35, texture: 20, detail: 25, colorTemp: 15, comfort: -15, risk: 25 },
+    '파수꾼': { formality: 5, silhouette: 15, contrast: -15, texture: -10, detail: -15, colorTemp: -15, comfort: 20, risk: -25 },
+    '달변가': { formality: 30, silhouette: 20, contrast: -5, texture: -15, detail: 5, colorTemp: -5, comfort: -5, risk: -15 },
+    '탐정': { formality: 15, silhouette: 15, contrast: 30, texture: 10, detail: 35, colorTemp: -10, comfort: -10, risk: 15 },
+    '천하장사': { formality: -20, silhouette: 0, contrast: 20, texture: 15, detail: 5, colorTemp: 0, comfort: 25, risk: 5 },
+    '화가': { formality: -10, silhouette: -10, contrast: 35, texture: 30, detail: 30, colorTemp: 25, comfort: 0, risk: 20 },
+    '선생님': { formality: 25, silhouette: 15, contrast: -10, texture: -15, detail: 5, colorTemp: -5, comfort: 0, risk: -15 },
+    '전령사': { formality: -25, silhouette: -20, contrast: 15, texture: 0, detail: -10, colorTemp: 5, comfort: 20, risk: 5 },
+    '사진가': { formality: -5, silhouette: 0, contrast: 25, texture: 15, detail: 30, colorTemp: 0, comfort: 5, risk: 15 },
+    '정원사': { formality: -15, silhouette: -15, contrast: -10, texture: 30, detail: 15, colorTemp: 20, comfort: 25, risk: -10 },
+    '길잡이': { formality: 10, silhouette: 10, contrast: -15, texture: -10, detail: -10, colorTemp: -10, comfort: 15, risk: -20 },
+    '치유사': { formality: -20, silhouette: -15, contrast: -20, texture: 20, detail: 5, colorTemp: 25, comfort: 30, risk: -15 },
+    '연주가': { formality: 15, silhouette: 10, contrast: 10, texture: 15, detail: 25, colorTemp: 5, comfort: 0, risk: 5 },
+    '동물 조련사': { formality: -20, silhouette: -15, contrast: -5, texture: 25, detail: 10, colorTemp: 15, comfort: 30, risk: -5 },
+    '기록가': { formality: 5, silhouette: 5, contrast: -20, texture: -15, detail: -25, colorTemp: -15, comfort: 15, risk: -20 },
+    '해양 탐험가': { formality: -15, silhouette: -10, contrast: 20, texture: 20, detail: 20, colorTemp: -15, comfort: 5, risk: 30 },
+    '명상가': { formality: -10, silhouette: -15, contrast: -30, texture: -20, detail: -30, colorTemp: -25, comfort: 35, risk: -25 },
+    '재단사': { formality: 20, silhouette: 35, contrast: 15, texture: 25, detail: 35, colorTemp: 5, comfort: -10, risk: 0 },
+    '마법사': { formality: -15, silhouette: -10, contrast: 25, texture: 20, detail: 30, colorTemp: 20, comfort: 5, risk: 30 }
+  };
+
+  function inferStyleFingerprintFromPersonas(selectedRoles, goal) {
+    if (!selectedRoles || selectedRoles.length === 0) return null;
+    var axes = STYLE_DNA_AXES;
+    var scores = {};
+    var confidence = {};
+    axes.forEach(function (ax) { scores[ax] = 0; confidence[ax] = 0.5; });
+    selectedRoles.forEach(function (role) {
+      var d = ROLE_TO_8D[role];
+      if (d) axes.forEach(function (ax) { scores[ax] += d[ax] || 0; });
+    });
+    var n = selectedRoles.length;
+    axes.forEach(function (ax) {
+      scores[ax] = Math.round((scores[ax] || 0) / n);
+      scores[ax] = Math.max(-100, Math.min(100, scores[ax]));
+    });
+    var prior = STYLE_DNA_GOAL_PRIOR[goal || 'daily'] || {};
+    axes.forEach(function (ax) {
+      scores[ax] = Math.max(-100, Math.min(100, (scores[ax] || 0) + (prior[ax] || 0)));
+    });
+    return { goal: goal || 'daily', scores: scores, confidence: confidence, source: 'persona', selectedRoles: selectedRoles, updatedAt: new Date().toISOString() };
+  }
+
+  function inferStyleFingerprintFromSoul(soulType, goal) {
+    if (!soulType || !SOUL_TO_8D[soulType]) soulType = 'jk';
+    var base = SOUL_TO_8D[soulType];
+    var prior = STYLE_DNA_GOAL_PRIOR[goal || 'daily'] || {};
+    var scores = {};
+    var confidence = {};
+    STYLE_DNA_AXES.forEach(function (ax) {
+      scores[ax] = Math.max(-100, Math.min(100, (base[ax] || 0) + (prior[ax] || 0)));
+      confidence[ax] = 0.5;
+    });
+    return { goal: goal || 'daily', cardChoices: [], scores: scores, confidence: confidence, source: 'soul', soulType: soulType, updatedAt: new Date().toISOString() };
+  }
+
+  function computeStyleFingerprint(goal, cardChoices) {
+    var scores = {};
+    var confidence = {};
+    STYLE_DNA_AXES.forEach(function (ax) {
+      scores[ax] = 0;
+      confidence[ax] = 1;
+    });
+    var prior = STYLE_DNA_GOAL_PRIOR[goal] || {};
+    STYLE_DNA_AXES.forEach(function (ax) {
+      scores[ax] += prior[ax] || 0;
+    });
+    cardChoices.forEach(function (choice) {
+      if (choice.endsWith('-UNK')) {
+        var cardId = choice.replace('-UNK', '');
+        var cardAxis = { C1: 'silhouette', C2: 'formality', C3: 'contrast', C4: 'texture', C5: 'detail', C6: 'colorTemp' }[cardId];
+        if (cardAxis) confidence[cardAxis] = Math.max(0.3, (confidence[cardAxis] || 1) * 0.6);
       } else {
-        stylingData.styles = stylingData.styles.filter(s => s !== style);
+        var delta = STYLE_DNA_DELTA[choice];
+        if (delta) {
+          STYLE_DNA_AXES.forEach(function (ax) {
+            scores[ax] = Math.max(-100, Math.min(100, (scores[ax] || 0) + (delta[ax] || 0)));
+          });
+        }
+      }
+    });
+    return { goal: goal, cardChoices: cardChoices, scores: scores, confidence: confidence, source: 'card', updatedAt: new Date().toISOString() };
+  }
+
+  function styleFingerprintToStyles(fp) {
+    if (!fp || !fp.scores) return ['casual'];
+    var s = fp.scores;
+    var list = [];
+    if (s.formality > 20) list.push('classic');
+    if (s.formality < -20) list.push('casual');
+    if (s.silhouette > 20) list.push('classic');
+    if (s.silhouette < -20) list.push('street');
+    if (s.detail < -20) list.push('minimal');
+    if (s.detail > 20) list.push('street');
+    if (s.contrast > 20) list.push('street');
+    if (s.contrast < -20) list.push('minimal');
+    if (s.colorTemp > 20) list.push('romantic');
+    if (s.colorTemp < -20) list.push('classic');
+    if (list.length === 0) list.push('casual');
+    return list.slice(0, 4);
+  }
+
+  document.querySelectorAll('.style-dna-goal-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.style-dna-goal-btn').forEach(function (b) { b.classList.remove('selected'); });
+      btn.classList.add('selected');
+      stylingData.styleFingerprint = null;
+      stylingData.styleFingerprintGoal = btn.dataset.goal;
+    });
+  });
+
+  document.querySelectorAll('.style-dna-option, .style-dna-unk').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var card = btn.closest('.style-dna-card');
+      if (!card) return;
+      card.querySelectorAll('.style-dna-option, .style-dna-unk').forEach(function (b) { b.classList.remove('selected'); });
+      btn.classList.add('selected');
+      var choices = [];
+      document.querySelectorAll('.style-dna-card').forEach(function (c) {
+        var sel = c.querySelector('.style-dna-option.selected, .style-dna-unk.selected');
+        if (sel) choices.push(sel.dataset.choice);
+      });
+      var goal = stylingData.styleFingerprintGoal || document.querySelector('.style-dna-goal-btn.selected')?.dataset?.goal || 'daily';
+      if (choices.length === 6) {
+        stylingData.styleFingerprint = computeStyleFingerprint(goal, choices);
+        stylingData.styles = styleFingerprintToStyles(stylingData.styleFingerprint);
       }
     });
   });
@@ -1804,12 +2250,33 @@
       stepEl.classList.add('active');
     }
 
+    if (step === 3) {
+      var fp = stylingData.styleFingerprint;
+      if (fp && fp.goal) {
+        var goalBtn = document.querySelector('.style-dna-goal-btn[data-goal="' + fp.goal + '"]');
+        if (goalBtn) {
+          document.querySelectorAll('.style-dna-goal-btn').forEach(function (b) { b.classList.remove('selected'); });
+          goalBtn.classList.add('selected');
+        }
+        if (fp.cardChoices && fp.cardChoices.length === 6) {
+          fp.cardChoices.forEach(function (choice) {
+            var sel = document.querySelector('[data-choice="' + choice + '"]');
+            if (sel) {
+              sel.closest('.style-dna-card')?.querySelectorAll('.style-dna-option, .style-dna-unk').forEach(function (b) { b.classList.remove('selected'); });
+              sel.classList.add('selected');
+            }
+          });
+        }
+      }
+    }
+
     if (step === 4) {
       var consentCb = document.getElementById('k-beauty-consent-checkbox');
       if (consentCb) consentCb.checked = !!stylingData.kBeautyConsent;
     }
 
     if (step === 5) {
+      saveStylingProfileToLocal();
       startAIAnalysis();
       if (stylingData.facePhoto) {
         setTimeout(function () { generateFashionImage(); }, 100);
@@ -1832,8 +2299,65 @@
   document.getElementById('prev-2')?.addEventListener('click', () => goToStep(1));
   document.getElementById('next-2')?.addEventListener('click', () => goToStep(3));
   document.getElementById('prev-3')?.addEventListener('click', () => goToStep(2));
-  document.getElementById('next-3')?.addEventListener('click', () => goToStep(4));
+  document.getElementById('next-3')?.addEventListener('click', () => {
+    var goal = stylingData.styleFingerprintGoal || document.querySelector('.style-dna-goal-btn.selected')?.dataset?.goal;
+    var choices = [];
+    document.querySelectorAll('.style-dna-card').forEach(function (c) {
+      var sel = c.querySelector('.style-dna-option.selected, .style-dna-unk.selected');
+      if (sel) choices.push(sel.dataset.choice);
+    });
+    if (!goal) {
+      alert('오늘 어떤 룩이 필요하신지 먼저 선택해주세요.');
+      return;
+    }
+    if (choices.length < 6) {
+      alert('6가지 질문에 모두 답해주세요. (잘 모르겠어요도 선택 가능해요)');
+      return;
+    }
+    stylingData.styleFingerprint = computeStyleFingerprint(goal, choices);
+    stylingData.styles = styleFingerprintToStyles(stylingData.styleFingerprint);
+    goToStep(4);
+  });
+  var styleDnaSkipBtn = document.getElementById('style-dna-skip-btn');
+  if (styleDnaSkipBtn) {
+    styleDnaSkipBtn.addEventListener('click', function () {
+      var goal = stylingData.styleFingerprintGoal || document.querySelector('.style-dna-goal-btn.selected')?.dataset?.goal || 'daily';
+      var soulResult = document.getElementById('soul-color-result');
+      var soulType = (soulResult && !soulResult.hidden && soulResult.getAttribute('data-soul-type')) ? soulResult.getAttribute('data-soul-type') : null;
+      var selectedPersonas = [];
+      try {
+        var raw = localStorage.getItem('sims_selected_personas');
+        selectedPersonas = raw ? JSON.parse(raw) : [];
+      } catch (e) {}
+      if (!soulType && (!selectedPersonas || selectedPersonas.length === 0)) {
+        var msg = (window.__simsI18n && window.__simsI18n.t) ? window.__simsI18n.t('styling.dna_skip_need_soul_or_persona') : '생년월일을 입력하거나, PLAY 섹션에서 28 캐릭터 중 마음에 드는 것을 선택해주세요.';
+        alert(msg);
+        var soulSection = document.getElementById('soul-color-section');
+        if (soulSection) { soulSection.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+        return;
+      }
+      var fp;
+      if (soulType && selectedPersonas && selectedPersonas.length > 0) {
+        var fpSoul = inferStyleFingerprintFromSoul(soulType, goal);
+        var fpPersona = inferStyleFingerprintFromPersonas(selectedPersonas, goal);
+        fp = { goal: goal, scores: {}, confidence: fpSoul.confidence, source: 'soul+persona', selectedRoles: selectedPersonas, updatedAt: new Date().toISOString() };
+        STYLE_DNA_AXES.forEach(function (ax) {
+          fp.scores[ax] = Math.round(0.5 * (fpSoul.scores[ax] || 0) + 0.5 * (fpPersona.scores[ax] || 0));
+          fp.scores[ax] = Math.max(-100, Math.min(100, fp.scores[ax]));
+        });
+      } else if (soulType) {
+        fp = inferStyleFingerprintFromSoul(soulType, goal);
+      } else {
+        fp = inferStyleFingerprintFromPersonas(selectedPersonas, goal);
+      }
+      stylingData.styleFingerprint = fp;
+      stylingData.styles = styleFingerprintToStyles(stylingData.styleFingerprint);
+      goToStep(4);
+    });
+  }
   document.getElementById('prev-4')?.addEventListener('click', () => goToStep(3));
+  document.getElementById('prev-5')?.addEventListener('click', () => goToStep(4));
+  document.getElementById('prev-5-loading')?.addEventListener('click', () => goToStep(4));
   document.getElementById('next-4')?.addEventListener('click', () => goToStep(5));
   var kBeautyConsentCheckbox = document.getElementById('k-beauty-consent-checkbox');
   if (kBeautyConsentCheckbox) {
@@ -1858,6 +2382,31 @@
       }
     });
   }
+  var fpCtaYes = document.getElementById('fp-cta-yes');
+  var fpCtaEdit = document.getElementById('fp-cta-edit');
+  var fpCtaRefine = document.getElementById('fp-cta-refine');
+  if (fpCtaYes) {
+    fpCtaYes.addEventListener('click', function () {
+      var msg = (window.__simsI18n && window.__simsI18n.t) ? window.__simsI18n.t('styling.fp_toast_yes') : '프로필이 저장됐어요. 다음 추천이 더 맞춰질 거예요 💜';
+      if (typeof showToast === 'function') showToast(msg); else alert(msg);
+      if (stylingData.styleFingerprint) stylingData.styleFingerprint.confirmed = true;
+    });
+  }
+  if (fpCtaEdit) {
+    fpCtaEdit.addEventListener('click', function () { goToStep(3); });
+  }
+  if (fpCtaRefine) {
+    fpCtaRefine.addEventListener('click', function () {
+      var msg = (window.__simsI18n && window.__simsI18n.t) ? window.__simsI18n.t('styling.fp_toast_refine') : '다음 추천에서 테스트 룩으로 더 맞춰볼게요 💜';
+      if (typeof showToast === 'function') showToast(msg); else alert(msg);
+      if (stylingData.styleFingerprint) stylingData.styleFingerprint.wantProof = true;
+    });
+  }
+  document.addEventListener('sims-lang-changed', function () {
+    if (typeof lastStylingAnalysisResult !== 'undefined' && lastStylingAnalysisResult && typeof displayAnalysisResult === 'function') {
+      displayAnalysisResult(lastStylingAnalysisResult);
+    }
+  });
   document.getElementById('go-to-tryon')?.addEventListener('click', () => goToStep(6));
   document.getElementById('prev-6')?.addEventListener('click', () => goToStep(5));
   document.getElementById('finish-styling')?.addEventListener('click', () => {
@@ -2554,11 +3103,12 @@
     }
   });
 
-  // Load user photo for Try-On
+  // Load user photo for Try-On (연예인 착장 블록 이미지 우선)
   function loadUserPhotoForTryOn() {
     const tryonOriginal = document.getElementById('tryon-original');
-    if (tryonOriginal && stylingData.facePhoto) {
-      tryonOriginal.innerHTML = `<img src="${stylingData.facePhoto}" alt="User photo">`;
+    var personPhoto = stylingData.tryonPersonPhoto || stylingData.facePhoto;
+    if (tryonOriginal && personPhoto) {
+      tryonOriginal.innerHTML = '<img src="' + personPhoto + '" alt="User photo">';
     }
   }
 
@@ -2566,7 +3116,6 @@
   // Gemini Fashion Image Generation
   // ========================================
   document.getElementById('generate-fashion-btn')?.addEventListener('click', generateFashionImage);
-  document.getElementById('regenerate-fashion-btn')?.addEventListener('click', generateFashionImage);
   document.getElementById('taste-like-fashion-btn')?.addEventListener('click', function () {
     saveTasteLike('fashion', { styles: stylingData.styles.slice(), gender: stylingData.gender, body: stylingData.body });
     showTasteToast('취향에 반영했어요. 다음 추천에 반영됩니다.');
@@ -2651,13 +3200,32 @@
 
   var FASHION_PROMPT_FIXED = 'CRITICAL STYLE RULES (always follow): Photorealistic only. Do NOT draw cartoon, illustration, anime, comic, or manhwa style. Output must look like a real photograph taken by a professional fashion photographer. Style inspiration: Korean K-pop idol fashion, trendy Korean street style. Outfit colors and silhouettes must suit the person\'s skin tone, face, height and body type—do NOT force purple; recommend colors that flatter them. As if a professional fashion coordinator styled and dressed the person for a real photoshoot: natural skin texture, real fabric and lighting, soft shadows, consistent quality. Maintain real-photo image quality and style in every generation.';
 
+  function getStyleFingerprintPromptLine() {
+    var fp = stylingData.styleFingerprint;
+    if (!fp || !fp.scores) return '';
+    var s = fp.scores;
+    var parts = [];
+    if (s.formality != null) parts.push(s.formality > 30 ? '포멀' : s.formality < -30 ? '캐주얼' : '세미포멀');
+    if (s.silhouette != null) parts.push(s.silhouette > 30 ? '핏·타이트' : s.silhouette < -30 ? '릴렉스·루즈' : '');
+    if (s.contrast != null && Math.abs(s.contrast) > 20) parts.push(s.contrast > 0 ? '하이컨트라스트' : '톤온톤');
+    if (s.texture != null && Math.abs(s.texture) > 20) parts.push(s.texture > 0 ? '텍스처·레이어드' : '클린·스무스');
+    if (s.detail != null) parts.push(s.detail > 20 ? '포인트 악센트' : s.detail < -20 ? '미니멀' : '');
+    if (s.colorTemp != null && Math.abs(s.colorTemp) > 20) parts.push(s.colorTemp > 0 ? '웜톤' : '쿨톤');
+    return parts.filter(Boolean).join(', ') || '캐주얼';
+  }
+
   function buildFashionPrompt(useFaceAndBody, textOnly) {
     const genderMap = { female: '여성', male: '남성', neutral: '젠더리스' };
     const bodyMap = { slim: '슬림한', standard: '보통', muscular: '근육질', curvy: '볼륨감 있는' };
-    const styleNames = stylingData.styles.map(s => {
-      const map = { minimal: '미니멀', casual: '캐주얼', street: '스트릿', romantic: '로맨틱', classic: '클래식', sporty: '스포티' };
-      return map[s] || s;
-    }).join(', ');
+    var styleNames = '';
+    if (stylingData.styleFingerprint) {
+      styleNames = getStyleFingerprintPromptLine();
+    } else {
+      styleNames = (stylingData.styles && stylingData.styles.length) ? stylingData.styles.map(function (s) {
+        var map = { minimal: '미니멀', casual: '캐주얼', street: '스트릿', romantic: '로맨틱', classic: '클래식', sporty: '스포티' };
+        return map[s] || s;
+      }).join(', ') : 'modern casual';
+    }
 
     var preferredLine = getPreferredStylesForPrompt();
     if (textOnly) {
@@ -3055,8 +3623,9 @@
     const generateBtn = document.getElementById('generate-tryon-btn');
     const downloadBtn = document.getElementById('download-tryon-btn');
 
-    if (!stylingData.facePhoto) {
-      alert('먼저 Step 2에서 사진을 업로드해주세요.');
+    var personPhoto = stylingData.tryonPersonPhoto || stylingData.facePhoto;
+    if (!personPhoto) {
+      alert('먼저 Step 2에서 사진을 업로드하거나, 연예인 착장 블록에서 이미지를 올려주세요.');
       return;
     }
 
@@ -3078,13 +3647,10 @@
     }
 
     try {
-      const resultImage = await callGeminiTryOn(stylingData.facePhoto, stylingData.selectedGarment);
+      const resultImage = await callGeminiTryOn(personPhoto, stylingData.selectedGarment);
 
       if (tryonResult && resultImage) {
-        var buyHtml = stylingData.selectedGarmentBuyUrl
-          ? '<a href="' + (stylingData.selectedGarmentBuyUrl || '#') + '" target="_blank" rel="noopener noreferrer" class="btn-tryon-shop">선택한 옷 쇼핑하기</a>'
-          : '';
-        tryonResult.innerHTML = '<div class="tryon-result-wrap"><img src="' + resultImage + '" alt="Try-On Result"><div class="tryon-result-actions"><button type="button" class="btn-taste-like" id="taste-like-tryon-btn">❤ 이 코디 마음에 들어요</button>' + buyHtml + '</div></div>';
+        tryonResult.innerHTML = '<div class="tryon-result-wrap"><img src="' + resultImage + '" alt="Try-On Result"><div class="tryon-result-actions"><button type="button" class="btn-taste-like" id="taste-like-tryon-btn">❤ 이 코디 마음에 들어요</button></div></div>';
         document.getElementById('taste-like-tryon-btn')?.addEventListener('click', function () {
           saveTasteLike('tryon', { styles: stylingData.styles.slice(), garmentName: stylingData.selectedGarmentName });
           showTasteToast('취향에 반영했어요.');
@@ -3093,12 +3659,31 @@
           downloadBtn.disabled = false;
           downloadBtn.onclick = function () { downloadImage(resultImage, 'virtual-tryon.png'); };
         }
+        var tryonActions = tryonResult.closest('.tryon-result-area')?.querySelector('.tryon-actions');
+        if (tryonActions) {
+          var oldShop = tryonActions.querySelector('.btn-tryon-shop');
+          if (oldShop) oldShop.remove();
+          if (stylingData.selectedGarmentBuyUrl) {
+            var shopLink = document.createElement('a');
+            shopLink.href = stylingData.selectedGarmentBuyUrl;
+            shopLink.target = '_blank';
+            shopLink.rel = 'noopener noreferrer';
+            shopLink.className = 'btn-tryon-shop';
+            shopLink.textContent = (window.__simsI18n && window.__simsI18n.t) ? window.__simsI18n.t('tryon.shop_btn') : '선택한 옷 쇼핑하기';
+            tryonActions.appendChild(shopLink);
+          }
+        }
       }
     } catch (error) {
       console.error('Virtual Try-On error:', error);
       if (tryonResult) {
         var errText = (error && error.message) ? String(error.message) : '다시 시도해주세요.';
         tryonResult.innerHTML = '<div class="tryon-error"><p>Virtual Try-On 생성에 실패했습니다.</p><small>' + (typeof escapeHtml === 'function' ? escapeHtml(errText) : errText) + '</small></div>';
+        var tryonActionsErr = tryonResult.closest('.tryon-result-area')?.querySelector('.tryon-actions');
+        if (tryonActionsErr) {
+          var oldShopErr = tryonActionsErr.querySelector('.btn-tryon-shop');
+          if (oldShopErr) oldShopErr.remove();
+        }
       }
     } finally {
       if (generateBtn) {
@@ -3420,16 +4005,17 @@
     const soulResult = document.getElementById('soul-color-result');
     const hasSoulColor = soulResult && !soulResult.hidden && soulResult.getAttribute('data-soul-color');
 
-    const statuses = [
-      '데이터 수집 중...',
-      hasSoulColor ? '소울 컬러 DNA 이식 중...' : '체형 분석 중...',
-      '퍼스널 컬러 분석 중...',
-      '스타일 매칭 중...',
-      '추천 생성 중...'
+    var t = (typeof window.__t === 'function') ? window.__t : function (k) { return k; };
+    var statusKeys = [
+      'styling.loading_1',
+      hasSoulColor ? 'styling.loading_2_soul' : 'styling.loading_2',
+      'styling.loading_3',
+      'styling.loading_4',
+      'styling.loading_5'
     ];
 
-    for (let i = 0; i < statuses.length; i++) {
-      if (loadingStatus) loadingStatus.textContent = statuses[i];
+    for (let i = 0; i < statusKeys.length; i++) {
+      if (loadingStatus) loadingStatus.textContent = t(statusKeys[i]) || statusKeys[i];
       if (loadingBar) loadingBar.style.width = `${(i + 1) * 20}%`;
       await sleep(600);
     }
@@ -3471,7 +4057,9 @@
 - BMI: ${stylingData.bmi != null ? stylingData.bmi : '미계산'}`;
     }
 
-    var prompt = `당신은 전 세계 최고 수준의 AI 패션 전문 스타일리스트입니다. 아래 사용자의 모든 정보(성별, 연령, 체형, 키·몸무게, 피부톤, 톤, 선호 스타일 등)를 반영하여, 고객 메일로 발송할 프리미엄 스타일 프로필을 작성합니다. 샘플처럼 짧게 쓰지 마세요. 각 항목은 실제 돈을 내고 구독하는 고객이 읽고 이해할 수 있도록 전문가 수준으로 구체적이고 풍부하게 작성해주세요. 중요: 옷·코디·팔레트는 반드시 해당 사용자의 얼굴 톤, 키, 몸무게, 피부톤에 맞는 색과 실루엣으로만 추천하세요. 보라색은 브랜드 정체성용이므로 추천에 강제하지 마세요. 다른 설명 없이 JSON만 출력하세요.
+    var lang = (window.__simsI18n && window.__simsI18n.getLang) ? window.__simsI18n.getLang() : 'ko';
+    var langInstruction = lang === 'en' ? 'CRITICAL: Write ALL output (descriptions, recommendations, tips) in English only.' : 'CRITICAL: Write ALL output (descriptions, recommendations, tips) in Korean only.';
+    var prompt = `당신은 전 세계 최고 수준의 AI 패션 전문 스타일리스트입니다. ${langInstruction} 아래 사용자의 모든 정보(성별, 연령, 체형, 키·몸무게, 피부톤, 톤, 선호 스타일 등)를 반영하여, 고객 메일로 발송할 프리미엄 스타일 프로필을 작성합니다. 샘플처럼 짧게 쓰지 마세요. 각 항목은 실제 돈을 내고 구독하는 고객이 읽고 이해할 수 있도록 전문가 수준으로 구체적이고 풍부하게 작성해주세요. 중요: 옷·코디·팔레트는 반드시 해당 사용자의 얼굴 톤, 키, 몸무게, 피부톤에 맞는 색과 실루엣으로만 추천하세요. 보라색은 브랜드 정체성용이므로 추천에 강제하지 마세요. 다른 설명 없이 JSON만 출력하세요.
 ${soulInfo ? soulInfo : ''}
 
 [사용자 정보 - 반드시 추천에 반영]
@@ -3528,23 +4116,33 @@ ${soulInfo ? soulInfo : ''}
   }
 
   function getDefaultResult() {
+    var lang = (window.__simsI18n && window.__simsI18n.getLang) ? window.__simsI18n.getLang() : 'ko';
+    var isEn = lang === 'en';
     return {
       personalColor: {
-        season: "가을웜",
-        description: "따뜻하고 깊이 있는 컬러가 잘 어울리는 타입입니다.",
+        season: isEn ? "Autumn Warm" : "가을웜",
+        description: isEn ? "Warm, deep colors suit you well." : "따뜻하고 깊이 있는 컬러가 잘 어울리는 타입입니다.",
         palette: ["#8B4513", "#D2691E", "#F5DEB3", "#556B2F", "#2F4F4F"]
       },
       recommendedStyle: {
-        mainStyle: "미니멀 시크",
-        subStyles: ["캐주얼", "클래식"],
-        description: "깔끔한 라인과 절제된 디테일이 돋보이는 스타일입니다."
+        mainStyle: isEn ? "Minimal Chic" : "미니멀 시크",
+        subStyles: isEn ? ["Casual", "Classic"] : ["캐주얼", "클래식"],
+        description: isEn ? "Clean lines and restrained details define this style." : "깔끔한 라인과 절제된 디테일이 돋보이는 스타일입니다."
       },
-      outfitRecommendations: [
+      outfitRecommendations: isEn ? [
+        "Beige trench coat + white shirt + slacks",
+        "Camel knit + denim pants + loafers",
+        "Olive jacket + cream tee + chino pants"
+      ] : [
         "베이지 트렌치코트 + 화이트 셔츠 + 슬랙스",
         "카멜 니트 + 데님 팬츠 + 로퍼",
         "올리브 재킷 + 크림 티셔츠 + 치노 팬츠"
       ],
-      stylingTips: [
+      stylingTips: isEn ? [
+        "Add gold accessories for a point of interest",
+        "Use earth-tone colors as your base",
+        "Layer for depth and dimension"
+      ] : [
         "골드 액세서리로 포인트를 주세요",
         "어스톤 계열의 컬러를 베이스로 활용하세요",
         "레이어드 스타일링으로 깊이감을 연출하세요"
@@ -3552,17 +4150,167 @@ ${soulInfo ? soulInfo : ''}
     };
   }
 
+  function getStyleFingerprintSummary(fp) {
+    if (!fp || !fp.scores) return { summary: '', tags: [] };
+    var s = fp.scores;
+    var lang = (window.__simsI18n && window.__simsI18n.getLang) ? window.__simsI18n.getLang() : 'ko';
+    var isEn = lang === 'en';
+    var parts = [];
+    var axisDesc = {
+      formality: { ko: { high: '무대감이 강해요', low: '캐주얼한 스타일을 선호해요' }, en: { high: 'Stage-ready style', low: 'Casual style' } },
+      silhouette: { ko: { high: '핏감 있는 실루엣', low: '여유로운 오버핏' }, en: { high: 'Fitted silhouette', low: 'Relaxed oversized' } },
+      contrast: { ko: { high: '하이컨트라스트', low: '톤온톤' }, en: { high: 'High contrast', low: 'Tone-on-tone' } },
+      texture: { ko: { high: '텍스처·레이어드', low: '클린·스무스' }, en: { high: 'Textured·layered', low: 'Clean·smooth' } },
+      detail: { ko: { high: '포인트·악센트', low: '미니멀' }, en: { high: 'Accent·point', low: 'Minimal' } },
+      colorTemp: { ko: { high: '웜·따뜻한 톤', low: '쿨·차가운 톤' }, en: { high: 'Warm tones', low: 'Cool tones' } },
+      comfort: { ko: { high: '외모 우선', low: '편안함 우선' }, en: { high: 'Appearance-first', low: 'Comfort-first' } },
+      risk: { ko: { high: '실험·트렌디', low: '안전·클래식' }, en: { high: 'Experimental·trendy', low: 'Safe·classic' } }
+    };
+    var axes = ['formality', 'silhouette', 'contrast', 'texture', 'detail', 'colorTemp', 'comfort', 'risk'];
+    var sorted = axes.map(function (ax) { return { ax: ax, v: Math.abs(s[ax] || 0) }; }).sort(function (a, b) { return b.v - a.v; });
+    for (var i = 0; i < Math.min(3, sorted.length) && sorted[i].v >= 15; i++) {
+      var ax = sorted[i].ax;
+      var v = s[ax] || 0;
+      var d = axisDesc[ax];
+      if (d) {
+        var txt = v > 0 ? (isEn ? d.en.high : d.ko.high) : (isEn ? d.en.low : d.ko.low);
+        parts.push(txt);
+      }
+    }
+    var summary = parts.length > 0
+      ? (isEn ? 'Your style: ' + parts.join(', ') + '.' : '당신의 스타일은 ' + parts.join(', ') + '에 가까워요.')
+      : (isEn ? 'Your style is balanced across all axes.' : '모든 축에서 균형 잡힌 스타일이에요.');
+    var styleTags = styleFingerprintToStyles(fp);
+    var tagMap = { classic: isEn ? 'Classic' : '클래식', casual: isEn ? 'Casual' : '캐주얼', minimal: isEn ? 'Minimal' : '미니멀', street: isEn ? 'Street' : '스트릿', romantic: isEn ? 'Romantic' : '로맨틱', sporty: isEn ? 'Sporty' : '스포티' };
+    var tags = styleTags.map(function (t) { return tagMap[t] || t; });
+    return { summary: summary, tags: tags };
+  }
+
+  function renderStyleFingerprintInsight(fp) {
+    if (!fp || !fp.scores) return;
+    var summaryEl = document.getElementById('style-fingerprint-summary-text');
+    var tagsEl = document.getElementById('style-fingerprint-tags');
+    var confListEl = document.getElementById('style-fingerprint-confidence-list');
+    var t = (window.__simsI18n && window.__simsI18n.t) ? window.__simsI18n.t : function (k) { return k; };
+    var lang = (window.__simsI18n && window.__simsI18n.getLang) ? window.__simsI18n.getLang() : 'ko';
+    var isEn = lang === 'en';
+    var axisLabels = ['formality', 'silhouette', 'contrast', 'texture', 'detail', 'colorTemp', 'comfort', 'risk'];
+    var labelKeys = ['styling.radar_axis_formality', 'styling.radar_axis_silhouette', 'styling.radar_axis_contrast', 'styling.radar_axis_texture', 'styling.radar_axis_detail', 'styling.radar_axis_colorTemp', 'styling.radar_axis_comfort', 'styling.radar_axis_risk'];
+    var data = getStyleFingerprintSummary(fp);
+    if (summaryEl) summaryEl.textContent = data.summary;
+    if (tagsEl) {
+      tagsEl.innerHTML = data.tags.map(function (tag) {
+        return '<span class="style-fingerprint-tag">' + tag + '</span>';
+      }).join('');
+    }
+    if (confListEl && fp.confidence) {
+      confListEl.innerHTML = axisLabels.map(function (ax, i) {
+        var conf = fp.confidence[ax] != null ? fp.confidence[ax] : 1;
+        var pct = Math.round(conf * 100);
+        var label = t(labelKeys[i]) || ax;
+        return '<div class="style-fingerprint-conf-item"><span class="style-fingerprint-conf-label">' + label + '</span><div class="style-fingerprint-conf-bar"><div class="style-fingerprint-conf-fill" style="width:' + pct + '%"></div></div><span class="style-fingerprint-conf-pct">' + pct + '%</span></div>';
+      }).join('');
+    }
+  }
+
+  function renderStyleFingerprintRadar(fp) {
+    var canvas = document.getElementById('style-fingerprint-radar');
+    if (!canvas || !fp || !fp.scores) return;
+    var ctx = canvas.getContext('2d');
+    var w = canvas.width;
+    var h = canvas.height;
+    var cx = w / 2;
+    var cy = h / 2;
+    var radius = Math.min(w, h) / 2 - 40;
+    var axes = ['formality', 'silhouette', 'contrast', 'texture', 'detail', 'colorTemp', 'comfort', 'risk'];
+    var labelKeys = ['styling.radar_axis_formality', 'styling.radar_axis_silhouette', 'styling.radar_axis_contrast', 'styling.radar_axis_texture', 'styling.radar_axis_detail', 'styling.radar_axis_colorTemp', 'styling.radar_axis_comfort', 'styling.radar_axis_risk'];
+    var t = (window.__simsI18n && window.__simsI18n.t) ? window.__simsI18n.t : function (k) { return k; };
+    var labels = labelKeys.map(function (k) { return t(k) || k; });
+    var n = axes.length;
+    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    var gridColor = isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.12)';
+    var textColor = isDark ? '#e2e8f0' : '#334155';
+    var fillColor = 'rgba(168, 85, 247, 0.35)';
+    var strokeColor = '#a855f7';
+    var labelColor = isDark ? '#94a3b8' : '#64748b';
+
+    ctx.clearRect(0, 0, w, h);
+
+    for (var r = 1; r <= 5; r++) {
+      var rVal = (radius * r) / 5;
+      ctx.beginPath();
+      for (var i = 0; i <= n; i++) {
+        var angle = (Math.PI * 2 * i) / n - Math.PI / 2;
+        var x = cx + rVal * Math.cos(angle);
+        var y = cy + rVal * Math.sin(angle);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+      ctx.strokeStyle = gridColor;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+
+    for (var i = 0; i < n; i++) {
+      var angle = (Math.PI * 2 * i) / n - Math.PI / 2;
+      var ex = cx + radius * Math.cos(angle);
+      var ey = cy + radius * Math.sin(angle);
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(ex, ey);
+      ctx.strokeStyle = gridColor;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+
+    var scores = fp.scores;
+    var points = [];
+    for (var i = 0; i < n; i++) {
+      var s = scores[axes[i]] != null ? scores[axes[i]] : 0;
+      var normalized = (s + 100) / 2;
+      var r = (radius * normalized) / 100;
+      var angle = (Math.PI * 2 * i) / n - Math.PI / 2;
+      points.push({ x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle) });
+    }
+
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, points[0].y);
+    for (var i = 1; i < points.length; i++) {
+      ctx.lineTo(points[i].x, points[i].y);
+    }
+    ctx.closePath();
+    ctx.fillStyle = fillColor;
+    ctx.fill();
+    ctx.strokeStyle = strokeColor;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.font = '11px system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    for (var i = 0; i < n; i++) {
+      var angle = (Math.PI * 2 * i) / n - Math.PI / 2;
+      var lx = cx + (radius + 18) * Math.cos(angle);
+      var ly = cy + (radius + 18) * Math.sin(angle);
+      ctx.fillStyle = labelColor;
+      ctx.fillText(labels[i], lx, ly);
+    }
+  }
+
   function displayAnalysisResult(result) {
     lastStylingAnalysisResult = result;
+    saveStylingProfileToLocal();
     const loadingEl = document.getElementById('analysis-loading');
     const resultEl = document.getElementById('analysis-result');
 
     if (loadingEl) loadingEl.style.display = 'none';
     if (resultEl) resultEl.style.display = 'block';
 
-    const seasonClass = result.personalColor.season.includes('봄') ? 'spring' :
-                        result.personalColor.season.includes('여름') ? 'summer' :
-                        result.personalColor.season.includes('가을') ? 'autumn' : 'winter';
+    var seasonStr = (result.personalColor.season || '').toLowerCase();
+    const seasonClass = seasonStr.includes('spring') || seasonStr.includes('봄') ? 'spring' :
+                        seasonStr.includes('summer') || seasonStr.includes('여름') ? 'summer' :
+                        seasonStr.includes('autumn') || seasonStr.includes('fall') || seasonStr.includes('가을') ? 'autumn' : 'winter';
 
     var primaryKey = getPrimary7Color(result.personalColor.season);
     var music = COLOR_MUSIC[primaryKey] || COLOR_MUSIC.blue;
@@ -3636,6 +4384,54 @@ ${soulInfo ? soulInfo : ''}
         </div>
         <p class="style-description" style="margin-top: 12px;">${result.recommendedStyle.description}</p>
       `;
+    }
+
+    var fpCard = document.getElementById('style-fingerprint-card');
+    if (fpCard) {
+      var fp = stylingData.styleFingerprint;
+      if (fp && fp.scores) {
+        fpCard.style.display = 'block';
+        renderStyleFingerprintRadar(fp);
+        renderStyleFingerprintInsight(fp);
+        var bipolarList = document.getElementById('style-fingerprint-bipolar-list');
+        if (bipolarList) {
+          var lang = (window.__simsI18n && window.__simsI18n.getLang) ? window.__simsI18n.getLang() : (document.documentElement.lang || 'ko');
+          var isEn = lang === 'en';
+          var bipolarDefs = [
+            { key: 'formality', left: isEn ? 'daily casual' : '일상 캐주얼', right: isEn ? 'stage-ready' : '무대 위 포멀' },
+            { key: 'silhouette', left: isEn ? 'relaxed·oversized' : '오버핏·루즈', right: isEn ? 'fitted·tight' : '타이트·핏' },
+            { key: 'contrast', left: isEn ? 'tone-on-tone' : '톤온톤', right: isEn ? 'high contrast' : '하이컨트라스트' },
+            { key: 'texture', left: isEn ? 'clean·smooth' : '클린·스무스', right: isEn ? 'textured·layered' : '텍스처·레이어드' },
+            { key: 'detail', left: isEn ? 'minimal' : '미니멀', right: isEn ? 'accent·point' : '포인트·악센트' },
+            { key: 'colorTemp', left: isEn ? 'cool' : '쿨·차가운 톤', right: isEn ? 'warm' : '웜·따뜻한 톤' },
+            { key: 'comfort', left: isEn ? 'comfort-first' : '편안함 우선', right: isEn ? 'appearance-first' : '외모 우선' },
+            { key: 'risk', left: isEn ? 'safe·classic' : '안전·클래식', right: isEn ? 'experimental·trendy' : '실험·트렌디' }
+          ];
+          bipolarList.innerHTML = bipolarDefs.map(function (d) {
+            return '<li><span class="bipolar-left">' + d.left + '</span> <span class="bipolar-arrow">&lt;-&gt;</span> <span class="bipolar-right">' + d.right + '</span></li>';
+          }).join('');
+        }
+        var soulResult = document.getElementById('soul-color-result');
+        var fpSoulWrap = document.getElementById('style-fingerprint-soul');
+        var fpSoulChip = document.getElementById('fp-soul-chip');
+        var fpSoulKeyword = document.getElementById('fp-soul-keyword');
+        var fpSoulPersonality = document.getElementById('fp-soul-personality');
+        if (fpSoulWrap && soulResult && !soulResult.hidden && soulResult.getAttribute('data-soul-color')) {
+          var sColor = soulResult.getAttribute('data-soul-color');
+          var sType = soulResult.getAttribute('data-soul-type') || 'jk';
+          var t = (window.__simsI18n && window.__simsI18n.t) ? window.__simsI18n.t : function (k) { return k; };
+          var sKeyword = t('soul.' + sType + '.keyword') || soulResult.getAttribute('data-soul-keyword') || '';
+          var sPersonality = t('soul.' + sType + '.personality') || '';
+          if (fpSoulChip) fpSoulChip.style.background = sColor;
+          if (fpSoulKeyword) fpSoulKeyword.textContent = sKeyword;
+          if (fpSoulPersonality) fpSoulPersonality.textContent = sPersonality;
+          fpSoulWrap.style.display = 'block';
+        } else if (fpSoulWrap) {
+          fpSoulWrap.style.display = 'none';
+        }
+      } else {
+        fpCard.style.display = 'none';
+      }
     }
 
     var kBeautyLead = document.getElementById('k-beauty-lead');
@@ -3885,7 +4681,6 @@ ${soulInfo ? soulInfo : ''}
 | 버튼ID | 기능 | 사용자 말 예시 |
 |--------|------|---------------|
 | generate-fashion-btn | 패션 이미지 생성 | "패션 이미지 만들어" |
-| regenerate-fashion-btn | 패션 다시 생성 | "다른 패션 보여줘" |
 | save-result | 결과 저장 | "결과 저장" |
 | retry-analysis | 다시 분석 | "다시 분석" |
 | go-to-tryon | 가상 피팅으로 이동 | "가상 피팅 해볼래", "입어보기" |
@@ -4067,25 +4862,73 @@ ${soulInfo ? soulInfo : ''}
 - 항상 소아베로서 대화하세요. "저는 AI입니다"가 아니라 "나는 소아베예요"라고 정체성을 유지하세요`;
 
   function getChatUserContext() {
+    var lines = ['## [필수] 사용자 데이터 (이 섹션을 반드시 참고하여 "내 취향 말해줘" 등에 답하세요)'];
+    var styleMap = { minimal: '미니멀', casual: '캐주얼', street: '스트릿', romantic: '로맨틱', classic: '클래식', sporty: '스포티' };
+
+    var profile = {};
+    try {
+      var raw = localStorage.getItem(PROFILE_STORAGE_KEY);
+      if (raw) profile = JSON.parse(raw) || {};
+    } catch (e) {}
+    var stylingProfile = {};
+    try {
+      var raw2 = localStorage.getItem(STYLING_PROFILE_KEY);
+      if (raw2) stylingProfile = JSON.parse(raw2) || {};
+    } catch (e) {}
+
+    if (profile.name) lines.push('- 이름: ' + profile.name);
+    if (profile.birthDate) lines.push('- 생년월일: ' + profile.birthDate);
+    if (profile.soulColor || profile.soulKeyword) {
+      lines.push('- 소울 컬러: ' + (profile.soulColor || '') + (profile.soulKeyword ? ' (' + profile.soulKeyword + ')' : ''));
+    }
+    if (profile.soulStyleName || profile.soulMaterial) {
+      lines.push('- 스타일/소재: ' + [profile.soulStyleName, profile.soulMaterial].filter(Boolean).join(', '));
+    }
+
+    var selectedPersonas = [];
+    try {
+      var raw3 = localStorage.getItem('sims_selected_personas');
+      selectedPersonas = raw3 ? JSON.parse(raw3) : [];
+    } catch (e) {}
+    if (selectedPersonas.length > 0) {
+      lines.push('- 선택한 28캐릭터(페르소나): ' + selectedPersonas.slice(0, 5).join(', '));
+    }
+
+    if (stylingProfile.gender || stylingProfile.age || stylingProfile.body) {
+      lines.push('- 성별: ' + (stylingProfile.gender || stylingData.gender || '미선택') + ', 연령: ' + (stylingProfile.age || stylingData.age || '미선택') + ', 체형: ' + (stylingProfile.body || stylingData.body || '미선택'));
+    }
+    if (stylingProfile.height || stylingProfile.weight) {
+      lines.push('- 키/몸무게: ' + (stylingProfile.height || stylingData.height || '-') + 'cm, ' + (stylingProfile.weight || stylingData.weight || '-') + 'kg');
+    }
+    if (stylingProfile.skinTone || stylingProfile.undertone) {
+      lines.push('- 피부톤: ' + (stylingProfile.skinTone || stylingData.skinTone || '미선택') + ', 언더톤: ' + (stylingProfile.undertone || stylingData.undertone || '미선택'));
+    }
+
+    var stylesFromSession = (stylingData.styles && stylingData.styles.length) ? stylingData.styles : (stylingProfile.styles && stylingProfile.styles.length) ? stylingProfile.styles : [];
+    var stylesFromAnalysis = stylingProfile.recommendedStyle ? [stylingProfile.recommendedStyle.mainStyle].concat(stylingProfile.recommendedStyle.subStyles || []) : [];
+    if (lastStylingAnalysisResult && lastStylingAnalysisResult.recommendedStyle) {
+      stylesFromAnalysis = [lastStylingAnalysisResult.recommendedStyle.mainStyle].concat(lastStylingAnalysisResult.recommendedStyle.subStyles || []);
+    }
     var prefs = getTastePreferences();
-    var lines = ['## [필수] 사용자 취향 데이터 (이 섹션을 반드시 참고하여 답변하세요)'];
-    var hasData = false;
-    if (prefs.likedStyles && prefs.likedStyles.length > 0) {
-      var styleNames = prefs.likedStyles.map(function (s) {
-        var map = { minimal: '미니멀', casual: '캐주얼', street: '스트릿', romantic: '로맨틱', classic: '클래식', sporty: '스포티' };
-        return map[s] || s;
-      }).join(', ');
-      lines.push('- 저장된 선호 스타일: ' + styleNames);
-      lines.push('- 사용자가 "내 취향 말해줘", "저의 취향을 이야기 해줘" 등으로 물으면 반드시 먼저 "저장된 취향은 [위 스타일]이에요."라고 말한 뒤, 그에 맞는 조언을 이어가세요. "취향을 말해주세요"라고 되물어보지 마세요.');
-      hasData = true;
+    var likedStyles = (prefs.likedStyles && prefs.likedStyles.length) ? prefs.likedStyles : [];
+
+    var primaryStyles = stylesFromSession.length ? stylesFromSession : (stylesFromAnalysis.length ? stylesFromAnalysis : likedStyles);
+    var styleNames = primaryStyles.slice(0, 6).map(function (s) { return styleMap[s] || s; }).join(', ');
+    if (styleNames) {
+      lines.push('- 선호 스타일 (우선순위: 현재 세션 > AI분석결과 > 저장한 코디): ' + styleNames);
+      if (stylingProfile.personalColor && stylingProfile.personalColor.season) {
+        lines.push('- 퍼스널 컬러(AI분석): ' + stylingProfile.personalColor.season + ' - ' + (stylingProfile.personalColor.description || '').slice(0, 80));
+      }
+      if (lastStylingAnalysisResult && lastStylingAnalysisResult.personalColor) {
+        lines.push('- 퍼스널 컬러(현재): ' + lastStylingAnalysisResult.personalColor.season);
+      }
+      lines.push('- [지시] "내 취향 말해줘" 등으로 물으면 위 이름·생년월일·소울컬러·선호스타일·퍼스널컬러를 종합하여 "저장된 취향은 [스타일]이에요. [이름]님의 [소울/퍼스널]을 반영한 추천이에요" 형식으로 답하세요. 되물어보지 마세요.');
+    } else {
+      lines.push('- 선호 스타일: 아직 없음');
+      lines.push('- [지시] "내 취향 말해줘" 등으로 물으면: "아직 저장된 취향이 없어요. PLAY에서 이름을 입력하고, CREATE에서 생년월일을 입력한 뒤 AI 스타일링을 진행해보세요. 마음에 드는 코디가 나오면 \'이 코디 마음에 들어요\'를 눌러 저장해주세요!"');
     }
     if (prefs.savedOutfits && prefs.savedOutfits.length > 0) {
       lines.push('- 저장한 코디 수: ' + prefs.savedOutfits.length + '건');
-      hasData = true;
-    }
-    if (!hasData) {
-      lines.push('- 현재 저장된 취향 없음 (아직 "이 코디 마음에 들어요"로 저장한 코디가 없음).');
-      lines.push('- 사용자가 "내 취향 말해줘", "저의 취향을 이야기 해줘" 등으로 물으면 반드시 이렇게만 답하세요: "아직 저장된 취향이 없어요. 상단에서 AI 스타일링을 진행하시고, 마음에 드는 코디가 나오면 \'이 코디 마음에 들어요\'를 눌러 저장해보세요. 저장하시면 다음부터 그 취향을 기반으로 맞춤 대화를 드릴게요!" 취향을 말해달라고 되물어보지 마세요.');
     }
     return '\n\n' + lines.join('\n');
   }
@@ -5071,7 +5914,7 @@ ${soulInfo ? soulInfo : ''}
   function clickButton(btnId) {
     if (!btnId) return;
     var noCloseIds = ['theme-toggle', 'lang-ko', 'lang-en', 'bgm-toggle', 'name-episodes-share-btn',
-      'save-result', 'retry-analysis', 'generate-fashion-btn', 'regenerate-fashion-btn',
+      'save-result', 'retry-analysis', 'generate-fashion-btn',
       'taste-like-fashion-btn', 'finish-styling', 'soave-nav-prev', 'soave-nav-next',
       'soave-mute-btn', 'nav-logout-btn', 'go-to-tryon', 'generate-tryon-btn',
       'download-tryon-btn', 'arch-generate-again-btn', 'arch-retry-btn',

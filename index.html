@@ -229,7 +229,7 @@
           <div class="feature-card-content">
             <h3 data-i18n="features.pillar1_title">한글 페르소나</h3>
             <p data-i18n="features.pillar1_desc">이름 속에 깃든 다채로운 페르소나와 당신만의 고유한 서사를 일깨우고, 그에 어울리는 최적의 스타일을 발견합니다.</p>
-            <p style="margin-top:12px;"><a href="#styling" class="btn-outline btn-sm feature-card-cta" data-i18n="features.pillar1_btn">놀기 · PLAY</a></p>
+            <p style="margin-top:12px;"><a href="#styling" class="btn-outline btn-sm feature-card-cta" data-i18n="features.pillar1_btn">일깨우기 · PLAY</a></p>
           </div>
         </div>
         <div class="feature-card magic-shop-card">
@@ -239,7 +239,7 @@
           <div class="feature-card-content">
             <h3 data-i18n="features.pillar2_title">매직샵</h3>
             <p data-i18n="features.pillar2_desc">음악(MIDI)이 머무는 안식처를 짓고, 그 공간의 열쇠가 되는 나만의 응원봉(기억의 등불)을 밝힙니다</p>
-            <p style="margin-top:12px;"><a href="#lightstick" class="btn-outline btn-sm feature-card-cta" data-i18n="features.pillar2_btn">일깨우기 · CREATE</a></p>
+            <p style="margin-top:12px;"><a href="#lightstick" class="btn-outline btn-sm feature-card-cta" data-i18n="features.pillar2_btn">짓기 · CREATE</a></p>
           </div>
         </div>
         <div class="feature-card bora-goods-card">
@@ -429,6 +429,17 @@
               <div id="name-episodes-share-cuts" style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:32px;"></div>
               <p id="name-episodes-share-summary" style="font-size:22px;line-height:1.5;margin:0;text-align:center;opacity:0.85;"></p>
             </div>
+            </div>
+            <div class="name-episodes-learn-more" id="name-episodes-learn-more">
+              <button type="button" class="name-episodes-learn-more-trigger" id="name-episodes-learn-more-trigger" aria-expanded="false" aria-controls="name-episodes-28-grid">
+                <span data-i18n="ai.learn_more_trigger">스타일과의 연결 더 알아보기</span>
+                <span class="name-episodes-learn-more-icon" aria-hidden="true">▼</span>
+              </button>
+              <div id="name-episodes-28-grid" class="name-episodes-28-grid" hidden aria-hidden="true">
+                <p class="name-episodes-28-hint" data-i18n="ai.learn_more_hint">마음에 드는 캐릭터를 골라보세요 (최대 5개). 스타일 추천에 반영됩니다.</p>
+                <div class="name-episodes-28-cards" id="name-episodes-28-cards"></div>
+                <p class="name-episodes-28-selected" id="name-episodes-28-selected-count">0개 선택됨</p>
+              </div>
             </div>
           </div>
         </div>
@@ -1943,27 +1954,27 @@
         <div class="progress-steps">
           <div class="progress-step active" data-step="1">
             <span class="step-dot">1</span>
-            <span class="step-label">기본 정보</span>
+            <span class="step-label" data-i18n="styling.step1_label">기본 정보</span>
           </div>
           <div class="progress-step" data-step="2">
             <span class="step-dot">2</span>
-            <span class="step-label">신체 측정</span>
+            <span class="step-label" data-i18n="styling.step2_label">신체 측정</span>
           </div>
           <div class="progress-step" data-step="3">
             <span class="step-dot">3</span>
-            <span class="step-label">스타일 취향</span>
+            <span class="step-label" data-i18n="styling.step3_label">스타일 DNA</span>
           </div>
           <div class="progress-step" data-step="4">
             <span class="step-dot">4</span>
-            <span class="step-label">컬러 분석</span>
+            <span class="step-label" data-i18n="styling.step4_label">컬러 분석</span>
           </div>
           <div class="progress-step" data-step="5">
             <span class="step-dot">5</span>
-            <span class="step-label">AI 분석</span>
+            <span class="step-label" data-i18n="styling.step5_label">AI 분석</span>
           </div>
           <div class="progress-step" data-step="6">
             <span class="step-dot">6</span>
-            <span class="step-label">Virtual Try-On</span>
+            <span class="step-label" data-i18n="styling.step6_label">Virtual Try-On</span>
           </div>
         </div>
       </div>
@@ -1972,72 +1983,72 @@
       <div id="step-1" class="styling-step active">
         <div class="step-header">
           <span class="step-badge">Step 1</span>
-          <h2>기본 정보를 알려주세요</h2>
-          <p>맞춤 스타일링을 위해 기본 정보가 필요해요</p>
+          <h2 data-i18n="styling.step1_title">기본 정보를 알려주세요</h2>
+          <p data-i18n="styling.step1_desc">맞춤 스타일링을 위해 기본 정보가 필요해요</p>
         </div>
         <div class="step-content">
           <div class="form-group">
-            <label>성별</label>
+            <label data-i18n="styling.gender">성별</label>
             <div class="option-grid gender-options">
               <button type="button" class="option-card" data-field="gender" data-value="female">
                 <div class="option-icon">👩</div>
-                <span>여성</span>
+                <span data-i18n="styling.female">여성</span>
               </button>
               <button type="button" class="option-card" data-field="gender" data-value="male">
                 <div class="option-icon">👨</div>
-                <span>남성</span>
+                <span data-i18n="styling.male">남성</span>
               </button>
               <button type="button" class="option-card" data-field="gender" data-value="neutral">
                 <div class="option-icon">🧑</div>
-                <span>젠더리스</span>
+                <span data-i18n="styling.neutral">젠더리스</span>
               </button>
             </div>
           </div>
           <div class="form-group">
-            <label>연령대</label>
+            <label data-i18n="styling.age">연령대</label>
             <div class="option-grid age-options">
               <button type="button" class="option-card" data-field="age" data-value="10s">
-                <span>10대</span>
+                <span data-i18n="styling.age_10s">10대</span>
               </button>
               <button type="button" class="option-card" data-field="age" data-value="20s">
-                <span>20대</span>
+                <span data-i18n="styling.age_20s">20대</span>
               </button>
               <button type="button" class="option-card" data-field="age" data-value="30s">
-                <span>30대</span>
+                <span data-i18n="styling.age_30s">30대</span>
               </button>
               <button type="button" class="option-card" data-field="age" data-value="40s">
-                <span>40대</span>
+                <span data-i18n="styling.age_40s">40대</span>
               </button>
               <button type="button" class="option-card" data-field="age" data-value="50s+">
-                <span>50대+</span>
+                <span data-i18n="styling.age_50s">50대+</span>
               </button>
             </div>
           </div>
           <div class="form-group">
-            <label>체형 타입</label>
+            <label data-i18n="styling.body">체형 타입</label>
             <div class="option-grid body-options">
               <button type="button" class="option-card" data-field="body" data-value="slim">
                 <div class="body-icon slim"></div>
-                <span>슬림</span>
+                <span data-i18n="styling.body_slim">슬림</span>
               </button>
               <button type="button" class="option-card" data-field="body" data-value="standard">
                 <div class="body-icon standard"></div>
-                <span>보통</span>
+                <span data-i18n="styling.body_standard">보통</span>
               </button>
               <button type="button" class="option-card" data-field="body" data-value="muscular">
                 <div class="body-icon muscular"></div>
-                <span>근육질</span>
+                <span data-i18n="styling.body_muscular">근육질</span>
               </button>
               <button type="button" class="option-card" data-field="body" data-value="curvy">
                 <div class="body-icon curvy"></div>
-                <span>볼륨</span>
+                <span data-i18n="styling.body_curvy">볼륨</span>
               </button>
             </div>
           </div>
         </div>
         <div class="step-actions">
           <button type="button" class="btn-next" id="next-1">
-            다음 단계
+            <span data-i18n="styling.next">다음 단계</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M5 12h14M12 5l7 7-7 7"/>
             </svg>
@@ -2049,12 +2060,12 @@
       <div id="step-2" class="styling-step">
         <div class="step-header">
           <span class="step-badge">Step 2</span>
-          <h2>신체 정보를 입력해주세요</h2>
-          <p>Virtual Try-On을 위해 사진과 체형 정보가 필요해요</p>
+          <h2 data-i18n="styling.step2_title">신체 정보를 입력해주세요</h2>
+          <p data-i18n="styling.step2_desc">Virtual Try-On을 위해 사진과 체형 정보가 필요해요</p>
         </div>
         <div class="step-content">
           <div class="form-group">
-            <label>얼굴 사진 업로드</label>
+            <label data-i18n="styling.face_upload">얼굴 사진 업로드</label>
             <div class="photo-upload-area" id="photo-upload-area">
               <input type="file" id="face-photo-input" accept="image/*" hidden>
               <div class="upload-placeholder" id="upload-placeholder">
@@ -2065,8 +2076,8 @@
                     <line x1="12" y1="3" x2="12" y2="15"/>
                   </svg>
                 </div>
-                <p>클릭하여 사진 업로드</p>
-                <span>정면 상반신 사진을 권장합니다</span>
+                <p data-i18n="styling.click_upload">클릭하여 사진 업로드</p>
+                <span data-i18n="styling.face_hint">정면 상반신 사진을 권장합니다</span>
               </div>
               <div class="photo-preview" id="photo-preview" style="display: none;">
                 <img id="preview-image" src="" alt="Preview">
@@ -2079,17 +2090,17 @@
             </div>
           </div>
           <div class="form-group">
-            <label>얼굴 샘플</label>
-            <p class="form-hint" style="font-size:0.9rem;color:var(--text-muted);margin-bottom:8px;">아래에서 샘플 이미지를 선택할 수도 있어요 (image/human/face)</p>
+            <label data-i18n="styling.face_sample">얼굴 샘플</label>
+            <p class="form-hint" style="font-size:0.9rem;color:var(--text-muted);margin-bottom:8px;" data-i18n="styling.face_sample_hint">아래에서 샘플 이미지를 선택할 수도 있어요 (image/human/face)</p>
             <div id="face-sample-container" class="face-sample-container"></div>
           </div>
           <div class="measurement-inputs">
             <div class="form-group measurement-field">
-              <label>키 (cm)</label>
+              <label data-i18n="styling.height">키 (cm)</label>
               <input type="number" id="height-input" placeholder="170" min="100" max="250">
             </div>
             <div class="form-group measurement-field">
-              <label>몸무게 (kg)</label>
+              <label data-i18n="styling.weight">몸무게 (kg)</label>
               <input type="number" id="weight-input" placeholder="65" min="30" max="200">
             </div>
           </div>
@@ -2100,8 +2111,8 @@
                 <small>BMI</small>
               </div>
               <div class="bmi-info">
-                <span id="bmi-category">체질량 지수</span>
-                <p id="bmi-description">키와 몸무게를 입력하면 BMI가 계산됩니다</p>
+                <span id="bmi-category" data-i18n="styling.bmi_category">체질량 지수</span>
+                <p id="bmi-description" data-i18n="styling.bmi_desc">키와 몸무게를 입력하면 BMI가 계산됩니다</p>
               </div>
             </div>
           </div>
@@ -2111,13 +2122,11 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M19 12H5M12 19l-7-7 7-7"/>
             </svg>
-            이전
+            <span data-i18n="styling.prev">이전</span>
           </button>
           <button type="button" class="btn-next" id="next-2">
-            다음 단계
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M5 12h14M12 5l7 7-7 7"/>
-            </svg>
+            <span data-i18n="styling.next">다음 단계</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </button>
         </div>
       </div>
@@ -2126,83 +2135,107 @@
       <div id="step-3" class="styling-step">
         <div class="step-header">
           <span class="step-badge">Step 3</span>
-          <h2>선호하는 스타일을 선택하세요</h2>
-          <p>마음에 드는 스타일을 모두 선택해주세요 (복수 선택 가능)</p>
+          <h2 data-i18n="styling.step3_title">60초 보라해 스타일 DNA</h2>
+          <p data-i18n="styling.step3_desc">이 중에서 더 끌리는 쪽을 골라주세요 (각 카드당 하나만 선택)</p>
         </div>
         <div class="step-content">
-          <div class="style-grid">
-            <button type="button" class="style-card" data-style="minimal">
-              <div class="style-preview minimal-preview"></div>
-              <div class="style-info">
-                <h4>미니멀</h4>
-                <p>깔끔하고 심플한</p>
-              </div>
-              <div class="style-check">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                  <polyline points="20 6 9 17 4 12"/>
-                </svg>
-              </div>
+          <div id="style-dna-goal" class="style-dna-section">
+            <label class="style-dna-label" data-i18n="styling.dna_goal_label">오늘 어떤 룩이 필요해요?</label>
+            <div class="style-dna-goal-grid">
+              <button type="button" class="style-dna-goal-btn" data-goal="concert" data-i18n="styling.goal_concert">🎤 콘서트·무대</button>
+              <button type="button" class="style-dna-goal-btn" data-goal="fanmeeting" data-i18n="styling.goal_fanmeeting">💜 팬미팅·매직샵</button>
+              <button type="button" class="style-dna-goal-btn" data-goal="daily" data-i18n="styling.goal_daily">☀️ 일상·데일리</button>
+              <button type="button" class="style-dna-goal-btn" data-goal="airport" data-i18n="styling.goal_airport">✈️ 공항·여행</button>
+              <button type="button" class="style-dna-goal-btn" data-goal="date" data-i18n="styling.goal_date">💕 데이트·특별한 날</button>
+              <button type="button" class="style-dna-goal-btn" data-goal="trend" data-i18n="styling.goal_trend">✨ 트렌드 체험</button>
+            </div>
+          </div>
+          <div class="style-dna-skip-wrap">
+            <button type="button" id="style-dna-skip-btn" class="style-dna-skip-btn" data-i18n="styling.dna_skip_btn">
+              ✨ 생년월일로 AI가 추천해줄게요
             </button>
-            <button type="button" class="style-card" data-style="casual">
-              <div class="style-preview casual-preview"></div>
-              <div class="style-info">
-                <h4>캐주얼</h4>
-                <p>편안하고 자연스러운</p>
-              </div>
-              <div class="style-check">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                  <polyline points="20 6 9 17 4 12"/>
-                </svg>
-              </div>
-            </button>
-            <button type="button" class="style-card" data-style="street">
-              <div class="style-preview street-preview"></div>
-              <div class="style-info">
-                <h4>스트릿</h4>
-                <p>트렌디하고 개성있는</p>
-              </div>
-              <div class="style-check">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                  <polyline points="20 6 9 17 4 12"/>
-                </svg>
-              </div>
-            </button>
-            <button type="button" class="style-card" data-style="romantic">
-              <div class="style-preview romantic-preview"></div>
-              <div class="style-info">
-                <h4>로맨틱</h4>
-                <p>여성스럽고 우아한</p>
-              </div>
-              <div class="style-check">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                  <polyline points="20 6 9 17 4 12"/>
-                </svg>
-              </div>
-            </button>
-            <button type="button" class="style-card" data-style="classic">
-              <div class="style-preview classic-preview"></div>
-              <div class="style-info">
-                <h4>클래식</h4>
-                <p>단정하고 세련된</p>
-              </div>
-              <div class="style-check">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                  <polyline points="20 6 9 17 4 12"/>
-                </svg>
-              </div>
-            </button>
-            <button type="button" class="style-card" data-style="sporty">
-              <div class="style-preview sporty-preview"></div>
-              <div class="style-info">
-                <h4>스포티</h4>
-                <p>활동적이고 건강한</p>
-              </div>
-              <div class="style-check">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                  <polyline points="20 6 9 17 4 12"/>
-                </svg>
-              </div>
-            </button>
+            <p class="style-dna-skip-hint" data-i18n="styling.dna_skip_hint">선택이 어려우시면 생년월일을 입력한 뒤 이 버튼을 눌러주세요</p>
+          </div>
+          <div id="style-dna-cards" class="style-dna-section">
+            <label class="style-dna-label" data-i18n="styling.dna_pick_label">이 중에서 더 끌리는 쪽을 골라주세요</label>
+            <div class="style-dna-card" data-card="C1">
+              <span class="style-dna-card-num">1</span>
+              <button type="button" class="style-dna-option style-dna-a" data-choice="C1-A">
+                <span class="style-dna-option-img" style="background-image:url(https://images.pexels.com/photos/1043473/pexels-photo-1043473.jpeg?auto=compress&cs=tinysrgb&w=200&h=140&fit=crop)"></span>
+                <span class="style-dna-option-label" data-i18n="styling.dna_c1a">클린 & 핏</span>
+              </button>
+              <span class="style-dna-vs">vs</span>
+              <button type="button" class="style-dna-option style-dna-b" data-choice="C1-B">
+                <span class="style-dna-option-img" style="background-image:url(https://images.unsplash.com/photo-1509631179647-0177331693ae?w=200&h=140&fit=crop)"></span>
+                <span class="style-dna-option-label" data-i18n="styling.dna_c1b">릴렉스 & 루즈</span>
+              </button>
+              <button type="button" class="style-dna-unk" data-choice="C1-UNK" data-i18n="styling.dna_unk">잘 모르겠어요</button>
+            </div>
+            <div class="style-dna-card" data-card="C2">
+              <span class="style-dna-card-num">2</span>
+              <button type="button" class="style-dna-option style-dna-a" data-choice="C2-A">
+                <span class="style-dna-option-img" style="background-image:url(https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=200&h=140&fit=crop)"></span>
+                <span class="style-dna-option-label" data-i18n="styling.dna_c2a">무대 포멀</span>
+              </button>
+              <span class="style-dna-vs">vs</span>
+              <button type="button" class="style-dna-option style-dna-b" data-choice="C2-B">
+                <span class="style-dna-option-img" style="background-image:url(https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=200&h=140&fit=crop)"></span>
+                <span class="style-dna-option-label" data-i18n="styling.dna_c2b">캐주얼</span>
+              </button>
+              <button type="button" class="style-dna-unk" data-choice="C2-UNK" data-i18n="styling.dna_unk">잘 모르겠어요</button>
+            </div>
+            <div class="style-dna-card" data-card="C3">
+              <span class="style-dna-card-num">3</span>
+              <button type="button" class="style-dna-option style-dna-a" data-choice="C3-A">
+                <span class="style-dna-option-img" style="background-image:url(https://images.pexels.com/photos/2097033/pexels-photo-2097033.jpeg?auto=compress&cs=tinysrgb&w=200&h=140&fit=crop)"></span>
+                <span class="style-dna-option-label" data-i18n="styling.dna_c3a">톤온톤</span>
+              </button>
+              <span class="style-dna-vs">vs</span>
+              <button type="button" class="style-dna-option style-dna-b" data-choice="C3-B">
+                <span class="style-dna-option-img" style="background-image:url(https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=200&h=140&fit=crop)"></span>
+                <span class="style-dna-option-label" data-i18n="styling.dna_c3b">하이컨트라스트</span>
+              </button>
+              <button type="button" class="style-dna-unk" data-choice="C3-UNK" data-i18n="styling.dna_unk">잘 모르겠어요</button>
+            </div>
+            <div class="style-dna-card" data-card="C4">
+              <span class="style-dna-card-num">4</span>
+              <button type="button" class="style-dna-option style-dna-a" data-choice="C4-A">
+                <span class="style-dna-option-img" style="background-image:url(https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=200&h=140&fit=crop)"></span>
+                <span class="style-dna-option-label" data-i18n="styling.dna_c4a">스무스 & 클린</span>
+              </button>
+              <span class="style-dna-vs">vs</span>
+              <button type="button" class="style-dna-option style-dna-b" data-choice="C4-B">
+                <span class="style-dna-option-img" style="background-image:url(https://images.pexels.com/photos/5493800/pexels-photo-5493800.jpeg?auto=compress&cs=tinysrgb&w=200&h=140&fit=crop)"></span>
+                <span class="style-dna-option-label" data-i18n="styling.dna_c4b">텍스처·레이어드</span>
+              </button>
+              <button type="button" class="style-dna-unk" data-choice="C4-UNK" data-i18n="styling.dna_unk">잘 모르겠어요</button>
+            </div>
+            <div class="style-dna-card" data-card="C5">
+              <span class="style-dna-card-num">5</span>
+              <button type="button" class="style-dna-option style-dna-a" data-choice="C5-A">
+                <span class="style-dna-option-img" style="background-image:url(https://images.unsplash.com/photo-1445205170230-053b83016050?w=200&h=140&fit=crop)"></span>
+                <span class="style-dna-option-label" data-i18n="styling.dna_c5a">울트라 미니멀</span>
+              </button>
+              <span class="style-dna-vs">vs</span>
+              <button type="button" class="style-dna-option style-dna-b" data-choice="C5-B">
+                <span class="style-dna-option-img" style="background-image:url(https://images.unsplash.com/photo-1549298916-b41d501d3772?w=200&h=140&fit=crop)"></span>
+                <span class="style-dna-option-label" data-i18n="styling.dna_c5b">포인트 악센트</span>
+              </button>
+              <button type="button" class="style-dna-unk" data-choice="C5-UNK" data-i18n="styling.dna_unk">잘 모르겠어요</button>
+            </div>
+            <div class="style-dna-card" data-card="C6">
+              <span class="style-dna-card-num">6</span>
+              <button type="button" class="style-dna-option style-dna-a" data-choice="C6-A">
+                <span class="style-dna-option-img" style="background-image:url(https://images.pexels.com/photos/8484114/pexels-photo-8484114.jpeg?auto=compress&cs=tinysrgb&w=200&h=140&fit=crop)"></span>
+                <span class="style-dna-option-label" data-i18n="styling.dna_c6a">쿨 뉴트럴</span>
+              </button>
+              <span class="style-dna-vs">vs</span>
+              <button type="button" class="style-dna-option style-dna-b" data-choice="C6-B">
+                <span class="style-dna-option-img" style="background-image:url(https://images.pexels.com/photos/9969149/pexels-photo-9969149.jpeg?auto=compress&cs=tinysrgb&w=200&h=140&fit=crop)"></span>
+                <span class="style-dna-option-label" data-i18n="styling.dna_c6b">웜 뉴트럴</span>
+              </button>
+              <button type="button" class="style-dna-unk" data-choice="C6-UNK" data-i18n="styling.dna_unk">잘 모르겠어요</button>
+            </div>
           </div>
         </div>
         <div class="step-actions">
@@ -2210,10 +2243,10 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M19 12H5M12 19l-7-7 7-7"/>
             </svg>
-            이전
+            <span data-i18n="styling.prev">이전</span>
           </button>
           <button type="button" class="btn-next" id="next-3">
-            다음 단계
+            <span data-i18n="styling.next">다음 단계</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M5 12h14M12 5l7 7-7 7"/>
             </svg>
@@ -2225,41 +2258,41 @@
       <div id="step-4" class="styling-step">
         <div class="step-header">
           <span class="step-badge">Step 4</span>
-          <h2>퍼스널 컬러를 찾아볼까요?</h2>
-          <p>피부톤과 어울리는 컬러를 분석해드려요</p>
+          <h2 data-i18n="styling.step4_title">퍼스널 컬러를 찾아볼까요?</h2>
+          <p data-i18n="styling.step4_desc">피부톤과 어울리는 컬러를 분석해드려요</p>
         </div>
         <div class="step-content">
           <div class="k-beauty-consent-wrap form-group" role="group" aria-label="K-뷰티 맞춤 추천 동의">
-            <p class="k-beauty-consent-text">맞춤 K-뷰티 추천 및 제휴 링크 안내에 톤·스타일 분석 결과를 활용합니다.</p>
+            <p class="k-beauty-consent-text" data-i18n="styling.kbeauty_consent">맞춤 K-뷰티 추천 및 제휴 링크 안내에 톤·스타일 분석 결과를 활용합니다.</p>
             <label class="k-beauty-consent-label">
               <input type="checkbox" id="k-beauty-consent-checkbox" aria-describedby="k-beauty-consent-desc">
-              <span>동의합니다 (선택)</span>
+              <span data-i18n="styling.kbeauty_agree">동의합니다 (선택)</span>
             </label>
-            <p id="k-beauty-consent-desc" class="k-beauty-consent-desc">비동의 시에도 분석은 이용 가능하며, 맞춤 제품 추천만 제한됩니다.</p>
+            <p id="k-beauty-consent-desc" class="k-beauty-consent-desc" data-i18n="styling.kbeauty_desc">비동의 시에도 분석은 이용 가능하며, 맞춤 제품 추천만 제한됩니다.</p>
           </div>
           <div class="form-group">
-            <label>피부톤</label>
+            <label data-i18n="styling.skin_tone">피부톤</label>
             <div class="color-option-grid">
               <button type="button" class="color-option" data-field="skinTone" data-value="fair">
                 <div class="skin-circle fair"></div>
-                <span>밝은 피부</span>
+                <span data-i18n="styling.skin_fair">밝은 피부</span>
               </button>
               <button type="button" class="color-option" data-field="skinTone" data-value="light">
                 <div class="skin-circle light"></div>
-                <span>연한 피부</span>
+                <span data-i18n="styling.skin_light">연한 피부</span>
               </button>
               <button type="button" class="color-option" data-field="skinTone" data-value="medium">
                 <div class="skin-circle medium"></div>
-                <span>중간 피부</span>
+                <span data-i18n="styling.skin_medium">중간 피부</span>
               </button>
               <button type="button" class="color-option" data-field="skinTone" data-value="tan">
                 <div class="skin-circle tan"></div>
-                <span>구릿빛 피부</span>
+                <span data-i18n="styling.skin_tan">구릿빛 피부</span>
               </button>
             </div>
           </div>
           <div class="form-group">
-            <label>피부 언더톤</label>
+            <label data-i18n="styling.undertone">피부 언더톤</label>
             <div class="undertone-options">
               <button type="button" class="undertone-card" data-field="undertone" data-value="warm">
                 <div class="undertone-preview warm">
@@ -2270,8 +2303,8 @@
                   </div>
                 </div>
                 <div class="undertone-info">
-                  <h4>웜톤 (Warm)</h4>
-                  <p>손목 혈관이 초록빛, 금색 액세서리가 잘 어울림</p>
+                  <h4 data-i18n="styling.undertone_warm">웜톤 (Warm)</h4>
+                  <p data-i18n="styling.undertone_warm_desc">손목 혈관이 초록빛, 금색 액세서리가 잘 어울림</p>
                 </div>
               </button>
               <button type="button" class="undertone-card" data-field="undertone" data-value="cool">
@@ -2283,8 +2316,8 @@
                   </div>
                 </div>
                 <div class="undertone-info">
-                  <h4>쿨톤 (Cool)</h4>
-                  <p>손목 혈관이 파란빛, 은색 액세서리가 잘 어울림</p>
+                  <h4 data-i18n="styling.undertone_cool">쿨톤 (Cool)</h4>
+                  <p data-i18n="styling.undertone_cool_desc">손목 혈관이 파란빛, 은색 액세서리가 잘 어울림</p>
                 </div>
               </button>
               <button type="button" class="undertone-card" data-field="undertone" data-value="neutral">
@@ -2296,8 +2329,8 @@
                   </div>
                 </div>
                 <div class="undertone-info">
-                  <h4>뉴트럴 (Neutral)</h4>
-                  <p>두 가지 톤이 섞여 있음, 모든 금속이 어울림</p>
+                  <h4 data-i18n="styling.undertone_neutral">뉴트럴 (Neutral)</h4>
+                  <p data-i18n="styling.undertone_neutral_desc">두 가지 톤이 섞여 있음, 모든 금속이 어울림</p>
                 </div>
               </button>
             </div>
@@ -2308,10 +2341,10 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M19 12H5M12 19l-7-7 7-7"/>
             </svg>
-            이전
+            <span data-i18n="styling.prev">이전</span>
           </button>
           <button type="button" class="btn-next" id="next-4">
-            AI 분석 시작
+            <span data-i18n="styling.ai_start">AI 분석 시작</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M5 12h14M12 5l7 7-7 7"/>
             </svg>
@@ -2327,24 +2360,32 @@
             <div class="loading-circle"></div>
             <div class="loading-circle"></div>
           </div>
-          <h3>AI가 당신의 스타일을 분석하고 있어요</h3>
-          <p id="loading-status">데이터 수집 중...</p>
+          <h3 data-i18n="styling.loading_title">AI가 당신의 스타일을 분석하고 있어요</h3>
+          <p id="loading-status" data-i18n="styling.loading_1">데이터 수집 중...</p>
           <div class="loading-progress">
             <div id="loading-bar" class="loading-bar"></div>
+          </div>
+          <div class="loading-step-actions">
+            <button type="button" class="btn-prev" id="prev-5-loading">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+              </svg>
+              <span data-i18n="styling.prev">이전</span>
+            </button>
           </div>
         </div>
 
         <div id="analysis-result" class="analysis-result" style="display: none;">
           <div class="result-header">
-            <div class="result-badge">AI 분석 완료</div>
-            <h2>당신만의 스타일 프로필</h2>
+            <div class="result-badge" data-i18n="styling.result_badge">AI 분석 완료</div>
+            <h2 data-i18n="styling.result_title">당신만의 스타일 프로필</h2>
           </div>
 
           <div class="result-grid">
             <div class="result-card personal-color-card">
               <div class="card-header">
                 <span class="card-icon">🎨</span>
-                <h4>퍼스널 컬러</h4>
+                <h4 data-i18n="styling.personal_color">퍼스널 컬러</h4>
               </div>
               <div id="personal-color-result" class="personal-color-content">
                 <!-- AI result: 시즌, 설명, 팔레트만 -->
@@ -2354,10 +2395,60 @@
             <div class="result-card style-card">
               <div class="card-header">
                 <span class="card-icon">✨</span>
-                <h4>추천 스타일</h4>
+                <h4 data-i18n="styling.recommended_style">추천 스타일</h4>
               </div>
               <div id="style-result" class="style-content">
                 <!-- AI result will be inserted here -->
+              </div>
+            </div>
+
+            <div class="result-card style-fingerprint-card" id="style-fingerprint-card">
+              <div class="card-header">
+                <span class="card-icon">📊</span>
+                <h4 data-i18n="styling.style_fingerprint">스타일 지문</h4>
+              </div>
+              <div class="style-fingerprint-content">
+                <div class="style-fingerprint-radar-wrap">
+                  <div class="style-fingerprint-radar-title" data-i18n="styling.radar_title">나의 보라해 스타일 DNA</div>
+                  <div class="style-fingerprint-radar-subtitle" data-i18n="styling.radar_subtitle">8가지 스타일 축</div>
+                  <canvas id="style-fingerprint-radar" width="280" height="280" aria-label="8D 스타일 지문 레이더 차트"></canvas>
+                  <div class="style-fingerprint-scale-note" data-i18n="styling.radar_scale">왼쪽 극 • 중립(0) • 오른쪽 극</div>
+                </div>
+                <div class="style-fingerprint-bipolar">
+                  <div class="style-fingerprint-bipolar-title" data-i18n="styling.bipolar_title">스타일 축의 의미</div>
+                  <ul class="style-fingerprint-bipolar-list" id="style-fingerprint-bipolar-list">
+                    <!-- JS populated -->
+                  </ul>
+                  <div class="style-fingerprint-soul" id="style-fingerprint-soul" style="display: none;">
+                    <div class="style-fingerprint-soul-title" data-i18n="styling.fp_soul_title">나만의 탄생 컬러</div>
+                    <div class="style-fingerprint-soul-inner">
+                      <div class="style-fingerprint-soul-chip" id="fp-soul-chip"></div>
+                      <div class="style-fingerprint-soul-info">
+                        <p class="style-fingerprint-soul-keyword" id="fp-soul-keyword"></p>
+                        <p class="style-fingerprint-soul-personality" id="fp-soul-personality"></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="style-fingerprint-insight">
+                  <div class="style-fingerprint-summary">
+                    <div class="style-fingerprint-summary-title" data-i18n="styling.fp_summary_title">나의 스타일 한 줄</div>
+                    <p class="style-fingerprint-summary-text" id="style-fingerprint-summary-text"></p>
+                    <div class="style-fingerprint-tags" id="style-fingerprint-tags"></div>
+                  </div>
+                  <div class="style-fingerprint-confidence">
+                    <div class="style-fingerprint-confidence-title" data-i18n="styling.fp_confidence_title">축별 신뢰도</div>
+                    <div class="style-fingerprint-confidence-list" id="style-fingerprint-confidence-list"></div>
+                  </div>
+                  <div class="style-fingerprint-cta">
+                    <div class="style-fingerprint-cta-title" data-i18n="styling.fp_cta_title">이 프로필이 맞나요?</div>
+                    <div class="style-fingerprint-cta-btns">
+                      <button type="button" class="style-fingerprint-cta-btn style-fingerprint-cta-yes" id="fp-cta-yes" data-i18n="styling.fp_cta_yes">맞아요 💜</button>
+                      <button type="button" class="style-fingerprint-cta-btn style-fingerprint-cta-edit" id="fp-cta-edit" data-i18n="styling.fp_cta_edit">수정할게요</button>
+                      <button type="button" class="style-fingerprint-cta-btn style-fingerprint-cta-refine" id="fp-cta-refine" data-i18n="styling.fp_cta_refine">다음에 더 맞춰줘요</button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -2419,7 +2510,7 @@
             <div class="result-card recommendation-card">
               <div class="card-header">
                 <span class="card-icon">👗</span>
-                <h4>코디 추천</h4>
+                <h4 data-i18n="styling.coordi_recommend">코디 추천</h4>
               </div>
               <div id="recommendation-result" class="recommendation-content">
                 <!-- AI result will be inserted here -->
@@ -2429,7 +2520,7 @@
             <div class="result-card tips-card">
               <div class="card-header">
                 <span class="card-icon">💡</span>
-                <h4>스타일링 팁</h4>
+                <h4 data-i18n="styling.styling_tips">스타일링 팁</h4>
               </div>
               <div id="tips-result" class="tips-content">
                 <!-- AI result will be inserted here -->
@@ -2441,7 +2532,7 @@
           <div class="result-card fashion-image-card" style="grid-column: span 2;">
             <div class="card-header">
               <span class="card-icon">AI</span>
-              <h4>AI 패션 이미지</h4>
+              <h4 data-i18n="styling.ai_fashion_image">AI 패션 이미지</h4>
             </div>
             <div id="fashion-image-container" class="fashion-image-content">
               <div class="fashion-image-placeholder" id="fashion-image-placeholder">
@@ -2452,12 +2543,12 @@
                     <polyline points="21 15 16 10 5 21"/>
                   </svg>
                 </div>
-                <p>AI 분석 완료 후 패션 이미지가 생성됩니다</p>
+                <p data-i18n="styling.fashion_placeholder">AI 분석 완료 후 패션 이미지가 생성됩니다</p>
                 <button type="button" class="btn-generate-fashion" id="generate-fashion-btn">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
                   </svg>
-                  패션 이미지 생성
+                  <span data-i18n="styling.generate_fashion">패션 이미지 생성</span>
                 </button>
               </div>
               <div class="fashion-image-result" id="fashion-image-result" style="display: none;">
@@ -2467,14 +2558,7 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
                     </svg>
-                    이 코디 마음에 들어요
-                  </button>
-                  <button type="button" class="btn-regenerate" id="regenerate-fashion-btn">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <polyline points="23 4 23 10 17 10"/>
-                      <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
-                    </svg>
-                    다시 생성
+                    <span data-i18n="styling.taste_like">이 코디 마음에 들어요</span>
                   </button>
                 </div>
               </div>
@@ -2482,12 +2566,18 @@
           </div>
 
           <div class="result-actions">
+            <button type="button" class="btn-prev" id="prev-5">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+              </svg>
+              <span data-i18n="styling.prev">이전</span>
+            </button>
             <a href="https://search.naver.com/search.naver?query=%ED%8C%A8%EC%85%98+%EC%BD%94%EB%94%94" target="_blank" rel="noopener noreferrer" class="btn-naver-shop" id="naver-shop-btn" title="네이버에서 검색 (쇼핑 탭에서 쇼핑 결과 확인)">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
                 <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
               </svg>
-              네이버 쇼핑
+              <span data-i18n="styling.naver_shop">네이버 쇼핑</span>
             </a>
             <button type="button" class="btn-save" id="save-result">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -2495,14 +2585,14 @@
                 <polyline points="17 21 17 13 7 13 7 21"/>
                 <polyline points="7 3 7 8 15 8"/>
               </svg>
-              결과 저장하기
+              <span data-i18n="styling.save_result">결과 저장하기</span>
             </button>
             <button type="button" class="btn-retry" id="retry-analysis">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="23 4 23 10 17 10"/>
                 <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
               </svg>
-              다시 분석하기
+              <span data-i18n="styling.retry_analysis">다시 분석하기</span>
             </button>
             <button type="button" class="btn-next btn-tryon" id="go-to-tryon">
               Virtual Try-On
@@ -2522,6 +2612,38 @@
           <p data-i18n="tryon.desc">원하는 의류를 선택하여 가상으로 착용해보세요</p>
         </div>
         <div class="step-content">
+          <!-- 연예인 착장 → 유사 옷 검색 (접이식) -->
+          <div class="step6-outfit-block" id="step6-outfit-block">
+            <button type="button" class="step6-outfit-trigger" id="step6-outfit-trigger" aria-expanded="false" aria-controls="step6-outfit-content">
+              <span data-i18n="tryon.outfit_finder_title">연예인/아이돌 착장으로 유사 옷 찾기</span>
+              <span class="step6-outfit-icon" aria-hidden="true">▼</span>
+            </button>
+            <div id="step6-outfit-content" class="step6-outfit-content" hidden aria-hidden="true">
+              <p class="step6-outfit-desc" data-i18n="tryon.outfit_finder_desc">착장 사진 1장을 올리면 AI가 비슷한 옷 검색어로 정리해드려요</p>
+              <div class="step6-outfit-url-wrap">
+                <input type="url" id="step6-outfit-photo-url" class="step6-outfit-photo-url-input" placeholder="이미지 URL을 붙여넣으세요" aria-label="이미지 URL" data-i18n-placeholder="tryon.outfit_url_placeholder">
+                <button type="button" id="step6-outfit-photo-url-btn" class="step6-outfit-photo-url-btn" data-i18n="tryon.outfit_load_url">불러오기</button>
+              </div>
+              <input type="file" id="step6-outfit-input" accept="image/jpeg,image/png,image/webp" aria-label="착장 사진 선택" tabindex="-1" style="position:absolute;width:0;height:0;opacity:0;pointer-events:none;">
+              <div class="step6-outfit-dropzone" id="step6-outfit-dropzone">
+                <span class="step6-outfit-icon-inner">📷</span>
+                <p data-i18n="tryon.outfit_upload">착장 사진을 올려주세요</p>
+                <small data-i18n="tryon.outfit_hint">무대·직캠·공항룩 캡처도 OK (최대 5MB)</small>
+              </div>
+              <div class="step6-outfit-loading" id="step6-outfit-loading" style="display:none;">
+                <div class="loading-spinner"></div>
+                <p data-i18n="lookbook.celeblook_analyzing">착장을 분석하고 있어요...</p>
+              </div>
+              <div class="step6-outfit-result" id="step6-outfit-result" style="display:none;">
+                <div class="step6-outfit-preview" id="step6-outfit-preview"></div>
+                <p class="step6-outfit-summary" id="step6-outfit-summary"></p>
+                <div class="step6-outfit-cards" id="step6-outfit-cards"></div>
+                <p class="step6-outfit-privacy" data-i18n="lookbook.celeblook_privacy">이미지는 저장하지 않아요. 결과(검색어)만 표시돼요.</p>
+                <button type="button" class="btn-outline btn-sm" id="step6-outfit-retry" data-i18n="lookbook.celeblook_retry">다른 사진으로 다시</button>
+              </div>
+            </div>
+          </div>
+          <div class="step6-divider" data-i18n="tryon.tryon_section">가상 피팅</div>
           <!-- Category Tabs -->
           <div class="category-tabs">
             <button type="button" class="category-tab active" data-category="fashion" data-i18n="tryon.cat_fashion">패션</button>
@@ -2981,7 +3103,7 @@
         resultEl.setAttribute('data-soul-copy', soul.copy || '');
         resultEl.setAttribute('data-soul-texture', soul.textureClass || '');
         resultEl.setAttribute('data-soul-hangeul', soul.hangeulPoint || '');
-        
+        if (typeof saveUserProfileToLocal === 'function') saveUserProfileToLocal();
         resultEl.hidden = false;
         // 2단 그리드 활성화
         var rowEl = document.querySelector('.soul-color-row');

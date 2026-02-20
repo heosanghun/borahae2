@@ -23,7 +23,7 @@
 
   // 자음/모음 → 페르소나 이름·역할 (표시용). ㅗ→오롱(웃음꽃), ㅏ→아롱(화가)
   var JA_INFO = { 'ㄱ':{ name:'고롱', role:'발명가' },'ㄴ':{ name:'노롱', role:'가수' },'ㄷ':{ name:'도롱', role:'도우미' },'ㄹ':{ name:'로롱', role:'요리사' },'ㅁ':{ name:'모롱', role:'뚝딱이' },'ㅂ':{ name:'보롱', role:'천문학자' },'ㅅ':{ name:'소롱', role:'시인' },'ㅇ':{ name:'오롱', role:'웃음꽃' },'ㅈ':{ name:'조롱', role:'상상가' },'ㅊ':{ name:'초롱', role:'댄서' },'ㅋ':{ name:'코롱', role:'파수꾼' },'ㅌ':{ name:'토롱', role:'달변가' },'ㅍ':{ name:'포롱', role:'탐정' },'ㅎ':{ name:'호롱', role:'천하장사' } };
-  var MO_INFO = { 'ㅏ':{ name:'아롱', role:'화가' },'ㅐ':{ name:'애롱', role:'선생님' },'ㅑ':{ name:'야롱', role:'전령사' },'ㅒ':{ name:'얍롱', role:'사진가' },'ㅓ':{ name:'어롱', role:'정원사' },'ㅔ':{ name:'에이롱', role:'길잡이' },'ㅕ':{ name:'여롱', role:'치유사' },'ㅖ':{ name:'예롱', role:'연주가' },'ㅗ':{ name:'오롱', role:'웃음꽃' },'ㅛ':{ name:'요롱', role:'동물 조련사' },'ㅜ':{ name:'우롱', role:'기록가' },'ㅠ':{ name:'유롱', role:'해양 탐험가' },'ㅡ':{ name:'으롱', role:'명상가' },'ㅣ':{ name:'이롱', role:'재단사' } };
+  var MO_INFO = { 'ㅏ':{ name:'아롱', role:'화가' },'ㅐ':{ name:'애롱', role:'선생님' },'ㅑ':{ name:'야롱', role:'전령사' },'ㅒ':{ name:'얍롱', role:'사진가' },'ㅓ':{ name:'어롱', role:'정원사' },'ㅔ':{ name:'에이롱', role:'길잡이' },'ㅕ':{ name:'여롱', role:'치유사' },'ㅖ':{ name:'예롱', role:'연주가' },'ㅗ':{ name:'올롱', role:'마법사' },'ㅛ':{ name:'요롱', role:'동물 조련사' },'ㅜ':{ name:'우롱', role:'기록가' },'ㅠ':{ name:'유롱', role:'해양 탐험가' },'ㅡ':{ name:'으롱', role:'명상가' },'ㅣ':{ name:'이롱', role:'재단사' } };
 
   var BASE = 'image/name';
   var MO_SUFFIX = '_draphed_01_896x1200.png';
@@ -41,6 +41,7 @@
     '뚝딱이': ['나무와 흙으로 작은 의자를 만들더니 "여기 앉아 봐!" 했어요.', '숲속 다리를 손수 고쳐서 모두가 안전히 건넜어요.'],
     '천문학자': ['밤하늘 별을 가리키며 "저기 보면 길을 찾을 수 있어" 알려줬어요.', '망원경을 들고 오며 우주의 비밀을 재미있게 풀어줬어요.'],
     '웃음꽃': ['엉뚱한 농담을 하더니 모두가 배꼽을 잡고 웃었어요.', '우울한 분위기를 한순간에 바꿔 놓으며 즐거움을 선사했어요.'],
+    '마법사': ['엉뚱한 마술을 보여 주더니 모두가 "우와!" 소리를 냈어요.', '상상을 현실로 만드는 마법으로 놀라움과 웃음을 선물했어요.'],
     '상상가': ['잠깐 잠들었다 깨어나더니 "꿈에서 대박 아이디어 났어!" 외쳤어요.', '꿈속 이야기를 하며 모두를 상상의 나라로 이끌었어요.'],
     '댄서': ['음악이 나오자 몸이 먼저 반응해 춤을 추기 시작했어요.', '리듬에 맞춰 춤을 추더니 친구들에게까지 열정이 전염됐어요.'],
     '파수꾼': ['키가 커서 멀리 보이다가 "저기 뭔가 온다!" 하고 알려줬어요.', '숲을 지키며 모두가 안심하고 놀 수 있게 해줬어요.'],
@@ -760,16 +761,122 @@
       return;
     }
     renderEpisodeStrip(list, name, hangulName ? raw : null);
+    if (typeof window.saveUserProfileToLocal === 'function') window.saveUserProfileToLocal();
   }
 
   // 인라인 onclick에서 호출 가능하도록 먼저 전역 노출 (다른 스크립트·초기화 실패와 무관하게 버튼 클릭 동작)
   window.nameEpisodesMake = onNameEpisodesSubmit;
+
+  var ALL_28_JAMOS = 'ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎㅏㅑㅓㅕㅗㅛㅜㅠㅡㅣㅔㅖㅐㅒ'.split('');
+  var STORAGE_KEY_PERSONAS = 'sims_selected_personas';
+
+  function getSelectedPersonaRoles() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY_PERSONAS);
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) { return []; }
+  }
+
+  function saveSelectedPersonaRoles(roles) {
+    try {
+      localStorage.setItem(STORAGE_KEY_PERSONAS, JSON.stringify(roles || []));
+    } catch (e) {}
+  }
+
+  function init28PersonaCards() {
+    var trigger = document.getElementById('name-episodes-learn-more-trigger');
+    var grid = document.getElementById('name-episodes-28-grid');
+    var cardsContainer = document.getElementById('name-episodes-28-cards');
+    var countEl = document.getElementById('name-episodes-28-selected-count');
+    if (!trigger || !grid || !cardsContainer) return;
+
+    var selectedRoles = getSelectedPersonaRoles();
+
+    function t(k) { return (window.__simsI18n && window.__simsI18n.t) ? window.__simsI18n.t(k) : k; }
+
+    function updateCount() {
+      if (countEl) {
+        var s = t('ai.selected_count') || '{n}개 선택됨';
+        countEl.textContent = s.replace(/\{n\}/g, String(selectedRoles.length));
+      }
+    }
+
+    function renderCards() {
+      cardsContainer.innerHTML = '';
+      ALL_28_JAMOS.forEach(function (jamo) {
+        var agent = getAgentForJamo(jamo);
+        if (!agent) return;
+        var card = document.createElement('div');
+        card.className = 'name-episodes-28-card' + (selectedRoles.indexOf(agent.role) >= 0 ? ' selected' : '');
+        card.dataset.jamo = jamo;
+        card.dataset.role = agent.role;
+        card.setAttribute('role', 'button');
+        card.setAttribute('tabindex', '0');
+        var nameText = t('persona.name.' + agent.name) || agent.name;
+        var roleText = t('persona.role.' + agent.role) || agent.role;
+        card.innerHTML = '<div class="name-episodes-28-card-hover-overlay" aria-hidden="true">' +
+          '<img src="' + agent.characterImage + '" alt="' + escapeHtml(agent.name) + '" loading="lazy">' +
+          '</div>' +
+          '<img class="name-episodes-28-card-jamo" src="' + agent.jamoOnly + '" alt="' + escapeHtml(jamo) + '" loading="lazy" onerror="this.style.display=\'none\'">' +
+          '<img class="name-episodes-28-card-char" src="' + agent.characterImage + '" alt="' + escapeHtml(agent.name) + '" loading="lazy" onerror="this.style.display=\'none\'">' +
+          '<p class="name-episodes-28-card-name">' + escapeHtml(nameText) + '</p>' +
+          '<p class="name-episodes-28-card-role">' + escapeHtml(roleText) + '</p>' +
+          '<span class="name-episodes-28-card-check" aria-hidden="true">✓</span>';
+        card.addEventListener('click', function () {
+          var idx = selectedRoles.indexOf(agent.role);
+          if (idx >= 0) {
+            selectedRoles.splice(idx, 1);
+          } else if (selectedRoles.length < 5) {
+            selectedRoles.push(agent.role);
+          }
+          saveSelectedPersonaRoles(selectedRoles);
+          cardsContainer.querySelectorAll('.name-episodes-28-card').forEach(function (c) {
+            c.classList.toggle('selected', selectedRoles.indexOf(c.dataset.role) >= 0);
+          });
+          updateCount();
+        });
+        card.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
+        });
+        cardsContainer.appendChild(card);
+      });
+      updateCount();
+    }
+
+    trigger.addEventListener('click', function () {
+      var expanded = trigger.getAttribute('aria-expanded') === 'true';
+      trigger.setAttribute('aria-expanded', !expanded);
+      grid.hidden = expanded;
+      grid.setAttribute('aria-hidden', expanded);
+      if (!expanded && cardsContainer.children.length === 0) renderCards();
+    });
+
+    document.addEventListener('sims-lang-changed', function () {
+      if (cardsContainer.children.length === 0) return;
+      cardsContainer.querySelectorAll('.name-episodes-28-card').forEach(function (card) {
+        var role = card.dataset.role;
+        var nameEl = card.querySelector('.name-episodes-28-card-name');
+        var roleEl = card.querySelector('.name-episodes-28-card-role');
+        if (nameEl && roleEl && role) {
+          var agent = getAgentForJamo(card.dataset.jamo);
+          if (agent) {
+            nameEl.textContent = t('persona.name.' + agent.name) || agent.name;
+            roleEl.textContent = t('persona.role.' + agent.role) || agent.role;
+          }
+        }
+      });
+      updateCount();
+    });
+
+    renderCards();
+  }
 
   var nameEpisodesInited = false;
   function initNameEpisodes() {
     if (nameEpisodesInited) return;
     nameEpisodesInited = true;
     try {
+      init28PersonaCards();
       document.body.addEventListener('click', function (e) {
         var target = e.target && (e.target.closest ? e.target.closest('#name-episodes-btn') : e.target);
         if (target && target.id === 'name-episodes-btn') {
