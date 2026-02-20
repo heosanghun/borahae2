@@ -52,6 +52,10 @@ export default {
       return handleUsageIncrement(request, env);
     }
 
+    if (url.pathname === '/api/account-delete' && request.method === 'POST') {
+      return handleAccountDelete(request, env);
+    }
+
     return env.ASSETS.fetch(request);
   }
 };
@@ -662,5 +666,41 @@ async function handleUsageIncrement(request, env) {
     return new Response(JSON.stringify({ ok: true }), { status: 200, headers: h });
   } catch (err) {
     return new Response(JSON.stringify({ error: { message: err.message || 'Usage increment failed' } }), { status: 500, headers: h });
+  }
+}
+
+/** 회원 탈퇴: 세션 토큰으로 본인 확인 후 Supabase Admin API로 삭제 */
+async function handleAccountDelete(request, env) {
+  const h = { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' };
+  const authHeader = request.headers.get('Authorization') || '';
+  const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+  if (!token) {
+    return new Response(JSON.stringify({ error: { message: '로그인이 필요합니다.' } }), { status: 401, headers: h });
+  }
+  const supabaseUrl = (env.SUPABASE_URL || '').toString().replace(/\/$/, '');
+  const serviceKey = env.SUPABASE_SERVICE_ROLE_KEY || '';
+  if (!supabaseUrl || !serviceKey) {
+    return new Response(JSON.stringify({ error: { message: '서버 설정이 완료되지 않았습니다.' } }), { status: 500, headers: h });
+  }
+  try {
+    const userRes = await fetch(supabaseUrl + '/auth/v1/user', {
+      headers: { 'Authorization': 'Bearer ' + token, 'apikey': serviceKey }
+    });
+    const userData = await userRes.json();
+    const userId = userData && userData.id ? userData.id : null;
+    if (!userId) {
+      return new Response(JSON.stringify({ error: { message: '유효한 로그인 정보가 없습니다.' } }), { status: 401, headers: h });
+    }
+    const deleteRes = await fetch(supabaseUrl + '/auth/v1/admin/users/' + userId, {
+      method: 'DELETE',
+      headers: { 'Authorization': 'Bearer ' + serviceKey, 'apikey': serviceKey }
+    });
+    if (!deleteRes.ok) {
+      const errBody = await deleteRes.text();
+      return new Response(JSON.stringify({ error: { message: '탈퇴 처리에 실패했습니다.', detail: errBody } }), { status: deleteRes.status, headers: h });
+    }
+    return new Response(JSON.stringify({ ok: true }), { status: 200, headers: h });
+  } catch (err) {
+    return new Response(JSON.stringify({ error: { message: err.message || '탈퇴 처리 중 오류가 발생했습니다.' } }), { status: 500, headers: h });
   }
 }

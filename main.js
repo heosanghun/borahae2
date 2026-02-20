@@ -92,6 +92,58 @@
     document.body.style.overflow = '';
   }
 
+  function openMyPageModal() {
+    var m = document.getElementById('mypage-modal');
+    if (!m) return;
+    var sb = getSupabase();
+    if (!sb) {
+      alert('Supabase가 설정되지 않았습니다.');
+      return;
+    }
+    sb.auth.getSession().then(function(res) {
+      var user = res.data.session && res.data.session.user ? res.data.session.user : null;
+      if (!user) {
+        openAuthModal('login');
+        return;
+      }
+      var emailEl = document.getElementById('mypage-email');
+      var createdEl = document.getElementById('mypage-created');
+      if (emailEl) emailEl.textContent = user.email || '-';
+      if (createdEl) {
+        var created = user.created_at;
+        createdEl.textContent = created ? new Date(created).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' }) : '-';
+      }
+      var isEmailUser = user.app_metadata && user.app_metadata.provider === 'email';
+      var pwSection = document.getElementById('mypage-password-section');
+      var pwHint = pwSection ? pwSection.querySelector('.mypage-hint') : null;
+      var pwForm = document.getElementById('mypage-password-form');
+      if (pwSection) {
+        if (isEmailUser) {
+          pwSection.style.display = '';
+          if (pwHint) pwHint.style.display = 'none';
+          if (pwForm) pwForm.style.display = '';
+        } else {
+          pwSection.style.display = '';
+          if (pwHint) pwHint.style.display = '';
+          if (pwForm) pwForm.style.display = 'none';
+        }
+      }
+      var leavePwWrap = document.getElementById('mypage-leave-password-wrap');
+      if (leavePwWrap) leavePwWrap.style.display = isEmailUser ? '' : 'none';
+      m.classList.add('open');
+      m.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    });
+  }
+
+  function closeMyPageModal() {
+    var m = document.getElementById('mypage-modal');
+    if (!m) return;
+    m.classList.remove('open');
+    m.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
   function initSupabaseAuth() {
     var sb = getSupabase();
     if (!sb) return;
@@ -195,9 +247,22 @@
     var sb = getSupabase();
     if (sb) sb.auth.signOut();
   });
+  document.getElementById('nav-mypage-btn') && document.getElementById('nav-mypage-btn').addEventListener('click', function() {
+    openMyPageModal();
+  });
   document.getElementById('auth-modal-close') && document.getElementById('auth-modal-close').addEventListener('click', closeAuthModal);
   document.getElementById('auth-modal') && document.getElementById('auth-modal').addEventListener('click', function(e) {
     if (e.target === this) closeAuthModal();
+  });
+  document.getElementById('mypage-modal-close') && document.getElementById('mypage-modal-close').addEventListener('click', closeMyPageModal);
+  document.getElementById('mypage-modal') && document.getElementById('mypage-modal').addEventListener('click', function(e) {
+    if (e.target.id === 'mypage-modal') closeMyPageModal();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      var mp = document.getElementById('mypage-modal');
+      if (mp && mp.classList.contains('open')) closeMyPageModal();
+    }
   });
 
   document.getElementById('auth-tab-login') && document.getElementById('auth-tab-login').addEventListener('click', function() {
@@ -474,6 +539,105 @@
         }
       }).catch(function(err) {
         if (errEl) errEl.textContent = err.message || 'Google 로그인에 실패했습니다.';
+      });
+    }
+  })();
+
+  // 마이페이지: 비밀번호 변경, 회원 탈퇴
+  (function initMyPage() {
+    var pwForm = document.getElementById('mypage-password-form');
+    var leaveForm = document.getElementById('mypage-leave-form');
+    var _t = (window.__simsI18n && window.__simsI18n.t) ? window.__simsI18n.t : function(k, d) { return d || k; };
+    if (pwForm) {
+      pwForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var newPw = document.getElementById('mypage-new-password');
+        var newPwConfirm = document.getElementById('mypage-new-password-confirm');
+        var errEl = document.getElementById('mypage-password-error');
+        var pw = newPw ? newPw.value : '';
+        var pwConfirm = newPwConfirm ? newPwConfirm.value : '';
+        if (!pw || pw.length < 6) {
+          if (errEl) errEl.textContent = _t('mypage.pw_min_err', '비밀번호는 6자 이상이어야 합니다.');
+          return;
+        }
+        if (pw !== pwConfirm) {
+          if (errEl) errEl.textContent = _t('mypage.pw_mismatch', '비밀번호가 일치하지 않습니다.');
+          return;
+        }
+        if (errEl) errEl.textContent = '';
+        var sb = getSupabase();
+        if (!sb) { if (errEl) errEl.textContent = '연결 중...'; return; }
+        sb.auth.updateUser({ password: pw }).then(function(res) {
+          if (res.error) {
+            if (errEl) errEl.textContent = res.error.message || _t('mypage.pw_change_fail', '비밀번호 변경에 실패했습니다.');
+            return;
+          }
+          if (errEl) errEl.textContent = '';
+          alert(_t('mypage.pw_change_success', '비밀번호가 변경되었습니다.'));
+          if (newPw) newPw.value = '';
+          if (newPwConfirm) newPwConfirm.value = '';
+        }).catch(function(err) {
+          if (errEl) errEl.textContent = err.message || _t('mypage.pw_change_fail', '비밀번호 변경에 실패했습니다.');
+        });
+      });
+    }
+    if (leaveForm) {
+      leaveForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var confirmInput = document.getElementById('mypage-leave-confirm');
+        var leavePw = document.getElementById('mypage-leave-password');
+        var errEl = document.getElementById('mypage-leave-error');
+        var confirmText = confirmInput ? confirmInput.value.trim() : '';
+        var expectedText = _t('mypage.leave_confirm_placeholder', '탈퇴');
+        if (confirmText !== expectedText) {
+          if (errEl) errEl.textContent = _t('mypage.leave_confirm_err', '\'탈퇴\'를 정확히 입력해 주세요.');
+          return;
+        }
+        var sb = getSupabase();
+        if (!sb) { if (errEl) errEl.textContent = '연결 중...'; return; }
+        sb.auth.getSession().then(function(res) {
+          var session = res.data.session;
+          var user = session && session.user ? session.user : null;
+          if (!user || !session.access_token) {
+            if (errEl) errEl.textContent = _t('mypage.login_required', '로그인이 필요합니다.');
+            return;
+          }
+          var isEmailUser = user.app_metadata && user.app_metadata.provider === 'email';
+          if (isEmailUser && leavePw && leavePw.value) {
+            sb.auth.signInWithPassword({ email: user.email, password: leavePw.value }).then(function(verifyRes) {
+              if (verifyRes.error) {
+                if (errEl) errEl.textContent = _t('mypage.pw_wrong', '비밀번호가 올바르지 않습니다.');
+                return;
+              }
+              var tok = verifyRes.data.session && verifyRes.data.session.access_token ? verifyRes.data.session.access_token : session.access_token;
+              doAccountDelete(tok, errEl);
+            }).catch(function() {
+              if (errEl) errEl.textContent = _t('mypage.pw_wrong', '비밀번호가 올바르지 않습니다.');
+            });
+          } else if (isEmailUser) {
+            if (errEl) errEl.textContent = _t('mypage.pw_required', '탈퇴 확인을 위해 비밀번호를 입력해 주세요.');
+          } else {
+            doAccountDelete(session.access_token, errEl);
+          }
+        });
+      });
+    }
+    function doAccountDelete(accessToken, errEl) {
+      if (errEl) errEl.textContent = '';
+      fetch('/api/account-delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + accessToken }
+      }).then(function(r) { return r.json(); }).then(function(data) {
+        if (data.error && data.error.message) {
+          if (errEl) errEl.textContent = data.error.message;
+          return;
+        }
+        closeMyPageModal();
+        var sb = getSupabase();
+        if (sb) sb.auth.signOut();
+        alert(_t('mypage.leave_success', '회원 탈퇴가 완료되었습니다.'));
+      }).catch(function(err) {
+        if (errEl) errEl.textContent = err.message || _t('mypage.leave_fail', '탈퇴 처리 중 오류가 발생했습니다.');
       });
     }
   })();

@@ -6433,6 +6433,72 @@ section {
 }
 
 /* ========================================
+   마이페이지 모달
+   ======================================== */
+.mypage-modal .mypage-modal-content {
+  max-width: 480px;
+  max-height: 90vh;
+}
+.mypage-body {
+  padding: 24px 32px 32px;
+  overflow-y: auto;
+}
+.mypage-section {
+  margin-bottom: 28px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border-color);
+}
+.mypage-section:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+.mypage-section-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+.mypage-info-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.mypage-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.mypage-info-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.mypage-info-value {
+  font-size: 0.9375rem;
+  color: var(--text-primary);
+}
+.mypage-hint {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+.mypage-form .auth-field {
+  margin-bottom: 16px;
+}
+.mypage-form .auth-field:last-of-type {
+  margin-bottom: 16px;
+}
+.mypage-form button[type="submit"] {
+  margin-top: 8px;
+}
+.mypage-danger .mypage-section-title {
+  color: var(--danger, #dc2626);
+}
+
+/* ========================================
    AI Styling Modal
    ======================================== */
 .styling-modal {

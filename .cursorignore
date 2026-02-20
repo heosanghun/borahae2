@@ -10,3 +10,5 @@ dist/
 **/image/**/*.png
 **/movie/*.mp4
 node_modules/
+
+docs/polar.txt
