@@ -6948,7 +6948,7 @@ section {
 }
 
 .gender-options {
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
 }
 
 .age-options {
@@ -6957,6 +6957,11 @@ section {
 
 .body-options {
   grid-template-columns: repeat(4, 1fr);
+}
+
+.body-options .option-card {
+  border-radius: 18px;
+  padding: 16px 12px;
 }
 
 .option-card {
@@ -6986,40 +6991,82 @@ section {
   font-size: 2rem;
 }
 
+.gender-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--bg-primary);
+  border: 2px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.option-card--avatar .gender-avatar {
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.option-card--avatar:hover .gender-avatar,
+.option-card--avatar.selected .gender-avatar {
+  border-color: var(--primary-light);
+  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.2);
+}
+
+.option-card--avatar.selected .gender-avatar {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.3);
+}
+
+.gender-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .option-card span {
   font-size: 0.9rem;
   font-weight: 600;
   color: var(--text-primary);
 }
 
-/* Body Icons */
-.body-icon {
-  width: 40px;
-  height: 60px;
-  border-radius: 20px;
-  position: relative;
+/* Body Silhouettes – 디즈니 스타일 귀여운 체형 */
+.body-silhouette {
+  width: 56px;
+  height: 76px;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.body-icon.slim {
-  width: 24px;
-  background: linear-gradient(180deg, var(--primary-light) 0%, var(--primary) 100%);
+.body-silhouette svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
-.body-icon.standard {
-  width: 32px;
-  background: linear-gradient(180deg, var(--primary-light) 0%, var(--primary) 100%);
+/* 디즈니·캐릭터 스타일: 큰 머리, 부드러운 곡선 */
+.body-silhouette--cute {
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.body-icon.muscular {
-  width: 40px;
-  border-radius: 12px;
-  background: linear-gradient(180deg, var(--primary-light) 0%, var(--primary) 100%);
+.body-silhouette--cute svg {
+  filter: drop-shadow(0 2px 4px rgba(124, 58, 237, 0.12));
 }
 
-.body-icon.curvy {
-  width: 36px;
-  border-radius: 18px 18px 24px 24px;
-  background: linear-gradient(180deg, var(--primary-light) 0%, var(--primary) 100%);
+.option-card:hover .body-silhouette--cute {
+  transform: scale(1.08);
+}
+
+.body-silhouette--slim svg { width: 40px; }
+.body-silhouette--standard svg { width: 46px; }
+.body-silhouette--muscular svg { width: 54px; }
+.body-silhouette--curvy svg { width: 48px; }
+
+.option-card:hover .body-silhouette,
+.option-card.selected .body-silhouette {
+  color: var(--primary);
 }
 
 /* Style Grid */
@@ -7345,10 +7392,22 @@ section {
 }
 
 /* Color Options */
+.form-hint--skin,
+.form-hint--undertone {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: -4px 0 12px 0;
+  line-height: 1.4;
+}
+
 .color-option-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 12px;
+}
+
+.skin-tone-grid .color-option {
+  padding: 16px 12px;
 }
 
 .color-option {
@@ -7370,23 +7429,41 @@ section {
 
 .color-option.selected {
   border-color: var(--primary);
-  background: rgba(124, 58, 237, 0.1);
+  background: rgba(124, 58, 237, 0.08);
+  box-shadow: 0 0 0 1px var(--primary);
 }
 
-.skin-circle {
-  width: 48px;
-  height: 48px;
+/* 피부톤 스와치 - 자연스러운 그라데이션 */
+.skin-swatch {
+  position: relative;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
-  border: 3px solid white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  border: 3px solid rgba(255,255,255,0.9);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.4);
+}
+.skin-swatch-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(ellipse 70% 50% at 50% 30%, rgba(255,255,255,0.5), transparent 60%);
+  pointer-events: none;
+}
+.skin-swatch--fair {
+  background: linear-gradient(145deg, #ffe8d4 0%, #f5d9c4 50%, #ecd4c0 100%);
+}
+.skin-swatch--light {
+  background: linear-gradient(145deg, #f5dcc5 0%, #e8cfb8 50%, #ddc4a8 100%);
+}
+.skin-swatch--medium {
+  background: linear-gradient(145deg, #e0b896 0%, #d4a574 50%, #c4956a 100%);
+}
+.skin-swatch--tan {
+  background: linear-gradient(145deg, #c4956a 0%, #a67c52 50%, #8b6342 100%);
 }
 
-.skin-circle.fair { background: #ffe4c9; }
-.skin-circle.light { background: #f5d5b8; }
-.skin-circle.medium { background: #d4a574; }
-.skin-circle.tan { background: #a67c52; }
-
-.color-option span {
+.color-option span:not(.skin-swatch-glow) {
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--text-primary);
@@ -7402,11 +7479,11 @@ section {
 .undertone-card {
   display: flex;
   align-items: center;
-  gap: 20px;
-  padding: 20px;
+  gap: 18px;
+  padding: 18px 20px;
   background: var(--bg-secondary);
   border: 2px solid var(--border-color);
-  border-radius: 20px;
+  border-radius: 18px;
   cursor: pointer;
   text-align: left;
   transition: all 0.2s ease;
@@ -7414,49 +7491,69 @@ section {
 
 .undertone-card:hover {
   border-color: var(--primary-light);
-  transform: translateX(4px);
 }
 
 .undertone-card.selected {
   border-color: var(--primary);
-  background: rgba(124, 58, 237, 0.05);
+  background: rgba(124, 58, 237, 0.06);
+  box-shadow: 0 0 0 1px var(--primary);
 }
 
-.undertone-preview {
-  width: 80px;
-  height: 60px;
-  border-radius: 12px;
+.undertone-visual {
+  flex-shrink: 0;
+  width: 72px;
+  height: 56px;
+  border-radius: 14px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 6px;
+}
+.undertone-visual--warm {
+  background: linear-gradient(145deg, #fef3c7 0%, #fde68a 50%, #fcd34d 100%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
+}
+.undertone-visual--cool {
+  background: linear-gradient(145deg, #dbeafe 0%, #93c5fd 50%, #60a5fa 100%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
+}
+.undertone-visual--neutral {
+  background: linear-gradient(145deg, #f5f5f4 0%, #e7e5e4 50%, #d6d3d1 100%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
 }
 
-.undertone-preview.warm { background: linear-gradient(135deg, #fef3c7 0%, #fcd34d 100%); }
-.undertone-preview.cool { background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%); }
-.undertone-preview.neutral { background: linear-gradient(135deg, #f5f5f4 0%, #d6d3d1 100%); }
+.undertone-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
 
-.undertone-colors {
+.undertone-palette {
   display: flex;
   gap: 4px;
 }
-
-.undertone-colors span {
-  width: 18px;
-  height: 18px;
+.undertone-palette span {
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
-  border: 2px solid white;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  border: 2px solid rgba(255,255,255,0.9);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
 }
 
+.undertone-info {
+  flex: 1;
+  min-width: 0;
+}
 .undertone-info h4 {
   font-size: 1rem;
   font-weight: 700;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
+  color: var(--text-primary);
 }
-
 .undertone-info p {
   font-size: 0.85rem;
   color: var(--text-secondary);
+  line-height: 1.35;
 }
 
 /* Step Actions */
@@ -7855,30 +7952,71 @@ section {
 
 /* K-뷰티 동의 (Step 4) */
 .k-beauty-consent-wrap {
-  padding: 14px 16px;
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--primary) 8%, transparent);
-  border: 1px solid color-mix(in srgb, var(--primary) 20%, transparent);
+  border-radius: 14px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  overflow: hidden;
+}
+.k-beauty-consent-inner {
+  padding: 16px 18px;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.04) 0%, rgba(236, 72, 153, 0.03) 100%);
+  border-radius: 14px;
 }
 .k-beauty-consent-text {
   font-size: 0.9rem;
   color: var(--text-primary);
-  margin: 0 0 10px 0;
-  line-height: 1.45;
+  margin: 0 0 12px 0;
+  line-height: 1.5;
 }
 .k-beauty-consent-label {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   font-size: 0.9rem;
   cursor: pointer;
   font-weight: 500;
+  color: var(--text-primary);
 }
-.k-beauty-consent-label input { accent-color: var(--primary); }
+.k-beauty-consent-label input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.k-beauty-consent-check {
+  position: relative;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--bg-primary);
+  transition: all 0.2s ease;
+}
+.k-beauty-consent-label input:checked + .k-beauty-consent-check {
+  background: var(--gradient-primary);
+  border-color: var(--primary);
+}
+.k-beauty-consent-label input:checked + .k-beauty-consent-check::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.k-beauty-consent-label input:focus-visible + .k-beauty-consent-check {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
 .k-beauty-consent-desc {
   font-size: 0.8rem;
   color: var(--text-muted);
-  margin: 6px 0 0 0;
+  margin: 8px 0 0 0;
+  line-height: 1.4;
 }
 
 /* K-뷰티 추천: 무드&음악처럼 가로형 전체 너비 */

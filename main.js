@@ -3585,7 +3585,7 @@
   }
 
   function buildFashionPrompt(useFaceAndBody, textOnly) {
-    const genderMap = { female: '여성', male: '남성', neutral: '젠더리스' };
+    const genderMap = { female: '여성', male: '남성' };
     const bodyMap = { slim: '슬림한', standard: '보통', muscular: '근육질', curvy: '볼륨감 있는' };
     var styleNames = '';
     if (stylingData.styleFingerprint) {

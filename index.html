@@ -2111,17 +2111,17 @@
           <div class="form-group">
             <label data-i18n="styling.gender">성별</label>
             <div class="option-grid gender-options">
-              <button type="button" class="option-card" data-field="gender" data-value="female">
-                <div class="option-icon">👩</div>
-                <span data-i18n="styling.female">여성</span>
+              <button type="button" class="option-card option-card--avatar" data-field="gender" data-value="female">
+                <div class="gender-avatar gender-avatar--female">
+                  <img src="image/human/soave.jpg" alt="여자" loading="lazy" onerror="this.onerror=null; this.src='image/human/soave.png';">
+                </div>
+                <span data-i18n="styling.female_short">여자</span>
               </button>
-              <button type="button" class="option-card" data-field="gender" data-value="male">
-                <div class="option-icon">👨</div>
-                <span data-i18n="styling.male">남성</span>
-              </button>
-              <button type="button" class="option-card" data-field="gender" data-value="neutral">
-                <div class="option-icon">🧑</div>
-                <span data-i18n="styling.neutral">젠더리스</span>
+              <button type="button" class="option-card option-card--avatar" data-field="gender" data-value="male">
+                <div class="gender-avatar gender-avatar--male">
+                  <img src="image/human/ian.jpg" alt="남자" loading="lazy" onerror="this.onerror=null; this.src='image/human/ian.png';">
+                </div>
+                <span data-i18n="styling.male_short">남자</span>
               </button>
             </div>
           </div>
@@ -2149,19 +2149,39 @@
             <label data-i18n="styling.body">체형 타입</label>
             <div class="option-grid body-options">
               <button type="button" class="option-card" data-field="body" data-value="slim">
-                <div class="body-icon slim"></div>
+                <div class="body-silhouette body-silhouette--slim body-silhouette--cute" aria-hidden="true">
+                  <svg viewBox="0 0 64 80" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="32" cy="18" r="15"/>
+                    <path d="M28 36 Q32 34 36 36 Q38 52 36 66 Q34 74 32 76 Q30 74 28 66 Q26 52 28 36 Z"/>
+                  </svg>
+                </div>
                 <span data-i18n="styling.body_slim">슬림</span>
               </button>
               <button type="button" class="option-card" data-field="body" data-value="standard">
-                <div class="body-icon standard"></div>
+                <div class="body-silhouette body-silhouette--standard body-silhouette--cute" aria-hidden="true">
+                  <svg viewBox="0 0 64 80" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="32" cy="18" r="15"/>
+                    <path d="M22 36 Q32 32 42 36 Q48 50 44 60 Q40 70 32 74 Q24 70 20 60 Q16 50 22 36 Z M20 60 Q16 72 24 76 Q32 78 40 76 Q48 72 44 60 L20 60 Z"/>
+                  </svg>
+                </div>
                 <span data-i18n="styling.body_standard">보통</span>
               </button>
               <button type="button" class="option-card" data-field="body" data-value="muscular">
-                <div class="body-icon muscular"></div>
+                <div class="body-silhouette body-silhouette--muscular body-silhouette--cute" aria-hidden="true">
+                  <svg viewBox="0 0 64 80" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="32" cy="18" r="15"/>
+                    <path d="M14 36 L50 36 Q46 48 40 56 Q34 64 32 66 Q30 64 24 56 Q18 48 14 36 Z M24 56 Q18 70 26 74 Q32 76 38 74 Q46 70 40 56 L24 56 Z"/>
+                  </svg>
+                </div>
                 <span data-i18n="styling.body_muscular">근육질</span>
               </button>
               <button type="button" class="option-card" data-field="body" data-value="curvy">
-                <div class="body-icon curvy"></div>
+                <div class="body-silhouette body-silhouette--curvy body-silhouette--cute" aria-hidden="true">
+                  <svg viewBox="0 0 64 80" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="32" cy="18" r="15"/>
+                    <path d="M26 36 Q32 34 38 36 Q42 50 44 60 Q46 70 32 74 Q18 70 20 60 Q22 50 26 36 Z M20 60 Q14 72 22 76 Q32 78 42 76 Q50 72 44 60 L20 60 Z"/>
+                  </svg>
+                </div>
                 <span data-i18n="styling.body_curvy">볼륨</span>
               </button>
             </div>
@@ -2384,74 +2404,90 @@
         </div>
         <div class="step-content">
           <div class="k-beauty-consent-wrap form-group" role="group" aria-label="K-뷰티 맞춤 추천 동의">
-            <p class="k-beauty-consent-text" data-i18n="styling.kbeauty_consent">맞춤 K-뷰티 추천 및 제휴 링크 안내에 톤·스타일 분석 결과를 활용합니다.</p>
-            <label class="k-beauty-consent-label">
-              <input type="checkbox" id="k-beauty-consent-checkbox" aria-describedby="k-beauty-consent-desc">
-              <span data-i18n="styling.kbeauty_agree">동의합니다 (선택)</span>
-            </label>
-            <p id="k-beauty-consent-desc" class="k-beauty-consent-desc" data-i18n="styling.kbeauty_desc">비동의 시에도 분석은 이용 가능하며, 맞춤 제품 추천만 제한됩니다.</p>
+            <div class="k-beauty-consent-inner">
+              <p class="k-beauty-consent-text" data-i18n="styling.kbeauty_consent">맞춤 K-뷰티 추천 및 제휴 링크 안내에 톤·스타일 분석 결과를 활용합니다.</p>
+              <label class="k-beauty-consent-label">
+                <input type="checkbox" id="k-beauty-consent-checkbox" aria-describedby="k-beauty-consent-desc">
+                <span class="k-beauty-consent-check" aria-hidden="true"></span>
+                <span data-i18n="styling.kbeauty_agree">동의합니다 (선택)</span>
+              </label>
+              <p id="k-beauty-consent-desc" class="k-beauty-consent-desc" data-i18n="styling.kbeauty_desc">비동의 시에도 분석은 이용 가능하며, 맞춤 제품 추천만 제한됩니다.</p>
+            </div>
           </div>
           <div class="form-group">
             <label data-i18n="styling.skin_tone">피부톤</label>
-            <div class="color-option-grid">
-              <button type="button" class="color-option" data-field="skinTone" data-value="fair">
-                <div class="skin-circle fair"></div>
+            <p class="form-hint form-hint--skin" data-i18n="styling.skin_tone_hint">손등이나 턱선 부위 색상에 가까운 것을 선택해 주세요</p>
+            <div class="color-option-grid skin-tone-grid">
+              <button type="button" class="color-option skin-tone-option" data-field="skinTone" data-value="fair">
+                <div class="skin-swatch skin-swatch--fair">
+                  <span class="skin-swatch-glow"></span>
+                </div>
                 <span data-i18n="styling.skin_fair">밝은 피부</span>
               </button>
-              <button type="button" class="color-option" data-field="skinTone" data-value="light">
-                <div class="skin-circle light"></div>
+              <button type="button" class="color-option skin-tone-option" data-field="skinTone" data-value="light">
+                <div class="skin-swatch skin-swatch--light">
+                  <span class="skin-swatch-glow"></span>
+                </div>
                 <span data-i18n="styling.skin_light">연한 피부</span>
               </button>
-              <button type="button" class="color-option" data-field="skinTone" data-value="medium">
-                <div class="skin-circle medium"></div>
+              <button type="button" class="color-option skin-tone-option" data-field="skinTone" data-value="medium">
+                <div class="skin-swatch skin-swatch--medium">
+                  <span class="skin-swatch-glow"></span>
+                </div>
                 <span data-i18n="styling.skin_medium">중간 피부</span>
               </button>
-              <button type="button" class="color-option" data-field="skinTone" data-value="tan">
-                <div class="skin-circle tan"></div>
+              <button type="button" class="color-option skin-tone-option" data-field="skinTone" data-value="tan">
+                <div class="skin-swatch skin-swatch--tan">
+                  <span class="skin-swatch-glow"></span>
+                </div>
                 <span data-i18n="styling.skin_tan">구릿빛 피부</span>
               </button>
             </div>
           </div>
           <div class="form-group">
             <label data-i18n="styling.undertone">피부 언더톤</label>
+            <p class="form-hint form-hint--undertone" data-i18n="styling.undertone_hint">손목 안쪽 혈관 색이나 잘 어울리는 액세서리로 판단해 보세요</p>
             <div class="undertone-options">
-              <button type="button" class="undertone-card" data-field="undertone" data-value="warm">
-                <div class="undertone-preview warm">
-                  <div class="undertone-colors">
-                    <span style="background: #FFD700"></span>
-                    <span style="background: #FFA500"></span>
-                    <span style="background: #FF6347"></span>
+              <button type="button" class="undertone-card undertone-card--warm" data-field="undertone" data-value="warm">
+                <div class="undertone-visual undertone-visual--warm">
+                  <span class="undertone-icon" aria-hidden="true">✨</span>
+                  <div class="undertone-palette">
+                    <span style="background:#FFD700"></span>
+                    <span style="background:#FFA500"></span>
+                    <span style="background:#E07C4C"></span>
                   </div>
                 </div>
                 <div class="undertone-info">
-                  <h4 data-i18n="styling.undertone_warm">웜톤 (Warm)</h4>
-                  <p data-i18n="styling.undertone_warm_desc">손목 혈관이 초록빛, 금색 액세서리가 잘 어울림</p>
+                  <h4 data-i18n="styling.undertone_warm">웜톤</h4>
+                  <p data-i18n="styling.undertone_warm_desc">금색·골드 액세서리가 잘 어울려요</p>
                 </div>
               </button>
-              <button type="button" class="undertone-card" data-field="undertone" data-value="cool">
-                <div class="undertone-preview cool">
-                  <div class="undertone-colors">
-                    <span style="background: #4169E1"></span>
-                    <span style="background: #9370DB"></span>
-                    <span style="background: #FF69B4"></span>
+              <button type="button" class="undertone-card undertone-card--cool" data-field="undertone" data-value="cool">
+                <div class="undertone-visual undertone-visual--cool">
+                  <span class="undertone-icon" aria-hidden="true">💎</span>
+                  <div class="undertone-palette">
+                    <span style="background:#5B8DEF"></span>
+                    <span style="background:#9B7EDE"></span>
+                    <span style="background:#E8A0BF"></span>
                   </div>
                 </div>
                 <div class="undertone-info">
-                  <h4 data-i18n="styling.undertone_cool">쿨톤 (Cool)</h4>
-                  <p data-i18n="styling.undertone_cool_desc">손목 혈관이 파란빛, 은색 액세서리가 잘 어울림</p>
+                  <h4 data-i18n="styling.undertone_cool">쿨톤</h4>
+                  <p data-i18n="styling.undertone_cool_desc">은색·실버 액세서리가 잘 어울려요</p>
                 </div>
               </button>
-              <button type="button" class="undertone-card" data-field="undertone" data-value="neutral">
-                <div class="undertone-preview neutral">
-                  <div class="undertone-colors">
-                    <span style="background: #C4A484"></span>
-                    <span style="background: #A0522D"></span>
-                    <span style="background: #8B7355"></span>
+              <button type="button" class="undertone-card undertone-card--neutral" data-field="undertone" data-value="neutral">
+                <div class="undertone-visual undertone-visual--neutral">
+                  <span class="undertone-icon" aria-hidden="true">⚖</span>
+                  <div class="undertone-palette">
+                    <span style="background:#C4A484"></span>
+                    <span style="background:#A67B5B"></span>
+                    <span style="background:#8B6F47"></span>
                   </div>
                 </div>
                 <div class="undertone-info">
-                  <h4 data-i18n="styling.undertone_neutral">뉴트럴 (Neutral)</h4>
-                  <p data-i18n="styling.undertone_neutral_desc">두 가지 톤이 섞여 있음, 모든 금속이 어울림</p>
+                  <h4 data-i18n="styling.undertone_neutral">뉴트럴</h4>
+                  <p data-i18n="styling.undertone_neutral_desc">금·은 모두 잘 어울려요</p>
                 </div>
               </button>
             </div>
